@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welzijnswerker - SIJN Methodiek</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E3F2FD;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cdefs%3E%3Cstyle%3E.node%7Bfill:rgba(255,255,255,0.6)%7D.line%7Bstroke:rgba(255,255,255,0.4);stroke-width:1.5%7D%3C/style%3E%3C/defs%3E%3C!-- Network lines --%3E%3Cline class='line' x1='50' y1='80' x2='120' y2='150'/%3E%3Cline class='line' x1='120' y1='150' x2='200' y2='100'/%3E%3Cline class='line' x1='200' y1='100' x2='280' y2='140'/%3E%3Cline class='line' x1='280' y1='140' x2='350' y2='80'/%3E%3Cline class='line' x1='120' y1='150' x2='80' y2='250'/%3E%3Cline class='line' x1='120' y1='150' x2='200' y2='200'/%3E%3Cline class='line' x1='200' y1='200' x2='280' y2='140'/%3E%3Cline class='line' x1='200' y1='200' x2='150' y2='300'/%3E%3Cline class='line' x1='200' y1='200' x2='280' y2='280'/%3E%3Cline class='line' x1='280' y1='280' x2='350' y2='250'/%3E%3Cline class='line' x1='80' y1='250' x2='150' y2='300'/%3E%3Cline class='line' x1='150' y1='300' x2='280' y2='280'/%3E%3Cline class='line' x1='50' y1='350' x2='150' y2='300'/%3E%3Cline class='line' x1='280' y1='280' x2='350' y2='350'/%3E%3Cline class='line' x1='350' y1='80' x2='350' y2='250'/%3E%3Cline class='line' x1='50' y1='80' x2='50' y2='350'/%3E%3C!-- Network nodes (people) --%3E%3Ccircle class='node' cx='50' cy='80' r='12'/%3E%3Ccircle class='node' cx='120' cy='150' r='14'/%3E%3Ccircle class='node' cx='200' cy='100' r='10'/%3E%3Ccircle class='node' cx='280' cy='140' r='12'/%3E%3Ccircle class='node' cx='350' cy='80' r='11'/%3E%3Ccircle class='node' cx='80' cy='250' r='13'/%3E%3Ccircle class='node' cx='200' cy='200' r='16'/%3E%3Ccircle class='node' cx='150' cy='300' r='12'/%3E%3Ccircle class='node' cx='280' cy='280' r='14'/%3E%3Ccircle class='node' cx='350' cy='250' r='10'/%3E%3Ccircle class='node' cx='50' cy='350' r='11'/%3E%3Ccircle class='node' cx='350' cy='350' r='13'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: #1565C0;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+
+        header .subtitle {
+            font-size: 1.3rem;
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #1976D2;
+        }
+
+        .emoji-header {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(21, 101, 192, 0.15);
+            margin-bottom: 30px;
+        }
+
+        /* Progress Stepper */
+        .stepper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: rgba(21, 101, 192, 0.2);
+            border-radius: 25px;
+            color: #1565C0;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: #1565C0;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .step.completed {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .step.active .step-number {
+            background: white;
+            color: #1565C0;
+        }
+
+        .step.completed .step-number {
+            background: white;
+            color: #4CAF50;
+        }
+
+        /* Section hiding */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Postcode Section */
+        .postcode-section {
+            text-align: center;
+        }
+
+        .postcode-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .postcode-section p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .postcode-input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .postcode-input {
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            border: 3px solid #1976D2;
+            border-radius: 15px;
+            width: 150px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .postcode-input:focus {
+            outline: none;
+            border-color: #0D47A1;
+            box-shadow: 0 0 15px rgba(21, 101, 192, 0.3);
+        }
+
+        .start-btn, .next-btn, .calculate-btn {
+            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover, .next-btn:hover, .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(21, 101, 192, 0.4);
+        }
+
+        .start-btn:disabled, .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .region-display {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #E3F2FD;
+            border-radius: 10px;
+            color: #1565C0;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Domain Assessment */
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .domain-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid #1976D2;
+            transition: all 0.2s ease;
+        }
+
+        .domain-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .domain-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .domain-emoji {
+            font-size: 1.8rem;
+        }
+
+        .domain-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .domain-description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .score-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .score-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .score-btn:hover {
+            border-color: #1976D2;
+            background: #E3F2FD;
+        }
+
+        .score-btn.selected {
+            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
+            color: white;
+            border-color: #1565C0;
+        }
+
+        .score-btn.score-1, .score-btn.score-2 { border-left: 3px solid #FF6B6B; }
+        .score-btn.score-3, .score-btn.score-4 { border-left: 3px solid #FFA726; }
+        .score-btn.score-5, .score-btn.score-6 { border-left: 3px solid #FFEE58; }
+        .score-btn.score-7, .score-btn.score-8 { border-left: 3px solid #66BB6A; }
+        .score-btn.score-9, .score-btn.score-10 { border-left: 3px solid #26A69A; }
+
+        /* Score Legend */
+        .score-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Results Section */
+        .results-section {
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .overall-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1565C0;
+            margin: 20px 0 10px;
+        }
+
+        .score-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* All Domains Section */
+        .all-domains-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .all-domains-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .voorzieningen-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .voorzieningen-legend span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Domain Result Cards */
+        .domain-result-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1976D2;
+            transition: all 0.3s ease;
+        }
+
+        .domain-result-card.low-score {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border-left: 4px solid #e53935;
+            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.15);
+        }
+
+        .domain-result-card.medium-score {
+            background: linear-gradient(135deg, #fffbf0 0%, #fff3e0 100%);
+            border-left: 4px solid #FB8C00;
+        }
+
+        .domain-result-card.high-score {
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+            border-left: 4px solid #43A047;
+            opacity: 0.85;
+        }
+
+        .domain-result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .domain-result-header h4 {
+            color: #333;
+            font-size: 1.1rem;
+            flex-grow: 1;
+        }
+
+        .domain-score-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .domain-score-badge.low {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .domain-score-badge.medium {
+            background: #FFE0B2;
+            color: #E65100;
+        }
+
+        .domain-score-badge.high {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .domain-result-tip {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .voorzieningen {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .voorziening-link {
+            position: relative;
+            display: inline-block;
+        }
+
+        .voorziening-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .voorziening-btn.collectief {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border: 2px solid #A5D6A7;
+        }
+
+        .voorziening-btn.collectief:hover {
+            background: #C8E6C9;
+            transform: translateY(-2px);
+        }
+
+        .voorziening-btn.professioneel {
+            background: #E3F2FD;
+            color: #1565C0;
+            border: 2px solid #90CAF9;
+        }
+
+        .voorziening-btn.professioneel:hover {
+            background: #BBDEFB;
+            transform: translateY(-2px);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            width: 250px;
+            text-align: left;
+            z-index: 100;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #333;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #FFD93D;
+        }
+
+        .tooltip-type {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-desc {
+            line-height: 1.4;
+        }
+
+        .voorziening-link:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .reset-btn {
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #1565C0;
+            border: 2px solid #1565C0;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #E3F2FD;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .info-box h3 {
+            color: #2E7D32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .info-box ul {
+            margin-top: 10px;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+
+        /* Button group */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .step {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .domain-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tooltip {
+                width: 200px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="emoji-header">🌈✨🌻</div>
+            <h1>Welzijnswerker</h1>
+            <div class="subtitle">Powered by SIJN Methodiek</div>
+            <p>Sterk In Je Netwerk - 9 levensdomeinen in kaart</p>
+        </header>
+
+        <!-- Progress Stepper -->
+        <div class="stepper">
+            <div class="step active" id="step-1">
+                <span class="step-number">1</span>
+                <span>Start</span>
+            </div>
+            <div class="step" id="step-2">
+                <span class="step-number">2</span>
+                <span>Domeinkaart</span>
+            </div>
+            <div class="step" id="step-3">
+                <span class="step-number">3</span>
+                <span>Resultaten</span>
+            </div>
+            <div class="step" id="step-4">
+                <span class="step-number">4</span>
+                <span>Voorzieningen</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Postcode -->
+        <div id="section-1" class="section active">
+            <div class="card postcode-section">
+                <h2>📍 Welkom bij de Welzijnswerker</h2>
+                
+                <div class="info-box">
+                    <h3>🎯 Wat is de SIJN Methodiek?</h3>
+                    <p><strong>Sterk In Je Netwerk (SIJN)</strong> helpt je om je welzijn in kaart te brengen aan de hand van 9 levensdomeinen. Deze methodiek is ontwikkeld voor de GGZ, ouderenzorg en welzijnssector.</p>
+                    <ul>
+                        <li><strong>Stap 1:</strong> Vul je postcode in voor regionale voorzieningen</li>
+                        <li><strong>Stap 2:</strong> Beoordeel je 11 levensdomeinen (Domeinkaart)</li>
+                        <li><strong>Stap 3:</strong> Bekijk je resultaten en aandachtspunten</li>
+                        <li><strong>Stap 4:</strong> Ontdek passende voorzieningen in jouw regio</li>
+                    </ul>
+                </div>
+
+                <p>Vul je postcode in zodat we je kunnen koppelen aan voorzieningen in jouw regio</p>
+                
+                <div class="postcode-input-group">
+                    <input type="text" id="postcode-input" class="postcode-input" placeholder="1234 AB" maxlength="7" oninput="validatePostcode()">
+                    <button id="start-btn" class="start-btn" onclick="goToStep(2)" disabled>
+                        🚀 Start
+                    </button>
+                </div>
+                
+                <div id="region-display" class="region-display"></div>
+            </div>
+        </div>
+
+        <!-- Step 2: Domain Assessment -->
+        <div id="section-2" class="section">
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 15px; color: #333;">
+                    📊 Jouw Domeinkaart
+                </h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                    Geef elk levensdomein een score van 1 (zeer slecht) tot 10 (uitstekend)
+                </p>
+
+                <div class="score-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #FF6B6B;"></div>
+                        <span>1-2 Acuut</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #FFA726;"></div>
+                        <span>3-4 Niet zelfredzaam</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #FFEE58;"></div>
+                        <span>5-6 Beperkt zelfredzaam</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #66BB6A;"></div>
+                        <span>7-8 Voldoende zelfredzaam</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #26A69A;"></div>
+                        <span>9-10 Volledig zelfredzaam</span>
+                    </div>
+                </div>
+
+                <div class="domain-grid" id="domain-grid">
+                    <!-- Domains will be generated by JS -->
+                </div>
+
+                <div class="button-group">
+                    <button class="back-btn" onclick="goToStep(1)">← Terug</button>
+                    <button class="next-btn" onclick="showResults()" id="results-btn" disabled>
+                        Bekijk Resultaten →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3 & 4: Results -->
+        <div id="section-3" class="section">
+            <div class="card results-section">
+                <h2 class="results-title">🎉 Jouw Welzijnsoverzicht</h2>
+                
+                <div class="overall-score" id="overall-score">7.5</div>
+                <div class="score-message" id="score-message">Je doet het goed!</div>
+                
+                <div class="chart-container">
+                    <canvas id="welzijnsChart"></canvas>
+                </div>
+
+                <!-- All Domains Section - Sorted by score -->
+                <div id="all-domains-section" class="all-domains-section">
+                    <h3 class="all-domains-title">📋 Alle domeinen & voorzieningen</h3>
+                    
+                    <div class="voorzieningen-legend">
+                        <span><div class="legend-dot" style="background: #4CAF50; width: 12px; height: 12px; border-radius: 50%;"></div> Collectief (buurt/vrijwilligers)</span>
+                        <span><div class="legend-dot" style="background: #2196F3; width: 12px; height: 12px; border-radius: 50%;"></div> Professioneel</span>
+                    </div>
+
+                    <div id="all-domains-container"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="back-btn" onclick="goToStep(2)">← Terug naar Domeinkaart</button>
+                    <button class="reset-btn" onclick="resetAll()">🔄 Opnieuw beginnen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let chart = null;
+        let userPostcode = '';
+        let userRegion = '';
+        let currentStep = 1;
+        const scores = {};
+        
+        // 9 SIJN Levensdomeinen
+        const domains = [
+            { id: 'inkomen', emoji: '💰', name: 'Inkomen', desc: 'Heb je voldoende financiële middelen om in je basisbehoeften te voorzien?', color: '#FF6384' },
+            { id: 'dagbesteding', emoji: '💼', name: 'Dagbesteding', desc: 'Heb je zinvolle activiteiten overdag (werk, opleiding, vrijwilligerswerk)?', color: '#36A2EB' },
+            { id: 'huisvesting', emoji: '🏠', name: 'Huisvesting', desc: 'Woon je prettig, veilig en passend bij je situatie?', color: '#FFCE56' },
+            { id: 'huiselijke_relaties', emoji: '👨‍👩‍👧', name: 'Huiselijke relaties', desc: 'Hoe is de sfeer en zijn de relaties binnen je huishouden?', color: '#4BC0C0' },
+            { id: 'geestelijke_gezondheid', emoji: '🧠', name: 'Geestelijke gezondheid', desc: 'Hoe voel je je mentaal? Kun je omgaan met stress en emoties?', color: '#9966FF' },
+            { id: 'lichamelijke_gezondheid', emoji: '💪', name: 'Lichamelijke gezondheid', desc: 'Hoe is je fysieke gezondheid en conditie?', color: '#FF9F40' },
+            { id: 'adl', emoji: '🛁', name: 'ADL-vaardigheden', desc: 'Kun je dagelijkse activiteiten zelfstandig uitvoeren (wassen, koken, schoonmaken)?', color: '#26A69A' },
+            { id: 'sociaal_netwerk', emoji: '👥', name: 'Sociaal netwerk', desc: 'Heb je mensen om je heen die je steunen en met wie je contact hebt?', color: '#AB47BC' },
+            { id: 'participatie', emoji: '🤝', name: 'Maatschappelijke participatie', desc: 'Neem je deel aan de samenleving (verenigingen, buurt, vrijwilligerswerk)?', color: '#5C6BC0' }
+        ];
+
+        // Region mapping
+        const regionMapping = {
+            '10': 'Amsterdam', '11': 'Amsterdam', '12': 'Haarlem', '13': 'Haarlem',
+            '14': 'Alkmaar', '15': 'Alkmaar', '16': 'Hoorn', '17': 'Hoorn',
+            '18': 'Den Helder', '19': 'Texel',
+            '20': 'Den Haag', '21': 'Den Haag', '22': 'Den Haag', '23': 'Leiden',
+            '24': 'Leiden', '25': 'Delft', '26': 'Delft', '27': 'Gouda',
+            '28': 'Gouda', '29': 'Rotterdam',
+            '30': 'Rotterdam', '31': 'Rotterdam', '32': 'Rotterdam', '33': 'Dordrecht',
+            '34': 'Utrecht', '35': 'Utrecht', '36': 'Utrecht', '37': 'Amersfoort',
+            '38': 'Amersfoort', '39': 'Hilversum',
+            '40': 'Eindhoven', '41': 'Eindhoven', '42': 'Eindhoven', '43': 'Maastricht',
+            '44': 'Maastricht', '45': 'Heerlen', '46': 'Roermond', '47': 'Venlo',
+            '48': 'Breda', '49': 'Breda',
+            '50': 'Tilburg', '51': 'Tilburg', '52': 'Den Bosch', '53': 'Den Bosch',
+            '54': 'Helmond', '55': 'Oss', '56': 'Bergen op Zoom', '57': 'Roosendaal',
+            '58': 'Breda', '59': 'Oosterhout',
+            '60': 'Arnhem', '61': 'Arnhem', '62': 'Arnhem', '63': 'Nijmegen',
+            '64': 'Nijmegen', '65': 'Ede', '66': 'Apeldoorn', '67': 'Apeldoorn',
+            '68': 'Doetinchem', '69': 'Zevenaar',
+            '70': 'Enschede', '71': 'Enschede', '72': 'Almelo', '73': 'Hengelo',
+            '74': 'Deventer', '75': 'Zwolle', '76': 'Zwolle', '77': 'Hardenberg',
+            '78': 'Kampen', '79': 'Meppel',
+            '80': 'Zwolle', '81': 'Zwolle', '82': 'Lelystad', '83': 'Emmeloord',
+            '84': 'Dronten', '85': 'Almere', '86': 'Almere',
+            '87': 'Leeuwarden', '88': 'Leeuwarden', '89': 'Heerenveen',
+            '90': 'Groningen', '91': 'Groningen', '92': 'Groningen', '93': 'Assen',
+            '94': 'Assen', '95': 'Emmen', '96': 'Emmen', '97': 'Hoogeveen',
+            '98': 'Stadskanaal', '99': 'Delfzijl'
+        };
+
+        // Voorzieningen per domein
+        const voorzieningen = {
+            inkomen: {
+                collectief: [
+                    { naam: 'Schuldhulpmaatje', url: 'https://www.schuldhulpmaatje.nl', beschrijving: 'Vrijwilligers helpen bij het op orde krijgen van je financiën.' },
+                    { naam: 'Voedselbank', url: 'https://www.voedselbankennederland.nl', beschrijving: 'Tijdelijke ondersteuning met gratis levensmiddelen.' }
+                ],
+                professioneel: [
+                    { naam: 'Gemeentelijke Schuldhulp', url: 'https://www.nvvk.nl', beschrijving: 'Professionele schuldhulpverlening via de gemeente.' },
+                    { naam: 'Nibud', url: 'https://www.nibud.nl', beschrijving: 'Advies over budgetteren en financiële planning.' }
+                ],
+                tip: 'Geldzorgen kunnen zwaar wegen. Er is hulp beschikbaar om je financiën op orde te krijgen.',
+                tipGoed: 'Je financiële situatie is stabiel. Blijf bewust omgaan met je budget.'
+            },
+            dagbesteding: {
+                collectief: [
+                    { naam: 'Vrijwilligerscentrale', url: 'https://www.vrijwilligerswerk.nl', beschrijving: 'Vind zinvol vrijwilligerswerk in jouw buurt.' },
+                    { naam: 'Taalhuis', url: 'https://www.detaalhuizen.nl', beschrijving: 'Gratis hulp bij lezen, schrijven en digitale vaardigheden.' }
+                ],
+                professioneel: [
+                    { naam: 'UWV Werkbedrijf', url: 'https://www.uwv.nl', beschrijving: 'Begeleiding naar werk, uitkeringen en re-integratie.' },
+                    { naam: 'Jobcoach', url: 'https://www.jobcoach.nl', beschrijving: 'Persoonlijke begeleiding op de werkvloer.' }
+                ],
+                tip: 'Werk of dagbesteding geeft structuur en voldoening. Er zijn mogelijkheden om je te helpen met het vinden van passende activiteiten.',
+                tipGoed: 'Je hebt zinvolle dagbesteding. Blijf investeren in activiteiten die je energie geven.'
+            },
+            huisvesting: {
+                collectief: [
+                    { naam: 'Buurtbemiddeling', url: 'https://www.buurtbemiddeling.nl', beschrijving: 'Vrijwilligers helpen bij het oplossen van burenruzies.' },
+                    { naam: 'Huurteam', url: 'https://www.huurcommissie.nl', beschrijving: 'Gratis advies over huurprijzen en huurdersrechten.' }
+                ],
+                professioneel: [
+                    { naam: 'Sociaal Wijkteam', url: 'https://www.sociaalwerkwerkt.nl', beschrijving: 'Professionele ondersteuning bij woonproblemen.' },
+                    { naam: 'Woningcorporatie', url: 'https://www.aedes.nl', beschrijving: 'Hulp bij woningnood en sociale huurwoningen.' }
+                ],
+                tip: 'Je woonsituatie kan beter. Misschien kun je hulp gebruiken bij het vinden van een betere woning of het oplossen van problemen thuis.',
+                tipGoed: 'Je woonsituatie is goed. Je woning biedt een stabiele basis.'
+            },
+            huiselijke_relaties: {
+                collectief: [
+                    { naam: 'Humanitas Thuisadministratie', url: 'https://www.humanitas.nl', beschrijving: 'Vrijwilligers ondersteunen bij administratie en huishouden.' },
+                    { naam: 'Buurtgezinnen', url: 'https://www.buurtgezinnen.nl', beschrijving: 'Gezinnen ondersteunen elkaar in de buurt.' }
+                ],
+                professioneel: [
+                    { naam: 'Veilig Thuis', url: 'https://www.veiligthuis.nl', beschrijving: 'Advies en hulp bij huiselijk geweld en kindermishandeling. Bel 0800-2000.' },
+                    { naam: 'Relatietherapie', url: 'https://www.relatietherapeut.nl', beschrijving: 'Professionele hulp bij relatieproblemen.' }
+                ],
+                tip: 'Goede relaties thuis zijn belangrijk voor je welzijn. Praten over problemen kan helpen.',
+                tipGoed: 'De relaties in je huishouden zijn goed. Blijf investeren in deze waardevolle banden.'
+            },
+            geestelijke_gezondheid: {
+                collectief: [
+                    { naam: '113 Zelfmoordpreventie', url: 'https://www.113.nl', beschrijving: 'Anoniem praten over zelfmoordgedachten. Bel 113 of chat online.' },
+                    { naam: 'MIND Korrelatie', url: 'https://www.mindkorrelatie.nl', beschrijving: 'Luisterend oor voor iedereen met psychische problemen.' }
+                ],
+                professioneel: [
+                    { naam: 'Huisarts', url: 'https://www.thuisarts.nl/psychische-klachten', beschrijving: 'Eerste stap voor verwijzing naar psycholoog.' },
+                    { naam: 'GGZ', url: 'https://www.ggznederland.nl', beschrijving: 'Geestelijke gezondheidszorg voor behandeling en therapie.' }
+                ],
+                tip: 'Je mentale welzijn verdient aandacht. Praten over wat je bezighoudt kan opluchten - je hoeft het niet alleen te doen.',
+                tipGoed: 'Je mentale gezondheid is goed. Blijf aandacht besteden aan je welzijn.'
+            },
+            lichamelijke_gezondheid: {
+                collectief: [
+                    { naam: 'Meer Bewegen voor Ouderen', url: 'https://www.meerbewegen.nl', beschrijving: 'Beweeggroepen in de buurt voor alle leeftijden.' },
+                    { naam: 'Wandelclub', url: 'https://www.wandel.nl', beschrijving: 'Samen wandelen met anderen uit je buurt.' }
+                ],
+                professioneel: [
+                    { naam: 'Fysiotherapeut', url: 'https://www.fysionet.nl', beschrijving: 'Behandeling van lichamelijke klachten en revalidatie.' },
+                    { naam: 'Huisarts', url: 'https://www.thuisarts.nl', beschrijving: 'Medisch advies en doorverwijzing naar specialisten.' }
+                ],
+                tip: 'Lichamelijke gezondheid is de basis. Kleine stappen kunnen al een groot verschil maken.',
+                tipGoed: 'Je lichamelijke gezondheid is goed. Blijf actief en zorg goed voor jezelf.'
+            },
+            adl: {
+                collectief: [
+                    { naam: 'Stichting Present', url: 'https://www.stichtingpresent.nl', beschrijving: 'Vrijwilligers helpen met praktische klussen.' },
+                    { naam: 'Boodschappenhulp', url: 'https://www.boodschappenplusbus.nl', beschrijving: 'Hulp bij het doen van boodschappen.' }
+                ],
+                professioneel: [
+                    { naam: 'Thuiszorg', url: 'https://www.thuiszorg.nl', beschrijving: 'Professionele hulp bij huishouden en verzorging.' },
+                    { naam: 'WMO-loket', url: 'https://www.regelhulp.nl', beschrijving: 'Aanvragen van hulp via de gemeente.' }
+                ],
+                tip: 'Praktische taken kunnen soms te veel worden. Er zijn mensen die je kunnen ondersteunen.',
+                tipGoed: 'Je bent zelfredzaam in dagelijkse activiteiten. Goed gedaan!'
+            },
+            sociaal_netwerk: {
+                collectief: [
+                    { naam: 'Maatjesproject', url: 'https://www.humanitas.nl', beschrijving: 'Vrijwilligers bieden vriendschap en gezelschap.' },
+                    { naam: 'Eetclub', url: 'https://www.samen-eten.nl', beschrijving: 'Samen eten met anderen uit de buurt.' }
+                ],
+                professioneel: [
+                    { naam: 'Maatschappelijk werk', url: 'https://www.sociaalwerknederland.nl', beschrijving: 'Begeleiding bij sociale problemen.' },
+                    { naam: 'Welzijnsorganisatie', url: 'https://www.sociaalwerkwerkt.nl', beschrijving: 'Activiteiten en ondersteuning in je buurt.' }
+                ],
+                tip: 'Een sterk sociaal netwerk is belangrijk. Er zijn manieren om je netwerk te versterken.',
+                tipGoed: 'Je hebt een goed sociaal netwerk. Koester deze relaties!'
+            },
+            participatie: {
+                collectief: [
+                    { naam: 'Buurtvereniging', url: 'https://www.lsabewoners.nl', beschrijving: 'Doe mee met activiteiten in je buurt.' },
+                    { naam: 'Sportclub', url: 'https://www.nocnsf.nl', beschrijving: 'Vind een sportclub bij jou in de buurt.' }
+                ],
+                professioneel: [
+                    { naam: 'MEE', url: 'https://www.mee.nl', beschrijving: 'Ondersteuning bij participatie voor mensen met een beperking.' },
+                    { naam: 'Jobcoach Participatie', url: 'https://www.uwv.nl', beschrijving: 'Begeleiding naar vrijwilligerswerk of betaald werk.' }
+                ],
+                tip: 'Meedoen in de samenleving geeft energie en zin. Er zijn veel mogelijkheden om actief te worden.',
+                tipGoed: 'Je participeert actief in de maatschappij. Blijf betrokken!'
+            },
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            generateDomainCards();
+        });
+
+        function generateDomainCards() {
+            const grid = document.getElementById('domain-grid');
+            grid.innerHTML = '';
+            
+            domains.forEach(domain => {
+                const card = document.createElement('div');
+                card.className = 'domain-card';
+                card.style.borderLeftColor = domain.color;
+                
+                let scoreButtons = '';
+                for (let i = 1; i <= 10; i++) {
+                    scoreButtons += `<button class="score-btn score-${i}" onclick="setScore('${domain.id}', ${i}, this)">${i}</button>`;
+                }
+                
+                card.innerHTML = `
+                    <div class="domain-header">
+                        <span class="domain-emoji">${domain.emoji}</span>
+                        <span class="domain-title">${domain.name}</span>
+                    </div>
+                    <div class="domain-description">${domain.desc}</div>
+                    <div class="score-buttons" id="scores-${domain.id}">
+                        ${scoreButtons}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function setScore(domainId, score, btn) {
+            scores[domainId] = score;
+            
+            // Update button styles
+            const container = document.getElementById('scores-' + domainId);
+            container.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Check if all domains have scores
+            checkAllScored();
+        }
+
+        function checkAllScored() {
+            const allScored = domains.every(d => scores[d.id] !== undefined);
+            document.getElementById('results-btn').disabled = !allScored;
+        }
+
+        function validatePostcode() {
+            const input = document.getElementById('postcode-input');
+            const btn = document.getElementById('start-btn');
+            const regionDisplay = document.getElementById('region-display');
+            
+            let value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (value.length > 4) {
+                value = value.slice(0, 4) + ' ' + value.slice(4);
+            }
+            input.value = value;
+            
+            const isValid = /^\d{4}\s?[A-Z]{2}$/.test(value);
+            btn.disabled = !isValid;
+            
+            if (isValid) {
+                const prefix = value.slice(0, 2);
+                userRegion = regionMapping[prefix] || 'Nederland';
+                regionDisplay.textContent = '📍 Regio: ' + userRegion;
+                regionDisplay.style.display = 'block';
+            } else {
+                regionDisplay.style.display = 'none';
+            }
+        }
+
+        function updateStepper(step) {
+            for (let i = 1; i <= 4; i++) {
+                const stepEl = document.getElementById('step-' + i);
+                stepEl.classList.remove('active', 'completed');
+                
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                }
+            }
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Show target section
+            const targetSection = document.getElementById('section-' + (step <= 2 ? step : 3));
+            targetSection.classList.add('active');
+            targetSection.classList.add('fade-in');
+            
+            // Update stepper
+            updateStepper(step);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showResults() {
+            goToStep(3);
+            
+            const scoreValues = domains.map(d => scores[d.id] || 5);
+            const overall = (scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length).toFixed(1);
+            
+            document.getElementById('overall-score').textContent = overall;
+            
+            let message = '';
+            if (overall >= 8) {
+                message = '🌟 Fantastisch! Je bent op veel gebieden zelfredzaam!';
+            } else if (overall >= 6) {
+                message = '😊 Goed bezig! Er zijn enkele aandachtspunten.';
+            } else if (overall >= 4) {
+                message = '💪 Er zijn meerdere gebieden waar ondersteuning kan helpen.';
+            } else {
+                message = '🤗 Er is hulp beschikbaar. Je staat er niet alleen voor.';
+            }
+            document.getElementById('score-message').textContent = message;
+            
+            createChart(scoreValues);
+            generateAllDomains(scoreValues);
+            
+            // Update stepper to show we're at results/voorzieningen
+            updateStepper(4);
+        }
+
+        function createChart(scoreValues) {
+            const ctx = document.getElementById('welzijnsChart').getContext('2d');
+            
+            if (chart) chart.destroy();
+            
+            chart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: domains.map(d => d.name),
+                    datasets: [{
+                        label: 'Jouw score',
+                        data: scoreValues,
+                        backgroundColor: 'rgba(25, 118, 210, 0.2)',
+                        borderColor: '#1976D2',
+                        borderWidth: 2,
+                        pointBackgroundColor: domains.map(d => d.color),
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 10,
+                            ticks: {
+                                stepSize: 2,
+                                font: { size: 11 }
+                            },
+                            pointLabels: {
+                                font: { size: 11, weight: '600' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function createVoorzieningLink(v, type) {
+            return `
+                <div class="voorziening-link">
+                    <a href="${v.url}" target="_blank" class="voorziening-btn ${type}">${v.naam}</a>
+                    <div class="tooltip">
+                        <div class="tooltip-title">${v.naam}</div>
+                        <div class="tooltip-type">${type === 'collectief' ? '🤝 Collectief (buurt/vrijwilligers)' : '👨‍⚕️ Professionele hulp'}</div>
+                        <div class="tooltip-desc">${v.beschrijving}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateAllDomains(scoreValues) {
+            const container = document.getElementById('all-domains-container');
+            container.innerHTML = '';
+            
+            // Create array of domains with their scores
+            const domainsWithScores = domains.map((domain, idx) => ({
+                domain: domain,
+                score: scoreValues[idx]
+            }));
+            
+            // Sort by score (low to high)
+            domainsWithScores.sort((a, b) => a.score - b.score);
+            
+            domainsWithScores.forEach(({ domain, score }) => {
+                const vData = voorzieningen[domain.id];
+                
+                // Determine card styling based on score
+                let cardClass = 'domain-result-card';
+                let badgeClass = '';
+                if (score <= 5) {
+                    cardClass += ' low-score';
+                    badgeClass = 'low';
+                } else if (score <= 7) {
+                    cardClass += ' medium-score';
+                    badgeClass = 'medium';
+                } else {
+                    cardClass += ' high-score';
+                    badgeClass = 'high';
+                }
+                
+                // Get appropriate tip
+                const tip = score <= 5 ? vData.tip : vData.tipGoed;
+                
+                // Generate voorzieningen HTML
+                let voorzieningenHtml = '';
+                if (vData) {
+                    vData.collectief.forEach(v => {
+                        voorzieningenHtml += createVoorzieningLink(v, 'collectief');
+                    });
+                    vData.professioneel.forEach(v => {
+                        voorzieningenHtml += createVoorzieningLink(v, 'professioneel');
+                    });
+                }
+                
+                container.innerHTML += `
+                    <div class="${cardClass} fade-in" style="border-left-color: ${domain.color};">
+                        <div class="domain-result-header">
+                            <span style="font-size: 1.5rem;">${domain.emoji}</span>
+                            <h4>${domain.name}</h4>
+                            <span class="domain-score-badge ${badgeClass}">${score}/10</span>
+                        </div>
+                        <p class="domain-result-tip">${tip}</p>
+                        <div class="voorzieningen">
+                            ${voorzieningenHtml}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function resetAll() {
+            // Reset scores
+            Object.keys(scores).forEach(key => delete scores[key]);
+            
+            // Reset UI
+            document.querySelectorAll('.score-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('results-btn').disabled = true;
+            
+            // Go back to start
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
