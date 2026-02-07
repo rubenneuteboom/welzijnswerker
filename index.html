@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welzijnswerker v2.1 Medium (GPT) - SIJN Levensdomeinen</title>
+    <title>Welzijnswerker v2.2 Medium (GPT) - SIJN Levensdomeinen</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -90,7 +90,38 @@
             margin-left: 10px;
         }
 
-        /* Progress bar - 8 steps compact */
+        /* View Tabs */
+        .view-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .view-tab {
+            padding: 12px 24px;
+            border: 2px solid var(--primary);
+            background: var(--white);
+            color: var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .view-tab:hover {
+            background: var(--primary-light);
+        }
+
+        .view-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Progress bar - 9 steps compact */
         .progress-container {
             background: var(--white);
             border-radius: var(--radius);
@@ -148,11 +179,11 @@
         }
 
         .step-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             margin-top: 5px;
             color: var(--text-light);
             text-align: center;
-            max-width: 60px;
+            max-width: 55px;
         }
 
         .progress-step.active .step-label {
@@ -183,6 +214,15 @@
         }
 
         .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
             display: block;
             animation: fadeIn 0.4s ease;
         }
@@ -228,6 +268,11 @@
         .btn-success {
             background: linear-gradient(135deg, var(--secondary) 0%, #4CAF50 100%);
             color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.85rem;
         }
 
         .btn-group {
@@ -778,6 +823,314 @@
             color: var(--primary);
         }
 
+        /* Organisaties in de omgeving */
+        .org-category {
+            margin-bottom: 25px;
+        }
+
+        .org-category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            font-weight: 600;
+        }
+
+        .org-category-header .count {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-left: auto;
+        }
+
+        .org-list {
+            background: var(--white);
+            border: 2px solid var(--primary-light);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 10px;
+        }
+
+        .org-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .org-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .org-item:hover {
+            background: var(--primary-light);
+        }
+
+        .org-item.highlighted {
+            background: #FEF3E2;
+            border-color: var(--warning);
+        }
+
+        .org-item.highlighted::before {
+            content: '⭐';
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+
+        .org-item {
+            position: relative;
+        }
+
+        .org-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .org-details {
+            flex: 1;
+        }
+
+        .org-details h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .org-details .org-type {
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .org-details .org-address {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .org-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .org-contact a {
+            font-size: 0.8rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .org-contact a:hover {
+            text-decoration: underline;
+        }
+
+        .org-filter-info {
+            background: var(--primary-light);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .no-orgs-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .kanban-column {
+            background: var(--bg);
+            border-radius: var(--radius);
+            padding: 15px;
+            min-height: 400px;
+        }
+
+        .kanban-column-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+            border-bottom: 3px solid;
+        }
+
+        .kanban-column.todo .kanban-column-header {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .kanban-column.doing .kanban-column-header {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .kanban-column.done .kanban-column-header {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .kanban-column-header .count {
+            background: #e0e0e0;
+            color: var(--text);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .kanban-cards {
+            min-height: 300px;
+        }
+
+        .kanban-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: grab;
+            transition: all 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .kanban-card:active {
+            cursor: grabbing;
+            transform: rotate(2deg);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .kanban-card.dragging {
+            opacity: 0.5;
+        }
+
+        .kanban-card.priority-high {
+            border-left-color: var(--danger);
+        }
+
+        .kanban-card.priority-normal {
+            border-left-color: var(--primary);
+        }
+
+        .kanban-card.priority-low {
+            border-left-color: var(--secondary);
+        }
+
+        .kanban-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .kanban-card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .kanban-card-delete {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 1rem;
+            border-radius: 4px;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .kanban-card:hover .kanban-card-delete {
+            opacity: 1;
+        }
+
+        .kanban-card-delete:hover {
+            background: #fee;
+            color: var(--danger);
+        }
+
+        .kanban-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .kanban-card-priority {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .kanban-card-priority.high {
+            background: #FDEAEA;
+            color: #C53030;
+        }
+
+        .kanban-card-priority.normal {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .kanban-card-priority.low {
+            background: #E6FFFA;
+            color: #276749;
+        }
+
+        .kanban-add-form {
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .kanban-add-form h3 {
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        .kanban-empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
         /* Voorzieningen */
         .voorziening-section {
             margin-bottom: 25px;
@@ -885,7 +1238,7 @@
                 print-color-adjust: exact;
             }
 
-            .btn, .progress-container, .person-form {
+            .btn, .progress-container, .person-form, .view-tabs, .kanban-add-form {
                 display: none !important;
             }
 
@@ -902,9 +1255,23 @@
             #screen-start, #screen-hulpvraag, #screen-domains, #screen-network, #screen-waardering {
                 display: none !important;
             }
+
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Responsive */
+        @media (max-width: 768px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+
+            .kanban-column {
+                min-height: auto;
+            }
+        }
+
         @media (max-width: 600px) {
             header h1 {
                 font-size: 1.4rem;
@@ -935,6 +1302,15 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .view-tabs {
+                flex-direction: column;
+            }
+
+            .view-tab {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -942,330 +1318,441 @@
     <header>
         <h1>
             🌐 Welzijnswerker
-            <span class="version-badge">v2.1 Medium</span>
+            <span class="version-badge">v2.2 Medium</span>
         </h1>
         <p>SIJN Levensdomeinen & Netwerkanalyse</p>
     </header>
 
     <div class="container">
-        <!-- Progress Bar - 8 Steps -->
-        <div class="progress-container" id="progressBar">
-            <div class="progress-steps">
-                <div class="progress-step active" data-step="1">
-                    <div class="step-circle">🏠</div>
-                    <span class="step-label">Start</span>
-                </div>
-                <div class="progress-step" data-step="2">
-                    <div class="step-circle">❓</div>
-                    <span class="step-label">Hulpvraag</span>
-                </div>
-                <div class="progress-step" data-step="3">
-                    <div class="step-circle">📊</div>
-                    <span class="step-label">Domeinen</span>
-                </div>
-                <div class="progress-step" data-step="4">
-                    <div class="step-circle">👥</div>
-                    <span class="step-label">Netwerk</span>
-                </div>
-                <div class="progress-step" data-step="5">
-                    <div class="step-circle">⭐</div>
-                    <span class="step-label">Waardering</span>
-                </div>
-                <div class="progress-step" data-step="6">
-                    <div class="step-circle">📈</div>
-                    <span class="step-label">Resultaten</span>
-                </div>
-                <div class="progress-step" data-step="7">
-                    <div class="step-circle">🤖</div>
-                    <span class="step-label">Advies</span>
-                </div>
-                <div class="progress-step" data-step="8">
-                    <div class="step-circle">📋</div>
-                    <span class="step-label">Overzicht</span>
-                </div>
-            </div>
+        <!-- View Tabs -->
+        <div class="view-tabs" id="viewTabs" style="display: none;">
+            <button class="view-tab active" data-view="assessment" onclick="switchView('assessment')">
+                📊 Assessment
+            </button>
+            <button class="view-tab" data-view="kanban" onclick="switchView('kanban')">
+                📋 Actieplan
+            </button>
         </div>
 
-        <!-- Screen 1: Start -->
-        <div class="screen active" id="screen-start">
-            <div class="card">
-                <h2>👋 Welkom!</h2>
-                <p>Dit hulpmiddel helpt je om inzicht te krijgen in je welzijn op verschillende levensdomeinen en je sociale netwerk in kaart te brengen.</p>
-                
-                <h3 style="margin-top: 25px; margin-bottom: 15px;">Hoe wil je dit invullen?</h3>
-                <div class="mode-cards">
-                    <div class="mode-card" data-mode="self" onclick="selectMode('self')">
-                        <div class="icon">🙋</div>
-                        <h3>Zelf invullen</h3>
-                        <p>Ik vul dit zelfstandig in op mijn eigen tempo</p>
+        <!-- Assessment View -->
+        <div class="view-section active" id="view-assessment">
+            <!-- Progress Bar - 9 Steps -->
+            <div class="progress-container" id="progressBar">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-circle">🏠</div>
+                        <span class="step-label">Start</span>
                     </div>
-                    <div class="mode-card" data-mode="professional" onclick="selectMode('professional')">
-                        <div class="icon">👥</div>
-                        <h3>Met een professional</h3>
-                        <p>Samen met een hulpverlener of coach</p>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-circle">❓</div>
+                        <span class="step-label">Hulpvraag</span>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-circle">📊</div>
+                        <span class="step-label">Domeinen</span>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-circle">👥</div>
+                        <span class="step-label">Netwerk</span>
+                    </div>
+                    <div class="progress-step" data-step="5">
+                        <div class="step-circle">⭐</div>
+                        <span class="step-label">Waardering</span>
+                    </div>
+                    <div class="progress-step" data-step="6">
+                        <div class="step-circle">📈</div>
+                        <span class="step-label">Resultaten</span>
+                    </div>
+                    <div class="progress-step" data-step="7">
+                        <div class="step-circle">🤖</div>
+                        <span class="step-label">Advies</span>
+                    </div>
+                    <div class="progress-step" data-step="8">
+                        <div class="step-circle">🏢</div>
+                        <span class="step-label">Organisaties</span>
+                    </div>
+                    <div class="progress-step" data-step="9">
+                        <div class="step-circle">📋</div>
+                        <span class="step-label">Overzicht</span>
                     </div>
                 </div>
+            </div>
 
-                <div id="professionalFields" style="display: none;">
+            <!-- Screen 1: Start -->
+            <div class="screen active" id="screen-start">
+                <div class="card">
+                    <h2>👋 Welkom!</h2>
+                    <p>Dit hulpmiddel helpt je om inzicht te krijgen in je welzijn op verschillende levensdomeinen en je sociale netwerk in kaart te brengen.</p>
+                    
+                    <h3 style="margin-top: 25px; margin-bottom: 15px;">Hoe wil je dit invullen?</h3>
+                    <div class="mode-cards">
+                        <div class="mode-card" data-mode="self" onclick="selectMode('self')">
+                            <div class="icon">🙋</div>
+                            <h3>Zelf invullen</h3>
+                            <p>Ik vul dit zelfstandig in op mijn eigen tempo</p>
+                        </div>
+                        <div class="mode-card" data-mode="professional" onclick="selectMode('professional')">
+                            <div class="icon">👥</div>
+                            <h3>Met een professional</h3>
+                            <p>Samen met een hulpverlener of coach</p>
+                        </div>
+                    </div>
+
+                    <div id="professionalFields" style="display: none;">
+                        <div class="form-group">
+                            <label for="professionalName">Naam professional</label>
+                            <input type="text" id="professionalName" placeholder="Bijv. Maria, maatschappelijk werker">
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="professionalName">Naam professional</label>
-                        <input type="text" id="professionalName" placeholder="Bijv. Maria, maatschappelijk werker">
+                        <label for="postcode">Postcode (voor lokale tips)</label>
+                        <input type="text" id="postcode" placeholder="1234 AB" maxlength="7">
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="startAssessment()">
+                            Aan de slag →
+                        </button>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="postcode">Postcode (voor lokale tips)</label>
-                    <input type="text" id="postcode" placeholder="1234 AB" maxlength="7">
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="startAssessment()">
-                        Aan de slag →
-                    </button>
-                </div>
             </div>
-        </div>
 
-        <!-- Screen 2: Hulpvraag (NEW) -->
-        <div class="screen" id="screen-hulpvraag">
-            <div class="card">
-                <h2>❓ Hulpvraag</h2>
-                <p>Vertel ons iets over uzelf en uw situatie. Deze informatie helpt ons om een beter beeld te krijgen.</p>
-                
-                <div class="form-row" style="margin-top: 20px;">
+            <!-- Screen 2: Hulpvraag (NEW) -->
+            <div class="screen" id="screen-hulpvraag">
+                <div class="card">
+                    <h2>❓ Hulpvraag</h2>
+                    <p>Vertel ons iets over uzelf en uw situatie. Deze informatie helpt ons om een beter beeld te krijgen.</p>
+                    
+                    <div class="form-row" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="clientName">Naam (optioneel)</label>
+                            <input type="text" id="clientName" placeholder="Uw voornaam">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientBirthdate">Geboortedatum (optioneel)</label>
+                            <input type="date" id="clientBirthdate">
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="clientName">Naam (optioneel)</label>
-                        <input type="text" id="clientName" placeholder="Uw voornaam">
+                        <label for="hulpvraag">Wat is de reden dat u hulp zoekt?</label>
+                        <textarea id="hulpvraag" rows="4" placeholder="Beschrijf hier uw situatie en waarom u contact heeft gezocht..."></textarea>
                     </div>
+
                     <div class="form-group">
-                        <label for="clientBirthdate">Geboortedatum (optioneel)</label>
-                        <input type="date" id="clientBirthdate">
+                        <label for="wens">Wat zou u het liefst willen bereiken?</label>
+                        <textarea id="wens" rows="3" placeholder="Beschrijf uw ideale situatie of belangrijkste wens..."></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
+                        <button class="btn btn-primary" onclick="saveHulpvraag(); goToScreen(3)">Naar Domeinkaart →</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="hulpvraag">Wat is de reden dat u hulp zoekt?</label>
-                    <textarea id="hulpvraag" rows="4" placeholder="Beschrijf hier uw situatie en waarom u contact heeft gezocht..."></textarea>
+            <!-- Screen 3: Domains -->
+            <div class="screen" id="screen-domains">
+                <div class="card">
+                    <h2>📊 Jouw Levensdomeinen</h2>
+                    <p>Geef voor elk domein aan hoe tevreden je bent (1 = heel slecht, 10 = uitstekend)</p>
+                    
+                    <div id="domainsList"></div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(4)">Naar Netwerkkaart →</button>
+                    </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="wens">Wat zou u het liefst willen bereiken?</label>
-                    <textarea id="wens" rows="3" placeholder="Beschrijf uw ideale situatie of belangrijkste wens..."></textarea>
+            <!-- Screen 4: Network Map -->
+            <div class="screen" id="screen-network">
+                <div class="card">
+                    <h2>👥 Jouw Netwerkkaart</h2>
+                    <p>Voeg personen toe die belangrijk zijn in jouw leven</p>
+
+                    <div class="person-form">
+                        <h3>➕ Persoon toevoegen</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="personName">Naam</label>
+                                <input type="text" id="personName" placeholder="Voornaam">
+                            </div>
+                            <div class="form-group">
+                                <label for="personType">Type relatie</label>
+                                <select id="personType">
+                                    <option value="familie">👨‍👩‍👧 Familie</option>
+                                    <option value="vriend">🤝 Vriend(in)</option>
+                                    <option value="buur">🏠 Buur</option>
+                                    <option value="collega">💼 Collega</option>
+                                    <option value="professional">⚕️ Professional</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="personFrequency">Contact frequentie</label>
+                                <select id="personFrequency">
+                                    <option value="dagelijks">Dagelijks</option>
+                                    <option value="wekelijks">Wekelijks</option>
+                                    <option value="maandelijks">Maandelijks</option>
+                                    <option value="minder">Minder vaak</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Deze persoon helpt mij met:</label>
+                            <div class="checkbox-group" id="domainCheckboxes"></div>
+                        </div>
+                        <button class="btn btn-success" onclick="addPerson()">
+                            ✓ Toevoegen
+                        </button>
+                    </div>
+
+                    <div class="person-list" id="personList"></div>
+
+                    <div class="network-container">
+                        <canvas id="networkCanvas"></canvas>
+                    </div>
+
+                    <div class="network-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #E53E3E;"></div>
+                            Familie
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #38A169;"></div>
+                            Vriend
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #D69E2E;"></div>
+                            Buur
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #805AD5;"></div>
+                            Collega
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #3182CE;"></div>
+                            Professional
+                        </div>
+                    </div>
+
+                    <div class="network-type" id="networkTypeDisplay">
+                        <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
+                        <div class="network-type-badge eenpersoons" id="networkTypeBadge">
+                            🔴 Eenpersoons netwerk
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(5)">Naar Waardering →</button>
+                    </div>
                 </div>
+            </div>
 
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
-                    <button class="btn btn-primary" onclick="saveHulpvraag(); goToScreen(3)">Naar Domeinkaart →</button>
+            <!-- Screen 5: Waardering Netwerksteun (NEW) -->
+            <div class="screen" id="screen-waardering">
+                <div class="card">
+                    <h2>⭐ Waardering Netwerksteun</h2>
+                    <p>Geef aan hoe tevreden u bent met de steun van elke persoon in uw netwerk.</p>
+                    
+                    <div id="ratingsList"></div>
+
+                    <div class="average-rating" id="averageRatingBox" style="display: none;">
+                        <div class="label">Gemiddelde tevredenheid</div>
+                        <div class="value" id="averageRatingValue">-</div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
+                        <button class="btn btn-primary" onclick="saveRatings(); goToScreen(6)">Bekijk Resultaten →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 6: Results -->
+            <div class="screen" id="screen-results">
+                <div class="card">
+                    <h2>📈 Jouw Resultaten</h2>
+                    
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+
+                    <div class="score-summary" id="scoreSummary"></div>
+
+                    <!-- Network Type Display with Color -->
+                    <div class="network-type" id="resultsNetworkType">
+                        <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
+                        <div class="network-type-badge" id="resultsNetworkTypeBadge"></div>
+                    </div>
+
+                    <!-- Risks Box -->
+                    <div class="risk-box" id="riskBox">
+                        <h4>⚠️ Aandachtspunten bij dit netwerktype</h4>
+                        <ul id="risksList"></ul>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(7)">Bekijk Persoonlijk Advies →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 7: Advies (NEW) -->
+            <div class="screen" id="screen-advies">
+                <div class="card">
+                    <h2>🤖 Persoonlijk Advies</h2>
+                    <p>Op basis van de SIJN-methodiek en uw resultaten</p>
+                    
+                    <div class="advice-box" id="adviceBox"></div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(8)">Bekijk Organisaties →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 8: Organisaties in de Omgeving (NEW) -->
+            <div class="screen" id="screen-organisaties">
+                <div class="card">
+                    <h2>🏢 Organisaties in de Omgeving</h2>
+                    <p>Hulporganisaties in uw regio die kunnen ondersteunen</p>
+                    
+                    <div class="org-filter-info" id="orgFilterInfo">
+                        <span>📍</span>
+                        <span id="orgFilterText">Organisaties worden gefilterd op basis van uw postcode</span>
+                    </div>
+
+                    <div id="organisatiesList"></div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(9)">Naar Samenvatting →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 9: Summary -->
+            <div class="screen" id="screen-summary">
+                <div class="card">
+                    <h2>📋 Samenvatting</h2>
+                    
+                    <div class="summary-section" id="summaryHulpvraag" style="display: none;">
+                        <h3>❓ Hulpvraag</h3>
+                        <div id="summaryHulpvraagContent"></div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3>🎯 Overzicht Scores</h3>
+                        <div id="summaryScores"></div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3>👥 Netwerkanalyse</h3>
+                        <div id="summaryNetwork"></div>
+                    </div>
+
+                    <div class="summary-section" id="summaryWaarderingSection" style="display: none;">
+                        <h3>⭐ Tevredenheid Netwerksteun</h3>
+                        <div id="summaryWaardering"></div>
+                    </div>
+
+                    <div class="summary-section" id="summaryNotesSection" style="display: none;">
+                        <h3>📝 Notities Professional</h3>
+                        <div id="summaryNotes"></div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3>🎯 Aandachtspunten</h3>
+                        <div id="summaryPriorities"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(8)">← Terug</button>
+                        <button class="btn btn-primary" onclick="window.print()">
+                            🖨️ Afdrukken / Exporteren
+                        </button>
+                        <button class="btn btn-success" onclick="switchView('kanban')">
+                            📋 Naar Actieplan
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Screen 3: Domains -->
-        <div class="screen" id="screen-domains">
+        <!-- Kanban View -->
+        <div class="view-section" id="view-kanban">
             <div class="card">
-                <h2>📊 Jouw Levensdomeinen</h2>
-                <p>Geef voor elk domein aan hoe tevreden je bent (1 = heel slecht, 10 = uitstekend)</p>
-                
-                <div id="domainsList"></div>
+                <h2>📋 Actieplan</h2>
+                <p>Beheer de acties voor deze cliënt. Sleep kaarten tussen kolommen.</p>
 
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
-                    <button class="btn btn-primary" onclick="goToScreen(4)">Naar Netwerkkaart →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 4: Network Map -->
-        <div class="screen" id="screen-network">
-            <div class="card">
-                <h2>👥 Jouw Netwerkkaart</h2>
-                <p>Voeg personen toe die belangrijk zijn in jouw leven</p>
-
-                <div class="person-form">
-                    <h3>➕ Persoon toevoegen</h3>
+                <div class="kanban-add-form">
+                    <h3>➕ Nieuwe actie toevoegen</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="personName">Naam</label>
-                            <input type="text" id="personName" placeholder="Voornaam">
+                            <label for="actionTitle">Titel</label>
+                            <input type="text" id="actionTitle" placeholder="Korte titel van de actie">
                         </div>
                         <div class="form-group">
-                            <label for="personType">Type relatie</label>
-                            <select id="personType">
-                                <option value="familie">👨‍👩‍👧 Familie</option>
-                                <option value="vriend">🤝 Vriend(in)</option>
-                                <option value="buur">🏠 Buur</option>
-                                <option value="collega">💼 Collega</option>
-                                <option value="professional">⚕️ Professional</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="personFrequency">Contact frequentie</label>
-                            <select id="personFrequency">
-                                <option value="dagelijks">Dagelijks</option>
-                                <option value="wekelijks">Wekelijks</option>
-                                <option value="maandelijks">Maandelijks</option>
-                                <option value="minder">Minder vaak</option>
+                            <label for="actionPriority">Prioriteit</label>
+                            <select id="actionPriority">
+                                <option value="normal">📌 Normaal</option>
+                                <option value="high">🔴 Hoog</option>
+                                <option value="low">🟢 Laag</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Deze persoon helpt mij met:</label>
-                        <div class="checkbox-group" id="domainCheckboxes"></div>
+                        <label for="actionDesc">Beschrijving</label>
+                        <textarea id="actionDesc" rows="2" placeholder="Korte beschrijving van wat er moet gebeuren..."></textarea>
                     </div>
-                    <button class="btn btn-success" onclick="addPerson()">
-                        ✓ Toevoegen
+                    <button class="btn btn-success" onclick="addKanbanCard()">
+                        ✓ Toevoegen aan Te Doen
                     </button>
                 </div>
 
-                <div class="person-list" id="personList"></div>
+                <div class="kanban-board">
+                    <div class="kanban-column todo" id="kanban-todo">
+                        <div class="kanban-column-header">
+                            <span>📋 Te Doen</span>
+                            <span class="count" id="count-todo">0</span>
+                        </div>
+                        <div class="kanban-cards" id="cards-todo" 
+                            ondragover="handleDragOver(event)" 
+                            ondrop="handleDrop(event, 'todo')"></div>
+                    </div>
 
-                <div class="network-container">
-                    <canvas id="networkCanvas"></canvas>
-                </div>
+                    <div class="kanban-column doing" id="kanban-doing">
+                        <div class="kanban-column-header">
+                            <span>🔄 Bezig</span>
+                            <span class="count" id="count-doing">0</span>
+                        </div>
+                        <div class="kanban-cards" id="cards-doing"
+                            ondragover="handleDragOver(event)" 
+                            ondrop="handleDrop(event, 'doing')"></div>
+                    </div>
 
-                <div class="network-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #E53E3E;"></div>
-                        Familie
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #38A169;"></div>
-                        Vriend
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #D69E2E;"></div>
-                        Buur
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #805AD5;"></div>
-                        Collega
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #3182CE;"></div>
-                        Professional
-                    </div>
-                </div>
-
-                <div class="network-type" id="networkTypeDisplay">
-                    <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
-                    <div class="network-type-badge eenpersoons" id="networkTypeBadge">
-                        🔴 Eenpersoons netwerk
+                    <div class="kanban-column done" id="kanban-done">
+                        <div class="kanban-column-header">
+                            <span>✅ Afgerond</span>
+                            <span class="count" id="count-done">0</span>
+                        </div>
+                        <div class="kanban-cards" id="cards-done"
+                            ondragover="handleDragOver(event)" 
+                            ondrop="handleDrop(event, 'done')"></div>
                     </div>
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
-                    <button class="btn btn-primary" onclick="goToScreen(5)">Naar Waardering →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 5: Waardering Netwerksteun (NEW) -->
-        <div class="screen" id="screen-waardering">
-            <div class="card">
-                <h2>⭐ Waardering Netwerksteun</h2>
-                <p>Geef aan hoe tevreden u bent met de steun van elke persoon in uw netwerk.</p>
-                
-                <div id="ratingsList"></div>
-
-                <div class="average-rating" id="averageRatingBox" style="display: none;">
-                    <div class="label">Gemiddelde tevredenheid</div>
-                    <div class="value" id="averageRatingValue">-</div>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                    <button class="btn btn-primary" onclick="saveRatings(); goToScreen(6)">Bekijk Resultaten →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 6: Results -->
-        <div class="screen" id="screen-results">
-            <div class="card">
-                <h2>📈 Jouw Resultaten</h2>
-                
-                <div class="chart-container">
-                    <canvas id="radarChart"></canvas>
-                </div>
-
-                <div class="score-summary" id="scoreSummary"></div>
-
-                <!-- Network Type Display with Color -->
-                <div class="network-type" id="resultsNetworkType">
-                    <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
-                    <div class="network-type-badge" id="resultsNetworkTypeBadge"></div>
-                </div>
-
-                <!-- Risks Box -->
-                <div class="risk-box" id="riskBox">
-                    <h4>⚠️ Aandachtspunten bij dit netwerktype</h4>
-                    <ul id="risksList"></ul>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                    <button class="btn btn-primary" onclick="goToScreen(7)">Bekijk Persoonlijk Advies →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 7: Advies (NEW) -->
-        <div class="screen" id="screen-advies">
-            <div class="card">
-                <h2>🤖 Persoonlijk Advies</h2>
-                <p>Op basis van de SIJN-methodiek en uw resultaten</p>
-                
-                <div class="advice-box" id="adviceBox"></div>
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
-                    <button class="btn btn-primary" onclick="goToScreen(8)">Naar Samenvatting →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 8: Summary -->
-        <div class="screen" id="screen-summary">
-            <div class="card">
-                <h2>📋 Samenvatting</h2>
-                
-                <div class="summary-section" id="summaryHulpvraag" style="display: none;">
-                    <h3>❓ Hulpvraag</h3>
-                    <div id="summaryHulpvraagContent"></div>
-                </div>
-
-                <div class="summary-section">
-                    <h3>🎯 Overzicht Scores</h3>
-                    <div id="summaryScores"></div>
-                </div>
-
-                <div class="summary-section">
-                    <h3>👥 Netwerkanalyse</h3>
-                    <div id="summaryNetwork"></div>
-                </div>
-
-                <div class="summary-section" id="summaryWaarderingSection" style="display: none;">
-                    <h3>⭐ Tevredenheid Netwerksteun</h3>
-                    <div id="summaryWaardering"></div>
-                </div>
-
-                <div class="summary-section" id="summaryNotesSection" style="display: none;">
-                    <h3>📝 Notities Professional</h3>
-                    <div id="summaryNotes"></div>
-                </div>
-
-                <div class="summary-section">
-                    <h3>🎯 Aandachtspunten</h3>
-                    <div id="summaryPriorities"></div>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
-                    <button class="btn btn-primary" onclick="window.print()">
-                        🖨️ Afdrukken / Exporteren
+                    <button class="btn btn-secondary" onclick="switchView('assessment')">
+                        ← Terug naar Assessment
                     </button>
-                    <button class="btn btn-success" onclick="resetAll()">
+                    <button class="btn btn-primary" onclick="resetAll()">
                         🔄 Opnieuw beginnen
                     </button>
                 </div>
@@ -1274,7 +1761,7 @@
     </div>
 
     <script>
-        // Data - Inkomen renamed to Financiën
+        // Data - Domains
         const domains = [
             { id: 'financien', emoji: '💰', name: 'Financiën', desc: 'Financiële middelen voor basisbehoeften' },
             { id: 'dagbesteding', emoji: '💼', name: 'Dagbesteding', desc: 'Werk, opleiding, vrijwilligerswerk' },
@@ -1336,6 +1823,55 @@
             }
         };
 
+        // Organisaties database (fictief maar realistisch)
+        const organisaties = [
+            // Sociaal wijkteam
+            { id: 1, name: 'Sociaal Wijkteam Centrum', type: 'sociaal-wijkteam', typeName: 'Sociaal wijkteam', postcodes: ['10', '11', '12'], address: 'Stationsplein 25, Amsterdam', phone: '020-555 0100', website: 'www.swt-centrum.nl', icon: '🏛️', helpt: ['sociaal', 'huiselijk', 'participatie'] },
+            { id: 2, name: 'Wijkteam Noord', type: 'sociaal-wijkteam', typeName: 'Sociaal wijkteam', postcodes: ['10', '11'], address: 'Buikslotermeerplein 100, Amsterdam', phone: '020-555 0200', website: 'www.wijkteam-noord.nl', icon: '🏛️', helpt: ['sociaal', 'huiselijk', 'adl'] },
+            { id: 3, name: 'Sociaal Wijkteam Utrecht Overvecht', type: 'sociaal-wijkteam', typeName: 'Sociaal wijkteam', postcodes: ['35', '36'], address: 'Tiberdreef 8, Utrecht', phone: '030-286 0000', website: 'www.swt-overvecht.nl', icon: '🏛️', helpt: ['sociaal', 'participatie', 'dagbesteding'] },
+            { id: 4, name: 'Buurtteam Rotterdam Zuid', type: 'sociaal-wijkteam', typeName: 'Sociaal wijkteam', postcodes: ['30', '31', '32'], address: 'Zuidplein 60, Rotterdam', phone: '010-267 0000', website: 'www.buurtteam-zuid.nl', icon: '🏛️', helpt: ['sociaal', 'huiselijk', 'financien'] },
+            
+            // GGZ
+            { id: 5, name: 'GGZ Amsterdam', type: 'ggz', typeName: 'GGZ', postcodes: ['10', '11', '12', '13'], address: 'Arenaweg 7, Amsterdam', phone: '020-590 5000', website: 'www.ggz-amsterdam.nl', icon: '🧠', helpt: ['geestelijk', 'verslaving'] },
+            { id: 6, name: 'Parnassia Groep Den Haag', type: 'ggz', typeName: 'GGZ', postcodes: ['25', '26', '27'], address: 'Monsterseweg 83, Den Haag', phone: '070-391 6666', website: 'www.parnassia.nl', icon: '🧠', helpt: ['geestelijk', 'verslaving'] },
+            { id: 7, name: 'Altrecht Utrecht', type: 'ggz', typeName: 'GGZ', postcodes: ['35', '36', '37'], address: 'Lange Nieuwstraat 119, Utrecht', phone: '030-230 8500', website: 'www.altrecht.nl', icon: '🧠', helpt: ['geestelijk'] },
+            { id: 8, name: 'GGZ Breburg', type: 'ggz', typeName: 'GGZ', postcodes: ['50', '51', '52'], address: 'Lage Witsiebaan 4, Tilburg', phone: '076-523 5000', website: 'www.ggzbreburg.nl', icon: '🧠', helpt: ['geestelijk', 'verslaving'] },
+            
+            // Schuldhulp
+            { id: 9, name: 'Schuldhulpverlening Amsterdam', type: 'schuldhulp', typeName: 'Schuldhulpverlening', postcodes: ['10', '11', '12'], address: 'Weesperplein 4, Amsterdam', phone: '020-252 6000', website: 'www.schuldhulp-amsterdam.nl', icon: '💶', helpt: ['financien'] },
+            { id: 10, name: 'Kredietbank Rotterdam', type: 'schuldhulp', typeName: 'Schuldhulpverlening', postcodes: ['30', '31', '32'], address: 'Schiekade 830, Rotterdam', phone: '010-498 4000', website: 'www.kredietbank-rotterdam.nl', icon: '💶', helpt: ['financien'] },
+            { id: 11, name: 'Budget Alert Eindhoven', type: 'schuldhulp', typeName: 'Schuldhulpverlening', postcodes: ['56', '57', '58'], address: 'Stadhuisplein 10, Eindhoven', phone: '040-238 6000', website: 'www.budgetalert.nl', icon: '💶', helpt: ['financien'] },
+            { id: 12, name: 'PLANgroep Groningen', type: 'schuldhulp', typeName: 'Schuldhulpverlening', postcodes: ['97', '98', '99'], address: 'Gedempte Zuiderdiep 98, Groningen', phone: '050-367 8900', website: 'www.plangroep.nl', icon: '💶', helpt: ['financien'] },
+            
+            // Verslavingszorg
+            { id: 13, name: 'Jellinek Amsterdam', type: 'verslavingszorg', typeName: 'Verslavingszorg', postcodes: ['10', '11', '12', '13'], address: 'Overschiestraat 65, Amsterdam', phone: '020-590 1515', website: 'www.jellinek.nl', icon: '🚭', helpt: ['verslaving', 'geestelijk'] },
+            { id: 14, name: 'Brijder Verslavingszorg', type: 'verslavingszorg', typeName: 'Verslavingszorg', postcodes: ['20', '21', '22', '23'], address: 'Schipholweg 3, Haarlem', phone: '088-358 8000', website: 'www.brijder.nl', icon: '🚭', helpt: ['verslaving'] },
+            { id: 15, name: 'Novadic-Kentron', type: 'verslavingszorg', typeName: 'Verslavingszorg', postcodes: ['50', '51', '52', '53'], address: 'Hofveld 52, Vught', phone: '073-658 4600', website: 'www.novadic-kentron.nl', icon: '🚭', helpt: ['verslaving', 'geestelijk'] },
+            
+            // Maatschappelijk werk
+            { id: 16, name: 'Stichting Dock Amsterdam', type: 'maatschappelijk-werk', typeName: 'Maatschappelijk werk', postcodes: ['10', '11', '12'], address: 'De Wittenstraat 25, Amsterdam', phone: '020-555 7777', website: 'www.dock.nl', icon: '🤝', helpt: ['sociaal', 'participatie', 'adl'] },
+            { id: 17, name: 'Welzijn Capelle', type: 'maatschappelijk-werk', typeName: 'Maatschappelijk werk', postcodes: ['29', '30'], address: 'Kerklaan 2, Capelle a/d IJssel', phone: '010-458 0888', website: 'www.welzijncapelle.nl', icon: '🤝', helpt: ['sociaal', 'dagbesteding'] },
+            { id: 18, name: 'WijZijn Tilburg', type: 'maatschappelijk-werk', typeName: 'Maatschappelijk werk', postcodes: ['50', '51'], address: 'Hart van Brabantlaan 12, Tilburg', phone: '013-549 5000', website: 'www.wijzijntilburg.nl', icon: '🤝', helpt: ['sociaal', 'participatie'] },
+            { id: 19, name: 'Humanitas Noord', type: 'maatschappelijk-werk', typeName: 'Maatschappelijk werk', postcodes: ['97', '98', '99'], address: 'Hereweg 120, Groningen', phone: '050-312 6000', website: 'www.humanitas-noord.nl', icon: '🤝', helpt: ['sociaal', 'huiselijk'] },
+            
+            // Huisvesting
+            { id: 20, name: 'De Regenboog Groep', type: 'huisvesting', typeName: 'Huisvesting/opvang', postcodes: ['10', '11', '12'], address: 'Droogbak 1d, Amsterdam', phone: '020-570 9370', website: 'www.deregenboog.org', icon: '🏠', helpt: ['huisvesting', 'sociaal'] },
+            { id: 21, name: 'Leger des Heils Den Haag', type: 'huisvesting', typeName: 'Huisvesting/opvang', postcodes: ['25', '26', '27'], address: 'Loosduinsekade 222, Den Haag', phone: '070-308 5000', website: 'www.legerdesheils.nl', icon: '🏠', helpt: ['huisvesting', 'dagbesteding'] },
+            { id: 22, name: 'Stichting Exodus Utrecht', type: 'huisvesting', typeName: 'Huisvesting/opvang', postcodes: ['35', '36'], address: 'Maliebaan 72, Utrecht', phone: '030-231 8888', website: 'www.exodus.nl', icon: '🏠', helpt: ['huisvesting', 'justitie'] },
+            
+            // Dagbesteding
+            { id: 23, name: 'Cordaan Dagbesteding', type: 'dagbesteding', typeName: 'Dagbesteding', postcodes: ['10', '11', '12'], address: 'Postjesweg 1, Amsterdam', phone: '020-562 1234', website: 'www.cordaan.nl', icon: '💼', helpt: ['dagbesteding', 'sociaal'] },
+            { id: 24, name: 'Ons Tweede Thuis', type: 'dagbesteding', typeName: 'Dagbesteding', postcodes: ['11', '12', '13'], address: 'Huizerweg 38, Aalsmeer', phone: '0297-382 000', website: 'www.onstweedethuis.nl', icon: '💼', helpt: ['dagbesteding', 'adl'] },
+            { id: 25, name: 'Philadelphia Rotterdam', type: 'dagbesteding', typeName: 'Dagbesteding', postcodes: ['30', '31', '32'], address: 'Baan 74, Rotterdam', phone: '010-206 3500', website: 'www.philadelphia.nl', icon: '💼', helpt: ['dagbesteding', 'participatie'] },
+            
+            // Juridisch
+            { id: 26, name: 'Het Juridisch Loket Amsterdam', type: 'juridisch', typeName: 'Juridisch', postcodes: ['10', '11', '12'], address: 'Vijzelstraat 20, Amsterdam', phone: '0900-8020', website: 'www.juridischloket.nl', icon: '⚖️', helpt: ['justitie', 'financien'] },
+            { id: 27, name: 'Sociaal Raadslieden Rotterdam', type: 'juridisch', typeName: 'Juridisch', postcodes: ['30', '31', '32'], address: 'Coolsingel 40, Rotterdam', phone: '010-267 5555', website: 'www.rotterdam.nl/sociaalraadslieden', icon: '⚖️', helpt: ['justitie', 'huisvesting'] },
+            { id: 28, name: 'Rechtswinkel Utrecht', type: 'juridisch', typeName: 'Juridisch', postcodes: ['35', '36', '37'], address: 'Nobelstraat 2a, Utrecht', phone: '030-230 4500', website: 'www.rechtswinkelutrecht.nl', icon: '⚖️', helpt: ['justitie'] },
+            { id: 29, name: 'Bureau Slachtofferhulp', type: 'juridisch', typeName: 'Juridisch', postcodes: ['10', '11', '12', '25', '26', '30', '31', '35', '36', '50', '51', '97', '98'], address: 'Landelijk werkend', phone: '0900-0101', website: 'www.slachtofferhulp.nl', icon: '⚖️', helpt: ['justitie', 'geestelijk'] },
+            { id: 30, name: 'MEE Zuidoost Brabant', type: 'maatschappelijk-werk', typeName: 'Cliëntondersteuning', postcodes: ['56', '57', '58'], address: 'Luchthavenweg 81, Eindhoven', phone: '040-239 0900', website: 'www.meezuidoostbrabant.nl', icon: '🤝', helpt: ['adl', 'sociaal', 'dagbesteding'] }
+        ];
+
         // Risks per network type
         const networkRisks = {
             eenpersoons: [
@@ -1372,7 +1908,7 @@
         };
 
         // Screen names for navigation
-        const screenNames = ['start', 'hulpvraag', 'domains', 'network', 'waardering', 'results', 'advies', 'summary'];
+        const screenNames = ['start', 'hulpvraag', 'domains', 'network', 'waardering', 'results', 'advies', 'organisaties', 'summary'];
 
         // State
         let state = {
@@ -1388,7 +1924,10 @@
             network: [],
             ratings: {},
             ratingNotes: {},
-            currentScreen: 1
+            currentScreen: 1,
+            currentView: 'assessment',
+            kanbanCards: [],
+            gptAdviceInterventions: []
         };
 
         // Load from localStorage
@@ -1402,6 +1941,24 @@
         // Save to localStorage
         function saveState() {
             localStorage.setItem('welzijnswerker_v2', JSON.stringify(state));
+        }
+
+        // Switch view (assessment / kanban)
+        function switchView(view) {
+            state.currentView = view;
+            saveState();
+
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`view-${view}`).classList.add('active');
+
+            document.querySelectorAll('.view-tab').forEach(t => {
+                t.classList.remove('active');
+                if (t.dataset.view === view) t.classList.add('active');
+            });
+
+            if (view === 'kanban') {
+                renderKanban();
+            }
         }
 
         // Mode selection
@@ -1428,6 +1985,10 @@
                 state.professionalName = document.getElementById('professionalName').value;
             }
             saveState();
+            
+            // Show view tabs after start
+            document.getElementById('viewTabs').style.display = 'flex';
+            
             goToScreen(2);
         }
 
@@ -1465,6 +2026,11 @@
                 if (i + 1 === screenNum) step.classList.add('active');
             });
 
+            // Show view tabs after screen 1
+            if (screenNum > 1) {
+                document.getElementById('viewTabs').style.display = 'flex';
+            }
+
             // Load content for each screen
             if (screenNum === 2) loadHulpvraagData();
             if (screenNum === 3) renderDomains();
@@ -1477,7 +2043,8 @@
             if (screenNum === 5) renderRatings();
             if (screenNum === 6) renderResults();
             if (screenNum === 7) renderAdvice();
-            if (screenNum === 8) renderSummary();
+            if (screenNum === 8) renderOrganisaties();
+            if (screenNum === 9) renderSummary();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1865,6 +2432,117 @@
             document.getElementById('risksList').innerHTML = risks.map(risk => `<li>${risk}</li>`).join('');
         }
 
+        // Get lowest domains
+        function getLowestDomains(count = 3) {
+            return [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            ).slice(0, count);
+        }
+
+        // Render organisaties
+        function renderOrganisaties() {
+            const container = document.getElementById('organisatiesList');
+            const postcodePrefix = state.postcode ? state.postcode.substring(0, 2) : '';
+            
+            // Update filter info
+            const filterInfo = document.getElementById('orgFilterText');
+            if (postcodePrefix) {
+                filterInfo.textContent = `Organisaties in regio ${postcodePrefix}xx • Gemarkeerde organisaties (⭐) zijn relevant voor uw aandachtspunten`;
+            } else {
+                filterInfo.textContent = 'Voer een postcode in op de startpagina voor regio-specifieke resultaten';
+            }
+
+            // Get lowest domains for highlighting
+            const lowestDomainIds = getLowestDomains(3).map(d => d.id);
+
+            // Filter organisaties by postcode region
+            let filteredOrgs = organisaties;
+            if (postcodePrefix) {
+                filteredOrgs = organisaties.filter(org => 
+                    org.postcodes.includes(postcodePrefix)
+                );
+            }
+
+            if (filteredOrgs.length === 0) {
+                container.innerHTML = `
+                    <div class="no-orgs-message">
+                        <p>😕 Geen organisaties gevonden in uw regio (${postcodePrefix}xx).</p>
+                        <p style="margin-top: 10px;">Hieronder tonen we organisaties uit andere regio's die mogelijk kunnen helpen.</p>
+                    </div>
+                `;
+                // Show all as fallback
+                filteredOrgs = organisaties.slice(0, 10);
+            }
+
+            // Group by type
+            const typeGroups = {};
+            const typeOrder = ['sociaal-wijkteam', 'ggz', 'schuldhulp', 'verslavingszorg', 'maatschappelijk-werk', 'huisvesting', 'dagbesteding', 'juridisch'];
+            const typeIcons = {
+                'sociaal-wijkteam': '🏛️',
+                'ggz': '🧠',
+                'schuldhulp': '💶',
+                'verslavingszorg': '🚭',
+                'maatschappelijk-werk': '🤝',
+                'huisvesting': '🏠',
+                'dagbesteding': '💼',
+                'juridisch': '⚖️'
+            };
+
+            filteredOrgs.forEach(org => {
+                if (!typeGroups[org.type]) {
+                    typeGroups[org.type] = [];
+                }
+                typeGroups[org.type].push(org);
+            });
+
+            // Render by type
+            let html = '';
+            typeOrder.forEach(type => {
+                if (typeGroups[type] && typeGroups[type].length > 0) {
+                    const orgs = typeGroups[type];
+                    const typeName = orgs[0].typeName;
+                    const icon = typeIcons[type] || '🏢';
+
+                    html += `
+                        <div class="org-category">
+                            <div class="org-category-header">
+                                <span>${icon}</span>
+                                <span>${typeName}</span>
+                                <span class="count">${orgs.length}</span>
+                            </div>
+                            <div class="org-list">
+                    `;
+
+                    orgs.forEach(org => {
+                        // Check if org helps with any of the lowest domains
+                        const isRelevant = org.helpt && org.helpt.some(h => lowestDomainIds.includes(h));
+                        
+                        html += `
+                            <div class="org-item ${isRelevant ? 'highlighted' : ''}">
+                                <div class="org-icon">${org.icon}</div>
+                                <div class="org-details">
+                                    <h4>${org.name}</h4>
+                                    <div class="org-type">${org.typeName}</div>
+                                    <div class="org-address">📍 ${org.address}</div>
+                                    <div class="org-contact">
+                                        <a href="tel:${org.phone}">📞 ${org.phone}</a>
+                                        <a href="https://${org.website}" target="_blank">🌐 ${org.website}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html || '<div class="no-orgs-message">Geen organisaties beschikbaar.</div>';
+        }
+
         // OpenAI API configuration
         const OPENAI_API_KEY = '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';
 
@@ -2011,6 +2689,9 @@ Geef je antwoord in dit exacte HTML-formaat:
                     </p>
                     ${gptAdvice}
                 `;
+
+                // Extract interventions for Kanban
+                extractInterventionsFromAdvice(gptAdvice);
             } catch (error) {
                 console.error('OpenAI API error:', error);
                 // Fallback to rule-based advice
@@ -2021,6 +2702,40 @@ Geef je antwoord in dit exacte HTML-formaat:
                     </div>
                 `;
                 renderAdviceFallback();
+            }
+        }
+
+        // Extract interventions from GPT advice
+        function extractInterventionsFromAdvice(adviceHtml) {
+            // Parse the interventions section
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = adviceHtml;
+            const listItems = tempDiv.querySelectorAll('li');
+            
+            state.gptAdviceInterventions = [];
+            listItems.forEach(li => {
+                const text = li.textContent.trim();
+                if (text.length > 5) {
+                    state.gptAdviceInterventions.push({
+                        title: text.substring(0, 60) + (text.length > 60 ? '...' : ''),
+                        description: text,
+                        priority: 'normal'
+                    });
+                }
+            });
+            
+            // Pre-populate Kanban if empty
+            if (state.kanbanCards.length === 0 && state.gptAdviceInterventions.length > 0) {
+                state.gptAdviceInterventions.forEach((intervention, i) => {
+                    state.kanbanCards.push({
+                        id: Date.now() + i,
+                        title: intervention.title,
+                        description: intervention.description,
+                        priority: i < 2 ? 'high' : 'normal',
+                        column: 'todo'
+                    });
+                });
+                saveState();
             }
         }
 
@@ -2063,16 +2778,31 @@ Geef je antwoord in dit exacte HTML-formaat:
                 </div>
             `;
 
+            const interventions = getInterventions(lowestDomains, networkInfo.type);
             adviceHtml += `
                 <div class="advice-section">
                     <h4>4️⃣ Aanbevolen Interventies</h4>
                     <ul>
-                        ${getInterventions(lowestDomains, networkInfo.type).map(i => `<li>${i}</li>`).join('')}
+                        ${interventions.map(i => `<li>${i}</li>`).join('')}
                     </ul>
                 </div>
             `;
 
             document.getElementById('adviceBox').innerHTML = adviceHtml;
+
+            // Pre-populate Kanban with fallback interventions
+            if (state.kanbanCards.length === 0) {
+                interventions.forEach((intervention, i) => {
+                    state.kanbanCards.push({
+                        id: Date.now() + i,
+                        title: intervention.substring(0, 50) + (intervention.length > 50 ? '...' : ''),
+                        description: intervention,
+                        priority: i < 2 ? 'high' : 'normal',
+                        column: 'todo'
+                    });
+                });
+                saveState();
+            }
         }
 
         // Helper functions for advice
@@ -2144,6 +2874,106 @@ Geef je antwoord in dit exacte HTML-formaat:
             });
 
             return interventions.slice(0, 5);
+        }
+
+        // Kanban functions
+        function renderKanban() {
+            const columns = ['todo', 'doing', 'done'];
+            columns.forEach(col => {
+                const container = document.getElementById(`cards-${col}`);
+                const cards = state.kanbanCards.filter(c => c.column === col);
+                
+                document.getElementById(`count-${col}`).textContent = cards.length;
+
+                if (cards.length === 0) {
+                    container.innerHTML = '<div class="kanban-empty-state">Sleep kaarten hierheen</div>';
+                } else {
+                    container.innerHTML = cards.map(card => `
+                        <div class="kanban-card priority-${card.priority}" 
+                            draggable="true" 
+                            ondragstart="handleDragStart(event, ${card.id})"
+                            ondragend="handleDragEnd(event)"
+                            id="card-${card.id}">
+                            <div class="kanban-card-header">
+                                <div class="kanban-card-title">${card.title}</div>
+                                <button class="kanban-card-delete" onclick="deleteKanbanCard(${card.id})">✕</button>
+                            </div>
+                            <div class="kanban-card-desc">${card.description}</div>
+                            <span class="kanban-card-priority ${card.priority}">${getPriorityLabel(card.priority)}</span>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+
+        function getPriorityLabel(priority) {
+            const labels = { high: '🔴 Hoog', normal: '📌 Normaal', low: '🟢 Laag' };
+            return labels[priority] || labels.normal;
+        }
+
+        function addKanbanCard() {
+            const title = document.getElementById('actionTitle').value.trim();
+            if (!title) {
+                alert('Vul een titel in');
+                return;
+            }
+
+            const desc = document.getElementById('actionDesc').value.trim();
+            const priority = document.getElementById('actionPriority').value;
+
+            state.kanbanCards.push({
+                id: Date.now(),
+                title,
+                description: desc,
+                priority,
+                column: 'todo'
+            });
+
+            document.getElementById('actionTitle').value = '';
+            document.getElementById('actionDesc').value = '';
+            document.getElementById('actionPriority').value = 'normal';
+
+            saveState();
+            renderKanban();
+        }
+
+        function deleteKanbanCard(id) {
+            if (confirm('Weet u zeker dat u deze actie wilt verwijderen?')) {
+                state.kanbanCards = state.kanbanCards.filter(c => c.id !== id);
+                saveState();
+                renderKanban();
+            }
+        }
+
+        // Drag and drop
+        let draggedCardId = null;
+
+        function handleDragStart(e, cardId) {
+            draggedCardId = cardId;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedCardId = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e, column) {
+            e.preventDefault();
+            if (draggedCardId) {
+                const card = state.kanbanCards.find(c => c.id === draggedCardId);
+                if (card) {
+                    card.column = column;
+                    saveState();
+                    renderKanban();
+                }
+            }
         }
 
         // Render summary
@@ -2278,12 +3108,17 @@ Geef je antwoord in dit exacte HTML-formaat:
                     network: [],
                     ratings: {},
                     ratingNotes: {},
-                    currentScreen: 1
+                    currentScreen: 1,
+                    currentView: 'assessment',
+                    kanbanCards: [],
+                    gptAdviceInterventions: []
                 };
                 document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
                 document.getElementById('professionalFields').style.display = 'none';
                 document.getElementById('postcode').value = '';
                 document.getElementById('professionalName').value = '';
+                document.getElementById('viewTabs').style.display = 'none';
+                switchView('assessment');
                 goToScreen(1);
             }
         }
@@ -2291,7 +3126,22 @@ Geef je antwoord in dit exacte HTML-formaat:
         // Initialize
         loadState();
         if (state.currentScreen > 1) {
-            goToScreen(state.currentScreen);
+            document.getElementById('viewTabs').style.display = 'flex';
+            if (state.currentView === 'kanban') {
+                switchView('kanban');
+            } else {
+                goToScreen(state.currentScreen);
+            }
+        }
+        if (state.mode) {
+            document.querySelector(`[data-mode="${state.mode}"]`)?.classList.add('selected');
+            if (state.mode === 'professional') {
+                document.getElementById('professionalFields').style.display = 'block';
+                document.getElementById('professionalName').value = state.professionalName || '';
+            }
+        }
+        if (state.postcode) {
+            document.getElementById('postcode').value = state.postcode;
         }
     </script>
 </body>
