@@ -3,9 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welzijnswerker - SIJN Methodiek</title>
+    <title>Welzijnswerker v2.1 Medium (GPT) - SIJN Levensdomeinen</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            --primary: #4A90D9;
+            --primary-light: #E8F4FD;
+            --primary-dark: #2E6CB5;
+            --secondary: #6FCF97;
+            --warning: #F2994A;
+            --danger: #EB5757;
+            --text: #333;
+            --text-light: #666;
+            --bg: #F5FAFF;
+            --white: #fff;
+            --shadow: 0 4px 20px rgba(74, 144, 217, 0.15);
+            --radius: 16px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,1175 +28,2257 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #E3F2FD;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cdefs%3E%3Cstyle%3E.node%7Bfill:rgba(255,255,255,0.6)%7D.line%7Bstroke:rgba(255,255,255,0.4);stroke-width:1.5%7D%3C/style%3E%3C/defs%3E%3C!-- Network lines --%3E%3Cline class='line' x1='50' y1='80' x2='120' y2='150'/%3E%3Cline class='line' x1='120' y1='150' x2='200' y2='100'/%3E%3Cline class='line' x1='200' y1='100' x2='280' y2='140'/%3E%3Cline class='line' x1='280' y1='140' x2='350' y2='80'/%3E%3Cline class='line' x1='120' y1='150' x2='80' y2='250'/%3E%3Cline class='line' x1='120' y1='150' x2='200' y2='200'/%3E%3Cline class='line' x1='200' y1='200' x2='280' y2='140'/%3E%3Cline class='line' x1='200' y1='200' x2='150' y2='300'/%3E%3Cline class='line' x1='200' y1='200' x2='280' y2='280'/%3E%3Cline class='line' x1='280' y1='280' x2='350' y2='250'/%3E%3Cline class='line' x1='80' y1='250' x2='150' y2='300'/%3E%3Cline class='line' x1='150' y1='300' x2='280' y2='280'/%3E%3Cline class='line' x1='50' y1='350' x2='150' y2='300'/%3E%3Cline class='line' x1='280' y1='280' x2='350' y2='350'/%3E%3Cline class='line' x1='350' y1='80' x2='350' y2='250'/%3E%3Cline class='line' x1='50' y1='80' x2='50' y2='350'/%3E%3C!-- Network nodes (people) --%3E%3Ccircle class='node' cx='50' cy='80' r='12'/%3E%3Ccircle class='node' cx='120' cy='150' r='14'/%3E%3Ccircle class='node' cx='200' cy='100' r='10'/%3E%3Ccircle class='node' cx='280' cy='140' r='12'/%3E%3Ccircle class='node' cx='350' cy='80' r='11'/%3E%3Ccircle class='node' cx='80' cy='250' r='13'/%3E%3Ccircle class='node' cx='200' cy='200' r='16'/%3E%3Ccircle class='node' cx='150' cy='300' r='12'/%3E%3Ccircle class='node' cx='280' cy='280' r='14'/%3E%3Ccircle class='node' cx='350' cy='250' r='10'/%3E%3Ccircle class='node' cx='50' cy='350' r='11'/%3E%3Ccircle class='node' cx='350' cy='350' r='13'/%3E%3C/svg%3E");
-            background-repeat: repeat;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Network background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(74, 144, 217, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(111, 207, 151, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(74, 144, 217, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
+            padding: 20px;
         }
 
+        /* Header */
         header {
             text-align: center;
-            color: #1565C0;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 0 0 30px 30px;
             margin-bottom: 30px;
+            box-shadow: var(--shadow);
         }
 
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 5px;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-        }
-
-        header .subtitle {
-            font-size: 1.3rem;
-            color: #1976D2;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         header p {
+            opacity: 0.9;
             font-size: 1rem;
-            color: #1976D2;
         }
 
-        .emoji-header {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .card {
-            background: white;
+        .version-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(21, 101, 192, 0.15);
-            margin-bottom: 30px;
+            font-size: 0.75rem;
+            margin-left: 10px;
         }
 
-        /* Progress Stepper */
-        .stepper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 5px;
+        /* Progress bar - 8 steps compact */
+        .progress-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 15px 10px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
         }
 
-        .step {
+        .progress-steps {
             display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: #e0e0e0;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 10px 15px;
-            background: rgba(21, 101, 192, 0.2);
-            border-radius: 25px;
-            color: #1565C0;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            flex: 1;
         }
 
-        .step.active {
-            background: #1565C0;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .step.completed {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .step-number {
-            width: 24px;
-            height: 24px;
+        .step-circle {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.3);
+            background: #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            transition: all 0.3s;
         }
 
-        .step.active .step-number {
-            background: white;
-            color: #1565C0;
+        .progress-step.active .step-circle,
+        .progress-step.completed .step-circle {
+            background: var(--primary);
+            color: white;
         }
 
-        .step.completed .step-number {
-            background: white;
-            color: #4CAF50;
+        .progress-step.completed .step-circle {
+            background: var(--secondary);
         }
 
-        /* Section hiding */
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Postcode Section */
-        .postcode-section {
+        .step-label {
+            font-size: 0.65rem;
+            margin-top: 5px;
+            color: var(--text-light);
             text-align: center;
+            max-width: 60px;
         }
 
-        .postcode-section h2 {
-            color: #333;
-            margin-bottom: 15px;
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
         }
 
-        .postcode-section p {
-            color: #666;
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
             margin-bottom: 20px;
         }
 
-        .postcode-input-group {
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
             display: flex;
-            justify-content: center;
+            align-items: center;
             gap: 10px;
-            flex-wrap: wrap;
         }
 
-        .postcode-input {
-            padding: 15px 20px;
-            font-size: 1.3rem;
-            border: 3px solid #1976D2;
-            border-radius: 15px;
-            width: 150px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .postcode-input:focus {
-            outline: none;
-            border-color: #0D47A1;
-            box-shadow: 0 0 15px rgba(21, 101, 192, 0.3);
-        }
-
-        .start-btn, .next-btn, .calculate-btn {
-            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .start-btn:hover, .next-btn:hover, .calculate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(21, 101, 192, 0.4);
-        }
-
-        .start-btn:disabled, .next-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .region-display {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: #E3F2FD;
-            border-radius: 10px;
-            color: #1565C0;
-            font-weight: 600;
+        /* Screen management */
+        .screen {
             display: none;
         }
 
-        /* Domain Assessment */
-        .domain-grid {
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #d4e9f9;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary) 0%, #4CAF50 100%);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* Mode selection cards */
+        .mode-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            margin: 30px 0;
         }
 
+        .mode-card {
+            background: var(--white);
+            border: 3px solid transparent;
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .mode-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .mode-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .mode-card h3 {
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+
+        .mode-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Domain scoring */
         .domain-card {
-            background: #f8f9ff;
-            border-radius: 15px;
+            background: var(--white);
+            border-radius: var(--radius);
             padding: 20px;
-            border-left: 4px solid #1976D2;
-            transition: all 0.2s ease;
-        }
-
-        .domain-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
         }
 
         .domain-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .domain-emoji {
-            font-size: 1.8rem;
-        }
-
-        .domain-title {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .domain-description {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .score-buttons {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .score-btn {
-            width: 36px;
-            height: 36px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }
-
-        .score-btn:hover {
-            border-color: #1976D2;
-            background: #E3F2FD;
-        }
-
-        .score-btn.selected {
-            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
-            color: white;
-            border-color: #1565C0;
-        }
-
-        .score-btn.score-1, .score-btn.score-2 { border-left: 3px solid #FF6B6B; }
-        .score-btn.score-3, .score-btn.score-4 { border-left: 3px solid #FFA726; }
-        .score-btn.score-5, .score-btn.score-6 { border-left: 3px solid #FFEE58; }
-        .score-btn.score-7, .score-btn.score-8 { border-left: 3px solid #66BB6A; }
-        .score-btn.score-9, .score-btn.score-10 { border-left: 3px solid #26A69A; }
-
-        /* Score Legend */
-        .score-legend {
-            display: flex;
-            justify-content: center;
             gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .domain-icon {
+            font-size: 2rem;
+        }
+
+        .domain-info h3 {
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .domain-info p {
             font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .domain-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .domain-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, var(--danger), var(--warning), var(--secondary));
+            outline: none;
+        }
+
+        .domain-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .domain-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .professional-note {
+            margin-top: 10px;
+        }
+
+        .professional-note textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .professional-note textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Network map */
+        .network-container {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 400px;
+        }
+
+        #networkCanvas {
+            width: 100%;
+            height: 400px;
+        }
+
+        .network-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-size: 0.85rem;
         }
 
         .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
         }
 
-        /* Results Section */
-        .results-section {
-            text-align: center;
-        }
-
-        .results-title {
-            font-size: 1.5rem;
-            color: #333;
+        /* Person form */
+        .person-form {
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            padding: 20px;
             margin-bottom: 20px;
         }
 
-        .chart-container {
-            position: relative;
-            max-width: 600px;
-            margin: 0 auto;
+        .person-form h3 {
+            margin-bottom: 15px;
+            color: var(--primary-dark);
         }
 
-        .overall-score {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #1565C0;
-            margin: 20px 0 10px;
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        .score-message {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        /* All Domains Section */
-        .all-domains-section {
-            margin-top: 30px;
-            text-align: left;
-        }
-
-        .all-domains-title {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .voorzieningen-legend {
+        .checkbox-group {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        .voorzieningen-legend span {
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--white);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: var(--primary-light);
+        }
+
+        .checkbox-item input {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Person list */
+        .person-list {
+            display: grid;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .person-item {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .person-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .person-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .person-details h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .person-details p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .person-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .person-delete:hover {
+            background: rgba(235, 87, 87, 0.1);
+        }
+
+        /* Network type indicator */
+        .network-type {
+            text-align: center;
+            padding: 20px;
+            background: var(--white);
+            border-radius: var(--radius);
+            margin: 20px 0;
+        }
+
+        .network-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .network-type-badge.eenpersoons { background: #FDEAEA; color: #C53030; }
+        .network-type-badge.informeel { background: #FEF3E2; color: #C05621; }
+        .network-type-badge.gemengd { background: #FEFCE8; color: #A16207; }
+        .network-type-badge.formeel { background: #E8F4FD; color: #2B6CB0; }
+
+        /* Risk box */
+        .risk-box {
+            background: #FFF5F5;
+            border: 2px solid #FC8181;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .risk-box h4 {
+            color: #C53030;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        /* Domain Result Cards */
-        .domain-result-card {
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #1976D2;
-            transition: all 0.3s ease;
+        .risk-box ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .domain-result-card.low-score {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-            border-left: 4px solid #e53935;
-            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.15);
+        .risk-box li {
+            padding: 8px 0;
+            border-bottom: 1px solid #FED7D7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .domain-result-card.medium-score {
-            background: linear-gradient(135deg, #fffbf0 0%, #fff3e0 100%);
-            border-left: 4px solid #FB8C00;
+        .risk-box li:last-child {
+            border-bottom: none;
         }
 
-        .domain-result-card.high-score {
-            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
-            border-left: 4px solid #43A047;
-            opacity: 0.85;
+        .risk-box li::before {
+            content: '⚠️';
         }
 
-        .domain-result-header {
+        /* Advice box */
+        .advice-box {
+            background: linear-gradient(135deg, #E8F4FD 0%, #EDF2FF 100%);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .advice-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
         }
 
-        .domain-result-header h4 {
-            color: #333;
-            font-size: 1.1rem;
-            flex-grow: 1;
-        }
-
-        .domain-score-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .domain-score-badge.low {
-            background: #FFCDD2;
-            color: #C62828;
-        }
-
-        .domain-score-badge.medium {
-            background: #FFE0B2;
-            color: #E65100;
-        }
-
-        .domain-score-badge.high {
-            background: #C8E6C9;
-            color: #2E7D32;
-        }
-
-        .domain-result-tip {
-            color: #555;
+        .advice-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
             margin-bottom: 15px;
-            line-height: 1.5;
+        }
+
+        .advice-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .advice-section h4 {
+            color: var(--primary);
             font-size: 0.95rem;
-        }
-
-        .voorzieningen {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .voorziening-link {
-            position: relative;
-            display: inline-block;
-        }
-
-        .voorziening-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .voorziening-btn.collectief {
-            background: #E8F5E9;
-            color: #2E7D32;
-            border: 2px solid #A5D6A7;
-        }
-
-        .voorziening-btn.collectief:hover {
-            background: #C8E6C9;
-            transform: translateY(-2px);
-        }
-
-        .voorziening-btn.professioneel {
-            background: #E3F2FD;
-            color: #1565C0;
-            border: 2px solid #90CAF9;
-        }
-
-        .voorziening-btn.professioneel:hover {
-            background: #BBDEFB;
-            transform: translateY(-2px);
-        }
-
-        /* Tooltip */
-        .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            width: 250px;
-            text-align: left;
-            z-index: 100;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            margin-bottom: 10px;
-        }
-
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 8px solid transparent;
-            border-top-color: #333;
-        }
-
-        .tooltip-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #FFD93D;
-        }
-
-        .tooltip-type {
-            font-size: 0.75rem;
-            opacity: 0.8;
-            margin-bottom: 8px;
-        }
-
-        .tooltip-desc {
-            line-height: 1.4;
-        }
-
-        .voorziening-link:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .reset-btn {
-            background: #f0f0f0;
-            color: #666;
-            border: none;
-            padding: 10px 25px;
-            font-size: 1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.2s ease;
-        }
-
-        .reset-btn:hover {
-            background: #e0e0e0;
-        }
-
-        .back-btn {
-            background: transparent;
-            color: #1565C0;
-            border: 2px solid #1565C0;
-            padding: 10px 25px;
-            font-size: 1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .back-btn:hover {
-            background: #E3F2FD;
-        }
-
-        /* Info Box */
-        .info-box {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-left: 4px solid #4CAF50;
-        }
-
-        .info-box h3 {
-            color: #2E7D32;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .info-box p {
-            color: #555;
-            line-height: 1.6;
+        .advice-section p, .advice-section ul {
+            font-size: 0.9rem;
+            color: var(--text);
         }
 
-        .info-box ul {
-            margin-top: 10px;
+        .advice-section ul {
             padding-left: 20px;
-            color: #555;
         }
 
-        .info-box li {
+        .advice-section li {
             margin-bottom: 5px;
         }
 
-        /* Button group */
-        .button-group {
+        /* Rating card for network satisfaction */
+        .rating-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .rating-card .person-header {
             display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .rating-card .person-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
             justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .rating-card .rating-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .rating-card .rating-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, var(--danger), var(--warning), var(--secondary));
+            outline: none;
+        }
+
+        .rating-card .rating-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .rating-card .rating-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .rating-card textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            min-height: 50px;
+            resize: vertical;
+            margin-top: 10px;
+        }
+
+        .average-rating {
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .average-rating .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .average-rating .label {
+            color: var(--text-light);
+        }
+
+        /* Results */
+        .chart-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .score-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background: var(--primary-light);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-item .emoji {
+            font-size: 1.5rem;
+        }
+
+        .score-item .label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .score-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Voorzieningen */
+        .voorziening-section {
+            margin-bottom: 25px;
+        }
+
+        .voorziening-header {
+            display: flex;
+            align-items: center;
             gap: 10px;
-            margin-top: 25px;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .voorziening-header .score {
+            margin-left: auto;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .voorziening-content {
+            background: var(--white);
+            border: 2px solid var(--primary-light);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 15px;
+        }
+
+        .voorziening-category {
+            margin-bottom: 15px;
+        }
+
+        .voorziening-category h4 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .voorziening-list {
+            display: flex;
             flex-wrap: wrap;
+            gap: 8px;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .voorziening-item {
+            background: var(--primary-light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease;
+        /* Summary */
+        .summary-section {
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-section:last-child {
+            border-bottom: none;
+        }
+
+        .notes-list {
+            background: #FFFBEB;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .note-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #FEF3C7;
+        }
+
+        .note-item:last-child {
+            border-bottom: none;
+        }
+
+        .note-item strong {
+            color: var(--primary-dark);
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            body::before {
+                display: none;
+            }
+
+            header {
+                background: var(--primary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .btn, .progress-container, .person-form {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            .screen {
+                display: block !important;
+            }
+
+            #screen-start, #screen-hulpvraag, #screen-domains, #screen-network, #screen-waardering {
+                display: none !important;
+            }
         }
 
         /* Responsive */
         @media (max-width: 600px) {
             header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .step {
-                padding: 8px 12px;
-                font-size: 0.8rem;
+                font-size: 1.4rem;
             }
 
-            .domain-grid {
+            .card {
+                padding: 20px;
+            }
+
+            .mode-cards {
                 grid-template-columns: 1fr;
             }
 
-            .tooltip {
-                width: 200px;
-                font-size: 0.8rem;
+            .step-label {
+                display: none;
+            }
+
+            .domain-slider-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>
+            🌐 Welzijnswerker
+            <span class="version-badge">v2.1 Medium</span>
+        </h1>
+        <p>SIJN Levensdomeinen & Netwerkanalyse</p>
+    </header>
+
     <div class="container">
-        <header>
-            <div class="emoji-header">🌈✨🌻</div>
-            <h1>Welzijnswerker</h1>
-            <div class="subtitle">Powered by SIJN Methodiek</div>
-            <p>Sterk In Je Netwerk - 9 levensdomeinen in kaart</p>
-        </header>
-
-        <!-- Progress Stepper -->
-        <div class="stepper">
-            <div class="step active" id="step-1">
-                <span class="step-number">1</span>
-                <span>Start</span>
-            </div>
-            <div class="step" id="step-2">
-                <span class="step-number">2</span>
-                <span>Domeinkaart</span>
-            </div>
-            <div class="step" id="step-3">
-                <span class="step-number">3</span>
-                <span>Resultaten</span>
-            </div>
-            <div class="step" id="step-4">
-                <span class="step-number">4</span>
-                <span>Voorzieningen</span>
+        <!-- Progress Bar - 8 Steps -->
+        <div class="progress-container" id="progressBar">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-circle">🏠</div>
+                    <span class="step-label">Start</span>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">❓</div>
+                    <span class="step-label">Hulpvraag</span>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">📊</div>
+                    <span class="step-label">Domeinen</span>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-circle">👥</div>
+                    <span class="step-label">Netwerk</span>
+                </div>
+                <div class="progress-step" data-step="5">
+                    <div class="step-circle">⭐</div>
+                    <span class="step-label">Waardering</span>
+                </div>
+                <div class="progress-step" data-step="6">
+                    <div class="step-circle">📈</div>
+                    <span class="step-label">Resultaten</span>
+                </div>
+                <div class="progress-step" data-step="7">
+                    <div class="step-circle">🤖</div>
+                    <span class="step-label">Advies</span>
+                </div>
+                <div class="progress-step" data-step="8">
+                    <div class="step-circle">📋</div>
+                    <span class="step-label">Overzicht</span>
+                </div>
             </div>
         </div>
 
-        <!-- Step 1: Postcode -->
-        <div id="section-1" class="section active">
-            <div class="card postcode-section">
-                <h2>📍 Welkom bij de Welzijnswerker</h2>
-                
-                <div class="info-box">
-                    <h3>🎯 Wat is de SIJN Methodiek?</h3>
-                    <p><strong>Sterk In Je Netwerk (SIJN)</strong> helpt je om je welzijn in kaart te brengen aan de hand van 9 levensdomeinen. Deze methodiek is ontwikkeld voor de GGZ, ouderenzorg en welzijnssector.</p>
-                    <ul>
-                        <li><strong>Stap 1:</strong> Vul je postcode in voor regionale voorzieningen</li>
-                        <li><strong>Stap 2:</strong> Beoordeel je 11 levensdomeinen (Domeinkaart)</li>
-                        <li><strong>Stap 3:</strong> Bekijk je resultaten en aandachtspunten</li>
-                        <li><strong>Stap 4:</strong> Ontdek passende voorzieningen in jouw regio</li>
-                    </ul>
-                </div>
-
-                <p>Vul je postcode in zodat we je kunnen koppelen aan voorzieningen in jouw regio</p>
-                
-                <div class="postcode-input-group">
-                    <input type="text" id="postcode-input" class="postcode-input" placeholder="1234 AB" maxlength="7" oninput="validatePostcode()">
-                    <button id="start-btn" class="start-btn" onclick="goToStep(2)" disabled>
-                        🚀 Start
-                    </button>
-                </div>
-                
-                <div id="region-display" class="region-display"></div>
-            </div>
-        </div>
-
-        <!-- Step 2: Domain Assessment -->
-        <div id="section-2" class="section">
+        <!-- Screen 1: Start -->
+        <div class="screen active" id="screen-start">
             <div class="card">
-                <h2 style="text-align: center; margin-bottom: 15px; color: #333;">
-                    📊 Jouw Domeinkaart
-                </h2>
-                <p style="text-align: center; color: #666; margin-bottom: 20px;">
-                    Geef elk levensdomein een score van 1 (zeer slecht) tot 10 (uitstekend)
-                </p>
-
-                <div class="score-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #FF6B6B;"></div>
-                        <span>1-2 Acuut</span>
+                <h2>👋 Welkom!</h2>
+                <p>Dit hulpmiddel helpt je om inzicht te krijgen in je welzijn op verschillende levensdomeinen en je sociale netwerk in kaart te brengen.</p>
+                
+                <h3 style="margin-top: 25px; margin-bottom: 15px;">Hoe wil je dit invullen?</h3>
+                <div class="mode-cards">
+                    <div class="mode-card" data-mode="self" onclick="selectMode('self')">
+                        <div class="icon">🙋</div>
+                        <h3>Zelf invullen</h3>
+                        <p>Ik vul dit zelfstandig in op mijn eigen tempo</p>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #FFA726;"></div>
-                        <span>3-4 Niet zelfredzaam</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #FFEE58;"></div>
-                        <span>5-6 Beperkt zelfredzaam</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #66BB6A;"></div>
-                        <span>7-8 Voldoende zelfredzaam</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #26A69A;"></div>
-                        <span>9-10 Volledig zelfredzaam</span>
+                    <div class="mode-card" data-mode="professional" onclick="selectMode('professional')">
+                        <div class="icon">👥</div>
+                        <h3>Met een professional</h3>
+                        <p>Samen met een hulpverlener of coach</p>
                     </div>
                 </div>
 
-                <div class="domain-grid" id="domain-grid">
-                    <!-- Domains will be generated by JS -->
+                <div id="professionalFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="professionalName">Naam professional</label>
+                        <input type="text" id="professionalName" placeholder="Bijv. Maria, maatschappelijk werker">
+                    </div>
                 </div>
 
-                <div class="button-group">
-                    <button class="back-btn" onclick="goToStep(1)">← Terug</button>
-                    <button class="next-btn" onclick="showResults()" id="results-btn" disabled>
-                        Bekijk Resultaten →
+                <div class="form-group">
+                    <label for="postcode">Postcode (voor lokale tips)</label>
+                    <input type="text" id="postcode" placeholder="1234 AB" maxlength="7">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="startAssessment()">
+                        Aan de slag →
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Step 3 & 4: Results -->
-        <div id="section-3" class="section">
-            <div class="card results-section">
-                <h2 class="results-title">🎉 Jouw Welzijnsoverzicht</h2>
+        <!-- Screen 2: Hulpvraag (NEW) -->
+        <div class="screen" id="screen-hulpvraag">
+            <div class="card">
+                <h2>❓ Hulpvraag</h2>
+                <p>Vertel ons iets over uzelf en uw situatie. Deze informatie helpt ons om een beter beeld te krijgen.</p>
                 
-                <div class="overall-score" id="overall-score">7.5</div>
-                <div class="score-message" id="score-message">Je doet het goed!</div>
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label for="clientName">Naam (optioneel)</label>
+                        <input type="text" id="clientName" placeholder="Uw voornaam">
+                    </div>
+                    <div class="form-group">
+                        <label for="clientBirthdate">Geboortedatum (optioneel)</label>
+                        <input type="date" id="clientBirthdate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="hulpvraag">Wat is de reden dat u hulp zoekt?</label>
+                    <textarea id="hulpvraag" rows="4" placeholder="Beschrijf hier uw situatie en waarom u contact heeft gezocht..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="wens">Wat zou u het liefst willen bereiken?</label>
+                    <textarea id="wens" rows="3" placeholder="Beschrijf uw ideale situatie of belangrijkste wens..."></textarea>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
+                    <button class="btn btn-primary" onclick="saveHulpvraag(); goToScreen(3)">Naar Domeinkaart →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Domains -->
+        <div class="screen" id="screen-domains">
+            <div class="card">
+                <h2>📊 Jouw Levensdomeinen</h2>
+                <p>Geef voor elk domein aan hoe tevreden je bent (1 = heel slecht, 10 = uitstekend)</p>
+                
+                <div id="domainsList"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
+                    <button class="btn btn-primary" onclick="goToScreen(4)">Naar Netwerkkaart →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Network Map -->
+        <div class="screen" id="screen-network">
+            <div class="card">
+                <h2>👥 Jouw Netwerkkaart</h2>
+                <p>Voeg personen toe die belangrijk zijn in jouw leven</p>
+
+                <div class="person-form">
+                    <h3>➕ Persoon toevoegen</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="personName">Naam</label>
+                            <input type="text" id="personName" placeholder="Voornaam">
+                        </div>
+                        <div class="form-group">
+                            <label for="personType">Type relatie</label>
+                            <select id="personType">
+                                <option value="familie">👨‍👩‍👧 Familie</option>
+                                <option value="vriend">🤝 Vriend(in)</option>
+                                <option value="buur">🏠 Buur</option>
+                                <option value="collega">💼 Collega</option>
+                                <option value="professional">⚕️ Professional</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="personFrequency">Contact frequentie</label>
+                            <select id="personFrequency">
+                                <option value="dagelijks">Dagelijks</option>
+                                <option value="wekelijks">Wekelijks</option>
+                                <option value="maandelijks">Maandelijks</option>
+                                <option value="minder">Minder vaak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Deze persoon helpt mij met:</label>
+                        <div class="checkbox-group" id="domainCheckboxes"></div>
+                    </div>
+                    <button class="btn btn-success" onclick="addPerson()">
+                        ✓ Toevoegen
+                    </button>
+                </div>
+
+                <div class="person-list" id="personList"></div>
+
+                <div class="network-container">
+                    <canvas id="networkCanvas"></canvas>
+                </div>
+
+                <div class="network-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #E53E3E;"></div>
+                        Familie
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #38A169;"></div>
+                        Vriend
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #D69E2E;"></div>
+                        Buur
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #805AD5;"></div>
+                        Collega
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #3182CE;"></div>
+                        Professional
+                    </div>
+                </div>
+
+                <div class="network-type" id="networkTypeDisplay">
+                    <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
+                    <div class="network-type-badge eenpersoons" id="networkTypeBadge">
+                        🔴 Eenpersoons netwerk
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
+                    <button class="btn btn-primary" onclick="goToScreen(5)">Naar Waardering →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Waardering Netwerksteun (NEW) -->
+        <div class="screen" id="screen-waardering">
+            <div class="card">
+                <h2>⭐ Waardering Netwerksteun</h2>
+                <p>Geef aan hoe tevreden u bent met de steun van elke persoon in uw netwerk.</p>
+                
+                <div id="ratingsList"></div>
+
+                <div class="average-rating" id="averageRatingBox" style="display: none;">
+                    <div class="label">Gemiddelde tevredenheid</div>
+                    <div class="value" id="averageRatingValue">-</div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
+                    <button class="btn btn-primary" onclick="saveRatings(); goToScreen(6)">Bekijk Resultaten →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 6: Results -->
+        <div class="screen" id="screen-results">
+            <div class="card">
+                <h2>📈 Jouw Resultaten</h2>
                 
                 <div class="chart-container">
-                    <canvas id="welzijnsChart"></canvas>
+                    <canvas id="radarChart"></canvas>
                 </div>
 
-                <!-- All Domains Section - Sorted by score -->
-                <div id="all-domains-section" class="all-domains-section">
-                    <h3 class="all-domains-title">📋 Alle domeinen & voorzieningen</h3>
-                    
-                    <div class="voorzieningen-legend">
-                        <span><div class="legend-dot" style="background: #4CAF50; width: 12px; height: 12px; border-radius: 50%;"></div> Collectief (buurt/vrijwilligers)</span>
-                        <span><div class="legend-dot" style="background: #2196F3; width: 12px; height: 12px; border-radius: 50%;"></div> Professioneel</span>
-                    </div>
+                <div class="score-summary" id="scoreSummary"></div>
 
-                    <div id="all-domains-container"></div>
+                <!-- Network Type Display with Color -->
+                <div class="network-type" id="resultsNetworkType">
+                    <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
+                    <div class="network-type-badge" id="resultsNetworkTypeBadge"></div>
                 </div>
 
-                <div class="button-group">
-                    <button class="back-btn" onclick="goToStep(2)">← Terug naar Domeinkaart</button>
-                    <button class="reset-btn" onclick="resetAll()">🔄 Opnieuw beginnen</button>
+                <!-- Risks Box -->
+                <div class="risk-box" id="riskBox">
+                    <h4>⚠️ Aandachtspunten bij dit netwerktype</h4>
+                    <ul id="risksList"></ul>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
+                    <button class="btn btn-primary" onclick="goToScreen(7)">Bekijk Persoonlijk Advies →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 7: Advies (NEW) -->
+        <div class="screen" id="screen-advies">
+            <div class="card">
+                <h2>🤖 Persoonlijk Advies</h2>
+                <p>Op basis van de SIJN-methodiek en uw resultaten</p>
+                
+                <div class="advice-box" id="adviceBox"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
+                    <button class="btn btn-primary" onclick="goToScreen(8)">Naar Samenvatting →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 8: Summary -->
+        <div class="screen" id="screen-summary">
+            <div class="card">
+                <h2>📋 Samenvatting</h2>
+                
+                <div class="summary-section" id="summaryHulpvraag" style="display: none;">
+                    <h3>❓ Hulpvraag</h3>
+                    <div id="summaryHulpvraagContent"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h3>🎯 Overzicht Scores</h3>
+                    <div id="summaryScores"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h3>👥 Netwerkanalyse</h3>
+                    <div id="summaryNetwork"></div>
+                </div>
+
+                <div class="summary-section" id="summaryWaarderingSection" style="display: none;">
+                    <h3>⭐ Tevredenheid Netwerksteun</h3>
+                    <div id="summaryWaardering"></div>
+                </div>
+
+                <div class="summary-section" id="summaryNotesSection" style="display: none;">
+                    <h3>📝 Notities Professional</h3>
+                    <div id="summaryNotes"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h3>🎯 Aandachtspunten</h3>
+                    <div id="summaryPriorities"></div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                    <button class="btn btn-primary" onclick="window.print()">
+                        🖨️ Afdrukken / Exporteren
+                    </button>
+                    <button class="btn btn-success" onclick="resetAll()">
+                        🔄 Opnieuw beginnen
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // State
-        let chart = null;
-        let userPostcode = '';
-        let userRegion = '';
-        let currentStep = 1;
-        const scores = {};
-        
-        // 9 SIJN Levensdomeinen
+        // Data - Inkomen renamed to Financiën
         const domains = [
-            { id: 'inkomen', emoji: '💰', name: 'Inkomen', desc: 'Heb je voldoende financiële middelen om in je basisbehoeften te voorzien?', color: '#FF6384' },
-            { id: 'dagbesteding', emoji: '💼', name: 'Dagbesteding', desc: 'Heb je zinvolle activiteiten overdag (werk, opleiding, vrijwilligerswerk)?', color: '#36A2EB' },
-            { id: 'huisvesting', emoji: '🏠', name: 'Huisvesting', desc: 'Woon je prettig, veilig en passend bij je situatie?', color: '#FFCE56' },
-            { id: 'huiselijke_relaties', emoji: '👨‍👩‍👧', name: 'Huiselijke relaties', desc: 'Hoe is de sfeer en zijn de relaties binnen je huishouden?', color: '#4BC0C0' },
-            { id: 'geestelijke_gezondheid', emoji: '🧠', name: 'Geestelijke gezondheid', desc: 'Hoe voel je je mentaal? Kun je omgaan met stress en emoties?', color: '#9966FF' },
-            { id: 'lichamelijke_gezondheid', emoji: '💪', name: 'Lichamelijke gezondheid', desc: 'Hoe is je fysieke gezondheid en conditie?', color: '#FF9F40' },
-            { id: 'adl', emoji: '🛁', name: 'ADL-vaardigheden', desc: 'Kun je dagelijkse activiteiten zelfstandig uitvoeren (wassen, koken, schoonmaken)?', color: '#26A69A' },
-            { id: 'sociaal_netwerk', emoji: '👥', name: 'Sociaal netwerk', desc: 'Heb je mensen om je heen die je steunen en met wie je contact hebt?', color: '#AB47BC' },
-            { id: 'participatie', emoji: '🤝', name: 'Maatschappelijke participatie', desc: 'Neem je deel aan de samenleving (verenigingen, buurt, vrijwilligerswerk)?', color: '#5C6BC0' }
+            { id: 'financien', emoji: '💰', name: 'Financiën', desc: 'Financiële middelen voor basisbehoeften' },
+            { id: 'dagbesteding', emoji: '💼', name: 'Dagbesteding', desc: 'Werk, opleiding, vrijwilligerswerk' },
+            { id: 'huisvesting', emoji: '🏠', name: 'Huisvesting', desc: 'Wonen, veiligheid' },
+            { id: 'huiselijk', emoji: '👨‍👩‍👧', name: 'Huiselijke relaties', desc: 'Sfeer en relaties thuis' },
+            { id: 'geestelijk', emoji: '🧠', name: 'Geestelijke gezondheid', desc: 'Mentaal welzijn, stress' },
+            { id: 'lichamelijk', emoji: '💪', name: 'Lichamelijke gezondheid', desc: 'Fysieke conditie' },
+            { id: 'verslaving', emoji: '🚭', name: 'Verslaving', desc: 'Middelen, gokken, gaming' },
+            { id: 'adl', emoji: '🛁', name: 'ADL-vaardigheden', desc: 'Dagelijkse activiteiten (wassen, koken, schoonmaken)' },
+            { id: 'sociaal', emoji: '👥', name: 'Sociaal netwerk', desc: 'Steun en contacten' },
+            { id: 'participatie', emoji: '🤝', name: 'Maatschappelijke participatie', desc: 'Meedoen in samenleving' },
+            { id: 'justitie', emoji: '⚖️', name: 'Justitie', desc: 'Juridische problemen' }
         ];
 
-        // Region mapping
-        const regionMapping = {
-            '10': 'Amsterdam', '11': 'Amsterdam', '12': 'Haarlem', '13': 'Haarlem',
-            '14': 'Alkmaar', '15': 'Alkmaar', '16': 'Hoorn', '17': 'Hoorn',
-            '18': 'Den Helder', '19': 'Texel',
-            '20': 'Den Haag', '21': 'Den Haag', '22': 'Den Haag', '23': 'Leiden',
-            '24': 'Leiden', '25': 'Delft', '26': 'Delft', '27': 'Gouda',
-            '28': 'Gouda', '29': 'Rotterdam',
-            '30': 'Rotterdam', '31': 'Rotterdam', '32': 'Rotterdam', '33': 'Dordrecht',
-            '34': 'Utrecht', '35': 'Utrecht', '36': 'Utrecht', '37': 'Amersfoort',
-            '38': 'Amersfoort', '39': 'Hilversum',
-            '40': 'Eindhoven', '41': 'Eindhoven', '42': 'Eindhoven', '43': 'Maastricht',
-            '44': 'Maastricht', '45': 'Heerlen', '46': 'Roermond', '47': 'Venlo',
-            '48': 'Breda', '49': 'Breda',
-            '50': 'Tilburg', '51': 'Tilburg', '52': 'Den Bosch', '53': 'Den Bosch',
-            '54': 'Helmond', '55': 'Oss', '56': 'Bergen op Zoom', '57': 'Roosendaal',
-            '58': 'Breda', '59': 'Oosterhout',
-            '60': 'Arnhem', '61': 'Arnhem', '62': 'Arnhem', '63': 'Nijmegen',
-            '64': 'Nijmegen', '65': 'Ede', '66': 'Apeldoorn', '67': 'Apeldoorn',
-            '68': 'Doetinchem', '69': 'Zevenaar',
-            '70': 'Enschede', '71': 'Enschede', '72': 'Almelo', '73': 'Hengelo',
-            '74': 'Deventer', '75': 'Zwolle', '76': 'Zwolle', '77': 'Hardenberg',
-            '78': 'Kampen', '79': 'Meppel',
-            '80': 'Zwolle', '81': 'Zwolle', '82': 'Lelystad', '83': 'Emmeloord',
-            '84': 'Dronten', '85': 'Almere', '86': 'Almere',
-            '87': 'Leeuwarden', '88': 'Leeuwarden', '89': 'Heerenveen',
-            '90': 'Groningen', '91': 'Groningen', '92': 'Groningen', '93': 'Assen',
-            '94': 'Assen', '95': 'Emmen', '96': 'Emmen', '97': 'Hoogeveen',
-            '98': 'Stadskanaal', '99': 'Delfzijl'
-        };
-
-        // Voorzieningen per domein
         const voorzieningen = {
-            inkomen: {
-                collectief: [
-                    { naam: 'Schuldhulpmaatje', url: 'https://www.schuldhulpmaatje.nl', beschrijving: 'Vrijwilligers helpen bij het op orde krijgen van je financiën.' },
-                    { naam: 'Voedselbank', url: 'https://www.voedselbankennederland.nl', beschrijving: 'Tijdelijke ondersteuning met gratis levensmiddelen.' }
-                ],
-                professioneel: [
-                    { naam: 'Gemeentelijke Schuldhulp', url: 'https://www.nvvk.nl', beschrijving: 'Professionele schuldhulpverlening via de gemeente.' },
-                    { naam: 'Nibud', url: 'https://www.nibud.nl', beschrijving: 'Advies over budgetteren en financiële planning.' }
-                ],
-                tip: 'Geldzorgen kunnen zwaar wegen. Er is hulp beschikbaar om je financiën op orde te krijgen.',
-                tipGoed: 'Je financiële situatie is stabiel. Blijf bewust omgaan met je budget.'
+            financien: {
+                collectief: ['Voedselbank', 'Kledingbank', 'Formulierenbrigade', 'Schuldhulpmaatje'],
+                professioneel: ['Gemeente (bijstand)', 'UWV', 'Schuldhulpverlening', 'Bewindvoering']
             },
             dagbesteding: {
-                collectief: [
-                    { naam: 'Vrijwilligerscentrale', url: 'https://www.vrijwilligerswerk.nl', beschrijving: 'Vind zinvol vrijwilligerswerk in jouw buurt.' },
-                    { naam: 'Taalhuis', url: 'https://www.detaalhuizen.nl', beschrijving: 'Gratis hulp bij lezen, schrijven en digitale vaardigheden.' }
-                ],
-                professioneel: [
-                    { naam: 'UWV Werkbedrijf', url: 'https://www.uwv.nl', beschrijving: 'Begeleiding naar werk, uitkeringen en re-integratie.' },
-                    { naam: 'Jobcoach', url: 'https://www.jobcoach.nl', beschrijving: 'Persoonlijke begeleiding op de werkvloer.' }
-                ],
-                tip: 'Werk of dagbesteding geeft structuur en voldoening. Er zijn mogelijkheden om je te helpen met het vinden van passende activiteiten.',
-                tipGoed: 'Je hebt zinvolle dagbesteding. Blijf investeren in activiteiten die je energie geven.'
+                collectief: ['Vrijwilligerscentrale', 'Buurtcentrum', 'Volksuniversiteit', 'Repair Café'],
+                professioneel: ['UWV Werkbedrijf', 'Re-integratiebedrijf', 'Sociale werkvoorziening', 'Jobcoach']
             },
             huisvesting: {
-                collectief: [
-                    { naam: 'Buurtbemiddeling', url: 'https://www.buurtbemiddeling.nl', beschrijving: 'Vrijwilligers helpen bij het oplossen van burenruzies.' },
-                    { naam: 'Huurteam', url: 'https://www.huurcommissie.nl', beschrijving: 'Gratis advies over huurprijzen en huurdersrechten.' }
-                ],
-                professioneel: [
-                    { naam: 'Sociaal Wijkteam', url: 'https://www.sociaalwerkwerkt.nl', beschrijving: 'Professionele ondersteuning bij woonproblemen.' },
-                    { naam: 'Woningcorporatie', url: 'https://www.aedes.nl', beschrijving: 'Hulp bij woningnood en sociale huurwoningen.' }
-                ],
-                tip: 'Je woonsituatie kan beter. Misschien kun je hulp gebruiken bij het vinden van een betere woning of het oplossen van problemen thuis.',
-                tipGoed: 'Je woonsituatie is goed. Je woning biedt een stabiele basis.'
+                collectief: ['Buurtbemiddeling', 'Huurteam', 'Woongroepen'],
+                professioneel: ['Woningcorporatie', 'Maatschappelijke opvang', 'Urgentieverklaring gemeente']
             },
-            huiselijke_relaties: {
-                collectief: [
-                    { naam: 'Humanitas Thuisadministratie', url: 'https://www.humanitas.nl', beschrijving: 'Vrijwilligers ondersteunen bij administratie en huishouden.' },
-                    { naam: 'Buurtgezinnen', url: 'https://www.buurtgezinnen.nl', beschrijving: 'Gezinnen ondersteunen elkaar in de buurt.' }
-                ],
-                professioneel: [
-                    { naam: 'Veilig Thuis', url: 'https://www.veiligthuis.nl', beschrijving: 'Advies en hulp bij huiselijk geweld en kindermishandeling. Bel 0800-2000.' },
-                    { naam: 'Relatietherapie', url: 'https://www.relatietherapeut.nl', beschrijving: 'Professionele hulp bij relatieproblemen.' }
-                ],
-                tip: 'Goede relaties thuis zijn belangrijk voor je welzijn. Praten over problemen kan helpen.',
-                tipGoed: 'De relaties in je huishouden zijn goed. Blijf investeren in deze waardevolle banden.'
+            huiselijk: {
+                collectief: ['Opvoedcafé', 'Mantelzorggroepen', 'Lotgenotencontact'],
+                professioneel: ['Veilig Thuis', 'Jeugdzorg', 'Relatietherapie', 'Familietherapie']
             },
-            geestelijke_gezondheid: {
-                collectief: [
-                    { naam: '113 Zelfmoordpreventie', url: 'https://www.113.nl', beschrijving: 'Anoniem praten over zelfmoordgedachten. Bel 113 of chat online.' },
-                    { naam: 'MIND Korrelatie', url: 'https://www.mindkorrelatie.nl', beschrijving: 'Luisterend oor voor iedereen met psychische problemen.' }
-                ],
-                professioneel: [
-                    { naam: 'Huisarts', url: 'https://www.thuisarts.nl/psychische-klachten', beschrijving: 'Eerste stap voor verwijzing naar psycholoog.' },
-                    { naam: 'GGZ', url: 'https://www.ggznederland.nl', beschrijving: 'Geestelijke gezondheidszorg voor behandeling en therapie.' }
-                ],
-                tip: 'Je mentale welzijn verdient aandacht. Praten over wat je bezighoudt kan opluchten - je hoeft het niet alleen te doen.',
-                tipGoed: 'Je mentale gezondheid is goed. Blijf aandacht besteden aan je welzijn.'
+            geestelijk: {
+                collectief: ['Inloophuis GGZ', 'Herstelgroepen', 'Mindfulness cursus', 'Vriendendienst'],
+                professioneel: ['Huisarts (POH-GGZ)', 'GGZ', 'Psycholoog', 'Psychiater']
             },
-            lichamelijke_gezondheid: {
-                collectief: [
-                    { naam: 'Meer Bewegen voor Ouderen', url: 'https://www.meerbewegen.nl', beschrijving: 'Beweeggroepen in de buurt voor alle leeftijden.' },
-                    { naam: 'Wandelclub', url: 'https://www.wandel.nl', beschrijving: 'Samen wandelen met anderen uit je buurt.' }
-                ],
-                professioneel: [
-                    { naam: 'Fysiotherapeut', url: 'https://www.fysionet.nl', beschrijving: 'Behandeling van lichamelijke klachten en revalidatie.' },
-                    { naam: 'Huisarts', url: 'https://www.thuisarts.nl', beschrijving: 'Medisch advies en doorverwijzing naar specialisten.' }
-                ],
-                tip: 'Lichamelijke gezondheid is de basis. Kleine stappen kunnen al een groot verschil maken.',
-                tipGoed: 'Je lichamelijke gezondheid is goed. Blijf actief en zorg goed voor jezelf.'
+            lichamelijk: {
+                collectief: ['Sportclub', 'Wandelgroep', 'Beweegmaatje', 'Gezondheidscentrum'],
+                professioneel: ['Huisarts', 'Fysiotherapeut', 'Diëtist', 'Specialist ziekenhuis']
+            },
+            verslaving: {
+                collectief: ['AA (Anonieme Alcoholisten)', 'NA (Narcotics Anonymous)', 'SMART Recovery', 'Gokkers Anonymous'],
+                professioneel: ['Jellinek', 'Brijder', 'AGOG (gokverslaving)', 'Verslavingsarts']
             },
             adl: {
-                collectief: [
-                    { naam: 'Stichting Present', url: 'https://www.stichtingpresent.nl', beschrijving: 'Vrijwilligers helpen met praktische klussen.' },
-                    { naam: 'Boodschappenhulp', url: 'https://www.boodschappenplusbus.nl', beschrijving: 'Hulp bij het doen van boodschappen.' }
-                ],
-                professioneel: [
-                    { naam: 'Thuiszorg', url: 'https://www.thuiszorg.nl', beschrijving: 'Professionele hulp bij huishouden en verzorging.' },
-                    { naam: 'WMO-loket', url: 'https://www.regelhulp.nl', beschrijving: 'Aanvragen van hulp via de gemeente.' }
-                ],
-                tip: 'Praktische taken kunnen soms te veel worden. Er zijn mensen die je kunnen ondersteunen.',
-                tipGoed: 'Je bent zelfredzaam in dagelijkse activiteiten. Goed gedaan!'
+                collectief: ['Boodschappenhulp', 'Klussenteam', 'Maaltijdservice', 'Thuisadministratie'],
+                professioneel: ['Thuiszorg', 'WMO (hulp bij huishouden)', 'Ergotherapeut', 'MEE']
             },
-            sociaal_netwerk: {
-                collectief: [
-                    { naam: 'Maatjesproject', url: 'https://www.humanitas.nl', beschrijving: 'Vrijwilligers bieden vriendschap en gezelschap.' },
-                    { naam: 'Eetclub', url: 'https://www.samen-eten.nl', beschrijving: 'Samen eten met anderen uit de buurt.' }
-                ],
-                professioneel: [
-                    { naam: 'Maatschappelijk werk', url: 'https://www.sociaalwerknederland.nl', beschrijving: 'Begeleiding bij sociale problemen.' },
-                    { naam: 'Welzijnsorganisatie', url: 'https://www.sociaalwerkwerkt.nl', beschrijving: 'Activiteiten en ondersteuning in je buurt.' }
-                ],
-                tip: 'Een sterk sociaal netwerk is belangrijk. Er zijn manieren om je netwerk te versterken.',
-                tipGoed: 'Je hebt een goed sociaal netwerk. Koester deze relaties!'
+            sociaal: {
+                collectief: ['Buurtvereniging', 'Maatjesproject', 'Vrouwengroep', 'Koffie-ochtend'],
+                professioneel: ['Sociaal wijkteam', 'Opbouwwerker', 'Maatschappelijk werker']
             },
             participatie: {
-                collectief: [
-                    { naam: 'Buurtvereniging', url: 'https://www.lsabewoners.nl', beschrijving: 'Doe mee met activiteiten in je buurt.' },
-                    { naam: 'Sportclub', url: 'https://www.nocnsf.nl', beschrijving: 'Vind een sportclub bij jou in de buurt.' }
-                ],
-                professioneel: [
-                    { naam: 'MEE', url: 'https://www.mee.nl', beschrijving: 'Ondersteuning bij participatie voor mensen met een beperking.' },
-                    { naam: 'Jobcoach Participatie', url: 'https://www.uwv.nl', beschrijving: 'Begeleiding naar vrijwilligerswerk of betaald werk.' }
-                ],
-                tip: 'Meedoen in de samenleving geeft energie en zin. Er zijn veel mogelijkheden om actief te worden.',
-                tipGoed: 'Je participeert actief in de maatschappij. Blijf betrokken!'
+                collectief: ['Taalcafé', 'Buurtmoestuin', 'Cultuurclub', 'Sportvereniging'],
+                professioneel: ['Sociaal wijkteam', 'Participatiecoach', 'Welzijnsorganisatie']
             },
+            justitie: {
+                collectief: ['Juridisch Loket', 'Slachtofferhulp Nederland', 'Rechtsbijstand vakbond', 'Sociaal Raadslieden'],
+                professioneel: ['Advocaat', 'Reclassering', 'Mediator', 'HALT (jongeren)']
+            }
         };
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            generateDomainCards();
-        });
+        // Risks per network type
+        const networkRisks = {
+            eenpersoons: [
+                'Overbelasting mantelzorger',
+                'Geen back-up bij uitval',
+                'Sociaal isolement cliënt',
+                'Beperkte signalering problemen'
+            ],
+            informeel: [
+                'Emotionele belasting netwerk',
+                'Gebrek aan professionele expertise',
+                'Grenzen bewaken lastig',
+                'Risico op uitputting'
+            ],
+            gemengd: [
+                'Afstemming formeel/informeel',
+                'Rolverdeling onduidelijk',
+                'Communicatie-uitdagingen'
+            ],
+            formeel: [
+                'Afhankelijkheid van zorg',
+                'Beperkte sociale verbinding',
+                'Hoge kosten',
+                'Minder eigen regie'
+            ]
+        };
 
-        function generateDomainCards() {
-            const grid = document.getElementById('domain-grid');
-            grid.innerHTML = '';
-            
-            domains.forEach(domain => {
-                const card = document.createElement('div');
-                card.className = 'domain-card';
-                card.style.borderLeftColor = domain.color;
-                
-                let scoreButtons = '';
-                for (let i = 1; i <= 10; i++) {
-                    scoreButtons += `<button class="score-btn score-${i}" onclick="setScore('${domain.id}', ${i}, this)">${i}</button>`;
-                }
-                
-                card.innerHTML = `
-                    <div class="domain-header">
-                        <span class="domain-emoji">${domain.emoji}</span>
-                        <span class="domain-title">${domain.name}</span>
-                    </div>
-                    <div class="domain-description">${domain.desc}</div>
-                    <div class="score-buttons" id="scores-${domain.id}">
-                        ${scoreButtons}
-                    </div>
-                `;
-                
-                grid.appendChild(card);
+        const typeColors = {
+            familie: '#E53E3E',
+            vriend: '#38A169',
+            buur: '#D69E2E',
+            collega: '#805AD5',
+            professional: '#3182CE'
+        };
+
+        // Screen names for navigation
+        const screenNames = ['start', 'hulpvraag', 'domains', 'network', 'waardering', 'results', 'advies', 'summary'];
+
+        // State
+        let state = {
+            mode: null,
+            professionalName: '',
+            postcode: '',
+            clientName: '',
+            clientBirthdate: '',
+            hulpvraag: '',
+            wens: '',
+            scores: {},
+            notes: {},
+            network: [],
+            ratings: {},
+            ratingNotes: {},
+            currentScreen: 1
+        };
+
+        // Load from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('welzijnswerker_v2');
+            if (saved) {
+                state = {...state, ...JSON.parse(saved)};
+            }
+        }
+
+        // Save to localStorage
+        function saveState() {
+            localStorage.setItem('welzijnswerker_v2', JSON.stringify(state));
+        }
+
+        // Mode selection
+        function selectMode(mode) {
+            state.mode = mode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('selected');
             });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+            
+            const professionalFields = document.getElementById('professionalFields');
+            professionalFields.style.display = mode === 'professional' ? 'block' : 'none';
+            saveState();
         }
 
-        function setScore(domainId, score, btn) {
-            scores[domainId] = score;
-            
-            // Update button styles
-            const container = document.getElementById('scores-' + domainId);
-            container.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            
-            // Check if all domains have scores
-            checkAllScored();
-        }
-
-        function checkAllScored() {
-            const allScored = domains.every(d => scores[d.id] !== undefined);
-            document.getElementById('results-btn').disabled = !allScored;
-        }
-
-        function validatePostcode() {
-            const input = document.getElementById('postcode-input');
-            const btn = document.getElementById('start-btn');
-            const regionDisplay = document.getElementById('region-display');
-            
-            let value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (value.length > 4) {
-                value = value.slice(0, 4) + ' ' + value.slice(4);
+        // Start assessment
+        function startAssessment() {
+            if (!state.mode) {
+                alert('Kies eerst hoe je wilt invullen');
+                return;
             }
-            input.value = value;
-            
-            const isValid = /^\d{4}\s?[A-Z]{2}$/.test(value);
-            btn.disabled = !isValid;
-            
-            if (isValid) {
-                const prefix = value.slice(0, 2);
-                userRegion = regionMapping[prefix] || 'Nederland';
-                regionDisplay.textContent = '📍 Regio: ' + userRegion;
-                regionDisplay.style.display = 'block';
-            } else {
-                regionDisplay.style.display = 'none';
+            state.postcode = document.getElementById('postcode').value;
+            if (state.mode === 'professional') {
+                state.professionalName = document.getElementById('professionalName').value;
             }
+            saveState();
+            goToScreen(2);
         }
 
-        function updateStepper(step) {
-            for (let i = 1; i <= 4; i++) {
-                const stepEl = document.getElementById('step-' + i);
-                stepEl.classList.remove('active', 'completed');
-                
-                if (i < step) {
-                    stepEl.classList.add('completed');
-                } else if (i === step) {
-                    stepEl.classList.add('active');
-                }
-            }
+        // Save hulpvraag data
+        function saveHulpvraag() {
+            state.clientName = document.getElementById('clientName').value;
+            state.clientBirthdate = document.getElementById('clientBirthdate').value;
+            state.hulpvraag = document.getElementById('hulpvraag').value;
+            state.wens = document.getElementById('wens').value;
+            saveState();
         }
 
-        function goToStep(step) {
-            currentStep = step;
+        // Save ratings
+        function saveRatings() {
+            state.network.forEach(person => {
+                const slider = document.getElementById(`rating-slider-${person.id}`);
+                const note = document.getElementById(`rating-note-${person.id}`);
+                if (slider) state.ratings[person.id] = parseInt(slider.value);
+                if (note) state.ratingNotes[person.id] = note.value;
+            });
+            saveState();
+        }
+
+        // Navigate to screen
+        function goToScreen(screenNum) {
+            state.currentScreen = screenNum;
+            saveState();
             
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenNames[screenNum - 1]}`).classList.add('active');
             
-            // Show target section
-            const targetSection = document.getElementById('section-' + (step <= 2 ? step : 3));
-            targetSection.classList.add('active');
-            targetSection.classList.add('fade-in');
-            
-            // Update stepper
-            updateStepper(step);
-            
-            // Scroll to top
+            document.querySelectorAll('.progress-step').forEach((step, i) => {
+                step.classList.remove('active', 'completed');
+                if (i + 1 < screenNum) step.classList.add('completed');
+                if (i + 1 === screenNum) step.classList.add('active');
+            });
+
+            // Load content for each screen
+            if (screenNum === 2) loadHulpvraagData();
+            if (screenNum === 3) renderDomains();
+            if (screenNum === 4) {
+                renderDomainCheckboxes();
+                renderPersonList();
+                drawNetwork();
+                updateNetworkType();
+            }
+            if (screenNum === 5) renderRatings();
+            if (screenNum === 6) renderResults();
+            if (screenNum === 7) renderAdvice();
+            if (screenNum === 8) renderSummary();
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showResults() {
-            goToStep(3);
-            
-            const scoreValues = domains.map(d => scores[d.id] || 5);
-            const overall = (scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length).toFixed(1);
-            
-            document.getElementById('overall-score').textContent = overall;
-            
-            let message = '';
-            if (overall >= 8) {
-                message = '🌟 Fantastisch! Je bent op veel gebieden zelfredzaam!';
-            } else if (overall >= 6) {
-                message = '😊 Goed bezig! Er zijn enkele aandachtspunten.';
-            } else if (overall >= 4) {
-                message = '💪 Er zijn meerdere gebieden waar ondersteuning kan helpen.';
-            } else {
-                message = '🤗 Er is hulp beschikbaar. Je staat er niet alleen voor.';
-            }
-            document.getElementById('score-message').textContent = message;
-            
-            createChart(scoreValues);
-            generateAllDomains(scoreValues);
-            
-            // Update stepper to show we're at results/voorzieningen
-            updateStepper(4);
+        // Load hulpvraag data
+        function loadHulpvraagData() {
+            document.getElementById('clientName').value = state.clientName || '';
+            document.getElementById('clientBirthdate').value = state.clientBirthdate || '';
+            document.getElementById('hulpvraag').value = state.hulpvraag || '';
+            document.getElementById('wens').value = state.wens || '';
         }
 
-        function createChart(scoreValues) {
-            const ctx = document.getElementById('welzijnsChart').getContext('2d');
+        // Render domains
+        function renderDomains() {
+            const container = document.getElementById('domainsList');
+            container.innerHTML = domains.map(domain => `
+                <div class="domain-card">
+                    <div class="domain-header">
+                        <span class="domain-icon">${domain.emoji}</span>
+                        <div class="domain-info">
+                            <h3>${domain.name}</h3>
+                            <p>${domain.desc}</p>
+                        </div>
+                    </div>
+                    <div class="domain-slider-container">
+                        <input type="range" class="domain-slider" 
+                            id="slider-${domain.id}" 
+                            min="1" max="10" 
+                            value="${state.scores[domain.id] || 5}"
+                            oninput="updateScore('${domain.id}', this.value)">
+                        <span class="domain-value" id="value-${domain.id}">${state.scores[domain.id] || 5}</span>
+                    </div>
+                    ${state.mode === 'professional' ? `
+                        <div class="professional-note">
+                            <textarea placeholder="Notities/observaties..."
+                                onchange="updateNote('${domain.id}', this.value)">${state.notes[domain.id] || ''}</textarea>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Update score
+        function updateScore(domainId, value) {
+            state.scores[domainId] = parseInt(value);
+            document.getElementById(`value-${domainId}`).textContent = value;
+            saveState();
+        }
+
+        // Update note
+        function updateNote(domainId, value) {
+            state.notes[domainId] = value;
+            saveState();
+        }
+
+        // Render domain checkboxes for network
+        function renderDomainCheckboxes() {
+            const container = document.getElementById('domainCheckboxes');
+            container.innerHTML = domains.map(domain => `
+                <label class="checkbox-item">
+                    <input type="checkbox" value="${domain.id}">
+                    ${domain.emoji} ${domain.name}
+                </label>
+            `).join('');
+        }
+
+        // Add person to network
+        function addPerson() {
+            const name = document.getElementById('personName').value.trim();
+            if (!name) {
+                alert('Vul een naam in');
+                return;
+            }
+
+            const type = document.getElementById('personType').value;
+            const frequency = document.getElementById('personFrequency').value;
+            const supports = Array.from(document.querySelectorAll('#domainCheckboxes input:checked'))
+                .map(cb => cb.value);
+
+            state.network.push({
+                id: Date.now(),
+                name,
+                type,
+                frequency,
+                supports
+            });
+
+            document.getElementById('personName').value = '';
+            document.querySelectorAll('#domainCheckboxes input').forEach(cb => cb.checked = false);
             
-            if (chart) chart.destroy();
+            saveState();
+            renderPersonList();
+            drawNetwork();
+            updateNetworkType();
+        }
+
+        // Remove person
+        function removePerson(id) {
+            state.network = state.network.filter(p => p.id !== id);
+            delete state.ratings[id];
+            delete state.ratingNotes[id];
+            saveState();
+            renderPersonList();
+            drawNetwork();
+            updateNetworkType();
+        }
+
+        // Render person list
+        function renderPersonList() {
+            const container = document.getElementById('personList');
+            if (state.network.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">Nog geen personen toegevoegd</p>';
+                return;
+            }
+
+            const typeLabels = {
+                familie: '👨‍👩‍👧 Familie',
+                vriend: '🤝 Vriend(in)',
+                buur: '🏠 Buur',
+                collega: '💼 Collega',
+                professional: '⚕️ Professional'
+            };
+
+            const freqLabels = {
+                dagelijks: 'Dagelijks contact',
+                wekelijks: 'Wekelijks contact',
+                maandelijks: 'Maandelijks contact',
+                minder: 'Minder vaak'
+            };
+
+            container.innerHTML = state.network.map(person => `
+                <div class="person-item">
+                    <div class="person-info">
+                        <div class="person-avatar" style="background: ${typeColors[person.type]}">
+                            ${person.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="person-details">
+                            <h4>${person.name}</h4>
+                            <p>${typeLabels[person.type]} • ${freqLabels[person.frequency]}</p>
+                        </div>
+                    </div>
+                    <button class="person-delete" onclick="removePerson(${person.id})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // Draw network visualization
+        function drawNetwork() {
+            const canvas = document.getElementById('networkCanvas');
+            const ctx = canvas.getContext('2d');
             
-            chart = new Chart(ctx, {
+            // Set actual size
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = 800;
+            ctx.scale(2, 2);
+
+            const width = canvas.offsetWidth;
+            const height = 400;
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            // Clear
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw connection lines first
+            state.network.forEach((person, i) => {
+                const angle = (i / state.network.length) * Math.PI * 2 - Math.PI / 2;
+                const radius = person.type === 'professional' ? 140 : 100;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = typeColors[person.type] + '40';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+
+            // Draw center (client)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 35, 0, Math.PI * 2);
+            ctx.fillStyle = '#4A90D9';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px system-ui';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('JIJ', centerX, centerY);
+
+            // Draw network persons
+            state.network.forEach((person, i) => {
+                const angle = (i / state.network.length) * Math.PI * 2 - Math.PI / 2;
+                const radius = person.type === 'professional' ? 140 : 100;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                // Circle
+                const circleRadius = person.frequency === 'dagelijks' ? 28 : 
+                                    person.frequency === 'wekelijks' ? 24 : 20;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, circleRadius, 0, Math.PI * 2);
+                ctx.fillStyle = typeColors[person.type];
+                ctx.fill();
+
+                // Initial
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px system-ui';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(person.name.charAt(0).toUpperCase(), x, y);
+
+                // Name below
+                ctx.fillStyle = '#333';
+                ctx.font = '11px system-ui';
+                ctx.fillText(person.name, x, y + circleRadius + 12);
+            });
+        }
+
+        // Calculate network type
+        function getNetworkType() {
+            const informal = state.network.filter(p => 
+                ['familie', 'vriend', 'buur', 'collega'].includes(p.type)
+            ).length;
+            const formal = state.network.filter(p => p.type === 'professional').length;
+
+            if (informal <= 1 && formal === 0) {
+                return { type: 'eenpersoons', label: '🔴 Eenpersoons netwerk', className: 'eenpersoons' };
+            } else if (formal === 0) {
+                return { type: 'informeel', label: '🟠 Informeel netwerk', className: 'informeel' };
+            } else if (informal > 0 && formal > 0) {
+                return { type: 'gemengd', label: '🟡 Gemengd netwerk', className: 'gemengd' };
+            } else {
+                return { type: 'formeel', label: '🔵 Formeel netwerk', className: 'formeel' };
+            }
+        }
+
+        // Update network type display
+        function updateNetworkType() {
+            const networkInfo = getNetworkType();
+            const badge = document.getElementById('networkTypeBadge');
+            badge.textContent = networkInfo.label;
+            badge.className = `network-type-badge ${networkInfo.className}`;
+        }
+
+        // Render ratings for network members
+        function renderRatings() {
+            const container = document.getElementById('ratingsList');
+            
+            if (state.network.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">U heeft nog geen personen toegevoegd aan uw netwerk. Ga terug om personen toe te voegen.</p>';
+                document.getElementById('averageRatingBox').style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = state.network.map(person => `
+                <div class="rating-card">
+                    <div class="person-header">
+                        <div class="person-avatar-small" style="background: ${typeColors[person.type]}">
+                            ${person.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <strong>${person.name}</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-light);">Hoe tevreden bent u met de steun van ${person.name}?</p>
+                        </div>
+                    </div>
+                    <div class="rating-slider-container">
+                        <input type="range" class="rating-slider" 
+                            id="rating-slider-${person.id}" 
+                            min="1" max="10" 
+                            value="${state.ratings[person.id] || 5}"
+                            oninput="updateRatingDisplay(${person.id}, this.value)">
+                        <span class="rating-value" id="rating-value-${person.id}">${state.ratings[person.id] || 5}</span>
+                    </div>
+                    <textarea id="rating-note-${person.id}" placeholder="Korte toelichting (optioneel)...">${state.ratingNotes[person.id] || ''}</textarea>
+                </div>
+            `).join('');
+
+            updateAverageRating();
+            document.getElementById('averageRatingBox').style.display = 'block';
+        }
+
+        // Update rating display
+        function updateRatingDisplay(personId, value) {
+            document.getElementById(`rating-value-${personId}`).textContent = value;
+            state.ratings[personId] = parseInt(value);
+            saveState();
+            updateAverageRating();
+        }
+
+        // Calculate and display average rating
+        function updateAverageRating() {
+            const ratings = state.network.map(p => state.ratings[p.id] || 5);
+            if (ratings.length > 0) {
+                const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+                document.getElementById('averageRatingValue').textContent = avg.toFixed(1);
+            }
+        }
+
+        // Render results
+        let radarChart = null;
+        function renderResults() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            if (radarChart) radarChart.destroy();
+
+            const labels = domains.map(d => d.name);
+            const data = domains.map(d => state.scores[d.id] || 5);
+
+            radarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: domains.map(d => d.name),
+                    labels: labels,
                     datasets: [{
-                        label: 'Jouw score',
-                        data: scoreValues,
-                        backgroundColor: 'rgba(25, 118, 210, 0.2)',
-                        borderColor: '#1976D2',
+                        label: 'Jouw scores',
+                        data: data,
+                        backgroundColor: 'rgba(74, 144, 217, 0.2)',
+                        borderColor: '#4A90D9',
                         borderWidth: 2,
-                        pointBackgroundColor: domains.map(d => d.color),
+                        pointBackgroundColor: '#4A90D9',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
-                        pointRadius: 6
+                        pointRadius: 5
                     }]
                 },
                 options: {
-                    responsive: true,
                     scales: {
                         r: {
                             min: 0,
                             max: 10,
                             ticks: {
-                                stepSize: 2,
-                                font: { size: 11 }
-                            },
-                            pointLabels: {
-                                font: { size: 11, weight: '600' }
+                                stepSize: 2
                             }
                         }
                     },
                     plugins: {
-                        legend: { display: false }
+                        legend: {
+                            display: false
+                        }
                     }
                 }
             });
-        }
 
-        function createVoorzieningLink(v, type) {
-            return `
-                <div class="voorziening-link">
-                    <a href="${v.url}" target="_blank" class="voorziening-btn ${type}">${v.naam}</a>
-                    <div class="tooltip">
-                        <div class="tooltip-title">${v.naam}</div>
-                        <div class="tooltip-type">${type === 'collectief' ? '🤝 Collectief (buurt/vrijwilligers)' : '👨‍⚕️ Professionele hulp'}</div>
-                        <div class="tooltip-desc">${v.beschrijving}</div>
-                    </div>
+            // Score summary
+            const avg = data.reduce((a, b) => a + b, 0) / data.length;
+            const lowest = Math.min(...data);
+            const highest = Math.max(...data);
+
+            document.getElementById('scoreSummary').innerHTML = `
+                <div class="score-item">
+                    <div class="emoji">📊</div>
+                    <div class="value">${avg.toFixed(1)}</div>
+                    <div class="label">Gemiddelde score</div>
+                </div>
+                <div class="score-item">
+                    <div class="emoji">⬇️</div>
+                    <div class="value">${lowest}</div>
+                    <div class="label">Laagste score</div>
+                </div>
+                <div class="score-item">
+                    <div class="emoji">⬆️</div>
+                    <div class="value">${highest}</div>
+                    <div class="label">Hoogste score</div>
+                </div>
+                <div class="score-item">
+                    <div class="emoji">👥</div>
+                    <div class="value">${state.network.length}</div>
+                    <div class="label">Personen in netwerk</div>
                 </div>
             `;
+
+            // Network type on results page
+            const networkInfo = getNetworkType();
+            const resultsBadge = document.getElementById('resultsNetworkTypeBadge');
+            resultsBadge.textContent = networkInfo.label;
+            resultsBadge.className = `network-type-badge ${networkInfo.className}`;
+
+            // Risks
+            const risks = networkRisks[networkInfo.type] || [];
+            document.getElementById('risksList').innerHTML = risks.map(risk => `<li>${risk}</li>`).join('');
         }
 
-        function generateAllDomains(scoreValues) {
-            const container = document.getElementById('all-domains-container');
-            container.innerHTML = '';
+        // OpenAI API configuration
+        const OPENAI_API_KEY = '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';
+
+        // Generate SIJN-based advice with GPT
+        async function renderAdvice() {
+            const adviceBox = document.getElementById('adviceBox');
             
-            // Create array of domains with their scores
-            const domainsWithScores = domains.map((domain, idx) => ({
-                domain: domain,
-                score: scoreValues[idx]
-            }));
-            
-            // Sort by score (low to high)
-            domainsWithScores.sort((a, b) => a.score - b.score);
-            
-            domainsWithScores.forEach(({ domain, score }) => {
-                const vData = voorzieningen[domain.id];
-                
-                // Determine card styling based on score
-                let cardClass = 'domain-result-card';
-                let badgeClass = '';
-                if (score <= 5) {
-                    cardClass += ' low-score';
-                    badgeClass = 'low';
-                } else if (score <= 7) {
-                    cardClass += ' medium-score';
-                    badgeClass = 'medium';
-                } else {
-                    cardClass += ' high-score';
-                    badgeClass = 'high';
-                }
-                
-                // Get appropriate tip
-                const tip = score <= 5 ? vData.tip : vData.tipGoed;
-                
-                // Generate voorzieningen HTML
-                let voorzieningenHtml = '';
-                if (vData) {
-                    vData.collectief.forEach(v => {
-                        voorzieningenHtml += createVoorzieningLink(v, 'collectief');
-                    });
-                    vData.professioneel.forEach(v => {
-                        voorzieningenHtml += createVoorzieningLink(v, 'professioneel');
-                    });
-                }
-                
-                container.innerHTML += `
-                    <div class="${cardClass} fade-in" style="border-left-color: ${domain.color};">
-                        <div class="domain-result-header">
-                            <span style="font-size: 1.5rem;">${domain.emoji}</span>
-                            <h4>${domain.name}</h4>
-                            <span class="domain-score-badge ${badgeClass}">${score}/10</span>
-                        </div>
-                        <p class="domain-result-tip">${tip}</p>
-                        <div class="voorzieningen">
-                            ${voorzieningenHtml}
+            // Show loading state
+            adviceBox.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🤖</div>
+                    <h3>AI-advies wordt gegenereerd...</h3>
+                    <p style="color: var(--text-light);">Even geduld, we analyseren uw situatie volgens de SIJN-methodiek.</p>
+                    <div style="margin-top: 20px;">
+                        <div style="width: 200px; height: 4px; background: var(--primary-light); border-radius: 2px; margin: 0 auto; overflow: hidden;">
+                            <div style="width: 30%; height: 100%; background: var(--primary); border-radius: 2px; animation: loading 1.5s ease-in-out infinite;"></div>
                         </div>
                     </div>
+                </div>
+                <style>
+                    @keyframes loading {
+                        0% { transform: translateX(-100%); }
+                        50% { transform: translateX(250%); }
+                        100% { transform: translateX(-100%); }
+                    }
+                </style>
+            `;
+
+            const networkInfo = getNetworkType();
+            const sortedDomains = [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            );
+            const lowestDomains = sortedDomains.slice(0, 3);
+            const highestDomains = [...domains].sort((a, b) => 
+                (state.scores[b.id] || 5) - (state.scores[a.id] || 5)
+            ).slice(0, 3);
+            
+            // Calculate average rating
+            const ratings = state.network.map(p => state.ratings[p.id] || 5);
+            const avgRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+
+            // Build context for GPT
+            const domainScores = domains.map(d => `- ${d.emoji} ${d.name}: ${state.scores[d.id] || 5}/10`).join('\n');
+            const networkDetails = state.network.map(p => {
+                const rating = state.ratings[p.id];
+                const ratingText = rating ? ` (tevredenheid: ${rating}/10${state.ratingNotes[p.id] ? ', opmerking: ' + state.ratingNotes[p.id] : ''})` : '';
+                return `- ${p.name} (${p.type === 'informeel' ? 'informeel contact' : 'professional'})${ratingText}`;
+            }).join('\n');
+
+            const prompt = `Je bent een ervaren welzijnswerker die advies geeft volgens de SIJN-methodiek (Sterk In Je Netwerk). 
+Analyseer de volgende cliëntgegevens en geef een persoonlijk, empathisch advies in het Nederlands.
+
+## Cliëntgegevens
+${state.clientName ? `Naam: ${state.clientName}` : 'Naam: Niet opgegeven'}
+${state.clientBirthdate ? `Geboortedatum: ${new Date(state.clientBirthdate).toLocaleDateString('nl-NL')}` : ''}
+Postcode: ${state.postcode || 'Niet opgegeven'}
+${state.hulpvraag ? `Hulpvraag: ${state.hulpvraag}` : ''}
+${state.wens ? `Belangrijkste wens: "${state.wens}"` : ''}
+
+## Domeinkaart Scores (1-10)
+${domainScores}
+
+Laagste domeinen: ${lowestDomains.map(d => d.name).join(', ')}
+Hoogste domeinen: ${highestDomains.map(d => d.name).join(', ')}
+
+## Netwerkanalyse
+Netwerktype: ${networkInfo.label.substring(2)} (${networkInfo.type})
+Aantal personen in netwerk: ${state.network.length}
+${avgRating > 0 ? `Gemiddelde tevredenheid met steun: ${avgRating.toFixed(1)}/10` : 'Tevredenheid: Niet beoordeeld'}
+
+Netwerkleden:
+${networkDetails || 'Geen netwerkleden opgegeven'}
+
+## Risico's bij dit netwerktype
+${(networkRisks[networkInfo.type] || []).join('\n')}
+
+## Opdracht
+Geef advies in EXACT deze 4 secties met deze HTML-structuur. Gebruik empathische, begrijpelijke taal. Wees concreet en praktisch.
+
+Geef je antwoord in dit exacte HTML-formaat:
+
+<div class="advice-section">
+<h4>1️⃣ Domeinkaart Inzichten</h4>
+[Analyseer de 3 laagste domeinen en wat dit betekent voor de cliënt. Benoem ook sterke punten.]
+</div>
+
+<div class="advice-section">
+<h4>2️⃣ Netwerkanalyse Conclusies</h4>
+[Analyseer het netwerktype, de risico's, en de kwaliteit van de steun op basis van de tevredenheidsscores.]
+</div>
+
+<div class="advice-section">
+<h4>3️⃣ Gewenste Situatie</h4>
+[Koppel de wens van de cliënt aan concrete doelen. Wat is er nodig om daar te komen?]
+</div>
+
+<div class="advice-section">
+<h4>4️⃣ Aanbevolen Interventies</h4>
+[Geef 4-6 concrete interventies als bullet points (<ul><li>), mix van netwerkversterking én domeingerichte hulp. Wees specifiek over type hulpverlening.]
+</div>`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            { role: 'system', content: 'Je bent een ervaren welzijnswerker die de SIJN-methodiek (Sterk In Je Netwerk) toepast. Je geeft warme, empathische maar concrete adviezen. Je antwoordt altijd in correct Nederlands.' },
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1500
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const gptAdvice = data.choices[0].message.content;
+
+                adviceBox.innerHTML = `
+                    <h3>🤖 Persoonlijk AI-Advies</h3>
+                    <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 16px;">
+                        <em>Gegenereerd op basis van uw gegevens volgens de SIJN-methodiek</em>
+                    </p>
+                    ${gptAdvice}
                 `;
-            });
+            } catch (error) {
+                console.error('OpenAI API error:', error);
+                // Fallback to rule-based advice
+                adviceBox.innerHTML = `
+                    <div style="background: #FFF3CD; border: 1px solid #FFE69C; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                        <strong>⚠️ AI-advies niet beschikbaar</strong><br>
+                        <small>We tonen het standaard advies. Fout: ${error.message}</small>
+                    </div>
+                `;
+                renderAdviceFallback();
+            }
         }
 
+        // Fallback rule-based advice
+        function renderAdviceFallback() {
+            const networkInfo = getNetworkType();
+            const sortedDomains = [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            );
+            const lowestDomains = sortedDomains.slice(0, 3);
+            const ratings = state.network.map(p => state.ratings[p.id] || 5);
+            const avgRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+
+            let adviceHtml = document.getElementById('adviceBox').innerHTML;
+            
+            adviceHtml += `
+                <div class="advice-section">
+                    <h4>1️⃣ Domeinkaart Inzichten</h4>
+                    <p>Uit uw domeinkaart blijkt dat de volgende gebieden extra aandacht verdienen:</p>
+                    <ul>
+                        ${lowestDomains.map(d => `<li><strong>${d.emoji} ${d.name}</strong> (score: ${state.scores[d.id] || 5}/10) - ${getAdviceForDomain(d.id)}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            adviceHtml += `
+                <div class="advice-section">
+                    <h4>2️⃣ Netwerkanalyse Conclusies</h4>
+                    <p>U heeft een <strong>${networkInfo.label.substring(2)}</strong> met ${state.network.length} personen.</p>
+                    ${avgRating > 0 ? `<p>Gemiddelde tevredenheid met steun: <strong>${avgRating.toFixed(1)}/10</strong></p>` : ''}
+                    <p>${getNetworkAdvice(networkInfo.type)}</p>
+                </div>
+            `;
+
+            adviceHtml += `
+                <div class="advice-section">
+                    <h4>3️⃣ Gewenste Situatie</h4>
+                    ${state.wens ? `<p><em>"${state.wens}"</em></p>` : '<p><em>Geen specifieke wens opgegeven.</em></p>'}
+                    <p>${getGoalAdvice(lowestDomains, networkInfo.type)}</p>
+                </div>
+            `;
+
+            adviceHtml += `
+                <div class="advice-section">
+                    <h4>4️⃣ Aanbevolen Interventies</h4>
+                    <ul>
+                        ${getInterventions(lowestDomains, networkInfo.type).map(i => `<li>${i}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('adviceBox').innerHTML = adviceHtml;
+        }
+
+        // Helper functions for advice
+        function getAdviceForDomain(domainId) {
+            const advices = {
+                financien: 'Bekijk mogelijkheden voor financiële ondersteuning en budgetbegeleiding',
+                dagbesteding: 'Overweeg vrijwilligerswerk of cursussen om structuur te creëren',
+                huisvesting: 'Onderzoek opties voor betere huisvesting of woningaanpassingen',
+                huiselijk: 'Werk aan verbetering van relaties binnen het huishouden',
+                geestelijk: 'Zoek professionele ondersteuning voor mentaal welzijn',
+                lichamelijk: 'Focus op beweging en gezonde leefstijl',
+                verslaving: 'Overweeg specialistische hulp bij verslavingsproblematiek',
+                adl: 'Bekijk mogelijkheden voor huishoudelijke ondersteuning',
+                sociaal: 'Werk aan uitbreiding van uw sociale netwerk',
+                participatie: 'Zoek naar mogelijkheden om meer deel te nemen aan activiteiten',
+                justitie: 'Schakel juridische hulp in voor advies'
+            };
+            return advices[domainId] || 'Bespreek dit met een professional';
+        }
+
+        function getNetworkAdvice(type) {
+            const advices = {
+                eenpersoons: 'Het is belangrijk om uw netwerk uit te breiden. Overweeg aansluiting bij een maatjesproject of buurtactiviteiten. De huidige situatie legt mogelijk te veel druk op één persoon.',
+                informeel: 'Uw informele netwerk is waardevol, maar overweeg ook professionele ondersteuning in te schakelen voor specifieke hulpvragen. Dit voorkomt overbelasting van familie en vrienden.',
+                gemengd: 'U heeft een goed gemengd netwerk. Let wel op duidelijke afspraken over wie waarvoor verantwoordelijk is. Regelmatig overleg tussen informele en formele helpers is aan te raden.',
+                formeel: 'Hoewel professionele hulp belangrijk is, is het ook waardevol om te investeren in informele contacten. Dit vergroot uw gevoel van verbondenheid en eigen regie.'
+            };
+            return advices[type] || '';
+        }
+
+        function getGoalAdvice(lowestDomains, networkType) {
+            let advice = 'Om uw gewenste situatie te bereiken, is het aan te raden om te focussen op ';
+            if (lowestDomains.length > 0) {
+                advice += lowestDomains[0].name.toLowerCase();
+                if (lowestDomains.length > 1) {
+                    advice += ` en ${lowestDomains[1].name.toLowerCase()}`;
+                }
+                advice += '. ';
+            }
+            if (networkType === 'eenpersoons' || networkType === 'formeel') {
+                advice += 'Tegelijkertijd is het versterken van uw sociale netwerk een belangrijke stap.';
+            } else {
+                advice += 'Maak hierbij gebruik van de steun die uw netwerk kan bieden.';
+            }
+            return advice;
+        }
+
+        function getInterventions(lowestDomains, networkType) {
+            const interventions = [];
+            
+            // Network-based interventions
+            if (networkType === 'eenpersoons') {
+                interventions.push('🤝 Aanmelden bij een maatjesproject voor sociale ondersteuning');
+                interventions.push('🏠 Deelnemen aan buurtactiviteiten om netwerk uit te breiden');
+            } else if (networkType === 'informeel') {
+                interventions.push('👨‍⚕️ Gesprek aanvragen bij sociaal wijkteam voor professionele ondersteuning');
+            } else if (networkType === 'gemengd') {
+                interventions.push('📋 Netwerkberaad organiseren voor betere afstemming');
+            } else if (networkType === 'formeel') {
+                interventions.push('🤝 Verkennen van vrijwilligersnetwerken voor informele steun');
+            }
+
+            // Domain-based interventions
+            lowestDomains.forEach(d => {
+                const v = voorzieningen[d.id];
+                if (v && v.collectief && v.collectief[0]) {
+                    interventions.push(`${d.emoji} ${v.collectief[0]} voor ondersteuning bij ${d.name.toLowerCase()}`);
+                }
+            });
+
+            return interventions.slice(0, 5);
+        }
+
+        // Render summary
+        function renderSummary() {
+            const date = new Date().toLocaleDateString('nl-NL');
+            
+            // Hulpvraag section
+            if (state.hulpvraag || state.wens || state.clientName) {
+                document.getElementById('summaryHulpvraag').style.display = 'block';
+                document.getElementById('summaryHulpvraagContent').innerHTML = `
+                    ${state.clientName ? `<p><strong>Cliënt:</strong> ${state.clientName}</p>` : ''}
+                    ${state.clientBirthdate ? `<p><strong>Geboortedatum:</strong> ${new Date(state.clientBirthdate).toLocaleDateString('nl-NL')}</p>` : ''}
+                    ${state.hulpvraag ? `<p><strong>Hulpvraag:</strong> ${state.hulpvraag}</p>` : ''}
+                    ${state.wens ? `<p><strong>Belangrijkste wens:</strong> ${state.wens}</p>` : ''}
+                `;
+            }
+
+            // Scores overview
+            const sortedDomains = [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            );
+
+            document.getElementById('summaryScores').innerHTML = `
+                <p><strong>Datum:</strong> ${date}</p>
+                ${state.mode === 'professional' ? `<p><strong>Professional:</strong> ${state.professionalName || 'Niet ingevuld'}</p>` : ''}
+                <p><strong>Postcode:</strong> ${state.postcode || 'Niet ingevuld'}</p>
+                <div style="margin-top: 15px;">
+                    ${sortedDomains.map(d => `
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee;">
+                            <span>${d.emoji}</span>
+                            <span style="flex: 1;">${d.name}</span>
+                            <strong style="color: ${(state.scores[d.id] || 5) < 5 ? 'var(--danger)' : 'var(--secondary)'}">
+                                ${state.scores[d.id] || 5}/10
+                            </strong>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Network summary
+            const informal = state.network.filter(p => ['familie', 'vriend', 'buur', 'collega'].includes(p.type)).length;
+            const formal = state.network.filter(p => p.type === 'professional').length;
+            const networkInfo = getNetworkType();
+
+            document.getElementById('summaryNetwork').innerHTML = `
+                <p><strong>Netwerktype:</strong> <span class="network-type-badge ${networkInfo.className}" style="padding: 5px 15px; font-size: 0.9rem;">${networkInfo.label}</span></p>
+                <p><strong>Totaal personen:</strong> ${state.network.length}</p>
+                <p><strong>Informele contacten:</strong> ${informal}</p>
+                <p><strong>Professionele contacten:</strong> ${formal}</p>
+                <div style="margin-top: 10px;">
+                    ${state.network.map(p => `
+                        <span style="display: inline-block; background: ${typeColors[p.type]}20; color: ${typeColors[p.type]}; padding: 4px 12px; border-radius: 15px; margin: 3px; font-size: 0.9rem;">
+                            ${p.name}
+                        </span>
+                    `).join('')}
+                </div>
+            `;
+
+            // Waardering section
+            if (state.network.length > 0) {
+                document.getElementById('summaryWaarderingSection').style.display = 'block';
+                const ratings = state.network.map(p => state.ratings[p.id] || 5);
+                const avgRating = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+                
+                document.getElementById('summaryWaardering').innerHTML = `
+                    <p><strong>Gemiddelde tevredenheid:</strong> ${avgRating.toFixed(1)}/10</p>
+                    <div style="margin-top: 10px;">
+                        ${state.network.map(p => `
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                <span style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; background: ${typeColors[p.type]}; color: white; text-align: center; line-height: 30px;">
+                                    ${p.name.charAt(0).toUpperCase()}
+                                </span>
+                                <span style="flex: 1;">${p.name}</span>
+                                <strong>${state.ratings[p.id] || 5}/10</strong>
+                            </div>
+                            ${state.ratingNotes[p.id] ? `<p style="margin-left: 40px; font-size: 0.85rem; color: var(--text-light);"><em>${state.ratingNotes[p.id]}</em></p>` : ''}
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Professional notes
+            if (state.mode === 'professional') {
+                const notesWithContent = Object.entries(state.notes).filter(([_, note]) => note.trim());
+                if (notesWithContent.length > 0) {
+                    document.getElementById('summaryNotesSection').style.display = 'block';
+                    document.getElementById('summaryNotes').innerHTML = `
+                        <div class="notes-list">
+                            ${notesWithContent.map(([domainId, note]) => {
+                                const domain = domains.find(d => d.id === domainId);
+                                return `
+                                    <div class="note-item">
+                                        <strong>${domain.emoji} ${domain.name}:</strong>
+                                        <p>${note}</p>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+            }
+
+            // Priorities (domains with score < 5)
+            const priorities = sortedDomains.filter(d => (state.scores[d.id] || 5) < 5);
+            document.getElementById('summaryPriorities').innerHTML = priorities.length > 0
+                ? priorities.map(d => `
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #FEF2F2; border-radius: 10px; margin: 8px 0;">
+                        <span style="font-size: 1.5rem;">${d.emoji}</span>
+                        <div>
+                            <strong>${d.name}</strong>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">Score: ${state.scores[d.id]}/10 - Aandacht nodig</p>
+                        </div>
+                    </div>
+                `).join('')
+                : '<p style="color: var(--secondary);">✓ Geen domeinen met urgente aandacht nodig (score < 5)</p>';
+        }
+
+        // Reset all
         function resetAll() {
-            // Reset scores
-            Object.keys(scores).forEach(key => delete scores[key]);
-            
-            // Reset UI
-            document.querySelectorAll('.score-btn').forEach(btn => btn.classList.remove('selected'));
-            document.getElementById('results-btn').disabled = true;
-            
-            // Go back to start
-            goToStep(1);
+            if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
+                localStorage.removeItem('welzijnswerker_v2');
+                state = {
+                    mode: null,
+                    professionalName: '',
+                    postcode: '',
+                    clientName: '',
+                    clientBirthdate: '',
+                    hulpvraag: '',
+                    wens: '',
+                    scores: {},
+                    notes: {},
+                    network: [],
+                    ratings: {},
+                    ratingNotes: {},
+                    currentScreen: 1
+                };
+                document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+                document.getElementById('professionalFields').style.display = 'none';
+                document.getElementById('postcode').value = '';
+                document.getElementById('professionalName').value = '';
+                goToScreen(1);
+            }
+        }
+
+        // Initialize
+        loadState();
+        if (state.currentScreen > 1) {
+            goToScreen(state.currentScreen);
         }
     </script>
 </body>
