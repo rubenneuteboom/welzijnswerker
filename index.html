@@ -1914,12 +1914,25 @@
                 return `- ${p.name} (${p.type === 'informeel' ? 'informeel contact' : 'professional'})${ratingText}`;
             }).join('\n');
 
+            // Calculate age from birthdate
+            const calculateAge = (birthdate) => {
+                if (!birthdate) return null;
+                const today = new Date();
+                const birth = new Date(birthdate);
+                let age = today.getFullYear() - birth.getFullYear();
+                const monthDiff = today.getMonth() - birth.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                    age--;
+                }
+                return age;
+            };
+            const clientAge = calculateAge(state.clientBirthdate);
+
             const prompt = `Je bent een ervaren welzijnswerker die advies geeft volgens de SIJN-methodiek (Sterk In Je Netwerk). 
 Analyseer de volgende cliëntgegevens en geef een persoonlijk, empathisch advies in het Nederlands.
 
 ## Cliëntgegevens
-${state.clientName ? `Naam: ${state.clientName}` : 'Naam: Niet opgegeven'}
-${state.clientBirthdate ? `Geboortedatum: ${new Date(state.clientBirthdate).toLocaleDateString('nl-NL')}` : ''}
+${clientAge ? `Leeftijd: ${clientAge} jaar` : 'Leeftijd: Niet opgegeven'}
 Postcode: ${state.postcode || 'Niet opgegeven'}
 ${state.hulpvraag ? `Hulpvraag: ${state.hulpvraag}` : ''}
 ${state.wens ? `Belangrijkste wens: "${state.wens}"` : ''}
