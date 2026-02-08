@@ -1359,18 +1359,53 @@
             margin-bottom: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             cursor: grab;
-            transition: all 0.2s;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
             border-left: 4px solid var(--primary);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
 
         .kanban-card:active {
             cursor: grabbing;
-            transform: rotate(2deg);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .kanban-card.dragging {
-            opacity: 0.5;
+            opacity: 0.8;
+            transform: rotate(3deg) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .kanban-cards.drag-over {
+            background: rgba(74, 144, 217, 0.1);
+            border-radius: 12px;
+            outline: 2px dashed var(--primary);
+            outline-offset: -4px;
+        }
+
+        .kanban-drop-indicator {
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+            margin: 5px 0;
+            animation: pulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes dropBounce {
+            0% { transform: scale(1.05); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
         }
 
         .kanban-card.priority-high {
@@ -2109,6 +2144,7 @@
                         </div>
                         <div class="kanban-cards" id="cards-todo" 
                             ondragover="handleDragOver(event)" 
+                            ondragleave="handleDragLeave(event)"
                             ondrop="handleDrop(event, 'todo')"></div>
                     </div>
 
@@ -2119,6 +2155,7 @@
                         </div>
                         <div class="kanban-cards" id="cards-doing"
                             ondragover="handleDragOver(event)" 
+                            ondragleave="handleDragLeave(event)"
                             ondrop="handleDrop(event, 'doing')"></div>
                     </div>
 
@@ -2129,6 +2166,7 @@
                         </div>
                         <div class="kanban-cards" id="cards-done"
                             ondragover="handleDragOver(event)" 
+                            ondragleave="handleDragLeave(event)"
                             ondrop="handleDrop(event, 'done')"></div>
                     </div>
                 </div>
@@ -3931,27 +3969,62 @@ END:VEVENT
 
         function handleDragStart(e, cardId) {
             draggedCardId = cardId;
-            e.target.classList.add('dragging');
+            // Small delay to allow the drag image to be captured first
+            setTimeout(() => {
+                e.target.classList.add('dragging');
+            }, 0);
             e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', cardId);
         }
 
         function handleDragEnd(e) {
             e.target.classList.remove('dragging');
             draggedCardId = null;
+            // Remove all drag-over states
+            document.querySelectorAll('.kanban-cards').forEach(col => {
+                col.classList.remove('drag-over');
+            });
         }
 
         function handleDragOver(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
+            // Add visual feedback to the column
+            const column = e.currentTarget;
+            if (!column.classList.contains('drag-over')) {
+                column.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            // Only remove if we're leaving the column entirely
+            const column = e.currentTarget;
+            const rect = column.getBoundingClientRect();
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+                column.classList.remove('drag-over');
+            }
         }
 
         function handleDrop(e, column) {
             e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
             if (draggedCardId) {
                 const card = state.kanbanCards.find(c => c.id === draggedCardId);
-                if (card) {
+                if (card && card.column !== column) {
                     card.column = column;
                     saveState();
+                    // Add a small animation effect
+                    renderKanban();
+                    const cardEl = document.getElementById(`card-${card.id}`);
+                    if (cardEl) {
+                        cardEl.style.animation = 'dropBounce 0.3s ease';
+                        setTimeout(() => cardEl.style.animation = '', 300);
+                    }
+                } else {
                     renderKanban();
                 }
             }
