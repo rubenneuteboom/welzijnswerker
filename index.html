@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welzijnswerker v2.3 Medium (GPT) - SIJN Levensdomeinen</title>
+    <title>Welzijnswerker v2.4 Medium (GPT) - SIJN Levensdomeinen</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -379,69 +379,9 @@
             border-color: var(--primary);
         }
 
-        /* Domain scoring */
-        .domain-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
-        }
-
-        .domain-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
+        /* Domain icon (used in active domain header) */
         .domain-icon {
             font-size: 2rem;
-        }
-
-        .domain-info h3 {
-            font-size: 1.1rem;
-            color: var(--text);
-        }
-
-        .domain-info p {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .domain-slider-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .domain-slider {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 8px;
-            border-radius: 4px;
-            background: linear-gradient(to right, var(--danger), var(--warning), var(--secondary));
-            outline: none;
-        }
-
-        .domain-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 3px solid var(--primary);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .domain-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            min-width: 50px;
-            text-align: center;
         }
 
         .professional-note {
@@ -459,6 +399,696 @@
         }
 
         .professional-note textarea:focus {
+            outline: none;
+        }
+
+        /* Domain Tabs */
+        /* Domeinkaart Accordion - Uitklapbare kaarten */
+        .domeinkaart-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .domain-card-accordion {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .domain-card-accordion.expanded {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.15);
+        }
+
+        .domain-card-header {
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+            transition: all 0.15s;
+        }
+
+        .domain-card-header:hover {
+            background: linear-gradient(to bottom, #fff 0%, #f5f5f5 100%);
+        }
+
+        .domain-card-accordion.expanded .domain-card-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .domain-card-header .card-emoji {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .domain-card-header .card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .domain-card-header .card-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .domain-card-header .card-desc {
+            font-size: 0.75rem;
+            color: #666;
+            margin: 2px 0 0 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .domain-card-accordion.expanded .domain-card-header .card-desc {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .domain-card-header .card-score {
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #555;
+            flex-shrink: 0;
+        }
+
+        .domain-card-accordion.expanded .domain-card-header .card-score {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        /* Score kleuren */
+        .domain-card-accordion.score-1 .card-score,
+        .domain-card-accordion.score-2 .card-score { background: #fecaca; color: #991b1b; }
+        .domain-card-accordion.score-3 .card-score { background: #fef08a; color: #854d0e; }
+        .domain-card-accordion.score-4 .card-score,
+        .domain-card-accordion.score-5 .card-score { background: #bbf7d0; color: #166534; }
+        .domain-card-accordion.expanded.score-1 .card-score,
+        .domain-card-accordion.expanded.score-2 .card-score { background: #dc2626; color: white; }
+        .domain-card-accordion.expanded.score-3 .card-score { background: #eab308; color: white; }
+        .domain-card-accordion.expanded.score-4 .card-score,
+        .domain-card-accordion.expanded.score-5 .card-score { background: #22c55e; color: white; }
+
+        .domain-card-header .card-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .domain-card-accordion.expanded .card-toggle {
+            transform: rotate(180deg);
+        }
+
+        .domain-card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: white;
+        }
+
+        .domain-card-accordion.expanded .domain-card-content {
+            max-height: 2000px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        .domain-card-body {
+            padding: 20px;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-chart-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .spider-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .spider-container canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .legend-chip {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .legend-chip:hover {
+            transform: scale(1.05);
+        }
+
+        .dashboard-details-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .details-panel {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 200px;
+            transition: all 0.3s;
+        }
+
+        .details-panel.active {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.15);
+        }
+
+        .details-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-light);
+            text-align: center;
+            gap: 10px;
+        }
+
+        .details-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .details-header .emoji {
+            font-size: 2rem;
+        }
+
+        .details-header .info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .details-header .info p {
+            margin: 2px 0 0 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .details-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .details-score.score-1, .details-score.score-2 { background: #fef2f2; color: #991b1b; }
+        .details-score.score-3 { background: #fefce8; color: #854d0e; }
+        .details-score.score-4, .details-score.score-5 { background: #f0fdf4; color: #166534; }
+
+        .details-ondersteuners {
+            margin-top: 15px;
+        }
+
+        .details-ondersteuners h4 {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 0 0 10px 0;
+        }
+
+        .ondersteuner-mini {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .ondersteuner-mini .name {
+            font-weight: 500;
+        }
+
+        .ondersteuner-mini .meta {
+            color: var(--text-light);
+            font-size: 0.75rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card.attention .stat-value { color: #dc2626; }
+        .stat-card.success .stat-value { color: #22c55e; }
+
+        /* Top Stats Row */
+        .dashboard-stats-top {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-stats-top {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card-top {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stat-card-top:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(74, 144, 217, 0.1);
+        }
+
+        .stat-card-top .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-top .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-card-top .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Attention Box */
+        .attention-box {
+            background: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .attention-box h4 {
+            color: #991b1b;
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+        }
+
+        .attention-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .attention-box li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #fecaca;
+            color: #7f1d1d;
+        }
+
+        .attention-box li:last-child {
+            border-bottom: none;
+        }
+
+        .attention-box li::before {
+            content: '⚠️';
+        }
+
+        .domain-quick-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .domain-quick-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .domain-quick-item:hover {
+            background: white;
+            border-color: var(--primary);
+        }
+
+        .domain-quick-item .dq-emoji {
+            font-size: 1.2rem;
+        }
+
+        .domain-quick-item .dq-name {
+            flex: 1;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .domain-quick-item .dq-score {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .domain-quick-item .dq-score.score-1,
+        .domain-quick-item .dq-score.score-2 { background: #dc2626; }
+        .domain-quick-item .dq-score.score-3 { background: #eab308; }
+        .domain-quick-item .dq-score.score-4,
+        .domain-quick-item .dq-score.score-5 { background: #22c55e; }
+        .domain-quick-item .dq-score.score-0 { background: #94a3b8; }
+
+        .active-domain-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .active-domain-header .domain-icon {
+            font-size: 3rem;
+        }
+
+        .active-domain-header h3 {
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        /* Zelfredzaamheid Scale 1-5 */
+        .zelfredzaamheid-scale {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .scale-option {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .scale-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .scale-option.selected {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .scale-option.score-1 { border-color: #dc2626; }
+        .scale-option.score-1.selected { background: #dc2626; color: white; }
+        .scale-option.score-2 { border-color: #f97316; }
+        .scale-option.score-2.selected { background: #f97316; color: white; }
+        .scale-option.score-3 { border-color: #eab308; }
+        .scale-option.score-3.selected { background: #eab308; color: white; }
+        .scale-option.score-4 { border-color: #22c55e; }
+        .scale-option.score-4.selected { background: #22c55e; color: white; }
+        .scale-option.score-5 { border-color: #10b981; }
+        .scale-option.score-5.selected { background: #10b981; color: white; }
+
+        .scale-option .scale-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .scale-option .scale-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* SIJN Domain Details (6 aspecten) */
+        .domain-details-toggle {
+            background: var(--primary-light);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .domain-details-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .domain-details-toggle.expanded {
+            background: var(--primary);
+            color: white;
+        }
+
+        .domain-details-panel {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .domain-details-panel.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .domain-detail-row {
+            margin-bottom: 12px;
+        }
+
+        .domain-detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .domain-detail-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .domain-detail-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .domain-detail-option {
+            padding: 6px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .domain-detail-option:hover {
+            border-color: var(--primary);
+        }
+
+        .domain-detail-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .domain-detail-option.steunend.selected { background: var(--secondary); border-color: var(--secondary); }
+        .domain-detail-option.neutraal.selected { background: #6b7280; border-color: #6b7280; }
+        .domain-detail-option.beperkt.selected { background: var(--warning); border-color: var(--warning); }
+        .domain-detail-option.belemmerend.selected { background: var(--danger); border-color: var(--danger); }
+
+        .domain-detail-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .domain-detail-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Ondersteuners per domein */
+        .ondersteuners-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .ondersteuners-section h5 {
+            margin: 0 0 12px 0;
+            color: var(--text);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ondersteuner-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .ondersteuner-card:last-child { margin-bottom: 0; }
+        .ondersteuner-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .ondersteuner-number {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .ondersteuner-fields {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        @media (min-width: 480px) {
+            .ondersteuner-fields {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+            }
+        }
+        .ondersteuner-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .ondersteuner-field label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ondersteuner-field input,
+        .ondersteuner-field select {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            background: white;
+        }
+        .ondersteuner-field input:focus,
+        .ondersteuner-field select:focus {
             outline: none;
             border-color: var(--primary);
         }
@@ -1619,6 +2249,143 @@
             animation: loading 1.5s ease-in-out infinite;
         }
 
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-body .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .modal-body input[type="text"],
+        .modal-body textarea,
+        .modal-body select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .modal-body input[type="text"]:focus,
+        .modal-body textarea:focus,
+        .modal-body select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid var(--primary-light);
+        }
+
+        /* Cached advice indicator */
+        .advice-cached-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .advice-regenerate-btn {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+        }
+
+        .advice-regenerate-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
         /* Print styles */
         @media print {
             body {
@@ -1649,7 +2416,7 @@
                 display: block !important;
             }
 
-            #screen-start, #screen-hulpvraag, #screen-domains, #screen-network, #screen-waardering {
+            #screen-start, #screen-hulpvraag, #screen-domains, #screen-network {
                 display: none !important;
             }
 
@@ -1698,11 +2465,6 @@
 
             .step-label {
                 display: none;
-            }
-
-            .domain-slider-container {
-                flex-direction: column;
-                align-items: stretch;
             }
 
             .btn-group {
@@ -1866,6 +2628,141 @@
             padding: 40px;
             color: var(--text-light);
         }
+
+        /* Domain Info Tooltip */
+        .domain-info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .domain-info-icon:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .domain-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-dark);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: normal;
+            line-height: 1.5;
+            width: 280px;
+            max-width: 90vw;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            text-align: left;
+        }
+
+        .domain-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--primary-dark);
+        }
+
+        .domain-info-icon:hover .domain-tooltip,
+        .domain-info-icon:focus .domain-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .domain-header-row {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Checkbox items met beschrijving */
+        .checkbox-item-extended {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            background: var(--white);
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            min-width: 180px;
+        }
+
+        .checkbox-item-extended:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+
+        .checkbox-item-extended.checked {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .checkbox-item-extended .checkbox-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .checkbox-item-extended .checkbox-header input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-item-extended .checkbox-desc {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-left: 26px;
+            line-height: 1.4;
+        }
+
+        .checkbox-group-extended {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .domain-tooltip {
+                width: 220px;
+                left: 0;
+                transform: translateX(0);
+            }
+            .domain-tooltip::after {
+                left: 15px;
+            }
+            .checkbox-group-extended {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1977,124 +2874,85 @@
             <!-- Screen 3: Domains -->
             <div class="screen" id="screen-domains">
                 <div class="card">
-                    <h2>📊 Jouw Levensdomeinen</h2>
-                    <p>Geef voor elk domein aan hoe tevreden je bent (1 = heel slecht, 10 = uitstekend)</p>
+                    <h2>📊 Domeinkaart - Zelfredzaamheid</h2>
+                    <p>Selecteer een domein en geef de mate van zelfredzaamheid aan (1 = acuut probleem, 5 = volledig zelfstandig)</p>
                     
-                    <div id="domainsList"></div>
+                    <!-- Domeinkaart: Uitklapbare kaarten per domein -->
+                    <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(4)">Naar Netwerkkaart →</button>
+                        <button class="btn btn-primary" onclick="goToScreen(4)">Naar Dashboard →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 4: Network Map -->
+            <!-- Screen 4: Dashboard -->
             <div class="screen" id="screen-network">
                 <div class="card">
-                    <h2>👥 Jouw Netwerkkaart</h2>
-                    <p>Voeg personen toe die belangrijk zijn in jouw leven</p>
+                    <h2>📊 Zelfredzaamheid Dashboard</h2>
+                    <p>Overzicht van alle levensdomeinen en de mate van zelfredzaamheid</p>
 
-                    <div class="person-form">
-                        <h3>➕ Persoon toevoegen</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="personName">Naam</label>
-                                <input type="text" id="personName" placeholder="Voornaam">
+                    <!-- Top Stats Row -->
+                    <div class="dashboard-stats-top">
+                        <div class="stat-card-top">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-value" id="avgScoreValue">-</div>
+                            <div class="stat-label">Gemiddelde score</div>
+                        </div>
+                        <div class="stat-card-top">
+                            <div class="stat-icon">⬇️</div>
+                            <div class="stat-value" id="lowestScoreValue">-</div>
+                            <div class="stat-label">Laagste score</div>
+                        </div>
+                        <div class="stat-card-top">
+                            <div class="stat-icon">⬆️</div>
+                            <div class="stat-value" id="highestScoreValue">-</div>
+                            <div class="stat-label">Hoogste score</div>
+                        </div>
+                        <div class="stat-card-top">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-value" id="totalOndersteuners">-</div>
+                            <div class="stat-label">Ondersteuners</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-layout">
+                        <!-- Spider Diagram -->
+                        <div class="dashboard-chart-section">
+                            <div class="spider-container">
+                                <canvas id="spiderChart"></canvas>
                             </div>
-                            <div class="form-group">
-                                <label for="personType">Type relatie</label>
-                                <select id="personType">
-                                    <option value="familie">👨‍👩‍👧 Familie</option>
-                                    <option value="vriend">🤝 Vriend(in)</option>
-                                    <option value="buur">🏠 Buur</option>
-                                    <option value="collega">💼 Collega</option>
-                                    <option value="professional">⚕️ Professional</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="personFrequency">Contact frequentie</label>
-                                <select id="personFrequency">
-                                    <option value="dagelijks">Dagelijks</option>
-                                    <option value="wekelijks">Wekelijks</option>
-                                    <option value="maandelijks">Maandelijks</option>
-                                    <option value="minder">Minder vaak</option>
-                                </select>
+                        </div>
+
+                        <!-- Domain Details Panel -->
+                        <div class="dashboard-details-section">
+                            <div class="details-panel" id="domainDetailsPanel">
+                                <div class="details-placeholder">
+                                    <span style="font-size: 2rem;">👆</span>
+                                    <p>Beweeg over een domein in het diagram voor details</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Deze persoon helpt mij met:</label>
-                            <div class="checkbox-group" id="domainCheckboxes"></div>
-                        </div>
-                        <button class="btn btn-success" onclick="addPerson()">
-                            ✓ Toevoegen
-                        </button>
                     </div>
 
-                    <div class="person-list" id="personList"></div>
-
-                    <div class="network-container">
-                        <canvas id="networkCanvas"></canvas>
+                    <!-- Aandachtspunten Box -->
+                    <div class="attention-box" id="attentionBox" style="display: none;">
+                        <h4>⚠️ Aandachtspunten</h4>
+                        <ul id="attentionList"></ul>
                     </div>
 
-                    <div class="network-legend">
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background: #E53E3E;"></div>
-                            Familie
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background: #38A169;"></div>
-                            Vriend
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background: #D69E2E;"></div>
-                            Buur
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background: #805AD5;"></div>
-                            Collega
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background: #3182CE;"></div>
-                            Professional
-                        </div>
-                    </div>
-
-                    <div class="network-type" id="networkTypeDisplay">
-                        <p style="color: var(--text-light); margin-bottom: 10px;">Netwerktype:</p>
-                        <div class="network-type-badge eenpersoons" id="networkTypeBadge">
-                            🔴 Eenpersoons netwerk
-                        </div>
-                    </div>
+                    <!-- Domain Quick List -->
+                    <div class="domain-quick-list" id="domainQuickList"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(5)">Naar Waardering →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug naar Domeinkaart</button>
+                        <button class="btn btn-primary" onclick="goToScreen(5)">Bekijk Resultaten →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 5: Waardering Netwerksteun -->
-            <div class="screen" id="screen-waardering">
-                <div class="card">
-                    <h2>⭐ Waardering Netwerksteun</h2>
-                    <p>Geef aan hoe tevreden u bent met de steun van elke persoon in uw netwerk.</p>
-                    
-                    <div id="ratingsList"></div>
-
-                    <div class="average-rating" id="averageRatingBox" style="display: none;">
-                        <div class="label">Gemiddelde tevredenheid</div>
-                        <div class="value" id="averageRatingValue">-</div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                        <button class="btn btn-primary" onclick="saveRatings(); goToScreen(6)">Bekijk Resultaten →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 6: Results -->
+            <!-- Screen 5: Results -->
             <div class="screen" id="screen-results">
                 <div class="card">
                     <h2>📈 Jouw Resultaten</h2>
@@ -2118,13 +2976,13 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(7)">Bekijk Persoonlijk Advies →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(6)">Bekijk Persoonlijk Advies →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 7: Advies (Client) -->
+            <!-- Screen 6: Advies (Client) -->
             <div class="screen" id="screen-advies">
                 <div class="card">
                     <h2>🤖 Persoonlijk Advies</h2>
@@ -2190,9 +3048,18 @@
 
                     <div class="activities-selected-count">
                         <span id="selectedActivitiesCount">0</span> activiteit(en) geselecteerd
+                        <button class="btn btn-secondary" style="margin-left: 15px; padding: 8px 16px; font-size: 0.9rem;" onclick="searchBraveActivities()" id="btnSearchBrave">
+                            🔍 Zoek online
+                        </button>
                     </div>
 
                     <div id="lokaleActiviteitenList" class="lokale-activiteiten-grid"></div>
+                    
+                    <!-- Brave Search Results -->
+                    <div id="braveSearchResults" style="display: none; margin-top: 20px;">
+                        <h3 style="margin-bottom: 15px;">🌐 Online Zoekresultaten</h3>
+                        <div id="braveResultsList"></div>
+                    </div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(getScreenNumber('organisaties'))">← Terug</button>
@@ -2222,11 +3089,6 @@
                     <div class="summary-section">
                         <h3>👥 Netwerkanalyse</h3>
                         <div id="summaryNetwork"></div>
-                    </div>
-
-                    <div class="summary-section" id="summaryWaarderingSection" style="display: none;">
-                        <h3>⭐ Tevredenheid Netwerksteun</h3>
-                        <div id="summaryWaardering"></div>
                     </div>
 
                     <div class="summary-section" id="summaryNotesSection" style="display: none;">
@@ -2382,20 +3244,232 @@
         </div>
     </div>
 
+    <!-- Edit Kanban Card Modal -->
+    <div class="modal-overlay" id="editCardModal" onclick="closeEditCardModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>✏️ Actie Bewerken</h3>
+                <button class="modal-close" onclick="closeEditCardModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editCardId">
+                <div class="form-group">
+                    <label for="editCardTitle">Titel</label>
+                    <input type="text" id="editCardTitle" placeholder="Titel van de actie">
+                </div>
+                <div class="form-group">
+                    <label for="editCardDesc">Beschrijving</label>
+                    <textarea id="editCardDesc" rows="4" placeholder="Beschrijving van wat er moet gebeuren..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editCardPriority">Prioriteit</label>
+                    <select id="editCardPriority">
+                        <option value="normal">📌 Normaal</option>
+                        <option value="high">🔴 Hoog</option>
+                        <option value="low">🟢 Laag</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editCardColumn">Status</label>
+                    <select id="editCardColumn">
+                        <option value="todo">📋 Te Doen</option>
+                        <option value="doing">🔄 Bezig</option>
+                        <option value="done">✅ Afgerond</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditCardModal()">Annuleren</button>
+                <button class="btn btn-danger" onclick="deleteCardFromModal()">🗑️ Verwijderen</button>
+                <button class="btn btn-success" onclick="saveCardFromModal()">💾 Opslaan</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Data - Domains
+        // Data - Domains (SIJN Levensdomeinen)
+        // Zelfredzaamheid niveaus (SIJN schaal 1-10 gemapt naar 5 niveaus)
+        // Generieke zelfredzaamheid labels (fallback)
+        // Zelfredzaamheid niveaus (SIJN schaal 1-5)
+        const zelfredzaamheidLabels = {
+            1: { niveau: '1. Acuut probleem', kleur: '#dc2626', desc: 'Ernstige problemen, mogelijk gevaar' },
+            2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Dagelijkse hulp nodig, veel beperkingen' },
+            3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Enige hulp nodig, matige beperkingen' },
+            4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Minimale hulp, goed functioneren' },
+            5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Geen hulp nodig, uitstekend functioneren' }
+        };
+        
+        // Domein-specifieke zelfredzaamheid labels (SIJN methodiek, schaal 1-5)
+        const zelfredzaamheidPerDomein = {
+            financien: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Geen inkomen, hoge groeiende schulden' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Onvoldoende inkomen, groeiende schulden' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Basisbehoeften met hulp, stabiele schulden' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Basisbehoeften, beheert schulden zelf' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Ruim voldoende, goed financieel beheer' }
+            },
+            dagbesteding: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Geen dagbesteding, veroorzaakt overlast' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Geen dagbesteding, geen overlast' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Laagdrempelige dagbesteding' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Arbeidstoeleiding of opleiding' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Vast werk of hogere opleiding' }
+            },
+            huisvesting: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Dakloos of in nachtopvang' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Dreigende huisuitzetting' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Stabiel maar marginaal' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Veilig, gedeeltelijk autonoom' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Veilig, eigen contract, autonoom' }
+            },
+            huiselijk: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Huiselijk geweld aanwezig' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Slechte omgang, potentieel geweld' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Problemen erkend, werkt eraan' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Geen problemen of woont alleen' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Goede relaties, steun elkaar' }
+            },
+            geestelijk: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Gevaar voor zelf/anderen' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Aanhoudende problemen, geen behandeling' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Milde symptomen, in behandeling' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Minimale symptomen, goede behandeltrouw' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Alleen dagelijkse zorgen' }
+            },
+            lichamelijk: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Direct medische hulp nodig' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Behandeling nodig maar niet gevolgd' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'In behandeling, lichte beperking' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Aandoening goed behandeld' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Geen medische problemen' }
+            },
+            verslaving: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Ernstige verslaving, opname nodig' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Verslaving, dagelijks leven verstoord' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Gebruik, minimale verstoring' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Geen gevaarlijk gebruik' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Geen middelengebruik' }
+            },
+            adl: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Kan niet voor zichzelf zorgen' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Hulp nodig bij basis zelfzorg' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Meeste taken, complexe niet' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Alle taken, kleine problemen' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Geen problemen met zelfzorg' }
+            },
+            sociaal: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Geen steun, ernstig isolement' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Nauwelijks contacten' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Enige steun, moeite met relaties' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Goede steun van netwerk' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Sterk sociaal netwerk' }
+            },
+            participatie: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Crisissituatie, overlevingsmodus' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Maatschappelijk geïsoleerd' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Nauwelijks participerend' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Enige participatie' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Actief maatschappelijk betrokken' }
+            },
+            justitie: {
+                1: { niveau: '1. Acuut', kleur: '#dc2626', desc: 'Regelmatig politiecontact, openstaand' },
+                2: { niveau: '2. Niet zelfstandig', kleur: '#f97316', desc: 'Meerdere keren per jaar contact' },
+                3: { niveau: '3. Beperkt zelfstandig', kleur: '#eab308', desc: 'Incidenteel contact, proeftijd' },
+                4: { niveau: '4. Voldoende zelfstandig', kleur: '#22c55e', desc: 'Zelden contact' },
+                5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Geen politiecontact' }
+            }
+        };
+        
+        // Helper functie om domein-specifiek label op te halen
+        function getZelfredzaamheidLabel(domainId, score) {
+            // Fallback voor ongeldige scores
+            if (!score || score < 1 || score > 5) {
+                return { niveau: '- Niet beoordeeld', kleur: '#94a3b8', desc: 'Nog geen score toegekend' };
+            }
+            if (zelfredzaamheidPerDomein[domainId] && zelfredzaamheidPerDomein[domainId][score]) {
+                return zelfredzaamheidPerDomein[domainId][score];
+            }
+            return zelfredzaamheidLabels[score] || { niveau: '- Onbekend', kleur: '#94a3b8', desc: '' };
+        }
+        
         const domains = [
-            { id: 'financien', emoji: '💰', name: 'Financiën', desc: 'Financiële middelen voor basisbehoeften' },
-            { id: 'dagbesteding', emoji: '💼', name: 'Dagbesteding', desc: 'Werk, opleiding, vrijwilligerswerk' },
-            { id: 'huisvesting', emoji: '🏠', name: 'Huisvesting', desc: 'Wonen, veiligheid' },
-            { id: 'huiselijk', emoji: '👨‍👩‍👧', name: 'Huiselijke relaties', desc: 'Sfeer en relaties thuis' },
-            { id: 'geestelijk', emoji: '🧠', name: 'Geestelijke gezondheid', desc: 'Mentaal welzijn, stress' },
-            { id: 'lichamelijk', emoji: '💪', name: 'Lichamelijke gezondheid', desc: 'Fysieke conditie' },
-            { id: 'verslaving', emoji: '🚭', name: 'Verslaving', desc: 'Middelen, gokken, gaming' },
-            { id: 'adl', emoji: '🛁', name: 'ADL-vaardigheden', desc: 'Dagelijkse activiteiten (wassen, koken, schoonmaken)' },
-            { id: 'sociaal', emoji: '👥', name: 'Sociaal netwerk', desc: 'Steun en contacten' },
-            { id: 'participatie', emoji: '🤝', name: 'Maatschappelijke participatie', desc: 'Meedoen in samenleving' },
-            { id: 'justitie', emoji: '⚖️', name: 'Justitie', desc: 'Juridische problemen' }
+            { 
+                id: 'financien', 
+                emoji: '💰', 
+                name: 'Financiën', 
+                desc: 'Financiële middelen voor basisbehoeften',
+                sijnInfo: 'Inkomen, schulden, financiële zelfredzaamheid. Dit domein gaat over of iemand voldoende inkomen heeft om rond te komen, schulden kan beheren en financieel onafhankelijk is.'
+            },
+            { 
+                id: 'dagbesteding', 
+                emoji: '💼', 
+                name: 'Dagbesteding', 
+                desc: 'Werk, opleiding, vrijwilligerswerk',
+                sijnInfo: 'Werk, opleiding, vrijwilligerswerk, zinvolle tijdsbesteding. Dagbesteding geeft structuur en betekenis aan het dagelijks leven, of dit nu betaald werk is of andere zinvolle activiteiten.'
+            },
+            { 
+                id: 'huisvesting', 
+                emoji: '🏠', 
+                name: 'Huisvesting', 
+                desc: 'Wonen, veiligheid',
+                sijnInfo: 'Woonsituatie, veiligheid, stabiliteit. Een stabiele en veilige woonsituatie is een basisbehoefte. Hierbij gaat het om de kwaliteit van de woning én de zekerheid om daar te kunnen blijven wonen.'
+            },
+            { 
+                id: 'huiselijk', 
+                emoji: '👨‍👩‍👧', 
+                name: 'Huiselijke relaties', 
+                desc: 'Sfeer en relaties thuis',
+                sijnInfo: 'Gezin, huisgenoten, thuissituatie. De kwaliteit van relaties binnen het huishouden: partner, kinderen, huisgenoten. Hoe veilig en prettig voelt de thuissituatie?'
+            },
+            { 
+                id: 'geestelijk', 
+                emoji: '🧠', 
+                name: 'Geestelijke gezondheid', 
+                desc: 'Mentaal welzijn, stress',
+                sijnInfo: 'Psychisch welzijn, stress, veerkracht. Dit gaat over hoe iemand zich mentaal voelt: stemming, stress, angst, depressie, maar ook veerkracht en het vermogen om met tegenslagen om te gaan.'
+            },
+            { 
+                id: 'lichamelijk', 
+                emoji: '💪', 
+                name: 'Lichamelijke gezondheid', 
+                desc: 'Fysieke conditie',
+                sijnInfo: 'Fysieke conditie, beperkingen, zorg. De lichamelijke gezondheid omvat chronische aandoeningen, beperkingen, pijn en de toegang tot medische zorg die nodig is.'
+            },
+            { 
+                id: 'verslaving', 
+                emoji: '🚭', 
+                name: 'Verslaving', 
+                desc: 'Middelen, gokken, gaming',
+                sijnInfo: 'Middelengebruik, gedragsverslavingen. Gebruik van alcohol, drugs of medicijnen, maar ook gedragsverslavingen zoals gokken, gaming of social media die het dagelijks functioneren beïnvloeden.'
+            },
+            { 
+                id: 'adl', 
+                emoji: '🛁', 
+                name: 'ADL-vaardigheden', 
+                desc: 'Dagelijkse activiteiten (wassen, koken, schoonmaken)',
+                sijnInfo: 'Zelfzorg, huishouden, administratie. Algemene Dagelijkse Levensverrichtingen: persoonlijke verzorging, huishoudelijke taken, boodschappen doen en administratie bijhouden.'
+            },
+            { 
+                id: 'sociaal', 
+                emoji: '👥', 
+                name: 'Sociaal netwerk', 
+                desc: 'Steun en contacten',
+                sijnInfo: 'Vrienden, familie, sociale contacten. De omvang en kwaliteit van het sociale netwerk: zijn er mensen om op terug te vallen, voor gezelschap en emotionele steun?'
+            },
+            { 
+                id: 'participatie', 
+                emoji: '🤝', 
+                name: 'Maatschappelijke participatie', 
+                desc: 'Meedoen in samenleving',
+                sijnInfo: 'Deelname aan samenleving, activiteiten. Actieve deelname aan de maatschappij: lid zijn van verenigingen, deelnemen aan buurtactiviteiten, vrijwilligerswerk of andere vormen van maatschappelijke betrokkenheid.'
+            },
+            { 
+                id: 'justitie', 
+                emoji: '⚖️', 
+                name: 'Justitie', 
+                desc: 'Juridische problemen',
+                sijnInfo: 'Contact met justitie, juridische problemen. Lopende rechtszaken, boetes, schulden bij overheid, reclassering of andere juridische kwesties die het dagelijks leven beïnvloeden.'
+            }
         ];
 
         const voorzieningen = {
@@ -2525,10 +3599,34 @@
             { id: 405, name: 'Dierenasiel Hulp', type: 'vrijwilliger', typeName: 'Dierenverzorging', postcodes: ['10', '11', '12'], address: 'Dierenopvang Amsterdam', icon: '🐕', dagen: 'Alle dagen', tijd: 'Ochtend of middag', kosten: 'Geen', tags: ['dieren', 'buiten', 'beweging'], afstand: 6.2 },
             
             // Extra activiteiten voor variatie
-            { id: 501, name: 'Repair Café', type: 'sociaal', typeName: 'Repair Café', postcodes: ['10', '11', '30', '31', '35', '36'], address: 'Diverse locaties', icon: '🔧', dagen: 'Za (1x per maand)', tijd: '10:00-14:00', kosten: 'Gratis', tags: ['repareren', 'duurzaam', 'leren'], afstand: 2.0 },
-            { id: 502, name: 'Bingo Middag', type: 'sociaal', typeName: 'Spelletjes', postcodes: ['10', '11', '25', '26'], address: 'Wijkcentrum lokaal', icon: '🎱', dagen: 'Do', tijd: '14:00-16:00', kosten: '€2 incl. koffie', tags: ['senioren', 'prijzen', 'gezellig'], afstand: 1.0 },
-            { id: 503, name: 'Nordic Walking Groep', type: 'sport', typeName: 'Nordic Walking', postcodes: ['25', '26', '27'], address: 'Zuiderpark, Den Haag', icon: '🏃‍♀️', dagen: 'Di, Do', tijd: '09:30-11:00', kosten: '€3/keer', tags: ['buiten', 'conditie', 'gezellig'], afstand: 2.2 },
-            { id: 504, name: 'Moestuin Samen Groeien', type: 'vrijwilliger', typeName: 'Stadslandbouw', postcodes: ['10', '11'], address: 'Volkstuinpark Amsteldijk', icon: '🥕', dagen: 'Za', tijd: '10:00-13:00', kosten: 'Gratis, groenten delen', tags: ['natuur', 'buiten', 'gezond'], afstand: 3.5 }
+            { id: 501, name: 'Repair Café', type: 'sociaal', typeName: 'Repair Café', postcodes: ['10', '11', '23', '30', '31', '35', '36'], address: 'Diverse locaties', icon: '🔧', dagen: 'Za (1x per maand)', tijd: '10:00-14:00', kosten: 'Gratis', tags: ['repareren', 'duurzaam', 'leren'], afstand: 2.0 },
+            { id: 502, name: 'Bingo Middag', type: 'sociaal', typeName: 'Spelletjes', postcodes: ['10', '11', '23', '25', '26'], address: 'Wijkcentrum lokaal', icon: '🎱', dagen: 'Do', tijd: '14:00-16:00', kosten: '€2 incl. koffie', tags: ['senioren', 'prijzen', 'gezellig'], afstand: 1.0 },
+            { id: 503, name: 'Nordic Walking Groep', type: 'sport', typeName: 'Nordic Walking', postcodes: ['23', '25', '26', '27'], address: 'Zuiderpark, Den Haag', icon: '🏃‍♀️', dagen: 'Di, Do', tijd: '09:30-11:00', kosten: '€3/keer', tags: ['buiten', 'conditie', 'gezellig'], afstand: 2.2 },
+            { id: 504, name: 'Moestuin Samen Groeien', type: 'vrijwilliger', typeName: 'Stadslandbouw', postcodes: ['10', '11', '23'], address: 'Volkstuinpark Amsteldijk', icon: '🥕', dagen: 'Za', tijd: '10:00-13:00', kosten: 'Gratis, groenten delen', tags: ['natuur', 'buiten', 'gezond'], afstand: 3.5 },
+            
+            // Regio Leiden / Oegstgeest (postcode 23xx)
+            { id: 601, name: 'Sportclub Leiden', type: 'sport', typeName: 'Sportvereniging', postcodes: ['23', '22'], address: 'Sportpark De Vliet, Leiden', icon: '🏃', dagen: 'Ma, Wo, Vr', tijd: '09:00-11:00', kosten: 'Gratis proefles', tags: ['bewegen', 'groep', 'laagdrempelig'], afstand: 2.5 },
+            { id: 602, name: 'Zwembad De Zijl', type: 'sport', typeName: 'Zwemmen', postcodes: ['23'], address: 'Boshuizerlaan 145, Leiden', icon: '🏊', dagen: 'Ma t/m Zo', tijd: '07:00-22:00', kosten: '€5,50/keer', tags: ['bewegen', 'water', 'alle leeftijden'], afstand: 3.0 },
+            { id: 603, name: 'Wandelgroep Leiden', type: 'sport', typeName: 'Wandelen', postcodes: ['23', '22'], address: 'Start: Station Leiden Centraal', icon: '🚶', dagen: 'Di, Za', tijd: '10:00-12:30', kosten: 'Gratis', tags: ['natuur', 'sociaal', 'alle leeftijden'], afstand: 1.8 },
+            { id: 604, name: 'Yoga Studio Oegstgeest', type: 'sport', typeName: 'Yoga', postcodes: ['23'], address: 'Lijtweg 18, Oegstgeest', icon: '🧘', dagen: 'Ma, Wo, Vr', tijd: '09:00-10:00', kosten: '€12/les', tags: ['ontspanning', 'beginners', 'kleine groepen'], afstand: 0.8 },
+            { id: 605, name: 'Tennis & Padel Oegstgeest', type: 'sport', typeName: 'Racketsporten', postcodes: ['23'], address: 'Sportpark Haaswijk, Oegstgeest', icon: '🎾', dagen: 'Ma t/m Zo', tijd: 'Diverse tijden', kosten: 'Lidmaatschap €150/jaar', tags: ['buiten', 'sociaal', 'competitie'], afstand: 1.2 },
+            
+            { id: 611, name: 'Buurthuis De Sleutels', type: 'sociaal', typeName: 'Buurthuis', postcodes: ['23'], address: 'Sleutelbloemstraat 50, Leiden', icon: '🏠', dagen: 'Ma t/m Vr', tijd: '09:00-17:00', kosten: 'Gratis entree', tags: ['koffie', 'ontmoeting', 'activiteiten'], afstand: 2.1 },
+            { id: 612, name: 'Wijkcentrum De Sterren', type: 'sociaal', typeName: 'Wijkcentrum', postcodes: ['23'], address: 'Sterrenlaan 10, Leiden', icon: '⭐', dagen: 'Ma t/m Za', tijd: '10:00-21:00', kosten: 'Gratis', tags: ['eten', 'cursussen', 'ontmoeting'], afstand: 2.8 },
+            { id: 613, name: 'Eetcafé De Burcht', type: 'sociaal', typeName: 'Buurtrestaurant', postcodes: ['23'], address: 'Burgsteeg 14, Leiden', icon: '🍽️', dagen: 'Di, Do', tijd: '17:00-19:00', kosten: '€5 voor 3-gangen', tags: ['eten', 'betaalbaar', 'gezellig'], afstand: 3.5 },
+            { id: 614, name: 'Inloophuis Het Gesprek', type: 'sociaal', typeName: 'Inloophuis', postcodes: ['23', '22'], address: 'Haarlemmerstraat 120, Leiden', icon: '🏡', dagen: 'Ma, Wo, Vr', tijd: '10:00-15:00', kosten: 'Gratis', tags: ['GGZ', 'lotgenoten', 'koffie'], afstand: 3.2 },
+            { id: 615, name: 'Koffieochtend Dorpshuis Oegstgeest', type: 'sociaal', typeName: 'Ontmoeting', postcodes: ['23'], address: 'Dorpshuis, Wilhelminapark 14, Oegstgeest', icon: '☕', dagen: 'Wo', tijd: '10:00-12:00', kosten: 'Gratis', tags: ['senioren', 'gezellig', 'dorps'], afstand: 0.5 },
+            
+            { id: 621, name: 'Taalcafé Leiden', type: 'cursus', typeName: 'Taalles', postcodes: ['23'], address: 'Bibliotheek Leiden, Nieuwstraat 4', icon: '📚', dagen: 'Di, Do', tijd: '10:00-12:00', kosten: 'Gratis', tags: ['Nederlands', 'beginners', 'gezellig'], afstand: 3.0 },
+            { id: 622, name: 'Computercursus Bibliotheek', type: 'cursus', typeName: 'Digitale vaardigheden', postcodes: ['23'], address: 'Bibliotheek Leiden, Nieuwstraat 4', icon: '💻', dagen: 'Ma', tijd: '14:00-16:00', kosten: 'Gratis', tags: ['internet', 'DigiD', 'beginners'], afstand: 3.0 },
+            { id: 623, name: 'Schilderclub Leiden', type: 'cursus', typeName: 'Creatief', postcodes: ['23'], address: 'LAK Theater, Levendaal 150', icon: '🎨', dagen: 'Wo', tijd: '13:30-16:00', kosten: '€8/les incl. materiaal', tags: ['schilderen', 'creatief', 'gezellig'], afstand: 3.3 },
+            { id: 624, name: 'Kookworkshop Wereldkeuken', type: 'cursus', typeName: 'Koken', postcodes: ['23'], address: 'Buurthuis De Sleutels, Leiden', icon: '👨‍🍳', dagen: 'Za', tijd: '11:00-14:00', kosten: '€7,50 incl. eten', tags: ['gezond', 'multicultureel', 'samen'], afstand: 2.1 },
+            
+            { id: 631, name: 'Maatjesproject Leiden', type: 'vrijwilliger', typeName: 'Maatjes', postcodes: ['23', '22'], address: 'Humanitas Leiden, Breestraat 19', icon: '🤝', dagen: 'Flexibel', tijd: '2 uur/week', kosten: 'Onkostenvergoeding', tags: ['1-op-1', 'sociaal', 'training'], afstand: 3.2 },
+            { id: 632, name: 'Voedselbank Leiden', type: 'vrijwilliger', typeName: 'Voedselbank', postcodes: ['23'], address: 'Industrieweg 10, Leiden', icon: '🥫', dagen: 'Ma, Wo, Vr', tijd: '09:00-13:00', kosten: 'Reiskostenvergoeding', tags: ['logistiek', 'sociaal', 'zinvol'], afstand: 4.0 },
+            { id: 633, name: 'Voorlezen in de Bieb', type: 'vrijwilliger', typeName: 'Voorlezen', postcodes: ['23'], address: 'Bibliotheek Oegstgeest', icon: '📖', dagen: 'Wo', tijd: '14:00-15:00', kosten: 'Geen', tags: ['kinderen', 'lezen', 'leuk'], afstand: 0.6 },
+            { id: 634, name: 'Dierenweide Oegstgeest', type: 'vrijwilliger', typeName: 'Dierenverzorging', postcodes: ['23'], address: 'Kinderboerderij Oegstgeest', icon: '🐐', dagen: 'Za, Zo', tijd: '10:00-12:00', kosten: 'Geen', tags: ['dieren', 'buiten', 'kinderen'], afstand: 1.0 },
+            { id: 635, name: 'Taalmaatje Vluchtelingen Leiden', type: 'vrijwilliger', typeName: 'Taalmaatje', postcodes: ['23', '22'], address: 'VluchtelingenWerk Leiden', icon: '🗣️', dagen: 'Flexibel', tijd: '1-2 uur/week', kosten: 'Training aangeboden', tags: ['taal', 'integratie', 'cultuur'], afstand: 3.5 }
         ];
 
         // Risks per network type
@@ -2571,11 +3669,9 @@
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'hulpvraag', label: 'Hulpvraag', emoji: '❓' },
             { id: 'domains', label: 'Domeinen', emoji: '📊' },
-            { id: 'network', label: 'Netwerk', emoji: '👥' },
-            { id: 'waardering', label: 'Waardering', emoji: '⭐' },
+            { id: 'network', label: 'Dashboard', emoji: '📊' },
             { id: 'results', label: 'Resultaten', emoji: '📈' },
             { id: 'advies', label: 'Advies', emoji: '🤖' },
-            // advies-pro is inserted here for professional mode
             { id: 'organisaties', label: 'Organisaties', emoji: '🏢' },
             { id: 'activiteiten', label: 'Activiteiten', emoji: '📋' },
             { id: 'summary', label: 'Overzicht', emoji: '📋' }
@@ -2585,8 +3681,7 @@
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'hulpvraag', label: 'Hulpvraag', emoji: '❓' },
             { id: 'domains', label: 'Domeinen', emoji: '📊' },
-            { id: 'network', label: 'Netwerk', emoji: '👥' },
-            { id: 'waardering', label: 'Waardering', emoji: '⭐' },
+            { id: 'network', label: 'Dashboard', emoji: '📊' },
             { id: 'results', label: 'Resultaten', emoji: '📈' },
             { id: 'advies', label: 'Advies', emoji: '🤖' },
             { id: 'advies-pro', label: 'Prof. Advies', emoji: '👨‍⚕️' },
@@ -2607,8 +3702,15 @@
             return index + 1;
         }
 
-        // State
+        // State - Extended datamodel for historical tracking (v2.4+)
         let state = {
+            // Metadata
+            version: '2.4',
+            clientId: null, // Unique ID for multi-client support (future)
+            createdAt: null,
+            updatedAt: null,
+            
+            // Current assessment data
             mode: null,
             professionalName: '',
             postcode: '',
@@ -2618,6 +3720,8 @@
             wens: '',
             scores: {},
             notes: {},
+            // SIJN domein details (6 aspecten per domein)
+            domainDetails: {}, // { domeinId: { vraagVan, netwerkSteun, leverancier, ondersteuning, ervaring, ondersteuners: [{naam, relatieType, frequentie, beoordeling}] } }
             network: [],
             ratings: {},
             ratingNotes: {},
@@ -2629,20 +3733,133 @@
             selectedActivities: [],
             agendaActivities: [],
             agendaMonth: new Date().getMonth(),
-            agendaYear: new Date().getFullYear()
+            agendaYear: new Date().getFullYear(),
+            
+            // Cached advice (prevents regeneration)
+            cachedProAdvice: null,
+            cachedClientAdvice: null,
+            
+            // Historical tracking (for future dashboards)
+            history: {
+                // Assessment snapshots: [{date, scores, networkType, avgRating, priorities}]
+                assessments: [],
+                // Network changes: [{date, action, personId, personName, networkSize}]
+                networkChanges: [],
+                // Generated advice: [{date, type, content, model}]
+                adviceLog: [],
+                // Activity interactions: [{date, activityId, action, source}]
+                activityLog: [],
+                // Kanban progress: [{date, cardId, fromColumn, toColumn}]
+                kanbanLog: []
+            }
         };
 
         // Load from localStorage
         function loadState() {
             const saved = localStorage.getItem('welzijnswerker_v2');
             if (saved) {
-                state = {...state, ...JSON.parse(saved)};
+                const parsed = JSON.parse(saved);
+                // Ensure history object exists (migration from older versions)
+                if (!parsed.history) {
+                    parsed.history = {
+                        assessments: [],
+                        networkChanges: [],
+                        adviceLog: [],
+                        activityLog: [],
+                        kanbanLog: []
+                    };
+                }
+                // Migrate scores from 1-10 to 1-5 scale
+                if (parsed.scores) {
+                    Object.keys(parsed.scores).forEach(key => {
+                        const oldScore = parsed.scores[key];
+                        if (oldScore > 5) {
+                            // Convert 1-10 to 1-5: Math.ceil(score / 2)
+                            parsed.scores[key] = Math.ceil(oldScore / 2);
+                        }
+                    });
+                }
+                state = {...state, ...parsed};
+            }
+            // Set clientId if not exists
+            if (!state.clientId) {
+                state.clientId = 'client_' + Date.now();
+                state.createdAt = new Date().toISOString();
             }
         }
 
         // Save to localStorage
         function saveState() {
+            state.updatedAt = new Date().toISOString();
             localStorage.setItem('welzijnswerker_v2', JSON.stringify(state));
+        }
+
+        // Historical logging functions (for future dashboard features)
+        function logNetworkChange(action, person) {
+            if (!state.history) return;
+            state.history.networkChanges.push({
+                date: new Date().toISOString(),
+                action: action, // 'add', 'remove', 'update'
+                personId: person.id,
+                personName: person.name,
+                personType: person.type,
+                networkSize: state.network.length
+            });
+        }
+
+        function logAdvice(type, content) {
+            if (!state.history) return;
+            state.history.adviceLog.push({
+                date: new Date().toISOString(),
+                type: type, // 'client', 'professional'
+                contentLength: content?.length || 0,
+                model: 'gpt-4o-mini'
+            });
+        }
+
+        function logActivityInteraction(activityId, action, source) {
+            if (!state.history) return;
+            state.history.activityLog.push({
+                date: new Date().toISOString(),
+                activityId: activityId,
+                action: action, // 'view', 'select', 'deselect', 'complete'
+                source: source || 'static' // 'static', 'api', 'gpt'
+            });
+        }
+
+        function logKanbanMove(cardId, fromColumn, toColumn) {
+            if (!state.history) return;
+            state.history.kanbanLog.push({
+                date: new Date().toISOString(),
+                cardId: cardId,
+                fromColumn: fromColumn,
+                toColumn: toColumn
+            });
+        }
+
+        function createAssessmentSnapshot() {
+            if (!state.history) return;
+            const networkInfo = getNetworkType();
+            const ratings = state.network.map(p => state.ratings[p.id] || 5);
+            const avgRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+            
+            const sortedDomains = [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            );
+            
+            state.history.assessments.push({
+                date: new Date().toISOString(),
+                scores: {...state.scores},
+                networkType: networkInfo.type,
+                networkSize: state.network.length,
+                avgRating: Math.round(avgRating * 10) / 10,
+                lowestDomains: sortedDomains.slice(0, 3).map(d => d.id),
+                kanbanStats: {
+                    todo: state.kanbanCards.filter(c => c.column === 'todo').length,
+                    doing: state.kanbanCards.filter(c => c.column === 'doing').length,
+                    done: state.kanbanCards.filter(c => c.column === 'done').length
+                }
+            });
         }
 
         // Render progress steps dynamically
@@ -2737,6 +3954,7 @@
             state.clientBirthdate = document.getElementById('clientBirthdate').value;
             state.hulpvraag = document.getElementById('hulpvraag').value;
             state.wens = document.getElementById('wens').value;
+            invalidateAdviceCache();
             saveState();
         }
 
@@ -2748,6 +3966,7 @@
                 if (slider) state.ratings[person.id] = parseInt(slider.value);
                 if (note) state.ratingNotes[person.id] = note.value;
             });
+            invalidateAdviceCache();
             saveState();
         }
 
@@ -2797,12 +4016,8 @@
             if (screenId === 'hulpvraag') loadHulpvraagData();
             if (screenId === 'domains') renderDomains();
             if (screenId === 'network') {
-                renderDomainCheckboxes();
-                renderPersonList();
-                drawNetwork();
-                updateNetworkType();
+                renderDashboard();
             }
-            if (screenId === 'waardering') renderRatings();
             if (screenId === 'results') renderResults();
             if (screenId === 'advies') renderAdvice();
             if (screenId === 'advies-pro') renderProAdvice();
@@ -2822,40 +4037,498 @@
         }
 
         // Render domains
+        // Track active domain for tabs
+        let activeDomainId = null;
+        
         function renderDomains() {
-            const container = document.getElementById('domainsList');
-            container.innerHTML = domains.map(domain => `
-                <div class="domain-card">
-                    <div class="domain-header">
-                        <span class="domain-icon">${domain.emoji}</span>
-                        <div class="domain-info">
-                            <h3>${domain.name}</h3>
-                            <p>${domain.desc}</p>
+            const container = document.getElementById('domeinkaartAccordion');
+            if (!container) return;
+            
+            container.innerHTML = domains.map(domain => {
+                const score = state.scores[domain.id] || 0;
+                const isExpanded = domain.id === activeDomainId;
+                const details = state.domainDetails[domain.id] || {};
+                const currentScore = score || 3;
+                
+                return `
+                    <div class="domain-card-accordion ${isExpanded ? 'expanded' : ''} ${score ? 'score-' + score : ''}" 
+                         data-domain="${domain.id}">
+                        <div class="domain-card-header" onclick="toggleDomainCard('${domain.id}')">
+                            <span class="card-emoji">${domain.emoji}</span>
+                            <div class="card-info">
+                                <p class="card-name">${domain.name}</p>
+                                <p class="card-desc">${domain.desc}</p>
+                            </div>
+                            ${score ? `<span class="card-score">${score}</span>` : '<span class="card-score">-</span>'}
+                            <span class="card-toggle">▼</span>
+                        </div>
+                        <div class="domain-card-content">
+                            <div class="domain-card-body">
+                                ${renderDomainContent(domain, details, currentScore)}
+                            </div>
                         </div>
                     </div>
-                    <div class="domain-slider-container">
-                        <input type="range" class="domain-slider" 
-                            id="slider-${domain.id}" 
-                            min="1" max="10" 
-                            value="${state.scores[domain.id] || 5}"
-                            oninput="updateScore('${domain.id}', this.value)">
-                        <span class="domain-value" id="value-${domain.id}">${state.scores[domain.id] || 5}</span>
+                `;
+            }).join('');
+        }
+        
+        function toggleDomainCard(domainId) {
+            if (activeDomainId === domainId) {
+                activeDomainId = null; // Collapse if already open
+            } else {
+                activeDomainId = domainId; // Open this one
+            }
+            renderDomains();
+        }
+        
+        function renderDomainContent(domain, details, currentScore) {
+            return `
+                <div class="domain-info-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <span class="domain-info-icon" tabindex="0">
+                        ℹ️
+                        <span class="domain-tooltip">${domain.sijnInfo}</span>
+                    </span>
+                    <span style="font-size: 0.85rem; color: var(--text-light);">SIJN informatie</span>
+                </div>
+                
+                <h4 style="margin-bottom: 10px; color: var(--text);">1. Mate van zelfredzaamheid</h4>
+                    
+                    <!-- 1-5 Scale Options -->
+                    <div class="zelfredzaamheid-scale">
+                        ${[1,2,3,4,5].map(score => {
+                            const label = getZelfredzaamheidLabel(domain.id, score);
+                            return `
+                                <div class="scale-option score-${score} ${currentScore === score ? 'selected' : ''}"
+                                     onclick="setDomainScore('${domain.id}', ${score})">
+                                    <span class="scale-number">${score}</span>
+                                    <span class="scale-label">${label.niveau.split('. ')[1]}</span>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
+                    
+                    <!-- Current selection description -->
+                    <div style="background: ${getZelfredzaamheidLabel(domain.id, currentScore).kleur}15; 
+                                border-left: 4px solid ${getZelfredzaamheidLabel(domain.id, currentScore).kleur}; 
+                                padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <strong style="color: ${getZelfredzaamheidLabel(domain.id, currentScore).kleur};">
+                            ${getZelfredzaamheidLabel(domain.id, currentScore).niveau}
+                        </strong>
+                        <p style="margin: 5px 0 0 0; color: var(--text);">
+                            ${getZelfredzaamheidLabel(domain.id, currentScore).desc}
+                        </p>
+                    </div>
+                    
+                    <!-- SIJN Details Toggle -->
+                    <button class="domain-details-toggle ${details.expanded ? 'expanded' : ''}" 
+                            onclick="toggleDomainDetails('${domain.id}')">
+                        <span>📋</span> SIJN Details (aspecten 2-6) ${hasAnyDetails(details) ? '✓' : ''}
+                        <span style="margin-left: auto;">${details.expanded ? '▲' : '▼'}</span>
+                    </button>
+                    
+                    <div class="domain-details-panel ${details.expanded ? 'visible' : ''}" id="details-${domain.id}">
+                        <div class="domain-detail-row">
+                            <div class="domain-detail-label">2. Is er een vraag voor ondersteuning? Van wie?</div>
+                            <input type="text" class="domain-detail-input" 
+                                placeholder="Bijv. cliënt zelf, huisarts, familie..."
+                                value="${details.vraagVan || ''}"
+                                onchange="updateDomainDetail('${domain.id}', 'vraagVan', this.value)">
+                        </div>
+                        
+                        <div class="domain-detail-row">
+                            <div class="domain-detail-label">3. Is er ondersteuning vanuit het netwerk?</div>
+                            <div class="domain-detail-options">
+                                <span class="domain-detail-option ${details.netwerkSteun === 'ja' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'netwerkSteun', 'ja')">✅ Ja</span>
+                                <span class="domain-detail-option ${details.netwerkSteun === 'nee' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'netwerkSteun', 'nee')">❌ Nee</span>
+                                <span class="domain-detail-option ${details.netwerkSteun === 'deels' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'netwerkSteun', 'deels')">◐ Deels</span>
+                            </div>
+                        </div>
+                        
+                        <div class="domain-detail-row">
+                            <div class="domain-detail-label">4. Door wie wordt de ondersteuning geleverd?</div>
+                            <div class="domain-detail-options">
+                                <span class="domain-detail-option ${details.leverancier === 'Z' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'leverancier', 'Z')">
+                                      <span style="color: #10b981;">Z</span> Zelfstandig</span>
+                                <span class="domain-detail-option ${details.leverancier === 'I' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'leverancier', 'I')">
+                                      <span style="color: #f59e0b;">I</span> Informeel</span>
+                                <span class="domain-detail-option ${details.leverancier === 'C' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'leverancier', 'C')">
+                                      <span style="color: #8b5cf6;">C</span> Collectief</span>
+                                <span class="domain-detail-option ${details.leverancier === 'F' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'leverancier', 'F')">
+                                      <span style="color: #ef4444;">F</span> Formeel</span>
+                            </div>
+                        </div>
+                        
+                        <div class="domain-detail-row">
+                            <div class="domain-detail-label">5. Welke ondersteuning wordt ingezet?</div>
+                            <input type="text" class="domain-detail-input" 
+                                placeholder="Beschrijf de ondersteuning..."
+                                value="${details.ondersteuning || ''}"
+                                onchange="updateDomainDetail('${domain.id}', 'ondersteuning', this.value)">
+                        </div>
+                        
+                        <div class="domain-detail-row">
+                            <div class="domain-detail-label">6. Hoe wordt de ondersteuning ervaren?</div>
+                            <div class="domain-detail-options">
+                                <span class="domain-detail-option steunend ${details.ervaring === 'steunend' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'ervaring', 'steunend')">😊 Steunend</span>
+                                <span class="domain-detail-option neutraal ${details.ervaring === 'neutraal' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'ervaring', 'neutraal')">😐 Neutraal</span>
+                                <span class="domain-detail-option beperkt ${details.ervaring === 'beperkt' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'ervaring', 'beperkt')">😕 Beperkt</span>
+                                <span class="domain-detail-option belemmerend ${details.ervaring === 'belemmerend' ? 'selected' : ''}" 
+                                      onclick="updateDomainDetail('${domain.id}', 'ervaring', 'belemmerend')">😟 Belemmerend</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ondersteuners sectie -->
+                    <div class="ondersteuners-section">
+                        <h5>👥 Ondersteuners op dit domein</h5>
+                        ${[0,1,2].map(i => {
+                            const ondersteuner = (details.ondersteuners && details.ondersteuners[i]) || {};
+                            return `
+                                <div class="ondersteuner-card">
+                                    <div class="ondersteuner-header">
+                                        <span class="ondersteuner-number">${i + 1}</span>
+                                        <span style="font-size: 0.85rem; color: var(--text-light);">Persoon ${i + 1}</span>
+                                    </div>
+                                    <div class="ondersteuner-fields">
+                                        <div class="ondersteuner-field">
+                                            <label>Naam</label>
+                                            <input type="text" 
+                                                placeholder="Naam van ondersteuner"
+                                                value="${ondersteuner.naam || ''}"
+                                                onchange="updateOndersteuner('${domain.id}', ${i}, 'naam', this.value)">
+                                        </div>
+                                        <div class="ondersteuner-field">
+                                            <label>Type relatie</label>
+                                            <select onchange="updateOndersteuner('${domain.id}', ${i}, 'relatieType', this.value)">
+                                                <option value="" ${!ondersteuner.relatieType ? 'selected' : ''}>-- Kies --</option>
+                                                <option value="partner" ${ondersteuner.relatieType === 'partner' ? 'selected' : ''}>Partner</option>
+                                                <option value="familie" ${ondersteuner.relatieType === 'familie' ? 'selected' : ''}>Familie</option>
+                                                <option value="vriend" ${ondersteuner.relatieType === 'vriend' ? 'selected' : ''}>Vriend(in)</option>
+                                                <option value="buur" ${ondersteuner.relatieType === 'buur' ? 'selected' : ''}>Buur</option>
+                                                <option value="collega" ${ondersteuner.relatieType === 'collega' ? 'selected' : ''}>Collega</option>
+                                                <option value="vrijwilliger" ${ondersteuner.relatieType === 'vrijwilliger' ? 'selected' : ''}>Vrijwilliger</option>
+                                                <option value="professional" ${ondersteuner.relatieType === 'professional' ? 'selected' : ''}>Professional</option>
+                                                <option value="anders" ${ondersteuner.relatieType === 'anders' ? 'selected' : ''}>Anders</option>
+                                            </select>
+                                        </div>
+                                        <div class="ondersteuner-field">
+                                            <label>Frequentie</label>
+                                            <select onchange="updateOndersteuner('${domain.id}', ${i}, 'frequentie', this.value)">
+                                                <option value="" ${!ondersteuner.frequentie ? 'selected' : ''}>-- Kies --</option>
+                                                <option value="dagelijks" ${ondersteuner.frequentie === 'dagelijks' ? 'selected' : ''}>Dagelijks</option>
+                                                <option value="wekelijks" ${ondersteuner.frequentie === 'wekelijks' ? 'selected' : ''}>Wekelijks</option>
+                                                <option value="maandelijks" ${ondersteuner.frequentie === 'maandelijks' ? 'selected' : ''}>Maandelijks</option>
+                                                <option value="afentoe" ${ondersteuner.frequentie === 'afentoe' ? 'selected' : ''}>Af en toe</option>
+                                                <option value="zelden" ${ondersteuner.frequentie === 'zelden' ? 'selected' : ''}>Zelden</option>
+                                            </select>
+                                        </div>
+                                        <div class="ondersteuner-field">
+                                            <label>Beoordeling</label>
+                                            <select onchange="updateOndersteuner('${domain.id}', ${i}, 'beoordeling', this.value)">
+                                                <option value="" ${!ondersteuner.beoordeling ? 'selected' : ''}>-- Kies --</option>
+                                                <option value="zeer_helpend" ${ondersteuner.beoordeling === 'zeer_helpend' ? 'selected' : ''}>😊 Zeer helpend</option>
+                                                <option value="helpend" ${ondersteuner.beoordeling === 'helpend' ? 'selected' : ''}>🙂 Helpend</option>
+                                                <option value="neutraal" ${ondersteuner.beoordeling === 'neutraal' ? 'selected' : ''}>😐 Neutraal</option>
+                                                <option value="weinig_helpend" ${ondersteuner.beoordeling === 'weinig_helpend' ? 'selected' : ''}>😕 Weinig helpend</option>
+                                                <option value="belemmerend" ${ondersteuner.beoordeling === 'belemmerend' ? 'selected' : ''}>😟 Belemmerend</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
                     ${state.mode === 'professional' ? `
-                        <div class="professional-note">
-                            <textarea placeholder="Notities/observaties..."
+                        <div class="professional-note" style="margin-top: 15px;">
+                            <label style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 5px; display: block;">
+                                Notities professional:
+                            </label>
+                            <textarea placeholder="Observaties en aantekeningen..."
                                 onchange="updateNote('${domain.id}', this.value)">${state.notes[domain.id] || ''}</textarea>
                         </div>
                     ` : ''}
-                </div>
-            `).join('');
+            `;
+        }
+        
+        function setDomainScore(domainId, score) {
+            state.scores[domainId] = score;
+            invalidateAdviceCache();
+            saveState();
+            renderDomains();
+        }
+        
+        // Check if domain has any details filled in
+        function hasAnyDetails(details) {
+            return details.vraagVan || details.netwerkSteun || details.leverancier || 
+                   details.ondersteuning || details.ervaring;
+        }
+        
+        // Toggle domain details panel
+        function toggleDomainDetails(domainId) {
+            if (!state.domainDetails[domainId]) {
+                state.domainDetails[domainId] = {};
+            }
+            state.domainDetails[domainId].expanded = !state.domainDetails[domainId].expanded;
+            saveState();
+            renderDomains();
+        }
+        
+        // Update domain detail
+        function updateDomainDetail(domainId, field, value) {
+            if (!state.domainDetails[domainId]) {
+                state.domainDetails[domainId] = {};
+            }
+            state.domainDetails[domainId][field] = value;
+            invalidateAdviceCache();
+            saveState();
+            renderDomains();
         }
 
-        // Update score
-        function updateScore(domainId, value) {
-            state.scores[domainId] = parseInt(value);
-            document.getElementById(`value-${domainId}`).textContent = value;
+        // Update ondersteuner per domein
+        function updateOndersteuner(domainId, index, field, value) {
+            if (!state.domainDetails[domainId]) {
+                state.domainDetails[domainId] = {};
+            }
+            if (!state.domainDetails[domainId].ondersteuners) {
+                state.domainDetails[domainId].ondersteuners = [{}, {}, {}];
+            }
+            if (!state.domainDetails[domainId].ondersteuners[index]) {
+                state.domainDetails[domainId].ondersteuners[index] = {};
+            }
+            state.domainDetails[domainId].ondersteuners[index][field] = value;
+            invalidateAdviceCache();
             saveState();
+            // Don't re-render to avoid losing focus during typing
+            if (field !== 'naam') {
+                renderDomains();
+            }
+        }
+
+        // Invalidate cached advice when relevant data changes
+        function invalidateAdviceCache() {
+            state.cachedClientAdvice = null;
+            state.cachedProAdvice = null;
+        }
+
+        // Dashboard Spider Chart
+        let spiderChart = null;
+        let hoveredDomainId = null;
+
+        function renderDashboard() {
+            renderSpiderChart();
+            renderDashboardStats();
+            renderDomainQuickList();
+        }
+
+        function renderSpiderChart() {
+            const canvas = document.getElementById('spiderChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            if (spiderChart) spiderChart.destroy();
+
+            const labels = domains.map(d => d.emoji + ' ' + d.name);
+            const data = domains.map(d => state.scores[d.id] || 0);
+            const colors = domains.map(d => {
+                const score = state.scores[d.id] || 0;
+                if (score <= 2) return '#dc2626';
+                if (score === 3) return '#eab308';
+                return '#22c55e';
+            });
+
+            spiderChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Zelfredzaamheid',
+                        data: data,
+                        backgroundColor: 'rgba(74, 144, 217, 0.2)',
+                        borderColor: '#4A90D9',
+                        borderWidth: 2,
+                        pointBackgroundColor: colors,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 8,
+                        pointHoverRadius: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1,
+                                font: { size: 10 }
+                            },
+                            pointLabels: {
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(items) {
+                                    const idx = items[0].dataIndex;
+                                    return domains[idx].name;
+                                },
+                                label: function(item) {
+                                    const score = item.raw;
+                                    const label = getZelfredzaamheidLabel(domains[item.dataIndex].id, score);
+                                    return `Score: ${score} - ${label.niveau.split('. ')[1]}`;
+                                }
+                            }
+                        }
+                    },
+                    onHover: function(event, elements) {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            showDomainDetails(domains[idx].id);
+                        }
+                    }
+                }
+            });
+        }
+
+        function showDomainDetails(domainId) {
+            if (hoveredDomainId === domainId) return;
+            hoveredDomainId = domainId;
+            
+            const domain = domains.find(d => d.id === domainId);
+            const details = state.domainDetails[domainId] || {};
+            const score = state.scores[domainId] || 0;
+            const scoreLabel = getZelfredzaamheidLabel(domainId, score || 3);
+            
+            const panel = document.getElementById('domainDetailsPanel');
+            panel.classList.add('active');
+            
+            // Get ondersteuners for this domain
+            const ondersteuners = details.ondersteuners || [];
+            const filledOndersteuners = ondersteuners.filter(o => o && o.naam);
+            
+            panel.innerHTML = `
+                <div class="details-header">
+                    <span class="emoji">${domain.emoji}</span>
+                    <div class="info">
+                        <h3>${domain.name}</h3>
+                        <p>${domain.desc}</p>
+                    </div>
+                </div>
+                
+                <div class="details-score score-${score}">
+                    <strong>${score || '-'}</strong>
+                    <span>${score ? scoreLabel.niveau : 'Nog niet beoordeeld'}</span>
+                </div>
+                
+                ${score ? `<p style="color: var(--text-light); font-size: 0.85rem; margin-bottom: 15px;">${scoreLabel.desc}</p>` : ''}
+                
+                ${details.ondersteuning ? `
+                    <div style="margin-bottom: 15px;">
+                        <strong style="font-size: 0.8rem; color: var(--text-light);">Ondersteuning:</strong>
+                        <p style="margin: 5px 0 0 0;">${details.ondersteuning}</p>
+                    </div>
+                ` : ''}
+                
+                ${filledOndersteuners.length > 0 ? `
+                    <div class="details-ondersteuners">
+                        <h4>👥 Ondersteuners (${filledOndersteuners.length})</h4>
+                        ${filledOndersteuners.map(o => `
+                            <div class="ondersteuner-mini">
+                                <span class="name">${o.naam}</span>
+                                <span class="meta">${o.relatieType || ''} ${o.frequentie ? '• ' + o.frequentie : ''}</span>
+                                ${o.beoordeling ? `<span style="margin-left: auto;">${
+                                    o.beoordeling === 'zeer_helpend' ? '😊' :
+                                    o.beoordeling === 'helpend' ? '🙂' :
+                                    o.beoordeling === 'neutraal' ? '😐' :
+                                    o.beoordeling === 'weinig_helpend' ? '😕' : '😟'
+                                }</span>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '<p style="color: var(--text-light); font-size: 0.85rem;">Geen ondersteuners ingevuld voor dit domein.</p>'}
+            `;
+        }
+
+        function renderDashboardStats() {
+            const scores = domains.map(d => state.scores[d.id] || 0);
+            const filledScores = scores.filter(s => s > 0);
+            
+            // Gemiddelde
+            const avg = filledScores.length > 0 
+                ? (filledScores.reduce((a, b) => a + b, 0) / filledScores.length).toFixed(1)
+                : '-';
+            
+            // Laagste & Hoogste
+            const lowest = filledScores.length > 0 ? Math.min(...filledScores) : '-';
+            const highest = filledScores.length > 0 ? Math.max(...filledScores) : '-';
+            
+            // Tel alle ondersteuners over alle domeinen
+            let totalOndersteuners = 0;
+            domains.forEach(d => {
+                const details = state.domainDetails[d.id] || {};
+                const ondersteuners = details.ondersteuners || [];
+                totalOndersteuners += ondersteuners.filter(o => o && o.naam).length;
+            });
+            
+            // Update stats
+            document.getElementById('avgScoreValue').textContent = avg;
+            document.getElementById('lowestScoreValue').textContent = lowest;
+            document.getElementById('highestScoreValue').textContent = highest;
+            document.getElementById('totalOndersteuners').textContent = totalOndersteuners;
+            
+            // Aandachtspunten box
+            const attentionDomains = domains.filter(d => {
+                const score = state.scores[d.id] || 0;
+                return score > 0 && score <= 2;
+            });
+            
+            const attentionBox = document.getElementById('attentionBox');
+            const attentionList = document.getElementById('attentionList');
+            
+            if (attentionDomains.length > 0) {
+                attentionBox.style.display = 'block';
+                attentionList.innerHTML = attentionDomains.map(d => {
+                    const score = state.scores[d.id];
+                    const label = getZelfredzaamheidLabel(d.id, score);
+                    return `<li>${d.emoji} <strong>${d.name}</strong> - ${label.desc}</li>`;
+                }).join('');
+            } else {
+                attentionBox.style.display = 'none';
+            }
+        }
+
+        function renderDomainQuickList() {
+            const container = document.getElementById('domainQuickList');
+            if (!container) return;
+            
+            container.innerHTML = domains.map(domain => {
+                const score = state.scores[domain.id] || 0;
+                return `
+                    <div class="domain-quick-item" 
+                         onmouseenter="showDomainDetails('${domain.id}')"
+                         onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);">
+                        <span class="dq-emoji">${domain.emoji}</span>
+                        <span class="dq-name">${domain.name}</span>
+                        <span class="dq-score score-${score}">${score || '-'}</span>
+                    </div>
+                `;
+            }).join('');
         }
 
         // Update note
@@ -2864,15 +4537,29 @@
             saveState();
         }
 
-        // Render domain checkboxes for network
+        // Render domain checkboxes for network (with descriptions)
         function renderDomainCheckboxes() {
             const container = document.getElementById('domainCheckboxes');
             container.innerHTML = domains.map(domain => `
-                <label class="checkbox-item">
-                    <input type="checkbox" value="${domain.id}">
-                    ${domain.emoji} ${domain.name}
+                <label class="checkbox-item-extended" onclick="toggleCheckboxStyle(this)">
+                    <div class="checkbox-header">
+                        <input type="checkbox" value="${domain.id}" onclick="event.stopPropagation(); toggleCheckboxStyle(this.closest('.checkbox-item-extended'))">
+                        ${domain.emoji} ${domain.name}
+                    </div>
+                    <span class="checkbox-desc">${domain.desc}</span>
                 </label>
             `).join('');
+        }
+
+        // Toggle checkbox visual style
+        function toggleCheckboxStyle(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                element.classList.add('checked');
+            } else {
+                element.classList.remove('checked');
+            }
         }
 
         // Add person to network
@@ -2888,17 +4575,23 @@
             const supports = Array.from(document.querySelectorAll('#domainCheckboxes input:checked'))
                 .map(cb => cb.value);
 
-            state.network.push({
+            const newPerson = {
                 id: Date.now(),
                 name,
                 type,
                 frequency,
                 supports
-            });
+            };
+            state.network.push(newPerson);
+            logNetworkChange('add', newPerson);
 
             document.getElementById('personName').value = '';
-            document.querySelectorAll('#domainCheckboxes input').forEach(cb => cb.checked = false);
+            document.querySelectorAll('#domainCheckboxes input').forEach(cb => {
+                cb.checked = false;
+                cb.closest('.checkbox-item-extended')?.classList.remove('checked');
+            });
             
+            invalidateAdviceCache();
             saveState();
             renderPersonList();
             drawNetwork();
@@ -2907,9 +4600,12 @@
 
         // Remove person
         function removePerson(id) {
+            const person = state.network.find(p => p.id === id);
+            if (person) logNetworkChange('remove', person);
             state.network = state.network.filter(p => p.id !== id);
             delete state.ratings[id];
             delete state.ratingNotes[id];
+            invalidateAdviceCache();
             saveState();
             renderPersonList();
             drawNetwork();
@@ -3143,9 +4839,9 @@
                     scales: {
                         r: {
                             min: 0,
-                            max: 10,
+                            max: 5,
                             ticks: {
-                                stepSize: 2
+                                stepSize: 1
                             }
                         }
                     },
@@ -3309,10 +5005,20 @@
 
         // OpenAI API configuration
         const OPENAI_API_KEY = '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';
+        
+        // Brave Search API configuration
+        // Get your free API key at: https://brave.com/search/api/
+        const BRAVE_API_KEY = 'BSAX21VLfhXyIjl8tzWViFXlaDC4Mql';
 
         // Generate SIJN-based advice with GPT
-        async function renderAdvice() {
+        async function renderAdvice(forceRegenerate = false) {
             const adviceBox = document.getElementById('adviceBox');
+            
+            // Check if we have cached advice and don't need to regenerate
+            if (state.cachedClientAdvice && !forceRegenerate) {
+                displayClientAdvice(state.cachedClientAdvice, true);
+                return;
+            }
             
             // Show loading state
             adviceBox.innerHTML = `
@@ -3436,14 +5142,13 @@ Geef je antwoord in dit exacte HTML-formaat:
 
                 const data = await response.json();
                 const gptAdvice = data.choices[0].message.content;
-
-                adviceBox.innerHTML = `
-                    <h3>🤖 Persoonlijk AI-Advies</h3>
-                    <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 16px;">
-                        <em>Gegenereerd op basis van uw gegevens volgens de SIJN-methodiek</em>
-                    </p>
-                    ${gptAdvice}
-                `;
+                
+                // Cache the advice and log it
+                state.cachedClientAdvice = gptAdvice;
+                logAdvice('client', gptAdvice);
+                saveState();
+                
+                displayClientAdvice(gptAdvice, false);
 
                 // Extract interventions for activities
                 extractInterventionsFromAdvice(gptAdvice);
@@ -3559,9 +5264,15 @@ Geef je antwoord in dit exacte HTML-formaat:
             }
         }
 
-        // Professional Advice with GPT
-        async function renderProAdvice() {
+        // Professional Advice with GPT (with caching)
+        async function renderProAdvice(forceRegenerate = false) {
             const proAdviceBox = document.getElementById('proAdviceBox');
+            
+            // Check if we have cached advice and don't need to regenerate
+            if (state.cachedProAdvice && !forceRegenerate) {
+                displayProAdvice(state.cachedProAdvice, true);
+                return;
+            }
             
             // Show loading state
             proAdviceBox.innerHTML = `
@@ -3603,7 +5314,6 @@ Geef je antwoord in dit exacte HTML-formaat:
             const prompt = `Je bent een ervaren supervisor/consultant voor welzijnswerkers. Geef professioneel advies voor de begeleiding van deze cliënt.
 
 ## Cliëntgegevens
-${state.clientName ? `Naam: ${state.clientName}` : ''}
 ${clientAge ? `Leeftijd: ${clientAge} jaar` : ''}
 ${state.hulpvraag ? `Hulpvraag: ${state.hulpvraag}` : ''}
 ${state.wens ? `Wens: "${state.wens}"` : ''}
@@ -3668,14 +5378,13 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 
                 const data = await response.json();
                 const gptAdvice = data.choices[0].message.content;
-
-                proAdviceBox.innerHTML = `
-                    <h3>👨‍⚕️ Advies voor de Professional</h3>
-                    <p style="color: #C05621; font-size: 0.9rem; margin-bottom: 16px;">
-                        <em>Deze informatie is bedoeld voor de begeleidende professional</em>
-                    </p>
-                    ${gptAdvice}
-                `;
+                
+                // Cache the advice and log it
+                state.cachedProAdvice = gptAdvice;
+                logAdvice('professional', gptAdvice);
+                saveState();
+                
+                displayProAdvice(gptAdvice, false);
             } catch (error) {
                 console.error('OpenAI API error:', error);
                 proAdviceBox.innerHTML = `
@@ -3700,6 +5409,43 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
                         </ul>
                     </div>
                 `;
+            }
+        }
+
+        // Display professional advice (with optional cached badge)
+        function displayProAdvice(adviceHtml, isCached) {
+            const proAdviceBox = document.getElementById('proAdviceBox');
+            proAdviceBox.innerHTML = `
+                <div style="display: flex; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
+                    <h3 style="margin: 0;">👨‍⚕️ Advies voor de Professional</h3>
+                    ${isCached ? '<span class="advice-cached-badge">✓ Opgeslagen</span>' : ''}
+                    <button class="advice-regenerate-btn" onclick="renderProAdvice(true)">🔄 Opnieuw genereren</button>
+                </div>
+                <p style="color: #C05621; font-size: 0.9rem; margin-bottom: 16px;">
+                    <em>Deze informatie is bedoeld voor de begeleidende professional</em>
+                </p>
+                ${adviceHtml}
+            `;
+        }
+
+        // Display client advice (with optional cached badge)
+        function displayClientAdvice(adviceHtml, isCached) {
+            const adviceBox = document.getElementById('adviceBox');
+            adviceBox.innerHTML = `
+                <div style="display: flex; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
+                    <h3 style="margin: 0;">🤖 Persoonlijk AI-Advies</h3>
+                    ${isCached ? '<span class="advice-cached-badge">✓ Opgeslagen</span>' : ''}
+                    <button class="advice-regenerate-btn" onclick="renderAdvice(true)">🔄 Opnieuw genereren</button>
+                </div>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 16px;">
+                    <em>Gegenereerd op basis van uw gegevens volgens de SIJN-methodiek</em>
+                </p>
+                ${adviceHtml}
+            `;
+            
+            // Also extract interventions if cached
+            if (isCached) {
+                extractInterventionsFromAdvice(adviceHtml);
             }
         }
 
@@ -3848,11 +5594,100 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
             const index = state.selectedActivities.indexOf(id);
             if (index > -1) {
                 state.selectedActivities.splice(index, 1);
+                logActivityInteraction(id, 'deselect', 'static');
             } else {
                 state.selectedActivities.push(id);
+                logActivityInteraction(id, 'select', 'static');
             }
             saveState();
             renderActiviteiten();
+        }
+
+        // Brave Search for online activities
+        async function searchBraveActivities() {
+            const postcode = state.postcode || '';
+            const resultsContainer = document.getElementById('braveSearchResults');
+            const resultsList = document.getElementById('braveResultsList');
+            const btn = document.getElementById('btnSearchBrave');
+            
+            if (!BRAVE_API_KEY) {
+                alert('Brave Search API key niet ingesteld.\\n\\nVoor online zoeken:\\n1. Ga naar https://brave.com/search/api/\\n2. Maak een gratis account (2000 queries/maand)\\n3. Voeg de API key toe in de code');
+                return;
+            }
+            
+            // Get lowest domains for search context
+            const sortedDomains = [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            );
+            const lowestDomains = sortedDomains.slice(0, 2).map(d => d.name);
+            
+            // Build search query
+            const postcodeArea = postcode.substring(0, 4);
+            const searchTerms = [
+                `welzijn activiteiten ${postcodeArea}`,
+                lowestDomains[0] ? lowestDomains[0].toLowerCase() : '',
+                'buurt sociaal'
+            ].filter(Boolean).join(' ');
+            
+            // Show loading
+            btn.disabled = true;
+            btn.textContent = '⏳ Zoeken...';
+            resultsContainer.style.display = 'block';
+            resultsList.innerHTML = `
+                <div style="text-align: center; padding: 30px;">
+                    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+                    <p style="margin-top: 15px; color: var(--text-light);">Zoeken naar activiteiten in ${postcodeArea}...</p>
+                </div>
+            `;
+            
+            try {
+                // Use local proxy to avoid CORS issues
+                const response = await fetch(`http://localhost:3459/brave-search?q=${encodeURIComponent(searchTerms)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Brave API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const results = data.web?.results || [];
+                
+                if (results.length === 0) {
+                    resultsList.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                            <p>Geen resultaten gevonden voor "${searchTerms}"</p>
+                        </div>
+                    `;
+                } else {
+                    resultsList.innerHTML = results.map(result => `
+                        <div class="brave-result" style="background: var(--white); border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <a href="${result.url}" target="_blank" style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 1.05rem;">
+                                ${result.title}
+                            </a>
+                            <p style="color: var(--text-light); font-size: 0.85rem; margin: 5px 0;">
+                                ${result.meta_url?.hostname || new URL(result.url).hostname}
+                            </p>
+                            <p style="color: var(--text); font-size: 0.95rem; margin-top: 8px;">
+                                ${result.description || ''}
+                            </p>
+                        </div>
+                    `).join('');
+                }
+                
+                // Log the search
+                logActivityInteraction(0, 'brave_search', 'brave');
+                
+            } catch (error) {
+                console.error('Brave Search error:', error);
+                resultsList.innerHTML = `
+                    <div style="background: #FFF3CD; border: 1px solid #FFE69C; border-radius: 8px; padding: 15px;">
+                        <strong>⚠️ Zoeken mislukt</strong><br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔍 Zoek online';
+            }
         }
 
         function updateActivityCounts() {
@@ -4092,10 +5927,11 @@ END:VEVENT
                             draggable="true" 
                             ondragstart="handleDragStart(event, ${card.id})"
                             ondragend="handleDragEnd(event)"
+                            onclick="openEditCardModal(${card.id})"
                             id="card-${card.id}">
                             <div class="kanban-card-header">
                                 <div class="kanban-card-title">${card.title}</div>
-                                <button class="kanban-card-delete" onclick="deleteKanbanCard(${card.id})">✕</button>
+                                <button class="kanban-card-delete" onclick="event.stopPropagation(); deleteKanbanCard(${card.id})">✕</button>
                             </div>
                             <div class="kanban-card-desc">${card.description}</div>
                             <span class="kanban-card-priority ${card.priority}">${getPriorityLabel(card.priority)}</span>
@@ -4141,6 +5977,65 @@ END:VEVENT
                 state.kanbanCards = state.kanbanCards.filter(c => c.id !== id);
                 saveState();
                 renderKanban();
+            }
+        }
+
+        // Modal functions for editing Kanban cards
+        function openEditCardModal(cardId) {
+            const card = state.kanbanCards.find(c => c.id === cardId);
+            if (!card) return;
+
+            document.getElementById('editCardId').value = cardId;
+            document.getElementById('editCardTitle').value = card.title;
+            document.getElementById('editCardDesc').value = card.description;
+            document.getElementById('editCardPriority').value = card.priority;
+            document.getElementById('editCardColumn').value = card.column;
+
+            document.getElementById('editCardModal').classList.add('active');
+        }
+
+        function closeEditCardModal(event) {
+            // If called with event, only close if clicking overlay
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('editCardModal').classList.remove('active');
+        }
+
+        function saveCardFromModal() {
+            const cardId = parseInt(document.getElementById('editCardId').value);
+            const card = state.kanbanCards.find(c => c.id === cardId);
+            if (!card) return;
+
+            const newTitle = document.getElementById('editCardTitle').value.trim();
+            if (!newTitle) {
+                alert('Vul een titel in');
+                return;
+            }
+
+            const oldColumn = card.column;
+            const newColumn = document.getElementById('editCardColumn').value;
+            
+            card.title = newTitle;
+            card.description = document.getElementById('editCardDesc').value.trim();
+            card.priority = document.getElementById('editCardPriority').value;
+            card.column = newColumn;
+            
+            // Log if column changed
+            if (oldColumn !== newColumn) {
+                logKanbanMove(card.id, oldColumn, newColumn);
+            }
+
+            saveState();
+            renderKanban();
+            closeEditCardModal();
+        }
+
+        function deleteCardFromModal() {
+            const cardId = parseInt(document.getElementById('editCardId').value);
+            if (confirm('Weet u zeker dat u deze actie wilt verwijderen?')) {
+                state.kanbanCards = state.kanbanCards.filter(c => c.id !== cardId);
+                saveState();
+                renderKanban();
+                closeEditCardModal();
             }
         }
 
@@ -4195,7 +6090,9 @@ END:VEVENT
             if (draggedCardId) {
                 const card = state.kanbanCards.find(c => c.id === draggedCardId);
                 if (card && card.column !== column) {
+                    const fromColumn = card.column;
                     card.column = column;
+                    logKanbanMove(card.id, fromColumn, column);
                     saveState();
                     // Add a small animation effect
                     renderKanban();
@@ -4266,17 +6163,6 @@ END:VEVENT
                 </div>
             `;
 
-            // Waardering section
-            if (state.network.length > 0) {
-                document.getElementById('summaryWaarderingSection').style.display = 'block';
-                const ratings = state.network.map(p => state.ratings[p.id] || 5);
-                const avgRating = ratings.reduce((a, b) => a + b, 0) / ratings.length;
-                
-                document.getElementById('summaryWaardering').innerHTML = `
-                    <p><strong>Gemiddelde tevredenheid:</strong> ${avgRating.toFixed(1)}/10</p>
-                `;
-            }
-
             // Professional notes
             if (state.mode === 'professional') {
                 const notesWithContent = Object.entries(state.notes).filter(([_, note]) => note.trim());
@@ -4329,6 +6215,10 @@ END:VEVENT
             if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
                 localStorage.removeItem('welzijnswerker_v2');
                 state = {
+                    version: '2.4',
+                    clientId: 'client_' + Date.now(),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: null,
                     mode: null,
                     professionalName: '',
                     postcode: '',
@@ -4338,6 +6228,7 @@ END:VEVENT
                     wens: '',
                     scores: {},
                     notes: {},
+                    domainDetails: {},
                     network: [],
                     ratings: {},
                     ratingNotes: {},
@@ -4349,7 +6240,16 @@ END:VEVENT
                     selectedActivities: [],
                     agendaActivities: [],
                     agendaMonth: new Date().getMonth(),
-                    agendaYear: new Date().getFullYear()
+                    agendaYear: new Date().getFullYear(),
+                    cachedProAdvice: null,
+                    cachedClientAdvice: null,
+                    history: {
+                        assessments: [],
+                        networkChanges: [],
+                        adviceLog: [],
+                        activityLog: [],
+                        kanbanLog: []
+                    }
                 };
                 document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
                 document.getElementById('professionalFields').style.display = 'none';
