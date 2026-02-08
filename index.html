@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welzijnswerker v2.2 Medium (GPT) - SIJN Levensdomeinen</title>
+    <title>Welzijnswerker v2.3 Medium (GPT) - SIJN Levensdomeinen</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -96,6 +96,7 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .view-tab {
@@ -121,19 +122,21 @@
             color: white;
         }
 
-        /* Progress bar - 9 steps compact */
+        /* Progress bar - dynamic steps */
         .progress-container {
             background: var(--white);
             border-radius: var(--radius);
             padding: 15px 10px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            overflow-x: auto;
         }
 
         .progress-steps {
             display: flex;
             justify-content: space-between;
             position: relative;
+            min-width: fit-content;
         }
 
         .progress-steps::before {
@@ -153,6 +156,18 @@
             position: relative;
             z-index: 1;
             flex: 1;
+            min-width: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .progress-step:hover:not(.future) {
+            transform: scale(1.1);
+        }
+
+        .progress-step.future {
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .step-circle {
@@ -254,6 +269,13 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-secondary {
@@ -695,6 +717,44 @@
             margin-bottom: 5px;
         }
 
+        /* Professional Advice Box */
+        .pro-advice-box {
+            background: linear-gradient(135deg, #FEF3E2 0%, #FFF8E7 100%);
+            border: 2px solid var(--warning);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .pro-advice-box h3 {
+            color: #C05621;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pro-advice-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .pro-advice-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .pro-advice-section h4 {
+            color: #C05621;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         /* Rating card for network satisfaction */
         .rating-card {
             background: var(--white);
@@ -960,6 +1020,284 @@
             color: var(--text-light);
         }
 
+        /* Activity Items */
+        .activity-item {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .activity-item:hover {
+            border-color: var(--primary-light);
+        }
+
+        .activity-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .activity-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-top: 3px;
+            cursor: pointer;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .activity-priority {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .activity-priority.high {
+            background: #FDEAEA;
+            color: #C53030;
+        }
+
+        .activity-priority.normal {
+            background: #FEFCE8;
+            color: #A16207;
+        }
+
+        .activity-priority.low {
+            background: #E6FFFA;
+            color: #276749;
+        }
+
+        .activity-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .activity-duration {
+            font-size: 0.8rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* SIJN Agenda Styles */
+        .agenda-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .agenda-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .agenda-month {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .agenda-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .agenda-nav button {
+            background: var(--primary-light);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .agenda-nav button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .agenda-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .agenda-weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            padding: 10px 0;
+        }
+
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .agenda-day {
+            min-height: 100px;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 8px;
+            position: relative;
+        }
+
+        .agenda-day.other-month {
+            opacity: 0.4;
+        }
+
+        .agenda-day.today {
+            background: var(--primary-light);
+            border: 2px solid var(--primary);
+        }
+
+        .agenda-day-number {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .agenda-event {
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .agenda-event.high {
+            background: var(--danger);
+        }
+
+        .agenda-event.normal {
+            background: var(--warning);
+        }
+
+        .agenda-event.low {
+            background: var(--secondary);
+        }
+
+        .agenda-event.completed {
+            background: #9CA3AF;
+            text-decoration: line-through;
+        }
+
+        .agenda-event.in-progress {
+            background: var(--primary);
+        }
+
+        /* Agenda Activity Detail */
+        .agenda-activity-detail {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .agenda-activity-detail.high {
+            border-left-color: var(--danger);
+        }
+
+        .agenda-activity-detail.normal {
+            border-left-color: var(--warning);
+        }
+
+        .agenda-activity-detail.low {
+            border-left-color: var(--secondary);
+        }
+
+        .agenda-activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .agenda-activity-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .status-badge.gepland {
+            background: #E8F4FD;
+            color: var(--primary);
+        }
+
+        .status-badge.bezig {
+            background: #FEF3E2;
+            color: #C05621;
+        }
+
+        .status-badge.afgerond {
+            background: #E6FFFA;
+            color: #276749;
+        }
+
+        .date-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-input-wrapper input {
+            padding: 6px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .date-input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         /* Kanban Board */
         .kanban-board {
             display: grid;
@@ -1222,6 +1560,30 @@
             color: var(--primary-dark);
         }
 
+        /* Loading animation */
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(250%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: var(--primary-light);
+            border-radius: 2px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .loading-bar-inner {
+            width: 30%;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            animation: loading 1.5s ease-in-out infinite;
+        }
+
         /* Print styles */
         @media print {
             body {
@@ -1269,6 +1631,20 @@
 
             .kanban-column {
                 min-height: auto;
+            }
+
+            .agenda-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .agenda-day {
+                min-height: 60px;
+                padding: 4px;
+            }
+
+            .agenda-event {
+                font-size: 0.65rem;
+                padding: 2px 4px;
             }
         }
 
@@ -1318,7 +1694,7 @@
     <header>
         <h1>
             🌐 Welzijnswerker
-            <span class="version-badge">v2.2 Medium</span>
+            <span class="version-badge">v2.3 Medium</span>
         </h1>
         <p>SIJN Levensdomeinen & Netwerkanalyse</p>
     </header>
@@ -1332,49 +1708,17 @@
             <button class="view-tab" data-view="kanban" onclick="switchView('kanban')">
                 📋 Actieplan
             </button>
+            <button class="view-tab" data-view="agenda" onclick="switchView('agenda')">
+                📅 SIJN-Agenda
+            </button>
         </div>
 
         <!-- Assessment View -->
         <div class="view-section active" id="view-assessment">
-            <!-- Progress Bar - 9 Steps -->
+            <!-- Progress Bar - Dynamic Steps -->
             <div class="progress-container" id="progressBar">
-                <div class="progress-steps">
-                    <div class="progress-step active" data-step="1">
-                        <div class="step-circle">🏠</div>
-                        <span class="step-label">Start</span>
-                    </div>
-                    <div class="progress-step" data-step="2">
-                        <div class="step-circle">❓</div>
-                        <span class="step-label">Hulpvraag</span>
-                    </div>
-                    <div class="progress-step" data-step="3">
-                        <div class="step-circle">📊</div>
-                        <span class="step-label">Domeinen</span>
-                    </div>
-                    <div class="progress-step" data-step="4">
-                        <div class="step-circle">👥</div>
-                        <span class="step-label">Netwerk</span>
-                    </div>
-                    <div class="progress-step" data-step="5">
-                        <div class="step-circle">⭐</div>
-                        <span class="step-label">Waardering</span>
-                    </div>
-                    <div class="progress-step" data-step="6">
-                        <div class="step-circle">📈</div>
-                        <span class="step-label">Resultaten</span>
-                    </div>
-                    <div class="progress-step" data-step="7">
-                        <div class="step-circle">🤖</div>
-                        <span class="step-label">Advies</span>
-                    </div>
-                    <div class="progress-step" data-step="8">
-                        <div class="step-circle">🏢</div>
-                        <span class="step-label">Organisaties</span>
-                    </div>
-                    <div class="progress-step" data-step="9">
-                        <div class="step-circle">📋</div>
-                        <span class="step-label">Overzicht</span>
-                    </div>
+                <div class="progress-steps" id="progressSteps">
+                    <!-- Steps will be dynamically rendered -->
                 </div>
             </div>
 
@@ -1418,7 +1762,7 @@
                 </div>
             </div>
 
-            <!-- Screen 2: Hulpvraag (NEW) -->
+            <!-- Screen 2: Hulpvraag -->
             <div class="screen" id="screen-hulpvraag">
                 <div class="card">
                     <h2>❓ Hulpvraag</h2>
@@ -1552,7 +1896,7 @@
                 </div>
             </div>
 
-            <!-- Screen 5: Waardering Netwerksteun (NEW) -->
+            <!-- Screen 5: Waardering Netwerksteun -->
             <div class="screen" id="screen-waardering">
                 <div class="card">
                     <h2>⭐ Waardering Netwerksteun</h2>
@@ -1602,7 +1946,7 @@
                 </div>
             </div>
 
-            <!-- Screen 7: Advies (NEW) -->
+            <!-- Screen 7: Advies (Client) -->
             <div class="screen" id="screen-advies">
                 <div class="card">
                     <h2>🤖 Persoonlijk Advies</h2>
@@ -1612,12 +1956,27 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(8)">Bekijk Organisaties →</button>
+                        <button class="btn btn-primary" onclick="goToNextFromAdvies()">Volgende →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 8: Organisaties in de Omgeving (NEW) -->
+            <!-- Screen 8: Advies Professional (only in professional mode) -->
+            <div class="screen" id="screen-advies-pro">
+                <div class="card">
+                    <h2>👨‍⚕️ Advies voor de Professional</h2>
+                    <p>Specifieke handvatten voor de begeleiding van deze cliënt</p>
+                    
+                    <div class="pro-advice-box" id="proAdviceBox"></div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(getScreenNumber('organisaties'))">Bekijk Organisaties →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 9: Organisaties -->
             <div class="screen" id="screen-organisaties">
                 <div class="card">
                     <h2>🏢 Organisaties in de Omgeving</h2>
@@ -1631,13 +1990,31 @@
                     <div id="organisatiesList"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(9)">Naar Samenvatting →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevFromOrganisaties()">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(getScreenNumber('activiteiten'))">Naar Activiteiten →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 9: Summary -->
+            <!-- Screen 10: Activiteiten Overzicht -->
+            <div class="screen" id="screen-activiteiten">
+                <div class="card">
+                    <h2>📋 Activiteiten Overzicht</h2>
+                    <p>Selecteer de activiteiten die u wilt inplannen</p>
+                    
+                    <div id="activiteitenList"></div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(getScreenNumber('organisaties'))">← Terug</button>
+                        <button class="btn btn-primary" id="btnToAgenda" onclick="goToAgenda()" disabled>
+                            📅 Naar SIJN-agenda
+                        </button>
+                        <button class="btn btn-secondary" onclick="goToScreen(getScreenNumber('summary'))">Naar Samenvatting →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 11: Summary -->
             <div class="screen" id="screen-summary">
                 <div class="card">
                     <h2>📋 Samenvatting</h2>
@@ -1672,13 +2049,21 @@
                         <div id="summaryPriorities"></div>
                     </div>
 
+                    <div class="summary-section" id="summaryActiviteitenSection" style="display: none;">
+                        <h3>📋 Geselecteerde Activiteiten</h3>
+                        <div id="summaryActiviteiten"></div>
+                    </div>
+
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(8)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(getScreenNumber('activiteiten'))">← Terug</button>
                         <button class="btn btn-primary" onclick="window.print()">
                             🖨️ Afdrukken / Exporteren
                         </button>
                         <button class="btn btn-success" onclick="switchView('kanban')">
                             📋 Naar Actieplan
+                        </button>
+                        <button class="btn btn-success" onclick="switchView('agenda')">
+                            📅 Naar SIJN-Agenda
                         </button>
                     </div>
                 </div>
@@ -1754,6 +2139,50 @@
                     </button>
                     <button class="btn btn-primary" onclick="resetAll()">
                         🔄 Opnieuw beginnen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIJN Agenda View -->
+        <div class="view-section" id="view-agenda">
+            <div class="card">
+                <h2>📅 SIJN-Agenda</h2>
+                <p>Uw ingeplande activiteiten voor de komende weken</p>
+
+                <div class="agenda-container">
+                    <div class="agenda-header">
+                        <div class="agenda-nav">
+                            <button onclick="navigateMonth(-1)">◀ Vorige</button>
+                        </div>
+                        <div class="agenda-month" id="agendaMonth">Februari 2026</div>
+                        <div class="agenda-nav">
+                            <button onclick="navigateMonth(1)">Volgende ▶</button>
+                        </div>
+                    </div>
+
+                    <div class="agenda-weekdays">
+                        <div class="agenda-weekday">Ma</div>
+                        <div class="agenda-weekday">Di</div>
+                        <div class="agenda-weekday">Wo</div>
+                        <div class="agenda-weekday">Do</div>
+                        <div class="agenda-weekday">Vr</div>
+                        <div class="agenda-weekday">Za</div>
+                        <div class="agenda-weekday">Zo</div>
+                    </div>
+
+                    <div class="agenda-grid" id="agendaGrid"></div>
+                </div>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">📋 Activiteiten Details</h3>
+                <div id="agendaActivitiesList"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="switchView('assessment')">
+                        ← Terug naar Assessment
+                    </button>
+                    <button class="btn btn-primary" onclick="exportToICS()">
+                        📥 Exporteer naar ICS
                     </button>
                 </div>
             </div>
@@ -1907,8 +2336,46 @@
             professional: '#3182CE'
         };
 
-        // Screen names for navigation
-        const screenNames = ['start', 'hulpvraag', 'domains', 'network', 'waardering', 'results', 'advies', 'organisaties', 'summary'];
+        // Screen configuration - dynamic based on mode
+        const screenConfigBase = [
+            { id: 'start', label: 'Start', emoji: '🏠' },
+            { id: 'hulpvraag', label: 'Hulpvraag', emoji: '❓' },
+            { id: 'domains', label: 'Domeinen', emoji: '📊' },
+            { id: 'network', label: 'Netwerk', emoji: '👥' },
+            { id: 'waardering', label: 'Waardering', emoji: '⭐' },
+            { id: 'results', label: 'Resultaten', emoji: '📈' },
+            { id: 'advies', label: 'Advies', emoji: '🤖' },
+            // advies-pro is inserted here for professional mode
+            { id: 'organisaties', label: 'Organisaties', emoji: '🏢' },
+            { id: 'activiteiten', label: 'Activiteiten', emoji: '📋' },
+            { id: 'summary', label: 'Overzicht', emoji: '📋' }
+        ];
+
+        const screenConfigPro = [
+            { id: 'start', label: 'Start', emoji: '🏠' },
+            { id: 'hulpvraag', label: 'Hulpvraag', emoji: '❓' },
+            { id: 'domains', label: 'Domeinen', emoji: '📊' },
+            { id: 'network', label: 'Netwerk', emoji: '👥' },
+            { id: 'waardering', label: 'Waardering', emoji: '⭐' },
+            { id: 'results', label: 'Resultaten', emoji: '📈' },
+            { id: 'advies', label: 'Advies', emoji: '🤖' },
+            { id: 'advies-pro', label: 'Prof. Advies', emoji: '👨‍⚕️' },
+            { id: 'organisaties', label: 'Organisaties', emoji: '🏢' },
+            { id: 'activiteiten', label: 'Activiteiten', emoji: '📋' },
+            { id: 'summary', label: 'Overzicht', emoji: '📋' }
+        ];
+
+        // Get current screen config based on mode
+        function getScreenConfig() {
+            return state.mode === 'professional' ? screenConfigPro : screenConfigBase;
+        }
+
+        // Get screen number by id
+        function getScreenNumber(screenId) {
+            const config = getScreenConfig();
+            const index = config.findIndex(s => s.id === screenId);
+            return index + 1;
+        }
 
         // State
         let state = {
@@ -1927,7 +2394,12 @@
             currentScreen: 1,
             currentView: 'assessment',
             kanbanCards: [],
-            gptAdviceInterventions: []
+            gptAdviceInterventions: [],
+            activities: [],
+            selectedActivities: [],
+            agendaActivities: [],
+            agendaMonth: new Date().getMonth(),
+            agendaYear: new Date().getFullYear()
         };
 
         // Load from localStorage
@@ -1943,7 +2415,41 @@
             localStorage.setItem('welzijnswerker_v2', JSON.stringify(state));
         }
 
-        // Switch view (assessment / kanban)
+        // Render progress steps dynamically
+        function renderProgressSteps() {
+            const config = getScreenConfig();
+            const container = document.getElementById('progressSteps');
+            
+            container.innerHTML = config.map((step, i) => {
+                const stepNum = i + 1;
+                const isActive = stepNum === state.currentScreen;
+                const isCompleted = stepNum < state.currentScreen;
+                const isFuture = stepNum > state.currentScreen;
+                const classes = [
+                    'progress-step',
+                    isActive ? 'active' : '',
+                    isCompleted ? 'completed' : '',
+                    isFuture ? 'future' : ''
+                ].filter(Boolean).join(' ');
+                
+                return `
+                    <div class="${classes}" data-step="${stepNum}" onclick="handleStepClick(${stepNum})">
+                        <div class="step-circle">${step.emoji}</div>
+                        <span class="step-label">${step.label}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Handle click on progress step
+        function handleStepClick(stepNum) {
+            // Only allow navigation to completed steps or current step
+            if (stepNum <= state.currentScreen) {
+                goToScreen(stepNum);
+            }
+        }
+
+        // Switch view (assessment / kanban / agenda)
         function switchView(view) {
             state.currentView = view;
             saveState();
@@ -1958,6 +2464,8 @@
 
             if (view === 'kanban') {
                 renderKanban();
+            } else if (view === 'agenda') {
+                renderAgenda();
             }
         }
 
@@ -1972,6 +2480,7 @@
             const professionalFields = document.getElementById('professionalFields');
             professionalFields.style.display = mode === 'professional' ? 'block' : 'none';
             saveState();
+            renderProgressSteps();
         }
 
         // Start assessment
@@ -2012,19 +2521,41 @@
             saveState();
         }
 
+        // Navigate from advies screen
+        function goToNextFromAdvies() {
+            if (state.mode === 'professional') {
+                goToScreen(getScreenNumber('advies-pro'));
+            } else {
+                goToScreen(getScreenNumber('organisaties'));
+            }
+        }
+
+        // Navigate back from organisaties
+        function goToPrevFromOrganisaties() {
+            if (state.mode === 'professional') {
+                goToScreen(getScreenNumber('advies-pro'));
+            } else {
+                goToScreen(getScreenNumber('advies'));
+            }
+        }
+
         // Navigate to screen
         function goToScreen(screenNum) {
+            const config = getScreenConfig();
             state.currentScreen = screenNum;
             saveState();
             
+            // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${screenNames[screenNum - 1]}`).classList.add('active');
             
-            document.querySelectorAll('.progress-step').forEach((step, i) => {
-                step.classList.remove('active', 'completed');
-                if (i + 1 < screenNum) step.classList.add('completed');
-                if (i + 1 === screenNum) step.classList.add('active');
-            });
+            // Get screen id from config
+            const screenConfig = config[screenNum - 1];
+            if (screenConfig) {
+                document.getElementById(`screen-${screenConfig.id}`).classList.add('active');
+            }
+            
+            // Update progress steps
+            renderProgressSteps();
 
             // Show view tabs after screen 1
             if (screenNum > 1) {
@@ -2032,19 +2563,22 @@
             }
 
             // Load content for each screen
-            if (screenNum === 2) loadHulpvraagData();
-            if (screenNum === 3) renderDomains();
-            if (screenNum === 4) {
+            const screenId = screenConfig ? screenConfig.id : '';
+            if (screenId === 'hulpvraag') loadHulpvraagData();
+            if (screenId === 'domains') renderDomains();
+            if (screenId === 'network') {
                 renderDomainCheckboxes();
                 renderPersonList();
                 drawNetwork();
                 updateNetworkType();
             }
-            if (screenNum === 5) renderRatings();
-            if (screenNum === 6) renderResults();
-            if (screenNum === 7) renderAdvice();
-            if (screenNum === 8) renderOrganisaties();
-            if (screenNum === 9) renderSummary();
+            if (screenId === 'waardering') renderRatings();
+            if (screenId === 'results') renderResults();
+            if (screenId === 'advies') renderAdvice();
+            if (screenId === 'advies-pro') renderProAdvice();
+            if (screenId === 'organisaties') renderOrganisaties();
+            if (screenId === 'activiteiten') renderActiviteiten();
+            if (screenId === 'summary') renderSummary();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2557,18 +3091,9 @@
                     <h3>AI-advies wordt gegenereerd...</h3>
                     <p style="color: var(--text-light);">Even geduld, we analyseren uw situatie volgens de SIJN-methodiek.</p>
                     <div style="margin-top: 20px;">
-                        <div style="width: 200px; height: 4px; background: var(--primary-light); border-radius: 2px; margin: 0 auto; overflow: hidden;">
-                            <div style="width: 30%; height: 100%; background: var(--primary); border-radius: 2px; animation: loading 1.5s ease-in-out infinite;"></div>
-                        </div>
+                        <div class="loading-bar"><div class="loading-bar-inner"></div></div>
                     </div>
                 </div>
-                <style>
-                    @keyframes loading {
-                        0% { transform: translateX(-100%); }
-                        50% { transform: translateX(250%); }
-                        100% { transform: translateX(-100%); }
-                    }
-                </style>
             `;
 
             const networkInfo = getNetworkType();
@@ -2690,7 +3215,7 @@ Geef je antwoord in dit exacte HTML-formaat:
                     ${gptAdvice}
                 `;
 
-                // Extract interventions for Kanban
+                // Extract interventions for activities
                 extractInterventionsFromAdvice(gptAdvice);
             } catch (error) {
                 console.error('OpenAI API error:', error);
@@ -2707,7 +3232,6 @@ Geef je antwoord in dit exacte HTML-formaat:
 
         // Extract interventions from GPT advice
         function extractInterventionsFromAdvice(adviceHtml) {
-            // Parse the interventions section
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = adviceHtml;
             const listItems = tempDiv.querySelectorAll('li');
@@ -2805,6 +3329,150 @@ Geef je antwoord in dit exacte HTML-formaat:
             }
         }
 
+        // Professional Advice with GPT
+        async function renderProAdvice() {
+            const proAdviceBox = document.getElementById('proAdviceBox');
+            
+            // Show loading state
+            proAdviceBox.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">👨‍⚕️</div>
+                    <h3>Professioneel advies wordt gegenereerd...</h3>
+                    <p style="color: var(--text-light);">Even geduld, we analyseren de casus voor uw begeleiding.</p>
+                    <div style="margin-top: 20px;">
+                        <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+                    </div>
+                </div>
+            `;
+
+            const networkInfo = getNetworkType();
+            const sortedDomains = [...domains].sort((a, b) => 
+                (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
+            );
+            const lowestDomains = sortedDomains.slice(0, 3);
+            
+            const domainScores = domains.map(d => `- ${d.emoji} ${d.name}: ${state.scores[d.id] || 5}/10`).join('\n');
+            const networkDetails = state.network.map(p => {
+                const rating = state.ratings[p.id];
+                return `- ${p.name} (${p.type}) - tevredenheid: ${rating || 5}/10`;
+            }).join('\n');
+
+            const calculateAge = (birthdate) => {
+                if (!birthdate) return null;
+                const today = new Date();
+                const birth = new Date(birthdate);
+                let age = today.getFullYear() - birth.getFullYear();
+                const monthDiff = today.getMonth() - birth.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                    age--;
+                }
+                return age;
+            };
+            const clientAge = calculateAge(state.clientBirthdate);
+
+            const prompt = `Je bent een ervaren supervisor/consultant voor welzijnswerkers. Geef professioneel advies voor de begeleiding van deze cliënt.
+
+## Cliëntgegevens
+${state.clientName ? `Naam: ${state.clientName}` : ''}
+${clientAge ? `Leeftijd: ${clientAge} jaar` : ''}
+${state.hulpvraag ? `Hulpvraag: ${state.hulpvraag}` : ''}
+${state.wens ? `Wens: "${state.wens}"` : ''}
+
+## Domeinkaart Scores
+${domainScores}
+
+## Netwerkanalyse
+Type: ${networkInfo.label}
+Leden: ${state.network.length}
+${networkDetails || 'Geen netwerkleden'}
+
+## Opdracht
+Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-formaat:
+
+<div class="pro-advice-section">
+<h4>🗣️ Gesprekstechnieken</h4>
+[Geef 3-4 specifieke gesprekstechnieken die effectief kunnen zijn bij deze cliënt, gezien hun situatie en hulpvraag.]
+</div>
+
+<div class="pro-advice-section">
+<h4>⚠️ Aandachtspunten bij Begeleiding</h4>
+[Benoem 3-4 belangrijke aandachtspunten waar de professional op moet letten tijdens de begeleiding.]
+</div>
+
+<div class="pro-advice-section">
+<h4>🚫 Valkuilen om te Vermijden</h4>
+[Benoem 3-4 veelvoorkomende valkuilen die de professional moet vermijden bij dit type casus.]
+</div>
+
+<div class="pro-advice-section">
+<h4>🤝 Samenwerking & Verwijzing</h4>
+[Suggesties voor samenwerking met andere professionals of verwijzing naar specifieke instanties.]
+</div>
+
+<div class="pro-advice-section">
+<h4>📋 Concrete Volgende Stappen</h4>
+[Geef 4-5 concrete acties die de professional kan ondernemen, in volgorde van prioriteit.]
+</div>`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            { role: 'system', content: 'Je bent een ervaren supervisor voor welzijnswerkers. Je geeft praktische, evidence-based adviezen voor de professionele begeleiding van cliënten. Gebruik vakjargon waar passend maar blijf begrijpelijk.' },
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1500
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const gptAdvice = data.choices[0].message.content;
+
+                proAdviceBox.innerHTML = `
+                    <h3>👨‍⚕️ Advies voor de Professional</h3>
+                    <p style="color: #C05621; font-size: 0.9rem; margin-bottom: 16px;">
+                        <em>Deze informatie is bedoeld voor de begeleidende professional</em>
+                    </p>
+                    ${gptAdvice}
+                `;
+            } catch (error) {
+                console.error('OpenAI API error:', error);
+                proAdviceBox.innerHTML = `
+                    <div style="background: #FFF3CD; border: 1px solid #FFE69C; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                        <strong>⚠️ AI-advies niet beschikbaar</strong><br>
+                        <small>Fout: ${error.message}</small>
+                    </div>
+                    <div class="pro-advice-section">
+                        <h4>🗣️ Algemene Gesprekstechnieken</h4>
+                        <ul>
+                            <li>Motiverende gespreksvoering (MGV)</li>
+                            <li>Actief luisteren en doorvragen</li>
+                            <li>Oplossingsgerichte benadering</li>
+                        </ul>
+                    </div>
+                    <div class="pro-advice-section">
+                        <h4>📋 Volgende Stappen</h4>
+                        <ul>
+                            <li>Plan een vervolggesprek binnen 2 weken</li>
+                            <li>Stel SMART-doelen op met de cliënt</li>
+                            <li>Overweeg netwerkberaad te organiseren</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
         // Helper functions for advice
         function getAdviceForDomain(domainId) {
             const advices = {
@@ -2825,55 +3493,368 @@ Geef je antwoord in dit exacte HTML-formaat:
 
         function getNetworkAdvice(type) {
             const advices = {
-                eenpersoons: 'Het is belangrijk om uw netwerk uit te breiden. Overweeg aansluiting bij een maatjesproject of buurtactiviteiten. De huidige situatie legt mogelijk te veel druk op één persoon.',
-                informeel: 'Uw informele netwerk is waardevol, maar overweeg ook professionele ondersteuning in te schakelen voor specifieke hulpvragen. Dit voorkomt overbelasting van familie en vrienden.',
-                gemengd: 'U heeft een goed gemengd netwerk. Let wel op duidelijke afspraken over wie waarvoor verantwoordelijk is. Regelmatig overleg tussen informele en formele helpers is aan te raden.',
-                formeel: 'Hoewel professionele hulp belangrijk is, is het ook waardevol om te investeren in informele contacten. Dit vergroot uw gevoel van verbondenheid en eigen regie.'
+                eenpersoons: 'Het is belangrijk om uw netwerk uit te breiden. Overweeg aansluiting bij een maatjesproject of buurtactiviteiten.',
+                informeel: 'Uw informele netwerk is waardevol, maar overweeg ook professionele ondersteuning in te schakelen.',
+                gemengd: 'U heeft een goed gemengd netwerk. Let wel op duidelijke afspraken over rolverdeling.',
+                formeel: 'Hoewel professionele hulp belangrijk is, is het ook waardevol om te investeren in informele contacten.'
             };
             return advices[type] || '';
         }
 
         function getGoalAdvice(lowestDomains, networkType) {
-            let advice = 'Om uw gewenste situatie te bereiken, is het aan te raden om te focussen op ';
+            let advice = 'Om uw gewenste situatie te bereiken, focust u op ';
             if (lowestDomains.length > 0) {
                 advice += lowestDomains[0].name.toLowerCase();
                 if (lowestDomains.length > 1) {
                     advice += ` en ${lowestDomains[1].name.toLowerCase()}`;
                 }
-                advice += '. ';
             }
-            if (networkType === 'eenpersoons' || networkType === 'formeel') {
-                advice += 'Tegelijkertijd is het versterken van uw sociale netwerk een belangrijke stap.';
-            } else {
-                advice += 'Maak hierbij gebruik van de steun die uw netwerk kan bieden.';
-            }
-            return advice;
+            return advice + '.';
         }
 
         function getInterventions(lowestDomains, networkType) {
             const interventions = [];
             
-            // Network-based interventions
             if (networkType === 'eenpersoons') {
-                interventions.push('🤝 Aanmelden bij een maatjesproject voor sociale ondersteuning');
-                interventions.push('🏠 Deelnemen aan buurtactiviteiten om netwerk uit te breiden');
+                interventions.push('🤝 Aanmelden bij een maatjesproject');
+                interventions.push('🏠 Deelnemen aan buurtactiviteiten');
             } else if (networkType === 'informeel') {
-                interventions.push('👨‍⚕️ Gesprek aanvragen bij sociaal wijkteam voor professionele ondersteuning');
+                interventions.push('👨‍⚕️ Gesprek aanvragen bij sociaal wijkteam');
             } else if (networkType === 'gemengd') {
-                interventions.push('📋 Netwerkberaad organiseren voor betere afstemming');
+                interventions.push('📋 Netwerkberaad organiseren');
             } else if (networkType === 'formeel') {
-                interventions.push('🤝 Verkennen van vrijwilligersnetwerken voor informele steun');
+                interventions.push('🤝 Verkennen van vrijwilligersnetwerken');
             }
 
-            // Domain-based interventions
             lowestDomains.forEach(d => {
                 const v = voorzieningen[d.id];
                 if (v && v.collectief && v.collectief[0]) {
-                    interventions.push(`${d.emoji} ${v.collectief[0]} voor ondersteuning bij ${d.name.toLowerCase()}`);
+                    interventions.push(`${d.emoji} ${v.collectief[0]}`);
                 }
             });
 
             return interventions.slice(0, 5);
+        }
+
+        // Render Activities with GPT
+        async function renderActiviteiten() {
+            const container = document.getElementById('activiteitenList');
+            
+            // Show loading
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                    <h3>Activiteiten worden gegenereerd...</h3>
+                    <div style="margin-top: 20px;">
+                        <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+                    </div>
+                </div>
+            `;
+
+            // If we already have activities, just render them
+            if (state.activities && state.activities.length > 0) {
+                renderActivitiesList();
+                return;
+            }
+
+            const lowestDomains = getLowestDomains(3);
+            const networkInfo = getNetworkType();
+            
+            const prompt = `Genereer een lijst van 6-8 concrete activiteiten voor een cliënt met deze situatie:
+
+Hulpvraag: ${state.hulpvraag || 'Algemene ondersteuning'}
+Wens: ${state.wens || 'Verbetering welzijn'}
+Laagste domeinen: ${lowestDomains.map(d => d.name).join(', ')}
+Netwerktype: ${networkInfo.label}
+
+Geef een JSON array met activiteiten. Elke activiteit heeft:
+- title: korte titel (max 50 tekens)
+- description: uitleg wat te doen (max 100 tekens)  
+- duration: geschatte doorlooptijd (bijv. "1-2 weken", "doorlopend", "eenmalig")
+- priority: "high", "normal", of "low"
+
+Antwoord ALLEEN met de JSON array, geen andere tekst. Voorbeeld:
+[{"title":"Aanmelden voedselbank","description":"Contact opnemen met lokale voedselbank voor ondersteuning","duration":"1 week","priority":"high"}]`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            { role: 'system', content: 'Je genereert alleen JSON. Geen andere tekst. Geen markdown.' },
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    })
+                });
+
+                if (!response.ok) throw new Error('API error');
+
+                const data = await response.json();
+                let content = data.choices[0].message.content.trim();
+                
+                // Clean up response if needed
+                if (content.startsWith('```')) {
+                    content = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+                }
+                
+                state.activities = JSON.parse(content).map((a, i) => ({
+                    id: Date.now() + i,
+                    ...a
+                }));
+                saveState();
+                renderActivitiesList();
+            } catch (error) {
+                console.error('Error generating activities:', error);
+                // Fallback activities
+                state.activities = [
+                    { id: 1, title: 'Contact sociaal wijkteam', description: 'Maak een afspraak voor een intakegesprek', duration: '1 week', priority: 'high' },
+                    { id: 2, title: 'Netwerk inventariseren', description: 'Breng in kaart wie kan helpen', duration: '1-2 weken', priority: 'high' },
+                    { id: 3, title: 'Doelen opstellen', description: 'Bepaal concrete doelen voor de komende maand', duration: '1 week', priority: 'normal' },
+                    { id: 4, title: 'Buurtactiviteit bezoeken', description: 'Ga naar een lokale activiteit om mensen te ontmoeten', duration: 'doorlopend', priority: 'normal' },
+                    { id: 5, title: 'Financieel overzicht maken', description: 'Breng inkomsten en uitgaven in kaart', duration: '2 weken', priority: 'low' }
+                ];
+                saveState();
+                renderActivitiesList();
+            }
+        }
+
+        function renderActivitiesList() {
+            const container = document.getElementById('activiteitenList');
+            const priorityIcons = { high: '🔴', normal: '🟡', low: '🟢' };
+            const priorityLabels = { high: 'Hoog', normal: 'Normaal', low: 'Laag' };
+
+            container.innerHTML = state.activities.map(activity => `
+                <div class="activity-item ${state.selectedActivities.includes(activity.id) ? 'selected' : ''}" onclick="toggleActivity(${activity.id})">
+                    <input type="checkbox" class="activity-checkbox" 
+                        ${state.selectedActivities.includes(activity.id) ? 'checked' : ''}
+                        onclick="event.stopPropagation(); toggleActivity(${activity.id})">
+                    <div class="activity-content">
+                        <div class="activity-header">
+                            <span class="activity-title">${activity.title}</span>
+                            <span class="activity-priority ${activity.priority}">${priorityIcons[activity.priority]} ${priorityLabels[activity.priority]}</span>
+                        </div>
+                        <div class="activity-description">${activity.description}</div>
+                        <div class="activity-duration">⏱️ ${activity.duration}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            updateAgendaButton();
+        }
+
+        function toggleActivity(id) {
+            const index = state.selectedActivities.indexOf(id);
+            if (index > -1) {
+                state.selectedActivities.splice(index, 1);
+            } else {
+                state.selectedActivities.push(id);
+            }
+            saveState();
+            renderActivitiesList();
+        }
+
+        function updateAgendaButton() {
+            const btn = document.getElementById('btnToAgenda');
+            btn.disabled = state.selectedActivities.length === 0;
+        }
+
+        function goToAgenda() {
+            // Create agenda activities from selected
+            createAgendaActivities();
+            switchView('agenda');
+        }
+
+        function createAgendaActivities() {
+            const selected = state.activities.filter(a => state.selectedActivities.includes(a.id));
+            
+            // Sort by priority (high first)
+            const priorityOrder = { high: 0, normal: 1, low: 2 };
+            selected.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+            
+            // Spread over 4-8 weeks
+            const today = new Date();
+            state.agendaActivities = selected.map((activity, i) => {
+                const weekOffset = Math.floor(i / 2) + 1; // 2 activities per week max
+                const date = new Date(today);
+                date.setDate(date.getDate() + (weekOffset * 7) + (i % 2) * 3);
+                
+                return {
+                    ...activity,
+                    date: date.toISOString().split('T')[0],
+                    status: 'gepland' // gepland, bezig, afgerond
+                };
+            });
+            saveState();
+        }
+
+        // Agenda functions
+        function renderAgenda() {
+            renderAgendaCalendar();
+            renderAgendaActivitiesList();
+        }
+
+        function navigateMonth(direction) {
+            state.agendaMonth += direction;
+            if (state.agendaMonth > 11) {
+                state.agendaMonth = 0;
+                state.agendaYear++;
+            } else if (state.agendaMonth < 0) {
+                state.agendaMonth = 11;
+                state.agendaYear--;
+            }
+            saveState();
+            renderAgendaCalendar();
+        }
+
+        function renderAgendaCalendar() {
+            const months = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 
+                           'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
+            
+            document.getElementById('agendaMonth').textContent = `${months[state.agendaMonth]} ${state.agendaYear}`;
+            
+            const grid = document.getElementById('agendaGrid');
+            const firstDay = new Date(state.agendaYear, state.agendaMonth, 1);
+            const lastDay = new Date(state.agendaYear, state.agendaMonth + 1, 0);
+            const today = new Date();
+            
+            // Get first Monday
+            let startDate = new Date(firstDay);
+            const dayOfWeek = firstDay.getDay();
+            const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            startDate.setDate(startDate.getDate() - daysToSubtract);
+            
+            let html = '';
+            for (let i = 0; i < 42; i++) { // 6 weeks max
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+                
+                const isOtherMonth = currentDate.getMonth() !== state.agendaMonth;
+                const isToday = currentDate.toDateString() === today.toDateString();
+                const dateStr = currentDate.toISOString().split('T')[0];
+                
+                // Find activities for this day
+                const dayActivities = (state.agendaActivities || []).filter(a => a.date === dateStr);
+                
+                html += `
+                    <div class="agenda-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}">
+                        <div class="agenda-day-number">${currentDate.getDate()}</div>
+                        ${dayActivities.map(a => `
+                            <div class="agenda-event ${a.priority} ${a.status === 'afgerond' ? 'completed' : ''}" 
+                                 title="${a.title}">${a.title}</div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            grid.innerHTML = html;
+        }
+
+        function renderAgendaActivitiesList() {
+            const container = document.getElementById('agendaActivitiesList');
+            
+            if (!state.agendaActivities || state.agendaActivities.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <p>Nog geen activiteiten ingepland.</p>
+                        <p>Ga naar het Activiteiten Overzicht om activiteiten te selecteren.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const statusOptions = ['gepland', 'bezig', 'afgerond'];
+            const statusLabels = { gepland: 'Gepland', bezig: 'Bezig', afgerond: 'Afgerond' };
+
+            container.innerHTML = state.agendaActivities.map(activity => `
+                <div class="agenda-activity-detail ${activity.priority}">
+                    <div class="agenda-activity-header">
+                        <div>
+                            <strong>${activity.title}</strong>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">${activity.description}</p>
+                        </div>
+                        <div class="agenda-activity-status">
+                            <span class="status-badge ${activity.status}">${statusLabels[activity.status]}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap;">
+                        <div class="date-input-wrapper">
+                            <label>📅 Datum:</label>
+                            <input type="date" value="${activity.date}" onchange="updateActivityDate(${activity.id}, this.value)">
+                        </div>
+                        <div class="date-input-wrapper">
+                            <label>Status:</label>
+                            <select onchange="updateActivityStatus(${activity.id}, this.value)">
+                                ${statusOptions.map(s => `<option value="${s}" ${activity.status === s ? 'selected' : ''}>${statusLabels[s]}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateActivityDate(id, newDate) {
+            const activity = state.agendaActivities.find(a => a.id === id);
+            if (activity) {
+                activity.date = newDate;
+                saveState();
+                renderAgendaCalendar();
+            }
+        }
+
+        function updateActivityStatus(id, newStatus) {
+            const activity = state.agendaActivities.find(a => a.id === id);
+            if (activity) {
+                activity.status = newStatus;
+                saveState();
+                renderAgendaCalendar();
+                renderAgendaActivitiesList();
+            }
+        }
+
+        function exportToICS() {
+            if (!state.agendaActivities || state.agendaActivities.length === 0) {
+                alert('Geen activiteiten om te exporteren.');
+                return;
+            }
+
+            const formatDate = (dateStr) => {
+                return dateStr.replace(/-/g, '') + 'T090000';
+            };
+
+            let ics = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Welzijnswerker//SIJN Agenda//NL
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+`;
+
+            state.agendaActivities.forEach(activity => {
+                ics += `BEGIN:VEVENT
+DTSTART:${formatDate(activity.date)}
+DTEND:${formatDate(activity.date)}
+SUMMARY:${activity.title}
+DESCRIPTION:${activity.description}
+STATUS:${activity.status === 'afgerond' ? 'COMPLETED' : 'CONFIRMED'}
+END:VEVENT
+`;
+            });
+
+            ics += 'END:VCALENDAR';
+
+            const blob = new Blob([ics], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sijn-agenda.ics';
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         // Kanban functions
@@ -3040,18 +4021,6 @@ Geef je antwoord in dit exacte HTML-formaat:
                 
                 document.getElementById('summaryWaardering').innerHTML = `
                     <p><strong>Gemiddelde tevredenheid:</strong> ${avgRating.toFixed(1)}/10</p>
-                    <div style="margin-top: 10px;">
-                        ${state.network.map(p => `
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee;">
-                                <span style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; background: ${typeColors[p.type]}; color: white; text-align: center; line-height: 30px;">
-                                    ${p.name.charAt(0).toUpperCase()}
-                                </span>
-                                <span style="flex: 1;">${p.name}</span>
-                                <strong>${state.ratings[p.id] || 5}/10</strong>
-                            </div>
-                            ${state.ratingNotes[p.id] ? `<p style="margin-left: 40px; font-size: 0.85rem; color: var(--text-light);"><em>${state.ratingNotes[p.id]}</em></p>` : ''}
-                        `).join('')}
-                    </div>
                 `;
             }
 
@@ -3076,7 +4045,7 @@ Geef je antwoord in dit exacte HTML-formaat:
                 }
             }
 
-            // Priorities (domains with score < 5)
+            // Priorities
             const priorities = sortedDomains.filter(d => (state.scores[d.id] || 5) < 5);
             document.getElementById('summaryPriorities').innerHTML = priorities.length > 0
                 ? priorities.map(d => `
@@ -3089,6 +4058,17 @@ Geef je antwoord in dit exacte HTML-formaat:
                     </div>
                 `).join('')
                 : '<p style="color: var(--secondary);">✓ Geen domeinen met urgente aandacht nodig (score < 5)</p>';
+
+            // Selected activities
+            if (state.selectedActivities && state.selectedActivities.length > 0) {
+                document.getElementById('summaryActiviteitenSection').style.display = 'block';
+                const selected = state.activities.filter(a => state.selectedActivities.includes(a.id));
+                document.getElementById('summaryActiviteiten').innerHTML = `
+                    <ul>
+                        ${selected.map(a => `<li><strong>${a.title}</strong> - ${a.description}</li>`).join('')}
+                    </ul>
+                `;
+            }
         }
 
         // Reset all
@@ -3111,7 +4091,12 @@ Geef je antwoord in dit exacte HTML-formaat:
                     currentScreen: 1,
                     currentView: 'assessment',
                     kanbanCards: [],
-                    gptAdviceInterventions: []
+                    gptAdviceInterventions: [],
+                    activities: [],
+                    selectedActivities: [],
+                    agendaActivities: [],
+                    agendaMonth: new Date().getMonth(),
+                    agendaYear: new Date().getFullYear()
                 };
                 document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
                 document.getElementById('professionalFields').style.display = 'none';
@@ -3125,10 +4110,14 @@ Geef je antwoord in dit exacte HTML-formaat:
 
         // Initialize
         loadState();
+        renderProgressSteps();
+        
         if (state.currentScreen > 1) {
             document.getElementById('viewTabs').style.display = 'flex';
             if (state.currentView === 'kanban') {
                 switchView('kanban');
+            } else if (state.currentView === 'agenda') {
+                switchView('agenda');
             } else {
                 goToScreen(state.currentScreen);
             }
