@@ -1723,6 +1723,149 @@
                 justify-content: center;
             }
         }
+
+        /* Lokale Activiteiten */
+        .activity-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--primary-light);
+            background: var(--white);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .activities-selected-count {
+            background: var(--primary-light);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+
+        .lokale-activiteiten-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .activiteit-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .activiteit-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .activiteit-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .activiteit-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .activiteit-checkbox {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .activiteit-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .activiteit-info {
+            flex: 1;
+        }
+
+        .activiteit-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .activiteit-type {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .activiteit-details {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .activiteit-details p {
+            margin: 4px 0;
+        }
+
+        .activiteit-distance {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+
+        .activiteit-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .activiteit-tag {
+            background: #EDF2F7;
+            color: var(--text-light);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+
+        .no-activities-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
     </style>
 </head>
 <body>
@@ -2034,17 +2177,29 @@
             <!-- Screen 10: Activiteiten Overzicht -->
             <div class="screen" id="screen-activiteiten">
                 <div class="card">
-                    <h2>📋 Activiteiten Overzicht</h2>
-                    <p>Selecteer de activiteiten die u wilt inplannen</p>
+                    <h2>🎯 Lokale Activiteiten</h2>
+                    <p>Activiteiten en voorzieningen binnen 10 km van <strong id="activiteitenPostcode"></strong></p>
                     
-                    <div id="activiteitenList"></div>
+                    <div class="activity-filters">
+                        <button class="filter-btn active" data-filter="all" onclick="filterActivities('all')">Alle</button>
+                        <button class="filter-btn" data-filter="sport" onclick="filterActivities('sport')">🏃 Sport</button>
+                        <button class="filter-btn" data-filter="sociaal" onclick="filterActivities('sociaal')">👥 Sociaal</button>
+                        <button class="filter-btn" data-filter="cursus" onclick="filterActivities('cursus')">📚 Cursussen</button>
+                        <button class="filter-btn" data-filter="vrijwilliger" onclick="filterActivities('vrijwilliger')">🤝 Vrijwilligerswerk</button>
+                    </div>
+
+                    <div class="activities-selected-count">
+                        <span id="selectedActivitiesCount">0</span> activiteit(en) geselecteerd
+                    </div>
+
+                    <div id="lokaleActiviteitenList" class="lokale-activiteiten-grid"></div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(getScreenNumber('organisaties'))">← Terug</button>
-                        <button class="btn btn-primary" id="btnToAgenda" onclick="goToAgenda()" disabled>
-                            📅 Naar SIJN-agenda
+                        <button class="btn btn-success" id="btnAddToAgenda" onclick="addSelectedToAgenda()" disabled>
+                            📅 Toevoegen aan Agenda (<span id="addToAgendaCount">0</span>)
                         </button>
-                        <button class="btn btn-secondary" onclick="goToScreen(getScreenNumber('summary'))">Naar Samenvatting →</button>
+                        <button class="btn btn-primary" onclick="goToScreen(getScreenNumber('summary'))">Naar Samenvatting →</button>
                     </div>
                 </div>
             </div>
@@ -2337,6 +2492,43 @@
             { id: 28, name: 'Rechtswinkel Utrecht', type: 'juridisch', typeName: 'Juridisch', postcodes: ['35', '36', '37'], address: 'Nobelstraat 2a, Utrecht', phone: '030-230 4500', website: 'www.rechtswinkelutrecht.nl', icon: '⚖️', helpt: ['justitie'] },
             { id: 29, name: 'Bureau Slachtofferhulp', type: 'juridisch', typeName: 'Juridisch', postcodes: ['10', '11', '12', '25', '26', '30', '31', '35', '36', '50', '51', '97', '98'], address: 'Landelijk werkend', phone: '0900-0101', website: 'www.slachtofferhulp.nl', icon: '⚖️', helpt: ['justitie', 'geestelijk'] },
             { id: 30, name: 'MEE Zuidoost Brabant', type: 'maatschappelijk-werk', typeName: 'Cliëntondersteuning', postcodes: ['56', '57', '58'], address: 'Luchthavenweg 81, Eindhoven', phone: '040-239 0900', website: 'www.meezuidoostbrabant.nl', icon: '🤝', helpt: ['adl', 'sociaal', 'dagbesteding'] }
+        ];
+
+        // Lokale activiteiten database (buurthuizen, sport, cursussen, vrijwilligerswerk)
+        const lokaleActiviteiten = [
+            // Sport
+            { id: 101, name: 'Sportclub Nieuw-West', type: 'sport', typeName: 'Sportvereniging', postcodes: ['10', '11'], address: 'Sportpark Sloten 1, Amsterdam', icon: '🏃', dagen: 'Ma, Wo, Vr', tijd: '10:00-12:00', kosten: 'Gratis proefles', tags: ['bewegen', 'groep', 'laagdrempelig'], afstand: 2.3 },
+            { id: 102, name: 'Zwemvereniging De Dolfijn', type: 'sport', typeName: 'Zwemmen', postcodes: ['10', '11', '12'], address: 'Sloterparkbad, Amsterdam', icon: '🏊', dagen: 'Di, Do', tijd: '09:00-10:30', kosten: '€5/les', tags: ['bewegen', 'water', 'alle leeftijden'], afstand: 3.1 },
+            { id: 103, name: 'Wandelgroep 55+', type: 'sport', typeName: 'Wandelen', postcodes: ['30', '31', '32'], address: 'Start: Kralingse Bos, Rotterdam', icon: '🚶', dagen: 'Wo, Za', tijd: '10:00-12:00', kosten: 'Gratis', tags: ['natuur', 'sociaal', 'senioren'], afstand: 1.5 },
+            { id: 104, name: 'Yoga in het Park', type: 'sport', typeName: 'Yoga', postcodes: ['35', '36'], address: 'Wilhelminapark, Utrecht', icon: '🧘', dagen: 'Ma, Do', tijd: '08:30-09:30', kosten: 'Donatie', tags: ['ontspanning', 'buiten', 'beginners'], afstand: 2.8 },
+            { id: 105, name: 'Buurtsportcoach Rotterdam Zuid', type: 'sport', typeName: 'Diverse sporten', postcodes: ['30', '31'], address: 'Zuidplein, Rotterdam', icon: '⚽', dagen: 'Ma t/m Vr', tijd: '14:00-17:00', kosten: 'Gratis', tags: ['jongeren', 'buurt', 'gratis'], afstand: 0.8 },
+            
+            // Sociaal / Buurthuizen
+            { id: 201, name: 'Buurthuis De Boomgaard', type: 'sociaal', typeName: 'Buurthuis', postcodes: ['10', '11'], address: 'Boomgaardstraat 10, Amsterdam', icon: '🏠', dagen: 'Ma t/m Vr', tijd: '09:00-17:00', kosten: 'Gratis entree', tags: ['koffie', 'ontmoeting', 'activiteiten'], afstand: 1.2 },
+            { id: 202, name: 'Wijkcentrum Het Anker', type: 'sociaal', typeName: 'Wijkcentrum', postcodes: ['30', '31'], address: 'Slinge 900, Rotterdam', icon: '⚓', dagen: 'Ma t/m Za', tijd: '10:00-22:00', kosten: 'Lidmaatschap €15/jaar', tags: ['eten', 'biljart', 'kaarten'], afstand: 2.5 },
+            { id: 203, name: 'Buurthuiskamer Lombok', type: 'sociaal', typeName: 'Huiskamer', postcodes: ['35', '36'], address: 'Kanaalstraat 243, Utrecht', icon: '☕', dagen: 'Ma, Wo, Vr', tijd: '10:00-16:00', kosten: 'Gratis', tags: ['koffie', 'multicultureel', 'gezellig'], afstand: 1.8 },
+            { id: 204, name: 'Inloophuis De Tweede Thuis', type: 'sociaal', typeName: 'Inloophuis', postcodes: ['25', '26'], address: 'Loosduinse Hoofdstraat 200, Den Haag', icon: '🏡', dagen: 'Ma t/m Vr', tijd: '10:00-15:00', kosten: 'Gratis', tags: ['GGZ', 'lotgenoten', 'lunch'], afstand: 3.2 },
+            { id: 205, name: 'Eetcafé De Buurt', type: 'sociaal', typeName: 'Buurtrestaurant', postcodes: ['10', '11', '12'], address: 'Eerste van Swindenstraat 80, Amsterdam', icon: '🍽️', dagen: 'Di, Do', tijd: '17:30-19:30', kosten: '€4 voor 3-gangen', tags: ['eten', 'betaalbaar', 'gezellig'], afstand: 2.0 },
+            
+            // Cursussen
+            { id: 301, name: 'Taalcafé Wereldwijs', type: 'cursus', typeName: 'Taalles', postcodes: ['10', '11', '12'], address: 'OBA Javaplein, Amsterdam', icon: '📚', dagen: 'Di, Do', tijd: '13:00-15:00', kosten: 'Gratis', tags: ['Nederlands', 'beginners', 'gezellig'], afstand: 1.5 },
+            { id: 302, name: 'Computercursus Senioren', type: 'cursus', typeName: 'Digitale vaardigheden', postcodes: ['30', '31'], address: 'Bibliotheek Rotterdam Centrum', icon: '💻', dagen: 'Wo', tijd: '10:00-12:00', kosten: '€25 voor 8 lessen', tags: ['internet', 'DigiD', 'senioren'], afstand: 4.0 },
+            { id: 303, name: 'Creatieve Workshop', type: 'cursus', typeName: 'Handwerken', postcodes: ['35', '36'], address: 'Cultureel Centrum Leidsche Rijn, Utrecht', icon: '🎨', dagen: 'Ma', tijd: '14:00-16:30', kosten: '€3/materiaalkosten', tags: ['schilderen', 'breien', 'ontspanning'], afstand: 5.5 },
+            { id: 304, name: 'Kookcursus Budget', type: 'cursus', typeName: 'Koken', postcodes: ['10', '11'], address: 'Buurthuis Oost, Amsterdam', icon: '👨‍🍳', dagen: 'Za', tijd: '11:00-14:00', kosten: '€5 incl. eten', tags: ['gezond', 'budget', 'samen'], afstand: 2.1 },
+            { id: 305, name: 'Mindfulness Training', type: 'cursus', typeName: 'Mindfulness', postcodes: ['25', '26', '27'], address: 'GGZ-gebouw, Den Haag', icon: '🧘', dagen: 'Vr', tijd: '10:00-11:30', kosten: 'Via verwijzing gratis', tags: ['stress', 'ontspanning', 'GGZ'], afstand: 3.8 },
+            
+            // Vrijwilligerswerk
+            { id: 401, name: 'Maatjesproject Amsterdam', type: 'vrijwilliger', typeName: 'Maatjes', postcodes: ['10', '11', '12'], address: 'Humanitas Amsterdam', icon: '🤝', dagen: 'Flexibel', tijd: '2 uur/week', kosten: 'Onkostenvergoeding', tags: ['1-op-1', 'sociaal', 'training'], afstand: 2.5 },
+            { id: 402, name: 'Voedselbank Rotterdam', type: 'vrijwilliger', typeName: 'Voedselbank', postcodes: ['30', '31', '32'], address: 'Marconistraat 22, Rotterdam', icon: '🥫', dagen: 'Ma, Wo, Vr', tijd: '09:00-13:00', kosten: 'Reiskostenvergoeding', tags: ['logistiek', 'sociaal', 'zinvol'], afstand: 3.0 },
+            { id: 403, name: 'Voorleesproject Bibliotheek', type: 'vrijwilliger', typeName: 'Voorlezen', postcodes: ['35', '36'], address: 'Centrale Bibliotheek Utrecht', icon: '📖', dagen: 'Za', tijd: '10:30-12:00', kosten: 'Geen', tags: ['kinderen', 'lezen', 'leuk'], afstand: 1.2 },
+            { id: 404, name: 'Taalmaatje voor Nieuwkomers', type: 'vrijwilliger', typeName: 'Taalmaatje', postcodes: ['10', '11', '25', '26', '30', '31', '35', '36'], address: 'VluchtelingenWerk locatie', icon: '🗣️', dagen: 'Flexibel', tijd: '1-2 uur/week', kosten: 'Training aangeboden', tags: ['taal', 'integratie', 'cultuur'], afstand: 4.5 },
+            { id: 405, name: 'Dierenasiel Hulp', type: 'vrijwilliger', typeName: 'Dierenverzorging', postcodes: ['10', '11', '12'], address: 'Dierenopvang Amsterdam', icon: '🐕', dagen: 'Alle dagen', tijd: 'Ochtend of middag', kosten: 'Geen', tags: ['dieren', 'buiten', 'beweging'], afstand: 6.2 },
+            
+            // Extra activiteiten voor variatie
+            { id: 501, name: 'Repair Café', type: 'sociaal', typeName: 'Repair Café', postcodes: ['10', '11', '30', '31', '35', '36'], address: 'Diverse locaties', icon: '🔧', dagen: 'Za (1x per maand)', tijd: '10:00-14:00', kosten: 'Gratis', tags: ['repareren', 'duurzaam', 'leren'], afstand: 2.0 },
+            { id: 502, name: 'Bingo Middag', type: 'sociaal', typeName: 'Spelletjes', postcodes: ['10', '11', '25', '26'], address: 'Wijkcentrum lokaal', icon: '🎱', dagen: 'Do', tijd: '14:00-16:00', kosten: '€2 incl. koffie', tags: ['senioren', 'prijzen', 'gezellig'], afstand: 1.0 },
+            { id: 503, name: 'Nordic Walking Groep', type: 'sport', typeName: 'Nordic Walking', postcodes: ['25', '26', '27'], address: 'Zuiderpark, Den Haag', icon: '🏃‍♀️', dagen: 'Di, Do', tijd: '09:30-11:00', kosten: '€3/keer', tags: ['buiten', 'conditie', 'gezellig'], afstand: 2.2 },
+            { id: 504, name: 'Moestuin Samen Groeien', type: 'vrijwilliger', typeName: 'Stadslandbouw', postcodes: ['10', '11'], address: 'Volkstuinpark Amsteldijk', icon: '🥕', dagen: 'Za', tijd: '10:00-13:00', kosten: 'Gratis, groenten delen', tags: ['natuur', 'buiten', 'gezond'], afstand: 3.5 }
         ];
 
         // Risks per network type
@@ -3574,120 +3766,85 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
             return interventions.slice(0, 5);
         }
 
-        // Render Activities with GPT
-        async function renderActiviteiten() {
-            const container = document.getElementById('activiteitenList');
-            
-            // Show loading
-            container.innerHTML = `
-                <div style="text-align: center; padding: 40px;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
-                    <h3>Activiteiten worden gegenereerd...</h3>
-                    <div style="margin-top: 20px;">
-                        <div class="loading-bar"><div class="loading-bar-inner"></div></div>
-                    </div>
-                </div>
-            `;
+        // Current activity filter
+        let currentActivityFilter = 'all';
 
-            // If we already have activities, just render them
-            if (state.activities && state.activities.length > 0) {
-                renderActivitiesList();
+        // Render Local Activities based on postcode
+        function renderActiviteiten() {
+            const container = document.getElementById('lokaleActiviteitenList');
+            const postcodeDisplay = document.getElementById('activiteitenPostcode');
+            const postcode = state.postcode || '';
+            const postcodePrefix = postcode.substring(0, 2);
+            
+            postcodeDisplay.textContent = postcode || '(geen postcode)';
+            
+            // Filter activities by postcode area
+            let filteredActivities = lokaleActiviteiten.filter(a => 
+                a.postcodes.some(p => p === postcodePrefix || postcodePrefix === '')
+            );
+            
+            // Apply category filter
+            if (currentActivityFilter !== 'all') {
+                filteredActivities = filteredActivities.filter(a => a.type === currentActivityFilter);
+            }
+            
+            // Sort by distance
+            filteredActivities.sort((a, b) => a.afstand - b.afstand);
+            
+            if (filteredActivities.length === 0) {
+                container.innerHTML = `
+                    <div class="no-activities-message">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+                        <p>Geen activiteiten gevonden in uw regio.</p>
+                        <p style="font-size: 0.9rem;">Probeer een andere categorie of controleer de postcode.</p>
+                    </div>
+                `;
                 return;
             }
-
-            const lowestDomains = getLowestDomains(3);
-            const networkInfo = getNetworkType();
             
-            const prompt = `Genereer een lijst van 6-8 concrete activiteiten voor een cliënt met deze situatie:
-
-Hulpvraag: ${state.hulpvraag || 'Algemene ondersteuning'}
-Wens: ${state.wens || 'Verbetering welzijn'}
-Laagste domeinen: ${lowestDomains.map(d => d.name).join(', ')}
-Netwerktype: ${networkInfo.label}
-
-Geef een JSON array met activiteiten. Elke activiteit heeft:
-- title: korte titel (max 50 tekens)
-- description: uitleg wat te doen (max 100 tekens)  
-- duration: geschatte doorlooptijd (bijv. "1-2 weken", "doorlopend", "eenmalig")
-- priority: "high", "normal", of "low"
-
-Antwoord ALLEEN met de JSON array, geen andere tekst. Voorbeeld:
-[{"title":"Aanmelden voedselbank","description":"Contact opnemen met lokale voedselbank voor ondersteuning","duration":"1 week","priority":"high"}]`;
-
-            try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            { role: 'system', content: 'Je genereert alleen JSON. Geen andere tekst. Geen markdown.' },
-                            { role: 'user', content: prompt }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1000
-                    })
-                });
-
-                if (!response.ok) throw new Error('API error');
-
-                const data = await response.json();
-                let content = data.choices[0].message.content.trim();
-                
-                // Clean up response if needed
-                if (content.startsWith('```')) {
-                    content = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
-                }
-                
-                state.activities = JSON.parse(content).map((a, i) => ({
-                    id: Date.now() + i,
-                    ...a
-                }));
-                saveState();
-                renderActivitiesList();
-            } catch (error) {
-                console.error('Error generating activities:', error);
-                // Fallback activities
-                state.activities = [
-                    { id: 1, title: 'Contact sociaal wijkteam', description: 'Maak een afspraak voor een intakegesprek', duration: '1 week', priority: 'high' },
-                    { id: 2, title: 'Netwerk inventariseren', description: 'Breng in kaart wie kan helpen', duration: '1-2 weken', priority: 'high' },
-                    { id: 3, title: 'Doelen opstellen', description: 'Bepaal concrete doelen voor de komende maand', duration: '1 week', priority: 'normal' },
-                    { id: 4, title: 'Buurtactiviteit bezoeken', description: 'Ga naar een lokale activiteit om mensen te ontmoeten', duration: 'doorlopend', priority: 'normal' },
-                    { id: 5, title: 'Financieel overzicht maken', description: 'Breng inkomsten en uitgaven in kaart', duration: '2 weken', priority: 'low' }
-                ];
-                saveState();
-                renderActivitiesList();
-            }
-        }
-
-        function renderActivitiesList() {
-            const container = document.getElementById('activiteitenList');
-            const priorityIcons = { high: '🔴', normal: '🟡', low: '🟢' };
-            const priorityLabels = { high: 'Hoog', normal: 'Normaal', low: 'Laag' };
-
-            container.innerHTML = state.activities.map(activity => `
-                <div class="activity-item ${state.selectedActivities.includes(activity.id) ? 'selected' : ''}" onclick="toggleActivity(${activity.id})">
-                    <input type="checkbox" class="activity-checkbox" 
-                        ${state.selectedActivities.includes(activity.id) ? 'checked' : ''}
-                        onclick="event.stopPropagation(); toggleActivity(${activity.id})">
-                    <div class="activity-content">
-                        <div class="activity-header">
-                            <span class="activity-title">${activity.title}</span>
-                            <span class="activity-priority ${activity.priority}">${priorityIcons[activity.priority]} ${priorityLabels[activity.priority]}</span>
+            container.innerHTML = filteredActivities.map(activity => `
+                <div class="activiteit-card ${state.selectedActivities.includes(activity.id) ? 'selected' : ''}" 
+                     onclick="toggleLocalActivity(${activity.id})">
+                    <div class="activiteit-card-header">
+                        <input type="checkbox" class="activiteit-checkbox" 
+                            ${state.selectedActivities.includes(activity.id) ? 'checked' : ''}
+                            onclick="event.stopPropagation(); toggleLocalActivity(${activity.id})">
+                        <div class="activiteit-icon">${activity.icon}</div>
+                        <div class="activiteit-info">
+                            <div class="activiteit-name">${activity.name}</div>
+                            <div class="activiteit-type">${activity.typeName}</div>
                         </div>
-                        <div class="activity-description">${activity.description}</div>
-                        <div class="activity-duration">⏱️ ${activity.duration}</div>
+                    </div>
+                    <div class="activiteit-details">
+                        <p>📍 ${activity.address}</p>
+                        <p>📅 ${activity.dagen} • ${activity.tijd}</p>
+                        <p>💰 ${activity.kosten}</p>
+                    </div>
+                    <span class="activiteit-distance">📍 ${activity.afstand} km</span>
+                    <div class="activiteit-tags">
+                        ${activity.tags.map(tag => `<span class="activiteit-tag">${tag}</span>`).join('')}
                     </div>
                 </div>
             `).join('');
-
-            updateAgendaButton();
+            
+            updateActivityCounts();
         }
 
-        function toggleActivity(id) {
+        function filterActivities(type) {
+            currentActivityFilter = type;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === type) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            renderActiviteiten();
+        }
+
+        function toggleLocalActivity(id) {
             const index = state.selectedActivities.indexOf(id);
             if (index > -1) {
                 state.selectedActivities.splice(index, 1);
@@ -3695,41 +3852,64 @@ Antwoord ALLEEN met de JSON array, geen andere tekst. Voorbeeld:
                 state.selectedActivities.push(id);
             }
             saveState();
-            renderActivitiesList();
+            renderActiviteiten();
         }
 
-        function updateAgendaButton() {
-            const btn = document.getElementById('btnToAgenda');
-            btn.disabled = state.selectedActivities.length === 0;
+        function updateActivityCounts() {
+            const count = state.selectedActivities.length;
+            document.getElementById('selectedActivitiesCount').textContent = count;
+            document.getElementById('addToAgendaCount').textContent = count;
+            document.getElementById('btnAddToAgenda').disabled = count === 0;
         }
 
-        function goToAgenda() {
-            // Create agenda activities from selected
-            createAgendaActivities();
-            switchView('agenda');
-        }
-
-        function createAgendaActivities() {
-            const selected = state.activities.filter(a => state.selectedActivities.includes(a.id));
+        function addSelectedToAgenda() {
+            // Get selected local activities
+            const selected = lokaleActiviteiten.filter(a => state.selectedActivities.includes(a.id));
             
-            // Sort by priority (high first)
-            const priorityOrder = { high: 0, normal: 1, low: 2 };
-            selected.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+            if (selected.length === 0) return;
             
-            // Spread over 4-8 weeks
+            // Add to agenda with dates spread over coming weeks
             const today = new Date();
-            state.agendaActivities = selected.map((activity, i) => {
-                const weekOffset = Math.floor(i / 2) + 1; // 2 activities per week max
+            const newAgendaActivities = selected.map((activity, i) => {
+                const weekOffset = Math.floor(i / 2) + 1;
                 const date = new Date(today);
                 date.setDate(date.getDate() + (weekOffset * 7) + (i % 2) * 3);
                 
                 return {
-                    ...activity,
+                    id: activity.id,
+                    title: activity.name,
+                    description: `${activity.typeName} - ${activity.dagen} ${activity.tijd}`,
+                    address: activity.address,
                     date: date.toISOString().split('T')[0],
-                    status: 'gepland' // gepland, bezig, afgerond
+                    status: 'gepland',
+                    type: activity.type,
+                    icon: activity.icon
                 };
             });
+            
+            // Merge with existing agenda activities (avoid duplicates)
+            const existingIds = state.agendaActivities.map(a => a.id);
+            const newItems = newAgendaActivities.filter(a => !existingIds.includes(a.id));
+            state.agendaActivities = [...state.agendaActivities, ...newItems];
+            
             saveState();
+            
+            // Show confirmation and switch to agenda
+            alert(`✅ ${newItems.length} activiteit(en) toegevoegd aan uw agenda!`);
+            switchView('agenda');
+        }
+
+        // Legacy function for backward compatibility
+        function updateAgendaButton() {
+            updateActivityCounts();
+        }
+
+        function goToAgenda() {
+            addSelectedToAgenda();
+        }
+
+        function createAgendaActivities() {
+            // This is now handled by addSelectedToAgenda
         }
 
         // Agenda functions
