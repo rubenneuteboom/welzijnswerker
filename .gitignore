@@ -1,2 +1,2 @@
-# Backup files
-*.backup-*
+.env
+node_modules/

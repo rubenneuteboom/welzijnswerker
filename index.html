@@ -4694,21 +4694,8 @@
 
         // AI Analysis Functions
         function showAISetup() {
-            const apiKey = localStorage.getItem('openai_api_key');
-            
-            if (!apiKey) {
-                // Show API key setup
-                const key = prompt('⚠️ PRIVACY WAARSCHUWING\n\nDoor een OpenAI API key in te voeren, ga je ermee akkoord dat de hulpvraag naar OpenAI wordt gestuurd voor analyse.\n\n🔑 Voer je OpenAI API key in:\n(Deze wordt lokaal opgeslagen in je browser)');
-                
-                if (!key) return;
-                
-                localStorage.setItem('openai_api_key', key.trim());
+            if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar de server gestuurd voor analyse.\n\nDoorgaan?')) {
                 analyzeWithAI();
-            } else {
-                // Confirm before sending
-                if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar OpenAI gestuurd voor analyse.\n\nDoorgaan?')) {
-                    analyzeWithAI();
-                }
             }
         }
 
@@ -4729,8 +4716,6 @@
             document.body.appendChild(loadingMsg);
 
             try {
-                const apiKey = localStorage.getItem('openai_api_key');
-                
                 const prompt = `Je bent een SIJN (Sterk In Je Netwerk) expert. Analyseer de volgende hulpvraag en beoordeel elk van de 11 levensdomeinen op een schaal van 1-3:
 
 1 = 🔴 Onvoldoende stabiel (acute problematiek, intensieve ondersteuning nodig)
@@ -4769,11 +4754,10 @@ Antwoord in dit exacte JSON formaat:
   "justitie": 3
 }`;
 
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch('http://localhost:3459/openai', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -4827,10 +4811,9 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
-        // Clear API key (for testing/reset)
+        // Clear API key (no longer needed — key is server-side)
         function clearAIKey() {
-            localStorage.removeItem('openai_api_key');
-            alert('OpenAI API key verwijderd');
+            alert('API key wordt nu server-side beheerd via .env');
         }
 
         // Render Doelen overzicht
@@ -8217,7 +8200,7 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // OpenAI API configuration
-        const OPENAI_API_KEY = localStorage.getItem('openai_api_key') || '';
+        // OpenAI key is now stored server-side in .env
         
         // Brave Search API configuration
         // Get your free API key at: https://brave.com/search/api/
@@ -8339,11 +8322,10 @@ Geef je antwoord in dit exacte HTML-formaat:
 </div>`;
 
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch('http://localhost:3459/openai', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -8585,11 +8567,10 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 </div>`;
 
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch('http://localhost:3459/openai', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
