@@ -1,0 +1,66 @@
+<svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+    <!-- SIJN Netwerkdiagram - Definitieve versie 11-02-2026 -->
+    <!-- Dit diagram toont de basis van SIJN: netwerkbeweging als web van mogelijkheden, niet als ladder -->
+    
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0 0, 10 3, 0 6" fill="#9ca3af" />
+        </marker>
+    </defs>
+    
+    <!-- Pijlen (gestippeld, 2px, subtiel) -->
+    
+    <!-- Geen netwerk → Gemengd -->
+    <line x1="460" y1="87" x2="360" y2="87" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    
+    <!-- Gemengd ↔ Informeel -->
+    <line x1="295" y1="115" x2="295" y2="235" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    <line x1="305" y1="235" x2="305" y2="115" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    
+    <!-- 1-persoons → Gemengd -->
+    <line x1="160" y1="155" x2="240" y2="105" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    
+    <!-- 1-persoons → Informeel -->
+    <line x1="160" y1="195" x2="240" y2="245" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    
+    <!-- Informeel ↔ Formeel -->
+    <line x1="360" y1="257" x2="460" y2="257" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    <line x1="460" y1="263" x2="360" y2="263" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    
+    <!-- Gemengd ↔ Formeel -->
+    <line x1="350" y1="110" x2="470" y2="240" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
+    <line x1="470" y1="245" x2="350" y2="115" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
+    
+    <!-- Geen → Informeel -->
+    <line x1="470" y1="110" x2="350" y2="240" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
+    
+    <!-- Geen → Formeel -->
+    <line x1="520" y1="115" x2="520" y2="235" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
+    
+    <!-- Netwerkposities -->
+    
+    <!-- GEMENGD NETWERK (middenboven, oranje) -->
+    <rect x="240" y="60" width="120" height="55" rx="10" fill="#fed7aa" stroke="#f59e0b" stroke-width="3"/>
+    <text x="300" y="83" text-anchor="middle" font-size="13" font-weight="700" font-family="system-ui, -apple-system, sans-serif" fill="#92400e">GEMENGD</text>
+    <text x="300" y="101" text-anchor="middle" font-size="12" font-family="system-ui, -apple-system, sans-serif" fill="#92400e">NETWERK</text>
+    
+    <!-- GEEN NETWERK (rechtsboven, wit/grijs) -->
+    <rect x="460" y="60" width="120" height="55" rx="10" fill="#ffffff" stroke="#9ca3af" stroke-width="3"/>
+    <text x="520" y="83" text-anchor="middle" font-size="13" font-weight="700" font-family="system-ui, -apple-system, sans-serif" fill="#4b5563">GEEN</text>
+    <text x="520" y="101" text-anchor="middle" font-size="12" font-family="system-ui, -apple-system, sans-serif" fill="#6b7280">NETWERK</text>
+    
+    <!-- 1-PERSOONS NETWERK (links midden, geel) -->
+    <rect x="40" y="147" width="120" height="55" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+    <text x="100" y="170" text-anchor="middle" font-size="13" font-weight="700" font-family="system-ui, -apple-system, sans-serif" fill="#92400e">1-PERSOONS</text>
+    <text x="100" y="188" text-anchor="middle" font-size="12" font-family="system-ui, -apple-system, sans-serif" fill="#92400e">NETWERK</text>
+    
+    <!-- INFORMEEL NETWERK (midden beneden, geel) -->
+    <rect x="240" y="235" width="120" height="55" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+    <text x="300" y="258" text-anchor="middle" font-size="13" font-weight="700" font-family="system-ui, -apple-system, sans-serif" fill="#92400e">INFORMEEL</text>
+    <text x="300" y="276" text-anchor="middle" font-size="12" font-family="system-ui, -apple-system, sans-serif" fill="#92400e">NETWERK</text>
+    
+    <!-- FORMEEL NETWERK (rechtsonder, roze) -->
+    <rect x="460" y="235" width="120" height="55" rx="10" fill="#fce7f3" stroke="#ec4899" stroke-width="3"/>
+    <text x="520" y="258" text-anchor="middle" font-size="13" font-weight="700" font-family="system-ui, -apple-system, sans-serif" fill="#9f1239">FORMEEL</text>
+    <text x="520" y="276" text-anchor="middle" font-size="12" font-family="system-ui, -apple-system, sans-serif" fill="#9f1239">NETWERK</text>
+</svg>
