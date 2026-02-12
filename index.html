@@ -8217,7 +8217,7 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // OpenAI API configuration
-        const OPENAI_API_KEY = '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';
+        const OPENAI_API_KEY = localStorage.getItem('openai_api_key') || '';
         
         // Brave Search API configuration
         // Get your free API key at: https://brave.com/search/api/
