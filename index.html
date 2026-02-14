@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js used for spider/radar chart in dashboard -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -4326,6 +4327,23 @@
     </div>
 
     <script>
+        // XSS protection helper
+        function esc(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // Score-to-emoji/color helpers
+        function scoreEmoji(score) {
+            return scoreEmoji(score);
+        }
+        function scoreColor(score) {
+            return scoreColor(score);
+        }
+
+        // Brave API key (not used - searches go through proxy)
+        const BRAVE_API_KEY = null;
+
         // Data - Domains (SIJN Levensdomeinen)
         // Zelfredzaamheid niveaus (SIJN 3-niveau systeem: 🔴🟡🟢)
         // Legacy labels (niet meer gebruikt - oude 1-5 systeem)
@@ -5209,23 +5227,9 @@
             { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
         ];
 
-        const screenConfigPro = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
-            { id: 'start', label: 'Start', emoji: '🏠' },
-            { id: 'domains', label: 'Domeinscan', emoji: '📊' },
-            { id: 'network', label: 'Overzicht', emoji: '📋' },
-            { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Volgende stap', emoji: '🎯' },
-            { id: 'interventies', label: 'Interventies', emoji: '🔧' },
-            { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
-        ];
-
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Default naar screenConfigBase als mode nog niet gezet is
-            const config = state.mode === 'professional' ? screenConfigPro : screenConfigBase;
-            console.log('getScreenConfig() - mode:', state.mode, '- config length:', config.length);
-            return config;
+            return screenConfigBase;
         }
 
         // Get screen number by id
@@ -5297,6 +5301,7 @@
 
         // Load from localStorage
         function loadState() {
+          try {
             const saved = localStorage.getItem('welzijnswerker_v2');
             if (saved) {
                 const parsed = JSON.parse(saved);
@@ -5327,6 +5332,10 @@
                 state.clientId = 'client_' + Date.now();
                 state.createdAt = new Date().toISOString();
             }
+          } catch (e) {
+            console.error('Failed to load state:', e);
+            localStorage.removeItem('welzijnswerker_v2');
+          }
         }
 
         // Save to localStorage
@@ -5515,7 +5524,7 @@ Antwoord in dit exacte JSON formaat:
                 `;
                 
                 domeinDoelen.forEach(item => {
-                    const statusEmoji = item.score === 1 ? '🔴' : item.score === 2 ? '🟡' : item.score === 3 ? '🟢' : '⚪';
+                    const statusEmoji = scoreEmoji(item.score);
                     
                     html += `
                         <div style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s;" 
@@ -6107,7 +6116,7 @@ Antwoord in dit exacte JSON formaat:
                         </label>
                         <textarea style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; min-height: 80px;"
                                   placeholder="Observaties en aantekeningen..."
-                                  onchange="updateNote('${domain.id}', this.value)">${state.notes[domain.id] || ''}</textarea>
+                                  onchange="updateNote('${domain.id}', this.value)">${esc(state.notes[domain.id])}</textarea>
                     </div>
                 ` : ''}
             `;
@@ -6976,7 +6985,7 @@ Antwoord in dit exacte JSON formaat:
                         <div class="wens-reminder-icon">✨</div>
                         <div class="wens-reminder-content">
                             <div class="wens-reminder-title">Uw wens / doel</div>
-                            <div class="wens-reminder-text">"${state.wens}"</div>
+                            <div class="wens-reminder-text">"${esc(state.wens)}"</div>
                         </div>
                     </div>
                 `;
@@ -7108,7 +7117,7 @@ Antwoord in dit exacte JSON formaat:
             
             // Client info
             if (state.clientName) {
-                summary = `Naam: ${state.clientName}\n${state.clientBirthdate ? `Geboortedatum: ${state.clientBirthdate}\n` : ''}\n${summary}`;
+                summary = `Naam: ${esc(state.clientName)}\n${state.clientBirthdate ? `Geboortedatum: ${esc(state.clientBirthdate)}\n` : ''}\n${summary}`;
             }
             
             // Copy to clipboard
@@ -7184,9 +7193,9 @@ Antwoord in dit exacte JSON formaat:
                         <div class="form-group">
                             <label>Type *</label>
                             <div class="chip-group">
-                                <div class="chip ${supporter.type === 'informal' ? 'selected' : ''}" onclick="selectSupporterType('informal')">Informeel</div>
-                                <div class="chip ${supporter.type === 'professional' ? 'selected' : ''}" onclick="selectSupporterType('professional')">Professional</div>
-                                <div class="chip ${supporter.type === 'collective' ? 'selected' : ''}" onclick="selectSupporterType('collective')">Collectief</div>
+                                <div class="chip ${supporter.type === 'informal' ? 'selected' : ''}" onclick="selectSupporterType('informal', event)">Informeel</div>
+                                <div class="chip ${supporter.type === 'professional' ? 'selected' : ''}" onclick="selectSupporterType('professional', event)">Professional</div>
+                                <div class="chip ${supporter.type === 'collective' ? 'selected' : ''}" onclick="selectSupporterType('collective', event)">Collectief</div>
                             </div>
                             <input type="hidden" id="supporterType" value="${supporter.type || 'informal'}">
                         </div>
@@ -7213,7 +7222,7 @@ Antwoord in dit exacte JSON formaat:
                             <div class="chip-group" id="roleChipGroup">
                                 ${['Emotioneel', 'Praktisch', 'Regelen/organiseren', 'Motiveren/structuur', 'Veiligheid/crisis'].map(role => `
                                     <div class="role-chip ${(supporter.roles || []).includes(role) ? 'selected' : ''}" 
-                                         onclick="toggleRole('${role}')">${role}</div>
+                                         onclick="toggleRole('${role}', event)">${role}</div>
                                 `).join('')}
                             </div>
                         </div>
@@ -7221,10 +7230,10 @@ Antwoord in dit exacte JSON formaat:
                         <div class="form-group">
                             <label>Effect / Ervaring</label>
                             <div class="chip-group">
-                                <div class="chip ${supporter.effect === 'Steunend' ? 'selected' : ''}" onclick="selectEffect('Steunend')">Steunend</div>
-                                <div class="chip ${supporter.effect === 'Neutraal' ? 'selected' : ''}" onclick="selectEffect('Neutraal')">Neutraal</div>
-                                <div class="chip ${supporter.effect === 'Beperkt' ? 'selected' : ''}" onclick="selectEffect('Beperkt')">Beperkt</div>
-                                <div class="chip ${supporter.effect === 'Belemmerend' ? 'selected' : ''}" onclick="selectEffect('Belemmerend')">Belemmerend</div>
+                                <div class="chip ${supporter.effect === 'Steunend' ? 'selected' : ''}" onclick="selectEffect('Steunend', event)">Steunend</div>
+                                <div class="chip ${supporter.effect === 'Neutraal' ? 'selected' : ''}" onclick="selectEffect('Neutraal', event)">Neutraal</div>
+                                <div class="chip ${supporter.effect === 'Beperkt' ? 'selected' : ''}" onclick="selectEffect('Beperkt', event)">Beperkt</div>
+                                <div class="chip ${supporter.effect === 'Belemmerend' ? 'selected' : ''}" onclick="selectEffect('Belemmerend', event)">Belemmerend</div>
                             </div>
                             <input type="hidden" id="supporterEffect" value="${supporter.effect || ''}">
                         </div>
@@ -7263,32 +7272,32 @@ Antwoord in dit exacte JSON formaat:
             document.addEventListener('keydown', window.supporterModalEscHandler);
         }
         
-        function selectSupporterType(type) {
+        function selectSupporterType(type, event) {
             document.getElementById('supporterType').value = type;
             document.querySelectorAll('#supporterModal .chip-group .chip').forEach(chip => {
                 chip.classList.remove('selected');
             });
-            event.target.classList.add('selected');
+            if (event) event.target.classList.add('selected');
         }
         
-        function toggleRole(role) {
+        function toggleRole(role, event) {
             if (!window.selectedRoles) window.selectedRoles = [];
             const index = window.selectedRoles.indexOf(role);
             if (index > -1) {
                 window.selectedRoles.splice(index, 1);
-                event.target.classList.remove('selected');
+                if (event) event.target.classList.remove('selected');
             } else {
                 window.selectedRoles.push(role);
-                event.target.classList.add('selected');
+                if (event) event.target.classList.add('selected');
             }
         }
         
-        function selectEffect(effect) {
+        function selectEffect(effect, event) {
             document.getElementById('supporterEffect').value = effect;
-            event.target.parentElement.querySelectorAll('.chip').forEach(chip => {
+            if (event) event.target.parentElement.querySelectorAll('.chip').forEach(chip => {
                 chip.classList.remove('selected');
             });
-            event.target.classList.add('selected');
+            if (event) event.target.classList.add('selected');
             
             // Show/hide hindrance note field
             document.getElementById('hindranceNoteGroup').style.display = 
@@ -9945,7 +9954,7 @@ Geef je antwoord in dit exacte HTML-formaat:
                     <ul>
                         ${lowestDomains.map(d => {
                             const score = state.scores[d.id] || 0;
-                            const emoji = score === 1 ? '🔴' : score === 2 ? '🟡' : score === 3 ? '🟢' : '⚪';
+                            const emoji = scoreEmoji(score);
                             return `<li><strong>${d.emoji} ${d.name}</strong> ${emoji} - ${getAdviceForDomain(d.id)}</li>`;
                         }).join('')}
                     </ul>
@@ -9964,7 +9973,7 @@ Geef je antwoord in dit exacte HTML-formaat:
             adviceHtml += `
                 <div class="advice-section">
                     <h4>3️⃣ Gewenste Situatie</h4>
-                    ${state.wens ? `<p><em>"${state.wens}"</em></p>` : '<p><em>Geen specifieke wens opgegeven.</em></p>'}
+                    ${state.wens ? `<p><em>"${esc(state.wens)}"</em></p>` : '<p><em>Geen specifieke wens opgegeven.</em></p>'}
                     <p>${getGoalAdvice(lowestDomains, networkInfo.type)}</p>
                 </div>
             `;
@@ -10852,9 +10861,9 @@ END:VEVENT
             if (state.hulpvraag || state.wens || state.clientName) {
                 document.getElementById('summaryHulpvraag').style.display = 'block';
                 document.getElementById('summaryHulpvraagContent').innerHTML = `
-                    ${state.clientName ? `<p><strong>Cliënt:</strong> ${state.clientName}</p>` : ''}
+                    ${state.clientName ? `<p><strong>Cliënt:</strong> ${esc(state.clientName)}</p>` : ''}
                     ${state.clientBirthdate ? `<p><strong>Geboortedatum:</strong> ${new Date(state.clientBirthdate).toLocaleDateString('nl-NL')}</p>` : ''}
-                    ${state.hulpvraag ? `<p><strong>Hulpvraag:</strong> ${state.hulpvraag}</p>` : ''}
+                    ${state.hulpvraag ? `<p><strong>Hulpvraag:</strong> ${esc(state.hulpvraag)}</p>` : ''}
                     ${state.wens ? `<p><strong>Belangrijkste wens:</strong> ${state.wens}</p>` : ''}
                 `;
             }
@@ -10866,13 +10875,13 @@ END:VEVENT
 
             document.getElementById('summaryScores').innerHTML = `
                 <p><strong>Datum:</strong> ${date}</p>
-                ${state.mode === 'professional' ? `<p><strong>Professional:</strong> ${state.professionalName || 'Niet ingevuld'}</p>` : ''}
+                ${state.mode === 'professional' ? `<p><strong>Professional:</strong> ${esc(state.professionalName) || 'Niet ingevuld'}</p>` : ''}
                 <p><strong>Postcode:</strong> ${state.postcode || 'Niet ingevuld'}</p>
                 <div style="margin-top: 15px;">
                     ${sortedDomains.map(d => {
                         const score = state.scores[d.id] || 0;
-                        const emoji = score === 1 ? '🔴' : score === 2 ? '🟡' : score === 3 ? '🟢' : '⚪';
-                        const color = score === 1 ? '#dc2626' : score === 2 ? '#eab308' : score === 3 ? '#10b981' : '#94a3b8';
+                        const emoji = scoreEmoji(score);
+                        const color = scoreColor(score);
                         return `
                         <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee;">
                             <span>${d.emoji}</span>
@@ -11053,9 +11062,8 @@ END:VEVENT
                 doelRadio.checked = true;
             }
         }
-        if (state.postcode) {
-            document.getElementById('postcode').value = state.postcode;
-        }
+        const postcodeEl = document.getElementById('postcodeFilter');
+        if (postcodeEl && state.postcode) postcodeEl.value = state.postcode;
     </script>
 </body>
 </html>

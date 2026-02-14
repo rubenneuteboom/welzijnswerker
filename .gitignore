@@ -1,2 +1,3 @@
-.env
-node_modules/
+*.backup-*
+proxy-server.js
+index.html.pre-quickwins
