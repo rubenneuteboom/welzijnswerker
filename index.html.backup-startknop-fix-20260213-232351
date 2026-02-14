@@ -69,8 +69,6 @@
             border-radius: 0 0 30px 30px;
             margin-bottom: 30px;
             box-shadow: var(--shadow);
-            position: relative;
-            z-index: 50;
         }
 
         header h1 {
@@ -3463,41 +3461,9 @@
         <!-- Assessment View -->
         <div class="view-section active" id="view-assessment">
             <!-- Progress Bar - Dynamic Steps -->
-            <!-- Workflow bolletjes (zonder pijltjes) -->
-            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
-                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
-                    <div class="workflow-step" data-step="1" tabindex="0" onclick="goToScreen(1);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(1);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid var(--primary); transition: all 0.3s; pointer-events: none;">🌈</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text); pointer-events: none;">Intro</div>
-                    </div>
-                    <div class="workflow-step" data-step="2" tabindex="0" onclick="goToScreen(2);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(2);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🏠</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Start</div>
-                    </div>
-                    <div class="workflow-step" data-step="3" tabindex="0" onclick="goToScreen(3);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(3);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📊</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Domeinscan</div>
-                    </div>
-                    <div class="workflow-step" data-step="4" tabindex="0" onclick="goToScreen(4);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(4);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📋</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Overzicht</div>
-                    </div>
-                    <div class="workflow-step" data-step="5" tabindex="0" onclick="goToScreen(5);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(5);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🕸️</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Netwerk</div>
-                    </div>
-                    <div class="workflow-step" data-step="6" tabindex="0" onclick="goToScreen(6);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(6);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🎯</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Volgende stap</div>
-                    </div>
-                    <div class="workflow-step" data-step="7" tabindex="0" onclick="goToScreen(7);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(7);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔧</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Interventies</div>
-                    </div>
-                    <div class="workflow-step" data-step="8" tabindex="0" onclick="goToScreen(8);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(8);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📄</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Samenvatting</div>
-                    </div>
+            <div class="progress-container" id="progressBar">
+                <div class="progress-steps" id="progressSteps">
+                    <!-- Steps will be dynamically rendered -->
                 </div>
             </div>
 
@@ -3663,9 +3629,13 @@
                             💡 De pijltjes tonen mogelijke bewegingen. Context bepaalt welke richting passend is.
                         </p>
                     </div>
-
-                    <div class="btn-group" style="margin-top: 30px;">
-                        <button class="btn btn-primary" onclick="goToScreen(2)" style="font-size: 1.1rem; padding: 14px 28px;">Beginnen →</button>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="goToScreen(1)" style="font-size: 1.3rem; padding: 18px 50px; border-radius: 50px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 8px 24px rgba(46, 204, 113, 0.4); transition: all 0.3s;"
+                                onmouseover="this.style.transform='scale(1.1) translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(46, 204, 113, 0.6)';"
+                                onmouseout="this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 8px 24px rgba(46, 204, 113, 0.4)';">
+                            ✨ Begin →
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3853,7 +3823,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug naar Intro</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
                         <button class="btn btn-primary" onclick="saveOrientatie(); goToScreen(3)">Volgende →</button>
                     </div>
                 </div>
@@ -3876,8 +3846,8 @@
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(4)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(3)">Naar Overzicht →</button>
                     </div>
                 </div>
             </div>
@@ -3892,8 +3862,8 @@
                     <div id="domainOverviewTable"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(5)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug naar Domeinkaart</button>
+                        <button class="btn btn-primary" onclick="goToScreen(5)">Bekijk Resultaten →</button>
                     </div>
                 </div>
             </div>
@@ -3910,8 +3880,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(6)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug naar Overzicht</button>
+                        <button class="btn btn-primary" onclick="goToScreen(6)">Beoogde beweging kiezen →</button>
                     </div>
                 </div>
             </div>
@@ -3940,7 +3910,7 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(7)">Volgende →</button>
+                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(7)" disabled>Naar Interventies →</button>
                     </div>
                 </div>
             </div>
@@ -3987,7 +3957,7 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(8)">Volgende →</button>
+                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(8)">Naar Samenvatting →</button>
                     </div>
                 </div>
             </div>
@@ -4005,7 +3975,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
                     </div>
                 </div>
@@ -4966,8 +4936,8 @@
                 ],
                 mantelzorgers: [
                     { naam: 'Mantelzorgcafé Amsterdam', adres: 'Diverse wijken, zie website', wat: 'Ontmoeting en uitwisseling voor mantelzorgers', voor_wie: 'Mantelzorgers, alle leeftijden', contact: '020-570-2070', aanbod: 'Maandelijkse bijeenkomsten, lotgenotencontact, ontlasting' },
-                    { naam: 'Mezzo', adres: 'De Boelelaan 1109, Amsterdam', wat: 'Steun en respijtzorg voor mantelzorgers', voor_wie: 'Mantelzorgers die behoefte hebben aan verlichting', contact: '020-525-6565', aanbod: 'Respijtzorg, advies, belangenbehartiging' }
-                ],
+                    { naam: 'Mezzo', adres: 'De Boelelaan 1109, Amsterdam', wat: 'Steun en respijtzorg voor mantelzorgers', voor_wie: 'Mantelzorgers die behoefte hebben aan verlichting', contact: '020-525-6565', aanbod: 'Respijtzorg, adv Human: [Fri 2026-02-13 22:38 GMT+1] als we bij de interventies die we aanvinken ook kunnen aangeven per persoon/instantie bijvoorbeeld er is ggz opvang maar die bestaat uit jan wim en kees we vragen hulp bij jan bijvoorbeel
+[message_id: 5bc3e4a4-b4fe-4ac2-bd32-9efb22d76da4]
                 multiproblem: ['StreetLab Amsterdam', 'De Regenboog Groep', 'HVO-Querido', 'Maatschappelijke opvang'],
                 sociaalmaatschappelijk: ['Wijkwinkel', 'Stadsdeel servicepunt', 'Schuldhulpmaatje Amsterdam', 'Taalcafé']
             },
@@ -5197,9 +5167,8 @@
         };
 
         // Screen configuration - dynamic based on mode
-        // LEAN WORKFLOW - met Intro als eerste stap
+        // LEAN WORKFLOW - 8 stappen
         const screenConfigBase = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'domains', label: 'Domeinscan', emoji: '📊' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
@@ -5210,7 +5179,6 @@
         ];
 
         const screenConfigPro = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'domains', label: 'Domeinscan', emoji: '📊' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
@@ -5222,10 +5190,7 @@
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Default naar screenConfigBase als mode nog niet gezet is
-            const config = state.mode === 'professional' ? screenConfigPro : screenConfigBase;
-            console.log('getScreenConfig() - mode:', state.mode, '- config length:', config.length);
-            return config;
+            return state.mode === 'professional' ? screenConfigPro : screenConfigBase;
         }
 
         // Get screen number by id
@@ -5345,8 +5310,21 @@
 
         // AI Analysis Functions
         function showAISetup() {
-            if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar de server gestuurd voor analyse.\n\nDoorgaan?')) {
+            const apiKey = localStorage.getItem('openai_api_key');
+            
+            if (!apiKey) {
+                // Show API key setup
+                const key = prompt('⚠️ PRIVACY WAARSCHUWING\n\nDoor een OpenAI API key in te voeren, ga je ermee akkoord dat de hulpvraag naar OpenAI wordt gestuurd voor analyse.\n\n🔑 Voer je OpenAI API key in:\n(Deze wordt lokaal opgeslagen in je browser)');
+                
+                if (!key) return;
+                
+                localStorage.setItem('openai_api_key', key.trim());
                 analyzeWithAI();
+            } else {
+                // Confirm before sending
+                if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar OpenAI gestuurd voor analyse.\n\nDoorgaan?')) {
+                    analyzeWithAI();
+                }
             }
         }
 
@@ -5367,6 +5345,8 @@
             document.body.appendChild(loadingMsg);
 
             try {
+                const apiKey = localStorage.getItem('openai_api_key');
+                
                 const prompt = `Je bent een SIJN (Sterk In Je Netwerk) expert. Analyseer de volgende hulpvraag en beoordeel elk van de 11 levensdomeinen op een schaal van 1-3:
 
 1 = 🔴 Onvoldoende stabiel (acute problematiek, intensieve ondersteuning nodig)
@@ -5405,10 +5385,11 @@ Antwoord in dit exacte JSON formaat:
   "justitie": 3
 }`;
 
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -5462,9 +5443,10 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
-        // Clear API key (no longer needed — key is server-side)
+        // Clear API key (for testing/reset)
         function clearAIKey() {
-            alert('API key wordt nu server-side beheerd via .env');
+            localStorage.removeItem('openai_api_key');
+            alert('OpenAI API key verwijderd');
         }
 
         // Render Doelen overzicht
@@ -5747,19 +5729,9 @@ Antwoord in dit exacte JSON formaat:
         
         // Start assessment
         function startAssessment() {
-            console.log('startAssessment aangeroepen');
-            console.log('Huidige state.mode:', state.mode);
-            
-            // Check mode via radio button als state.mode niet gezet is
             if (!state.mode) {
-                const modeRadio = document.querySelector('input[name="modus"]:checked');
-                if (modeRadio) {
-                    state.mode = modeRadio.value;
-                    console.log('Mode gezet via radio button:', state.mode);
-                } else {
-                    alert('⚠️ Kies eerst hoe je wilt invullen (Zelfstandig of Samen met professional)');
-                    return;
-                }
+                alert('Kies eerst hoe je wilt invullen');
+                return;
             }
             
             // Sla doel van vandaag op
@@ -5771,10 +5743,9 @@ Antwoord in dit exacte JSON formaat:
             if (state.mode === 'professional') {
                 state.professionalName = document.getElementById('professionalName').value;
             }
-            
             saveState();
-            console.log('Ga naar scherm 3 (Domeinscan)');
-            goToScreen(3);
+            
+            goToScreen(2);
         }
 
         // Save oriëntatie (stabilisatie-check)
@@ -5831,65 +5802,20 @@ Antwoord in dit exacte JSON formaat:
 
         // Navigate to screen
         function goToScreen(screenNum) {
-            console.log('🔹 goToScreen aangeroepen:', screenNum);
             const config = getScreenConfig();
-            console.log('📋 Config length:', config.length, 'First item:', config[0]);
-            
             state.currentScreen = screenNum;
             saveState();
             
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
             // Get screen id from config
             const screenConfig = config[screenNum - 1];
-            console.log('🔍 screenConfig voor screenNum', screenNum, ':', screenConfig);
-            
-            if (!screenConfig) {
-                console.error('❌ Geen screenConfig gevonden voor screenNum:', screenNum, 'Config:', config);
-                alert('Fout: Scherm ' + screenNum + ' niet gevonden in configuratie');
-                return;
+            if (screenConfig) {
+                document.getElementById(`screen-${screenConfig.id}`).classList.add('active');
             }
             
-            const targetScreenId = `screen-${screenConfig.id}`;
-            const targetScreen = document.getElementById(targetScreenId);
-            console.log('🎯 Zoek naar:', targetScreenId, 'Gevonden:', targetScreen);
-            
-            if (!targetScreen) {
-                console.error('❌ Screen element niet gevonden:', targetScreenId);
-                alert('Fout: HTML element #' + targetScreenId + ' niet gevonden');
-                return;
-            }
-            
-            // Hide ALL screens first
-            console.log('👁️ Verberg alle screens...');
-            const allScreens = document.querySelectorAll('.screen');
-            console.log('Aantal screens gevonden:', allScreens.length);
-            allScreens.forEach(s => {
-                s.classList.remove('active');
-                console.log('  - Verborgen:', s.id);
-            });
-            
-            // Show target screen
-            console.log('✨ Activeer target screen:', targetScreenId);
-            targetScreen.classList.add('active');
-            console.log('✅ Classes na activatie:', targetScreen.className);
-            
-            // Check if it's actually visible
-            const computedStyle = window.getComputedStyle(targetScreen);
-            console.log('📊 Display style:', computedStyle.display);
-            
-            if (computedStyle.display === 'none') {
-                console.error('⚠️ WARNING: Screen has active class but display is still none!');
-            }
-            
-            // Toon workflow bolletjes
-            const workflowBolletjes = document.getElementById('workflowBolletjes');
-            if (workflowBolletjes) {
-                workflowBolletjes.style.display = screenNum >= 1 ? 'block' : 'none';
-            }
-            
-            // Update workflow bolletjes
-            updateWorkflowSteps(screenNum);
-            
-            // Update progress steps (hidden)
+            // Update progress steps
             renderProgressSteps();
 
             // Load content for each screen (LEAN workflow)
@@ -5906,42 +5832,6 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'samenvatting') renderSamenvatting();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Update workflow bolletjes
-        function updateWorkflowSteps(currentStep) {
-            document.querySelectorAll('.workflow-step').forEach((step, index) => {
-                const stepNum = index + 1;
-                const circle = step.querySelector('div:first-child');
-                const label = step.querySelector('div:last-child');
-                
-                // TESTMODUS: Alle bolletjes zijn altijd klikbaar
-                step.style.cursor = 'pointer';
-                step.style.pointerEvents = 'auto';
-                
-                if (stepNum === currentStep) {
-                    // Active
-                    circle.style.background = 'var(--primary)';
-                    circle.style.borderColor = 'var(--primary)';
-                    circle.style.color = 'white';
-                    label.style.color = 'var(--primary)';
-                    label.style.fontWeight = '700';
-                } else if (stepNum < currentStep) {
-                    // Completed
-                    circle.style.background = 'var(--secondary)';
-                    circle.style.borderColor = 'var(--secondary)';
-                    circle.style.color = 'white';
-                    label.style.color = 'var(--text)';
-                    label.style.fontWeight = '600';
-                } else {
-                    // Future - maar wel klikbaar voor testfase
-                    circle.style.background = '#e0e0e0';
-                    circle.style.borderColor = '#e0e0e0';
-                    circle.style.color = '#666';
-                    label.style.color = 'var(--text-light)';
-                    label.style.fontWeight = '600';
-                }
-            });
         }
 
         // Load hulpvraag data
@@ -9726,11 +9616,11 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // OpenAI API configuration
-        // OpenAI key is now stored server-side in .env
+        const OPENAI_API_KEY = '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';
         
         // Brave Search API configuration
         // Get your free API key at: https://brave.com/search/api/
-        // Brave search is proxied through the server at /brave-search
+        const BRAVE_API_KEY = 'BSAX21VLfhXyIjl8tzWViFXlaDC4Mql';
 
         // Generate SIJN-based advice with GPT
         async function renderAdvice(forceRegenerate = false) {
@@ -9848,10 +9738,11 @@ Geef je antwoord in dit exacte HTML-formaat:
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -10093,10 +9984,11 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -11025,12 +10917,10 @@ END:VEVENT
             });
         }
         
-        // Start op INTRO scherm (scherm 1)
-        if (state.currentScreen && state.currentScreen >= 1) {
-            // Hervat waar je was
+        // Start altijd op scherm 1 (START)
+        if (state.currentScreen && state.currentScreen > 1) {
             goToScreen(state.currentScreen);
         } else {
-            // Begin bij intro (scherm 1)
             goToScreen(1);
         }
         

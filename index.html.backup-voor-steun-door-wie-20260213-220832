@@ -69,8 +69,6 @@
             border-radius: 0 0 30px 30px;
             margin-bottom: 30px;
             box-shadow: var(--shadow);
-            position: relative;
-            z-index: 50;
         }
 
         header h1 {
@@ -3446,7 +3444,7 @@
         <div>
             <h1>
                 Welzijnswerker
-                <span class="version-badge">v2.9 MEDIUM</span>
+                <span class="version-badge">v2.5 MEDIUM</span>
             </h1>
             <p>SIJN Levensdomeinen & Netwerkanalyse</p>
         </div>
@@ -3463,41 +3461,9 @@
         <!-- Assessment View -->
         <div class="view-section active" id="view-assessment">
             <!-- Progress Bar - Dynamic Steps -->
-            <!-- Workflow bolletjes (zonder pijltjes) -->
-            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
-                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
-                    <div class="workflow-step" data-step="1" tabindex="0" onclick="goToScreen(1);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(1);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid var(--primary); transition: all 0.3s; pointer-events: none;">🌈</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text); pointer-events: none;">Intro</div>
-                    </div>
-                    <div class="workflow-step" data-step="2" tabindex="0" onclick="goToScreen(2);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(2);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🏠</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Start</div>
-                    </div>
-                    <div class="workflow-step" data-step="3" tabindex="0" onclick="goToScreen(3);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(3);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📊</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Domeinscan</div>
-                    </div>
-                    <div class="workflow-step" data-step="4" tabindex="0" onclick="goToScreen(4);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(4);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📋</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Overzicht</div>
-                    </div>
-                    <div class="workflow-step" data-step="5" tabindex="0" onclick="goToScreen(5);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(5);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🕸️</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Netwerk</div>
-                    </div>
-                    <div class="workflow-step" data-step="6" tabindex="0" onclick="goToScreen(6);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(6);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🎯</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Volgende stap</div>
-                    </div>
-                    <div class="workflow-step" data-step="7" tabindex="0" onclick="goToScreen(7);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(7);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔧</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Interventies</div>
-                    </div>
-                    <div class="workflow-step" data-step="8" tabindex="0" onclick="goToScreen(8);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(8);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📄</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Samenvatting</div>
-                    </div>
+            <div class="progress-container" id="progressBar">
+                <div class="progress-steps" id="progressSteps">
+                    <!-- Steps will be dynamically rendered -->
                 </div>
             </div>
 
@@ -3663,9 +3629,13 @@
                             💡 De pijltjes tonen mogelijke bewegingen. Context bepaalt welke richting passend is.
                         </p>
                     </div>
-
-                    <div class="btn-group" style="margin-top: 30px;">
-                        <button class="btn btn-primary" onclick="goToScreen(2)" style="font-size: 1.1rem; padding: 14px 28px;">Beginnen →</button>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="goToScreen(1)" style="font-size: 1.3rem; padding: 18px 50px; border-radius: 50px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 8px 24px rgba(46, 204, 113, 0.4); transition: all 0.3s;"
+                                onmouseover="this.style.transform='scale(1.1) translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(46, 204, 113, 0.6)';"
+                                onmouseout="this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 8px 24px rgba(46, 204, 113, 0.4)';">
+                            ✨ Begin →
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3788,12 +3758,6 @@
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">
-                        <button class="btn" onclick="testInterventies()" style="background: #8b5cf6; color: white; font-size: 0.9rem; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            🧪 Test postcode-filter (direct naar interventies)
-                        </button>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 15px;">
                         <button class="btn btn-secondary" onclick="resetAllData()" style="font-size: 0.85rem; padding: 8px 16px;">
                             🗑️ Reset alle data
                         </button>
@@ -3853,7 +3817,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug naar Intro</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
                         <button class="btn btn-primary" onclick="saveOrientatie(); goToScreen(3)">Volgende →</button>
                     </div>
                 </div>
@@ -3876,8 +3840,8 @@
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(4)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(3)">Naar Overzicht →</button>
                     </div>
                 </div>
             </div>
@@ -3892,8 +3856,8 @@
                     <div id="domainOverviewTable"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(5)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug naar Domeinkaart</button>
+                        <button class="btn btn-primary" onclick="goToScreen(5)">Bekijk Resultaten →</button>
                     </div>
                 </div>
             </div>
@@ -3910,8 +3874,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(6)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug naar Overzicht</button>
+                        <button class="btn btn-primary" onclick="goToScreen(6)">Beoogde beweging kiezen →</button>
                     </div>
                 </div>
             </div>
@@ -3919,15 +3883,8 @@
             <!-- Screen 6: Beoogde Beweging (LEAN - DE KERN!) -->
             <div class="screen" id="screen-beweging">
                 <div class="card">
-                    <h2>🎯 Eerstvolgende netwerkstap</h2>
-                    <p style="color: var(--text-light); margin-bottom: 15px; font-size: 1.05rem;">Wat is de meest helpende verschuiving <strong>op dit moment</strong>?</p>
-                    
-                    <!-- Belangrijke uitleg -->
-                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px 20px; margin-bottom: 30px; border-radius: 8px;">
-                        <p style="margin: 0; font-size: 0.95rem; color: #92400e; line-height: 1.6;">
-                            💡 <strong>Let op:</strong> Je kiest hier geen interventie, maar een richting van netwerkverschuiving. Netwerkontwikkeling verloopt vaak in stappen. Stabilisatie kan voorafgaan aan verbreding.
-                        </p>
-                    </div>
+                    <h2>🎯 Waar naartoe?</h2>
+                    <p style="color: var(--text-light); margin-bottom: 30px;">Kies de netwerkpositie die past bij de situatie en wensen.</p>
 
                     <!-- Voor/Na diagram met pijl -->
                     <div id="netwerkBewegingDiagram" style="margin-bottom: 40px;">
@@ -3940,7 +3897,7 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(7)">Volgende →</button>
+                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(7)" disabled>Naar Interventies →</button>
                     </div>
                 </div>
             </div>
@@ -3949,37 +3906,7 @@
             <div class="screen" id="screen-interventies">
                 <div class="card">
                     <h2>🔧 Interventies</h2>
-                    <p style="color: var(--text-light); margin-bottom: 20px;">Selecteer maximaal 3 concrete acties die passen bij de gekozen beweging.</p>
-
-                    <!-- Postcode filter -->
-                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                            <span style="font-size: 1.2rem;">📍</span>
-                            <h3 style="font-size: 1rem; font-weight: 600; color: #1e40af; margin: 0;">Lokale interventies (optioneel)</h3>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #1e3a8a; margin-bottom: 15px; line-height: 1.5;">
-                            Met je postcode filteren we op interventies die beschikbaar zijn in jouw buurt (collectief & formeel).
-                        </p>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="text" 
-                                   id="postcodeFilter" 
-                                   placeholder="Bijv. 1234AB"
-                                   maxlength="6"
-                                   style="flex: 0 0 150px; padding: 10px 14px; border: 2px solid #60a5fa; border-radius: 8px; font-size: 1rem; text-transform: uppercase;"
-                                   oninput="this.value = this.value.toUpperCase()">
-                            <button class="btn" 
-                                    onclick="filterInterventiesByPostcode()"
-                                    style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                                Filter interventies →
-                            </button>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #64748b; margin-top: 10px; margin-bottom: 0; font-style: italic;">
-                            💡 Geen postcode? Dan tonen we algemene interventies. Je kunt altijd zelf interventies toevoegen.
-                        </p>
-                    </div>
-
-                    <!-- Lokale voorzieningen overzicht (verschijnt na filteren) -->
-                    <div id="lokaleVoorzieningenOverzicht"></div>
+                    <p style="color: var(--text-light); margin-bottom: 30px;">Selecteer maximaal 3 concrete acties die passen bij de gekozen beweging.</p>
 
                     <div id="interventiesVoorBeweging">
                         <!-- Wordt gevuld door renderInterventiesVoorBeweging() -->
@@ -3987,7 +3914,7 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(8)">Volgende →</button>
+                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(8)">Naar Samenvatting →</button>
                     </div>
                 </div>
             </div>
@@ -4005,7 +3932,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
                     </div>
                 </div>
@@ -4917,93 +4844,6 @@
             ]
         };
 
-        // Lokale interventies per postcode/regio (voor MEDIUM → LARGE data)
-        // Later te koppelen aan externe API's zoals WaarStaatJeGemeente, lokale zorgkompassen etc.
-        const lokaleInterventies = {
-            // Voorbeeld structuur per gemeente/postcodegebied - uitgebreid met volledige details
-            // Postcode eerste 4 cijfers bepalen regio
-            '1000': { // Amsterdam
-                collectief: [
-                    { naam: 'Buurtteam', adres: 'Diverse locaties per wijk', wat: 'Laagdrempelig steunpunt voor vragen over wonen, zorg, geld, opvoeding', contact: '020-123-4567' },
-                    { naam: 'Inloophuis De Regenboog', adres: 'Stadhouderskade 159, Amsterdam', wat: 'Ontmoeting, maaltijden, activiteiten voor kwetsbare stadsbewoners', contact: '020-531-7777' },
-                    { naam: 'Straatpastoraat', adres: 'Diverse locaties', wat: 'Pastorale zorg en gesprekken voor mensen op straat', contact: '020-624-7764' }
-                ],
-                formeel: [
-                    { naam: 'Wijkteam Amsterdam', adres: 'Per stadsdeel verschillende locaties', wat: 'Professionele ondersteuning bij complexe problemen, toegang tot zorg', contact: '14020' },
-                    { naam: 'GGD Amsterdam', adres: 'Nieuwe Achtergracht 100, Amsterdam', wat: 'Publieke gezondheid, preventie, jeugdgezondheidszorg', contact: '020-555-5555' },
-                    { naam: 'Stadsbank Amsterdam', adres: 'Vijzelstraat 20, Amsterdam', wat: 'Budgetbeheer en schuldhulpverlening', contact: '020-624-5151' }
-                ],
-                // Doelgroep-specifiek met volledige details
-                ggz: [
-                    { 
-                        naam: 'Inloophuis GGZ Amsterdam', 
-                        adres: 'Bilderdijkstraat 65, Amsterdam',
-                        wat: 'Laagdrempelige ontmoeting en activiteiten voor mensen met psychische kwetsbaarheid',
-                        voor_wie: 'Mensen met GGZ-problematiek die behoefte hebben aan contact en dagbesteding',
-                        contact: '020-612-3456',
-                        aanbod: 'Creatieve workshops, gespreksgroepen, koffie-ochtenden, peer support'
-                    },
-                    {
-                        naam: 'Herstelgroep Vrankrijk',
-                        adres: 'Spuistraat 216, Amsterdam',
-                        wat: 'Lotgenotengroep gericht op herstel van psychische problemen',
-                        voor_wie: 'Mensen die in herstel zijn van depressie, angst, psychose',
-                        contact: '020-625-9654',
-                        aanbod: 'Wekelijkse bijeenkomsten, ervaringsdeskundige begeleiding, herstelplan'
-                    },
-                    {
-                        naam: 'MIND Amsterdam',
-                        adres: 'Plantage Middenlaan 14, Amsterdam',
-                        wat: 'Belangenbehartiging en ondersteuning voor mensen met psychische problemen',
-                        voor_wie: 'Iedereen met GGZ-vragen, ook naasten',
-                        contact: '020-521-6300',
-                        aanbod: 'Informatie, advies, lotgenotencontact, cursussen'
-                    }
-                ],
-                jongeren: [
-                    { naam: 'Jongerenwerker Amsterdam Oost', adres: 'Wijkpost Oost', wat: 'Ondersteuning voor jongeren bij school, thuis, vrienden', voor_wie: '12-23 jaar', contact: '020-251-2512', aanbod: 'Individuele gesprekken, groepsactiviteiten, bemiddeling' },
-                    { naam: 'JAC Amsterdam', adres: 'Overtoom 445, Amsterdam', wat: 'Jongeren Advies Centrum voor alle vragen', voor_wie: '12-25 jaar', contact: '020-412-2433', aanbod: 'Informatie, advies, doorverwijzing' }
-                ],
-                mantelzorgers: [
-                    { naam: 'Mantelzorgcafé Amsterdam', adres: 'Diverse wijken, zie website', wat: 'Ontmoeting en uitwisseling voor mantelzorgers', voor_wie: 'Mantelzorgers, alle leeftijden', contact: '020-570-2070', aanbod: 'Maandelijkse bijeenkomsten, lotgenotencontact, ontlasting' },
-                    { naam: 'Mezzo', adres: 'De Boelelaan 1109, Amsterdam', wat: 'Steun en respijtzorg voor mantelzorgers', voor_wie: 'Mantelzorgers die behoefte hebben aan verlichting', contact: '020-525-6565', aanbod: 'Respijtzorg, advies, belangenbehartiging' }
-                ],
-                multiproblem: ['StreetLab Amsterdam', 'De Regenboog Groep', 'HVO-Querido', 'Maatschappelijke opvang'],
-                sociaalmaatschappelijk: ['Wijkwinkel', 'Stadsdeel servicepunt', 'Schuldhulpmaatje Amsterdam', 'Taalcafé']
-            },
-            '3000': { // Rotterdam
-                collectief: ['Buurtcentrum', 'Inloophuis Kaap de Goede Hoop', 'Vrijwilligerscentrale Rotterdam'],
-                formeel: ['Wijkteam Rotterdam', 'GGD Rotterdam', 'Stadsbank Rotterdam'],
-                ggz: ['Inloophuis Kaap de Goede Hoop', 'MIND Rotterdam', 'Herstelgroep Rijnmond', 'Pameijer GGZ'],
-                jongeren: ['Jongerenwerk Rotterdam', 'Street Corner Work', 'Jongereninloophuis Zonnehuisgroep', 'JAC Rotterdam'],
-                mantelzorgers: ['MantelzorgNL Rotterdam', 'Mantelzorgcafé', 'Respijthuis Rotterdam', 'Samen voor Elkaar'],
-                ouderen: ['Seniorencentrum Hillegersberg', 'Ouderengroep Welzijn', 'KBO Rotterdam', 'Samen Oud Rotterdam'],
-                multiproblem: ['Bouman GGZ', 'Nieuw Wij Rotterdam', 'Straatpastoraat', 'Pauluskerk opvang'],
-                sociaalmaatschappelijk: ['Wijkwinkel', 'Deelbaarhuis', 'Schuldhulp Rotterdam', 'Taalhuis']
-            },
-            '2000': { // Haarlem
-                collectief: ['Buurtteam', 'Inloophuis Haarlem', 'Vrijwilligerscentrale Haarlem'],
-                formeel: ['Wijkteam Haarlem', 'GGD Kennemerland', 'Kredietbank Haarlem'],
-                ggz: ['Inloophuis GGZ Haarlem', 'Arkin locatie Haarlem', 'MIND Kennemerland', 'Herstelgroep'],
-                jongeren: ['Jongerenwerk Haarlem', 'JoU Jongeren Onder Één', 'JAC Haarlem', 'Inloophuis Jongeren'],
-                mantelzorgers: ['Mantelzorgpunt Haarlem', 'MantelzorgNL Kennemerland', 'Respijtzorg', 'Steunpunt Mantelzorg'],
-                ouderen: ['Seniorencentrum', 'KBO Haarlem', 'Ouderensoos', 'Welzijn Haarlem ouderen'],
-                multiproblem: ['Parnassia Bavo', 'Reclassering', 'HVO-Querido Haarlem', 'Maatschappelijke opvang'],
-                sociaalmaatschappelijk: ['Wijkservicepunt', 'Schuldhulpmaatje', 'Taalhuis Haarlem', 'Kledingbank']
-            },
-            // Default/algemeen (als postcode niet in lijst)
-            'default': {
-                collectief: ['Buurtcentrum', 'Vrijwilligerscentrale', 'Inloophuis', 'Buurtteam'],
-                formeel: ['Wijkteam', 'GGD', 'Gemeente sociale dienst', 'Huisarts'],
-                ggz: ['Inloophuis GGZ', 'MIND lokale afdeling', 'Herstelgroep', 'GGZ-zorginstelling'],
-                jongeren: ['Jongerenwerker', 'Jongerencentrum', 'JAC (Jongeren Advies Centrum)', 'Jongereninloophuis'],
-                mantelzorgers: ['Mantelzorgpunt', 'MantelzorgNL', 'Respijtzorg', 'Mantelzorgcafé'],
-                ouderen: ['Seniorencentrum', 'KBO (ouderenbond)', 'Ouderensoos', 'Welzijn ouderen'],
-                multiproblem: ['Maatschappelijke opvang', 'Reclassering', 'Daklozenopvang', 'Verslavingszorg'],
-                sociaalmaatschappelijk: ['Wijkservicepunt', 'Schuldhulpmaatje', 'Taalhuis', 'Kledingbank']
-            }
-        };
-
         const voorzieningen = {
             financien: {
                 collectief: ['Voedselbank', 'Kledingbank', 'Formulierenbrigade', 'Schuldhulpmaatje'],
@@ -5197,35 +5037,30 @@
         };
 
         // Screen configuration - dynamic based on mode
-        // LEAN WORKFLOW - met Intro als eerste stap
+        // LEAN WORKFLOW - 8 stappen
         const screenConfigBase = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'domains', label: 'Domeinscan', emoji: '📊' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
             { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Volgende stap', emoji: '🎯' },
+            { id: 'beweging', label: 'Waar naartoe?', emoji: '🎯' },
             { id: 'interventies', label: 'Interventies', emoji: '🔧' },
             { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
         ];
 
         const screenConfigPro = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'domains', label: 'Domeinscan', emoji: '📊' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
             { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Volgende stap', emoji: '🎯' },
+            { id: 'beweging', label: 'Waar naartoe?', emoji: '🎯' },
             { id: 'interventies', label: 'Interventies', emoji: '🔧' },
             { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
         ];
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Default naar screenConfigBase als mode nog niet gezet is
-            const config = state.mode === 'professional' ? screenConfigPro : screenConfigBase;
-            console.log('getScreenConfig() - mode:', state.mode, '- config length:', config.length);
-            return config;
+            return state.mode === 'professional' ? screenConfigPro : screenConfigBase;
         }
 
         // Get screen number by id
@@ -5238,7 +5073,7 @@
         // State - Extended datamodel for historical tracking (v2.4+)
         let state = {
             // Metadata
-            version: '3.0',
+            version: '2.5',
             clientId: null, // Unique ID for multi-client support (future)
             createdAt: null,
             updatedAt: null,
@@ -5252,7 +5087,6 @@
             netwerkToelichting: '',
             beoogdeBeweging: null, // LEAN: gekozen netwerkbeweging
             geselecteerdeInterventies: [], // LEAN: max 3 interventies
-            agenda: [], // Geplande afspraken
             professionalName: '',
             postcode: '',
             clientName: '',
@@ -5345,8 +5179,21 @@
 
         // AI Analysis Functions
         function showAISetup() {
-            if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar de server gestuurd voor analyse.\n\nDoorgaan?')) {
+            const apiKey = localStorage.getItem('openai_api_key');
+            
+            if (!apiKey) {
+                // Show API key setup
+                const key = prompt('⚠️ PRIVACY WAARSCHUWING\n\nDoor een OpenAI API key in te voeren, ga je ermee akkoord dat de hulpvraag naar OpenAI wordt gestuurd voor analyse.\n\n🔑 Voer je OpenAI API key in:\n(Deze wordt lokaal opgeslagen in je browser)');
+                
+                if (!key) return;
+                
+                localStorage.setItem('openai_api_key', key.trim());
                 analyzeWithAI();
+            } else {
+                // Confirm before sending
+                if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar OpenAI gestuurd voor analyse.\n\nDoorgaan?')) {
+                    analyzeWithAI();
+                }
             }
         }
 
@@ -5367,6 +5214,8 @@
             document.body.appendChild(loadingMsg);
 
             try {
+                const apiKey = localStorage.getItem('openai_api_key');
+                
                 const prompt = `Je bent een SIJN (Sterk In Je Netwerk) expert. Analyseer de volgende hulpvraag en beoordeel elk van de 11 levensdomeinen op een schaal van 1-3:
 
 1 = 🔴 Onvoldoende stabiel (acute problematiek, intensieve ondersteuning nodig)
@@ -5405,10 +5254,11 @@ Antwoord in dit exacte JSON formaat:
   "justitie": 3
 }`;
 
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -5462,9 +5312,10 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
-        // Clear API key (no longer needed — key is server-side)
+        // Clear API key (for testing/reset)
         function clearAIKey() {
-            alert('API key wordt nu server-side beheerd via .env');
+            localStorage.removeItem('openai_api_key');
+            alert('OpenAI API key verwijderd');
         }
 
         // Render Doelen overzicht
@@ -5712,8 +5563,15 @@ Antwoord in dit exacte JSON formaat:
         // Mode selection
         function selectMode(mode) {
             state.mode = mode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+            
+            const professionalFields = document.getElementById('professionalFields');
+            professionalFields.style.display = mode === 'professional' ? 'block' : 'none';
             saveState();
-            console.log('Mode geselecteerd:', mode);
+            renderProgressSteps();
         }
 
         // Toggle doelgroep
@@ -5727,39 +5585,11 @@ Antwoord in dit exacte JSON formaat:
             console.log('Geselecteerde doelgroepen:', state.doelgroepen);
         }
 
-        // Test interventies (direct springen met dummy data)
-        function testInterventies() {
-            // Vul dummy data in voor snelle test
-            state.mode = 'professional';
-            state.doelVandaag = 'actie';
-            state.beoogdeBeweging = 'formeel'; // Dummy beweging
-            state.doelgroepen = ['ggz', 'ouderen']; // Test met 2 doelgroepen
-            
-            // Sla op
-            saveState();
-            
-            // Ga direct naar interventies scherm (screen 7)
-            goToScreen(7);
-            
-            // Scroll naar boven
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
         // Start assessment
         function startAssessment() {
-            console.log('startAssessment aangeroepen');
-            console.log('Huidige state.mode:', state.mode);
-            
-            // Check mode via radio button als state.mode niet gezet is
             if (!state.mode) {
-                const modeRadio = document.querySelector('input[name="modus"]:checked');
-                if (modeRadio) {
-                    state.mode = modeRadio.value;
-                    console.log('Mode gezet via radio button:', state.mode);
-                } else {
-                    alert('⚠️ Kies eerst hoe je wilt invullen (Zelfstandig of Samen met professional)');
-                    return;
-                }
+                alert('Kies eerst hoe je wilt invullen');
+                return;
             }
             
             // Sla doel van vandaag op
@@ -5771,10 +5601,9 @@ Antwoord in dit exacte JSON formaat:
             if (state.mode === 'professional') {
                 state.professionalName = document.getElementById('professionalName').value;
             }
-            
             saveState();
-            console.log('Ga naar scherm 3 (Domeinscan)');
-            goToScreen(3);
+            
+            goToScreen(2);
         }
 
         // Save oriëntatie (stabilisatie-check)
@@ -5831,65 +5660,20 @@ Antwoord in dit exacte JSON formaat:
 
         // Navigate to screen
         function goToScreen(screenNum) {
-            console.log('🔹 goToScreen aangeroepen:', screenNum);
             const config = getScreenConfig();
-            console.log('📋 Config length:', config.length, 'First item:', config[0]);
-            
             state.currentScreen = screenNum;
             saveState();
             
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
             // Get screen id from config
             const screenConfig = config[screenNum - 1];
-            console.log('🔍 screenConfig voor screenNum', screenNum, ':', screenConfig);
-            
-            if (!screenConfig) {
-                console.error('❌ Geen screenConfig gevonden voor screenNum:', screenNum, 'Config:', config);
-                alert('Fout: Scherm ' + screenNum + ' niet gevonden in configuratie');
-                return;
+            if (screenConfig) {
+                document.getElementById(`screen-${screenConfig.id}`).classList.add('active');
             }
             
-            const targetScreenId = `screen-${screenConfig.id}`;
-            const targetScreen = document.getElementById(targetScreenId);
-            console.log('🎯 Zoek naar:', targetScreenId, 'Gevonden:', targetScreen);
-            
-            if (!targetScreen) {
-                console.error('❌ Screen element niet gevonden:', targetScreenId);
-                alert('Fout: HTML element #' + targetScreenId + ' niet gevonden');
-                return;
-            }
-            
-            // Hide ALL screens first
-            console.log('👁️ Verberg alle screens...');
-            const allScreens = document.querySelectorAll('.screen');
-            console.log('Aantal screens gevonden:', allScreens.length);
-            allScreens.forEach(s => {
-                s.classList.remove('active');
-                console.log('  - Verborgen:', s.id);
-            });
-            
-            // Show target screen
-            console.log('✨ Activeer target screen:', targetScreenId);
-            targetScreen.classList.add('active');
-            console.log('✅ Classes na activatie:', targetScreen.className);
-            
-            // Check if it's actually visible
-            const computedStyle = window.getComputedStyle(targetScreen);
-            console.log('📊 Display style:', computedStyle.display);
-            
-            if (computedStyle.display === 'none') {
-                console.error('⚠️ WARNING: Screen has active class but display is still none!');
-            }
-            
-            // Toon workflow bolletjes
-            const workflowBolletjes = document.getElementById('workflowBolletjes');
-            if (workflowBolletjes) {
-                workflowBolletjes.style.display = screenNum >= 1 ? 'block' : 'none';
-            }
-            
-            // Update workflow bolletjes
-            updateWorkflowSteps(screenNum);
-            
-            // Update progress steps (hidden)
+            // Update progress steps
             renderProgressSteps();
 
             // Load content for each screen (LEAN workflow)
@@ -5906,42 +5690,6 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'samenvatting') renderSamenvatting();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Update workflow bolletjes
-        function updateWorkflowSteps(currentStep) {
-            document.querySelectorAll('.workflow-step').forEach((step, index) => {
-                const stepNum = index + 1;
-                const circle = step.querySelector('div:first-child');
-                const label = step.querySelector('div:last-child');
-                
-                // TESTMODUS: Alle bolletjes zijn altijd klikbaar
-                step.style.cursor = 'pointer';
-                step.style.pointerEvents = 'auto';
-                
-                if (stepNum === currentStep) {
-                    // Active
-                    circle.style.background = 'var(--primary)';
-                    circle.style.borderColor = 'var(--primary)';
-                    circle.style.color = 'white';
-                    label.style.color = 'var(--primary)';
-                    label.style.fontWeight = '700';
-                } else if (stepNum < currentStep) {
-                    // Completed
-                    circle.style.background = 'var(--secondary)';
-                    circle.style.borderColor = 'var(--secondary)';
-                    circle.style.color = 'white';
-                    label.style.color = 'var(--text)';
-                    label.style.fontWeight = '600';
-                } else {
-                    // Future - maar wel klikbaar voor testfase
-                    circle.style.background = '#e0e0e0';
-                    circle.style.borderColor = '#e0e0e0';
-                    circle.style.color = '#666';
-                    label.style.color = 'var(--text-light)';
-                    label.style.fontWeight = '600';
-                }
-            });
         }
 
         // Load hulpvraag data
@@ -6040,49 +5788,13 @@ Antwoord in dit exacte JSON formaat:
                     <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
                         2️⃣ Is er steun?
                     </label>
-                    <select id="steun-${domain.id}" style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
-                            onchange="updateDomainDetail('${domain.id}', 'steunNiveau', this.value); toggleSteunDoorWie('${domain.id}', this.value)">
+                    <select style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
+                            onchange="updateDomainDetail('${domain.id}', 'steunNiveau', this.value)">
                         <option value="">-- Selecteer --</option>
                         <option value="voldoende" ${steunNiveau === 'voldoende' ? 'selected' : ''}>👥 Voldoende steun</option>
                         <option value="beperkt" ${steunNiveau === 'beperkt' ? 'selected' : ''}>⚠️ Beperkte steun</option>
                         <option value="geen" ${steunNiveau === 'geen' ? 'selected' : ''}>🚫 Geen steun</option>
                     </select>
-                    
-                    <!-- Door wie? (alleen bij voldoende of beperkt) -->
-                    <div id="steundoorwie-${domain.id}" style="display: ${(steunNiveau === 'voldoende' || steunNiveau === 'beperkt') ? 'block' : 'none'}; margin-top: 15px; padding: 15px; background: #f9fafb; border-radius: 8px; border: 1px solid #e0e0e0;">
-                        <label style="font-size: 0.9rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 10px;">
-                            Door wie? (voor LARGE kosten-analyse)
-                        </label>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox" 
-                                       id="steun-informeel-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'informeel', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">👨‍👩‍👧 Familie/vrienden (informeel)</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox"
-                                       id="steun-collectief-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'collectief', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">🤝 Vrijwilligers/buurt (collectief)</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox"
-                                       id="steun-formeel-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'formeel', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">🏥 Professionals/zorg (formeel)</span>
-                            </label>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 8px; margin-bottom: 0; font-style: italic;">
-                            💡 Deze data wordt gebruikt in LARGE voor kosten- en scenario-analyse
-                        </p>
-                    </div>
                 </div>
                 
                 <!-- Vraag 3: Wat is hier nu nodig? -->
@@ -6329,20 +6041,6 @@ Antwoord in dit exacte JSON formaat:
                     ` : ''}
                 </div>
                 
-                <!-- AGENDA SECTIE -->
-                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; color: #92400e; font-size: 1.2rem;">📅 Geplande Afspraken</h3>
-                        <button class="btn btn-sm" style="background: #f59e0b; color: white; border: none;" onclick="openAfspraakToevoegen()">
-                            ➕ Nieuwe afspraak
-                        </button>
-                    </div>
-                    
-                    <div id="agendaLijst">
-                        ${renderAgendaLijst()}
-                    </div>
-                </div>
-                
                 <!-- Datum -->
                 <div style="text-align: center; color: var(--text-light); font-size: 0.9rem; padding-top: 20px; border-top: 2px solid #e0e0e0;">
                     Scan uitgevoerd op: ${new Date().toLocaleDateString('nl-NL', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}
@@ -6350,174 +6048,6 @@ Antwoord in dit exacte JSON formaat:
             `;
             
             container.innerHTML = html;
-        }
-        
-        // Render agenda lijst
-        function renderAgendaLijst() {
-            if (!state.agenda || state.agenda.length === 0) {
-                return `
-                    <div style="text-align: center; padding: 30px; color: #78350f; font-style: italic;">
-                        <span style="font-size: 2rem;">📭</span><br>
-                        Nog geen afspraken gepland<br>
-                        <span style="font-size: 0.85rem;">Klik op "Nieuwe afspraak" om een afspraak toe te voegen</span>
-                    </div>
-                `;
-            }
-            
-            return state.agenda.map((afspraak, index) => `
-                <div style="background: white; border-left: 4px solid ${afspraak.voltooid ? '#22c55e' : '#f59e0b'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; align-items: start; gap: 15px;">
-                    <input type="checkbox" 
-                           ${afspraak.voltooid ? 'checked' : ''}
-                           onchange="toggleAfspraakVoltooid(${index}, this.checked)"
-                           style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
-                    <div style="flex: 1; ${afspraak.voltooid ? 'opacity: 0.6; text-decoration: line-through;' : ''}">
-                        <div style="font-weight: 700; font-size: 1rem; color: #92400e; margin-bottom: 5px;">
-                            ${afspraak.datum} om ${afspraak.tijd}
-                        </div>
-                        <div style="font-size: 0.95rem; color: var(--text); margin-bottom: 4px;">
-                            📍 ${afspraak.wat}
-                        </div>
-                        ${afspraak.waar ? `<div style="font-size: 0.85rem; color: var(--text-light);">📌 ${afspraak.waar}</div>` : ''}
-                        ${afspraak.met ? `<div style="font-size: 0.85rem; color: var(--text-light);">👤 Met: ${afspraak.met}</div>` : ''}
-                        ${afspraak.notitie ? `<div style="font-size: 0.85rem; color: var(--text-light); margin-top: 6px; padding-top: 6px; border-top: 1px dashed #fde68a; font-style: italic;">💭 ${afspraak.notitie}</div>` : ''}
-                    </div>
-                    <button onclick="verwijderAfspraak(${index})" 
-                            style="background: none; border: none; color: #dc2626; font-size: 1.2rem; cursor: pointer; padding: 5px;" 
-                            title="Verwijder afspraak">
-                        🗑️
-                    </button>
-                </div>
-            `).join('');
-        }
-        
-        // Open afspraak toevoegen modal
-        function openAfspraakToevoegen() {
-            const modal = document.createElement('div');
-            modal.id = 'afspraakModal';
-            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
-            
-            const morgen = new Date();
-            morgen.setDate(morgen.getDate() + 1);
-            const datumDefault = morgen.toISOString().split('T')[0];
-            
-            modal.innerHTML = `
-                <div style="background: white; border-radius: 16px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
-                    <h3 style="margin: 0 0 20px 0; color: var(--text);">📅 Nieuwe afspraak toevoegen</h3>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Datum *</label>
-                        <input type="date" id="afspraakDatum" value="${datumDefault}" 
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Tijd *</label>
-                        <input type="time" id="afspraakTijd" value="10:00"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Wat *</label>
-                        <input type="text" id="afspraakWat" placeholder="Bijv. Intake wijkteam"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Waar</label>
-                        <input type="text" id="afspraakWaar" placeholder="Bijv. Buurtcentrum De Pijp"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Met wie</label>
-                        <input type="text" id="afspraakMet" placeholder="Bijv. Marieke van wijkteam"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Notitie</label>
-                        <textarea id="afspraakNotitie" placeholder="Extra opmerkingen..."
-                                  style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 80px;"></textarea>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                        <button class="btn btn-secondary" onclick="sluitAfspraakModal()">Annuleren</button>
-                        <button class="btn btn-primary" onclick="opslaanAfspraak()">Opslaan</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // Sluit afspraak modal
-        function sluitAfspraakModal() {
-            const modal = document.getElementById('afspraakModal');
-            if (modal) modal.remove();
-        }
-        
-        // Opslaan afspraak
-        function opslaanAfspraak() {
-            const datum = document.getElementById('afspraakDatum').value;
-            const tijd = document.getElementById('afspraakTijd').value;
-            const wat = document.getElementById('afspraakWat').value.trim();
-            const waar = document.getElementById('afspraakWaar').value.trim();
-            const met = document.getElementById('afspraakMet').value.trim();
-            const notitie = document.getElementById('afspraakNotitie').value.trim();
-            
-            if (!datum || !tijd || !wat) {
-                alert('⚠️ Vul minimaal datum, tijd en wat in');
-                return;
-            }
-            
-            if (!state.agenda) {
-                state.agenda = [];
-            }
-            
-            const datumFormatted = new Date(datum + 'T00:00:00').toLocaleDateString('nl-NL', {
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short'
-            });
-            
-            state.agenda.push({
-                datum: datumFormatted,
-                datumRaw: datum,
-                tijd: tijd,
-                wat: wat,
-                waar: waar,
-                met: met,
-                notitie: notitie,
-                voltooid: false,
-                toegevoegdOp: new Date().toISOString()
-            });
-            
-            // Sorteer op datum
-            state.agenda.sort((a, b) => new Date(a.datumRaw) - new Date(b.datumRaw));
-            
-            saveState();
-            sluitAfspraakModal();
-            renderSamenvatting();
-            
-            alert('✅ Afspraak toegevoegd!');
-        }
-        
-        // Toggle afspraak voltooid
-        function toggleAfspraakVoltooid(index, checked) {
-            if (state.agenda && state.agenda[index]) {
-                state.agenda[index].voltooid = checked;
-                saveState();
-                renderSamenvatting();
-            }
-        }
-        
-        // Verwijder afspraak
-        function verwijderAfspraak(index) {
-            if (confirm('Weet je zeker dat je deze afspraak wilt verwijderen?')) {
-                state.agenda.splice(index, 1);
-                saveState();
-                renderSamenvatting();
-            }
         }
         
         // Exporteer samenvatting
@@ -7369,42 +6899,6 @@ Antwoord in dit exacte JSON formaat:
             invalidateAdviceCache();
             saveState();
             renderDomains();
-        }
-
-        // Toggle "Door wie?" sectie (alleen tonen bij voldoende/beperkt steun)
-        function toggleSteunDoorWie(domainId, steunNiveau) {
-            const doorWieDiv = document.getElementById(`steundoorwie-${domainId}`);
-            if (doorWieDiv) {
-                if (steunNiveau === 'voldoende' || steunNiveau === 'beperkt') {
-                    doorWieDiv.style.display = 'block';
-                } else {
-                    doorWieDiv.style.display = 'none';
-                    // Clear data als er geen steun is
-                    if (!state.domainDetails[domainId]) {
-                        state.domainDetails[domainId] = {};
-                    }
-                    state.domainDetails[domainId].steunDoorWie = [];
-                    saveState();
-                }
-            }
-        }
-
-        // Update "Door wie?" checkboxes (voor LARGE kosten-analyse)
-        function updateSteunDoorWie(domainId, type, checked) {
-            if (!state.domainDetails[domainId]) {
-                state.domainDetails[domainId] = {};
-            }
-            if (!state.domainDetails[domainId].steunDoorWie) {
-                state.domainDetails[domainId].steunDoorWie = [];
-            }
-            
-            if (checked && !state.domainDetails[domainId].steunDoorWie.includes(type)) {
-                state.domainDetails[domainId].steunDoorWie.push(type);
-            } else if (!checked) {
-                state.domainDetails[domainId].steunDoorWie = state.domainDetails[domainId].steunDoorWie.filter(t => t !== type);
-            }
-            
-            saveState();
         }
 
         // Toggle ondersteuningsbehoefte checkboxes
@@ -8324,81 +7818,80 @@ Antwoord in dit exacte JSON formaat:
         
         // Mogelijke richtingen vanuit huidige positie
         function getMogelijkeRichtingen(huidigePositie) {
-            // Gefaseerde netwerkstappen (eerstvolgende logische beweging)
             const richtingen = {
                 'geen': [
                     {
-                        naar: 'formeel',
-                        label: '→ Formeel netwerk opbouwen',
-                        context: 'Professionele steun kan stabilisatie bieden en veiligheid creëren. Dit is vaak een eerste noodzakelijke stap.',
+                        richting: 'formeel',
+                        label: 'Als stabiliteit en structuur nodig zijn → Professionele steun',
+                        context: 'Dit kan helpend zijn bij veiligheid, overzicht of acute situaties',
                         interventies: ['Aanmelden bij wijkteam', 'Vast aanspreekpunt regelen', 'Kortdurende begeleiding starten']
                     },
                     {
-                        naar: 'informeel',
-                        label: '→ Informeel netwerk opbouwen',
-                        context: 'Directe verbinding met familie, vrienden of buurt kan een eerste stap zijn bij voldoende draagkracht.',
+                        richting: 'informeel',
+                        label: 'Als verbinding helpt → Informeel netwerk opbouwen',
+                        context: 'Dit kan helpend zijn bij eenzaamheid of behoefte aan wederkerigheid',
                         interventies: ['Contact leggen met buren', 'Activiteit zoeken', 'Vrijwilliger koppelen']
                     }
                 ],
-                '1persoons': [
+                '1-persoons': [
                     {
-                        naar: 'formeel',
-                        label: '→ Stabiliseren via formele steun',
-                        context: 'Als één persoon overbelast raakt, kan professionele steun eerst nodig zijn voordat verbreding mogelijk is.',
-                        interventies: ['Aanmelden bij wijkteam', 'Respijtzorg regelen', 'Professional koppelen']
+                        richting: 'formeel',
+                        label: 'Als de druk te hoog wordt → Professioneel erbij',
+                        context: 'Dit kan helpend zijn bij overbelasting of uitval van de ene persoon',
+                        interventies: ['Aanmelden bij wijkteam', 'Vast aanspreekpunt regelen', 'Kortdurende begeleiding starten']
                     },
                     {
-                        naar: 'informeel',
-                        label: '→ Verbreden naar informeel netwerk',
-                        context: 'Uitbreiding naar meer informele contacten spreidt de verantwoordelijkheid en vermindert kwetsbaarheid.',
-                        interventies: ['Contact herstellen', 'Activiteit zoeken', 'Buurtinitiatief starten']
+                        richting: 'informeel',
+                        label: 'Als spreiding nodig is → Meer informele contacten',
+                        context: 'Dit kan helpend zijn om kwetsbaarheid te verminderen',
+                        interventies: ['Contact herstellen', 'Activiteit zoeken', 'Buurtinitiatief']
                     },
                     {
-                        naar: 'gemengd',
-                        label: '→ Combineren: formeel + informeel',
-                        context: 'Tijdelijk professionele steun toevoegen terwijl informeel netwerk versterkt wordt.',
-                        interventies: ['Professional betrekken', 'Netwerk coördineren', 'Gezamenlijke aanpak']
+                        richting: 'gemengd',
+                        label: 'Als beide helpen → Tijdelijk combineren',
+                        context: 'Dit kan helpend zijn bij overgang of extra ondersteuning',
+                        interventies: ['Professional betrekken bij familie', 'Buddy koppelen', 'Tijdelijke combinatie steun']
                     }
                 ],
                 'informeel': [
                     {
-                        naar: 'gemengd',
-                        label: '→ Uitbreiden met formele steun',
-                        context: 'Professionele ondersteuning toevoegen bij toenemende complexiteit of belasting van het informele netwerk.',
-                        interventies: ['Professional koppelen', 'Coördinatie verbeteren', 'Ondersteuning mantelzorgers']
+                        richting: 'gemengd',
+                        label: 'Als signalering of coördinatie helpt → Professional erbij',
+                        context: 'Dit kan helpend zijn bij complexiteit of belasting mantelzorgers',
+                        interventies: ['Signaleren bij netwerk', 'Coördinatie verbeteren', 'Begeleiding voor mantelzorger']
                     },
                     {
-                        naar: 'formeel',
-                        label: '→ Overstap naar formeel netwerk',
-                        context: 'Bij acute situaties of als informeel netwerk onvoldoende kan dragen, kan volledige overstap naar formele zorg nodig zijn.',
-                        interventies: ['Aanmelden wijkteam', 'Dagbesteding organiseren', 'Thuiszorg inschakelen']
+                        richting: 'formeel',
+                        label: 'Als professionele zorg nodig is → Naar formeel netwerk',
+                        context: 'Dit kan helpend zijn bij medische of specialistische ondersteuning',
+                        interventies: ['Aanmelden bij wijkteam', 'Dagbesteding organiseren', 'Thuiszorg inschakelen']
                     }
                 ],
                 'formeel': [
                     {
-                        naar: 'gemengd',
-                        label: '→ Informeel netwerk erbij betrekken',
-                        context: 'Familie, vrienden of buurt betrekken naast professionele zorg. Vaak een eerste stap richting meer eigen regie.',
+                        richting: 'gemengd',
+                        label: 'Als informeel netwerk kan groeien → Familie/vrienden betrekken',
+                        context: 'Dit kan helpend zijn bij herstel of afbouw professionele zorg',
                         interventies: ['Familie betrekken', 'Buddy koppelen', 'Participatieactiviteit']
                     },
                     {
-                        naar: 'informeel',
-                        label: '→ Afbouwen naar informeel netwerk',
-                        context: 'Als situatie stabiel is en informeel netwerk sterk genoeg, kan professionele zorg afgebouwd worden. Dit is vaak een latere fase.',
-                        interventies: ['Geleidelijk afbouwen', 'Overdracht naar netwerk', 'Zelfstandigheid vergroten']
+                        richting: 'informeel',
+                        label: 'Als zelfstandigheid groeit → Afbouwen naar informeel',
+                        context: 'Dit kan helpend zijn bij herstel en versterking eigen kracht',
+                        interventies: ['Overdracht naar netwerk', 'Zelfstandigheid vergroten', 'Netwerk activeren']
                     }
                 ],
                 'gemengd': [
                     {
-                        naar: 'informeel',
-                        label: '→ Afschalen naar informeel netwerk',
-                        context: 'Professionele steun afbouwen als informeel netwerk voldoende draagt en situatie stabiel is.',
-                        interventies: ['Geleidelijk afbouwen', 'Overdracht naar netwerk', 'Monitoring afspraken']
+                        richting: 'informeel',
+                        label: 'Als professionele steun minder nodig is → Afbouwen',
+                        context: 'Dit kan helpend zijn bij stabilisatie en groei',
+                        interventies: ['Overdracht naar netwerk', 'Zelfstandigheid vergroten', 'Netwerk activeren']
                     },
                     {
-                        naar: 'formeel',
-                        label: '→ Intensiveren naar formeel netwerk',
-                        context: 'Bij verslechtering of crisis kan tijdelijk meer professionele zorg nodig zijn.',
+                        richting: 'formeel',
+                        label: 'Als extra ondersteuning nodig is → Intensiveren',
+                        context: 'Dit kan helpend zijn bij verslechtering of crisis',
                         interventies: ['Intensivering zorg', 'Coördinatie verbeteren', 'Extra ondersteuning']
                     }
                 ]
@@ -9082,14 +8575,12 @@ Antwoord in dit exacte JSON formaat:
             const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
             
             let html = `
-                <div style="background: #e0f2fe; border: 2px solid #0284c7; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <div style="font-size: 0.95rem; color: #075985; line-height: 1.6;">
-                        <strong>📍 Huidige positie:</strong> ${netwerkInfo.label}<br>
-                        <strong>🎯 Kies eerstvolgende stap:</strong> Welke netwerkbeweging is nu het meest helpend?
+                <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <div style="font-size: 0.95rem; color: #92400e; line-height: 1.6;">
+                        <strong>Huidige positie:</strong> ${netwerkInfo.label}<br>
+                        Kies hieronder een richting die passend voelt bij waar jullie naartoe willen.
                     </div>
                 </div>
-                
-                <h3 style="font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 15px;">Mogelijke volgende stappen:</h3>
                 
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     ${richtingen.map((richting, index) => `
@@ -9123,14 +8614,6 @@ Antwoord in dit exacte JSON formaat:
             const container = document.getElementById('interventiesVoorBeweging');
             if (!container) return;
             
-            // Vul postcode veld in als die er is
-            setTimeout(() => {
-                const postcodeInput = document.getElementById('postcodeFilter');
-                if (postcodeInput && state.postcode) {
-                    postcodeInput.value = state.postcode;
-                }
-            }, 100);
-            
             const gekozenBeweging = state.beoogdeBeweging;
             if (!gekozenBeweging) {
                 container.innerHTML = '<p style="color: var(--text-light);">Geen beweging gekozen.</p>';
@@ -9146,40 +8629,6 @@ Antwoord in dit exacte JSON formaat:
                 return;
             }
             
-            // Voeg lokale interventies toe als postcode is ingevuld
-            let interventies = [...richting.interventies];
-            if (state.postcode) {
-                const regio = state.postcode.substring(0, 4);
-                const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
-                
-                // Voeg lokale collectieve en formele interventies toe
-                interventies = [
-                    ...interventies,
-                    ...lokaal.collectief.map(i => `${i} (lokaal collectief)`),
-                    ...lokaal.formeel.map(i => `${i} (lokaal formeel)`)
-                ];
-                
-                // Voeg doelgroep-specifieke lokale interventies toe
-                if (state.doelgroepen && state.doelgroepen.length > 0) {
-                    state.doelgroepen.forEach(doelgroep => {
-                        if (lokaal[doelgroep]) {
-                            interventies = [
-                                ...interventies,
-                                ...lokaal[doelgroep].map(i => `${i} (lokaal ${doelgroep})`)
-                            ];
-                        }
-                    });
-                }
-            }
-            
-            // Voeg custom interventies toe als die er zijn
-            if (state.customInterventies && state.customInterventies.length > 0) {
-                interventies = [
-                    ...interventies,
-                    ...state.customInterventies.map(i => `${i} (eigen toevoeging)`)
-                ];
-            }
-            
             let html = `
                 <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
                     <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">Gekozen beweging:</div>
@@ -9191,7 +8640,7 @@ Antwoord in dit exacte JSON formaat:
                 </p>
                 
                 <div style="display: grid; gap: 15px;">
-                    ${interventies.map((interventie, index) => `
+                    ${richting.interventies.slice(0, 6).map((interventie, index) => `
                         <label style="display: block; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; background: white; transition: all 0.2s;"
                                onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#f0f9ff';"
                                onmouseout="this.style.borderColor='#e0e0e0'; this.style.background='white';">
@@ -9205,38 +8654,20 @@ Antwoord in dit exacte JSON formaat:
                                         ${interventie}
                                     </div>
                                     <div id="focus_${index}" style="display: none; padding-top: 10px; border-top: 1px solid #e0e0e0;">
-                                        <!-- Bij wie / contactpersoon -->
-                                        <div style="margin-bottom: 12px;">
-                                            <label style="font-size: 0.85rem; color: var(--text-light); display: block; margin-bottom: 6px;">
-                                                👤 Bij wie / contactpersoon:
+                                        <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px;">Focus:</div>
+                                        <div style="display: flex; gap: 12px;">
+                                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                                <input type="checkbox" style="width: 16px; height: 16px;">
+                                                <span style="font-size: 0.9rem;">Cliënt</span>
                                             </label>
-                                            <input type="text" 
-                                                   id="contact_${index}"
-                                                   placeholder="Bijv. Jan de Vries, wijkverpleegkundige"
-                                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem;"
-                                                   onchange="saveInterventieContact(${index}, this.value)">
-                                            <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 4px; margin-bottom: 0; font-style: italic;">
-                                                💡 Optioneel: noteer de naam van de persoon binnen deze organisatie
-                                            </p>
-                                        </div>
-                                        
-                                        <!-- Focus -->
-                                        <div>
-                                            <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px;">Focus:</div>
-                                            <div style="display: flex; gap: 12px;">
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Cliënt</span>
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Netwerk</span>
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Beiden</span>
-                                                </label>
-                                            </div>
+                                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                                <input type="checkbox" style="width: 16px; height: 16px;">
+                                                <span style="font-size: 0.9rem;">Netwerk</span>
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                                <input type="checkbox" style="width: 16px; height: 16px;">
+                                                <span style="font-size: 0.9rem;">Beiden</span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -9244,57 +8675,9 @@ Antwoord in dit exacte JSON formaat:
                         </label>
                     `).join('')}
                 </div>
-                
-                <!-- Handmatige toevoeging -->
-                <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border: 2px dashed #f59e0b; border-radius: 12px;">
-                    <h4 style="font-size: 1rem; font-weight: 600; color: #92400e; margin: 0 0 12px 0;">
-                        ➕ Eigen interventie toevoegen
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #78350f; margin-bottom: 12px;">
-                        Staat je interventie er niet bij? Voeg deze hier toe:
-                    </p>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" 
-                               id="customInterventie"
-                               placeholder="Bijv. Schuldhulpmaatje via kerk"
-                               style="flex: 1; padding: 10px 14px; border: 2px solid #fbbf24; border-radius: 8px; font-size: 0.95rem;">
-                        <button class="btn" 
-                                onclick="addCustomInterventie()"
-                                style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap;">
-                            Toevoegen
-                        </button>
-                    </div>
-                </div>
             `;
             
             container.innerHTML = html;
-        }
-        
-        // Voeg custom interventie toe
-        function addCustomInterventie() {
-            const input = document.getElementById('customInterventie');
-            const interventie = input.value.trim();
-            
-            if (!interventie) {
-                alert('⚠️ Vul eerst een interventie in');
-                return;
-            }
-            
-            // Sla custom interventie op in state
-            if (!state.customInterventies) {
-                state.customInterventies = [];
-            }
-            state.customInterventies.push(interventie);
-            saveState();
-            
-            // Toon feedback
-            alert(`✅ Interventie toegevoegd: "${interventie}"`);
-            
-            // Reset input
-            input.value = '';
-            
-            // Herlaad interventies
-            renderInterventiesVoorBeweging();
         }
         
         // Helper: Selecteer beweging
@@ -9303,134 +8686,6 @@ Antwoord in dit exacte JSON formaat:
             saveState();
             document.getElementById('btnNaarInterventies').disabled = false;
             renderNetwerkBewegingDiagram(); // Update diagram met gekozen beweging
-        }
-        
-        // Filter interventies op basis van postcode
-        function filterInterventiesByPostcode() {
-            const postcodeInput = document.getElementById('postcodeFilter');
-            const postcode = postcodeInput.value.trim().toUpperCase();
-            
-            if (!postcode) {
-                alert('⚠️ Vul eerst een postcode in (bijv. 1234AB)');
-                return;
-            }
-            
-            // Valideer postcode format (4 cijfers + 2 letters)
-            const postcodeRegex = /^[0-9]{4}[A-Z]{2}$/;
-            if (!postcodeRegex.test(postcode)) {
-                alert('⚠️ Ongeldige postcode. Gebruik format: 1234AB');
-                return;
-            }
-            
-            // Sla postcode op in state (voor LARGE analyse)
-            state.postcode = postcode;
-            saveState();
-            
-            // Haal regio (eerste 4 cijfers)
-            const regio = postcode.substring(0, 4);
-            
-            // Haal lokale interventies
-            const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
-            
-            // Bepaal regio naam
-            const regioNamen = {
-                '1000': 'Amsterdam',
-                '3000': 'Rotterdam',
-                '2000': 'Haarlem'
-            };
-            const regioNaam = regioNamen[regio] || 'jouw regio';
-            
-            // Toon lokale voorzieningen overzicht
-            const overzichtContainer = document.getElementById('lokaleVoorzieningenOverzicht');
-            if (overzichtContainer) {
-                // Doelgroep config voor labels en kleuren
-                const doelgroepConfig = {
-                    ggz: { emoji: '🧠', label: 'GGZ', color: '#3b82f6', bg: '#dbeafe' },
-                    jongeren: { emoji: '👤', label: 'Jongeren', color: '#8b5cf6', bg: '#ede9fe' },
-                    mantelzorgers: { emoji: '🤝', label: 'Mantelzorgers', color: '#ec4899', bg: '#fce7f3' },
-                    ouderen: { emoji: '👴', label: 'Ouderen', color: '#f59e0b', bg: '#fef3c7' },
-                    multiproblem: { emoji: '🔄', label: 'Multi-problematiek', color: '#ef4444', bg: '#fee2e2' },
-                    sociaalmaatschappelijk: { emoji: '🏘️', label: 'Sociaal-maatschappelijk', color: '#10b981', bg: '#d1fae5' }
-                };
-                
-                let html = `
-                    <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <span style="font-size: 1.3rem;">✅</span>
-                            <h3 style="font-size: 1.1rem; font-weight: 700; color: #065f46; margin: 0;">Lokale voorzieningen in ${regioNaam} (${postcode})</h3>
-                        </div>
-                        
-                        <!-- Algemene voorzieningen -->
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <span>🤝</span> Collectieve voorzieningen (buurthuizen, vrijwilligers)
-                            </h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                ${lokaal.collectief.map(voorziening => `
-                                    <div style="background: white; border: 2px solid #86efac; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 1.1rem;">📍</span>
-                                        <span style="font-size: 0.9rem; font-weight: 600; color: #065f46;">${voorziening}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <span>🏥</span> Formele voorzieningen (professionals, wijkteams)
-                            </h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                ${lokaal.formeel.map(voorziening => `
-                                    <div style="background: white; border: 2px solid #86efac; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 1.1rem;">🏢</span>
-                                        <span style="font-size: 0.9rem; font-weight: 600; color: #065f46;">${voorziening}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                `;
-                
-                // Voeg doelgroep-specifieke voorzieningen toe als die doelgroep geselecteerd is
-                if (state.doelgroepen && state.doelgroepen.length > 0) {
-                    html += `<hr style="border: none; border-top: 2px dashed #86efac; margin: 20px 0;">`;
-                    html += `<h4 style="font-size: 1.05rem; font-weight: 700; color: #047857; margin-bottom: 15px;">🎯 Doelgroep-specifieke voorzieningen</h4>`;
-                    
-                    state.doelgroepen.forEach(doelgroep => {
-                        if (lokaal[doelgroep] && lokaal[doelgroep].length > 0) {
-                            const config = doelgroepConfig[doelgroep];
-                            html += `
-                                <div style="margin-bottom: 15px;">
-                                    <h5 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; color: ${config.color};">
-                                        <span>${config.emoji}</span> ${config.label}
-                                    </h5>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                        ${lokaal[doelgroep].map(voorziening => `
-                                            <div style="background: ${config.bg}; border: 2px solid ${config.color}; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 1.1rem;">${config.emoji}</span>
-                                                <span style="font-size: 0.9rem; font-weight: 600; color: #1f2937;">${voorziening}</span>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    });
-                }
-                
-                html += `
-                        <p style="font-size: 0.85rem; color: #047857; margin-top: 15px; margin-bottom: 0; font-style: italic;">
-                            💡 Deze voorzieningen zijn automatisch toegevoegd aan de interventies hieronder.
-                        </p>
-                    </div>
-                `;
-                
-                overzichtContainer.innerHTML = html;
-            }
-            
-            // Herlaad interventies met lokale opties
-            renderInterventiesVoorBeweging();
-            
-            console.log('Postcode gefilterd:', postcode, 'Regio:', regio, 'Lokale interventies:', lokaal);
         }
         
         // Helper: Toggle interventie
@@ -9447,16 +8702,6 @@ Antwoord in dit exacte JSON formaat:
                 focusDiv.style.display = 'none';
                 alert('Maximaal 3 interventies selecteren');
             }
-        }
-        
-        // Sla contactpersoon per interventie op (voor LARGE tracking)
-        function saveInterventieContact(index, contact) {
-            if (!state.interventieContacts) {
-                state.interventieContacts = {};
-            }
-            state.interventieContacts[index] = contact;
-            saveState();
-            console.log('Contactpersoon opgeslagen voor interventie', index, ':', contact);
         }
         
         // Render results
@@ -9726,11 +8971,11 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // OpenAI API configuration
-        // OpenAI key is now stored server-side in .env
+        const OPENAI_API_KEY = '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';
         
         // Brave Search API configuration
         // Get your free API key at: https://brave.com/search/api/
-        // Brave search is proxied through the server at /brave-search
+        const BRAVE_API_KEY = 'BSAX21VLfhXyIjl8tzWViFXlaDC4Mql';
 
         // Generate SIJN-based advice with GPT
         async function renderAdvice(forceRegenerate = false) {
@@ -9848,10 +9093,11 @@ Geef je antwoord in dit exacte HTML-formaat:
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -10093,10 +9339,11 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -10965,7 +10212,7 @@ END:VEVENT
             if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
                 localStorage.removeItem('welzijnswerker_v2');
                 state = {
-                    version: '3.0',
+                    version: '2.5',
                     clientId: 'client_' + Date.now(),
                     createdAt: new Date().toISOString(),
                     updatedAt: null,
@@ -11001,12 +10248,10 @@ END:VEVENT
                         kanbanLog: []
                     }
                 };
-                document.querySelectorAll('input[name="modus"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[name="doelVandaag"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+                document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
                 document.getElementById('professionalFields').style.display = 'none';
-                if (document.getElementById('postcodeFilter')) document.getElementById('postcodeFilter').value = '';
-                if (document.getElementById('professionalName')) document.getElementById('professionalName').value = '';
+                document.getElementById('postcode').value = '';
+                document.getElementById('professionalName').value = '';
                 goToScreen(1);
             }
         }
@@ -11025,32 +10270,23 @@ END:VEVENT
             });
         }
         
-        // Start op INTRO scherm (scherm 1)
-        if (state.currentScreen && state.currentScreen >= 1) {
-            // Hervat waar je was
+        // Als geen mode gekozen, toon intro
+        if (!state.mode) {
+            // Toon intro-scherm
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-intro').classList.add('active');
+        } else if (state.currentScreen > 1) {
             goToScreen(state.currentScreen);
         } else {
-            // Begin bij intro (scherm 1)
+            // Mode is gekozen, maar nog op scherm 1 (start)
             goToScreen(1);
         }
         
-        // Herstel mode keuze
         if (state.mode) {
-            const modeRadio = document.querySelector(`input[name="modus"][value="${state.mode}"]`);
-            if (modeRadio) {
-                modeRadio.checked = true;
-            }
+            document.querySelector(`[data-mode="${state.mode}"]`)?.classList.add('selected');
             if (state.mode === 'professional') {
                 document.getElementById('professionalFields').style.display = 'block';
                 document.getElementById('professionalName').value = state.professionalName || '';
-            }
-        }
-        
-        // Herstel doel van vandaag
-        if (state.doelVandaag) {
-            const doelRadio = document.querySelector(`input[name="doelVandaag"][value="${state.doelVandaag}"]`);
-            if (doelRadio) {
-                doelRadio.checked = true;
             }
         }
         if (state.postcode) {

@@ -69,8 +69,6 @@
             border-radius: 0 0 30px 30px;
             margin-bottom: 30px;
             box-shadow: var(--shadow);
-            position: relative;
-            z-index: 50;
         }
 
         header h1 {
@@ -3426,246 +3424,119 @@
                 grid-template-columns: 1fr;
             }
         }
-        
-        /* Doelgroep vragen uitklapper */
-        .doelgroep-vragen-content {
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            opacity: 1;
-        }
-        
-        .doelgroep-vragen-content.hidden {
-            max-height: 0;
-            opacity: 0;
-        }
     </style>
 </head>
 <body>
-    <header style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h1>
-                Welzijnswerker
-                <span class="version-badge">v2.9 MEDIUM</span>
-            </h1>
-            <p>SIJN Levensdomeinen & Netwerkanalyse</p>
-        </div>
-        <!-- TODO: Later uitbreiden naar uitgebreidere SIJN Methodiek slide -->
-        <!-- <button onclick="toonSIJNMethodiek();" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
-            <span>ℹ️</span>
-            <span>SIJN Methodiek</span>
-        </button> -->
+    <header>
+        <h1>
+            🌐 Welzijnswerker
+            <span class="version-badge">v2.3 Medium</span>
+        </h1>
+        <p>SIJN Levensdomeinen & Netwerkanalyse</p>
     </header>
 
     <div class="container">
-        <!-- View Tabs REMOVED for LEAN workflow -->
+        <!-- View Tabs -->
+        <div class="view-tabs" id="viewTabs" style="display: none;">
+            <button class="view-tab active" data-view="assessment" onclick="switchView('assessment')">
+                <div class="view-tab-circle">📊</div>
+                <span class="view-tab-label">Assessment</span>
+            </button>
+            <button class="view-tab" data-view="doelen" onclick="switchView('doelen')">
+                <div class="view-tab-circle">🎯</div>
+                <span class="view-tab-label">Doelen</span>
+            </button>
+            <button class="view-tab" data-view="kanban" onclick="switchView('kanban')">
+                <div class="view-tab-circle">📋</div>
+                <span class="view-tab-label">Actieplan</span>
+            </button>
+            <button class="view-tab" data-view="agenda" onclick="switchView('agenda')">
+                <div class="view-tab-circle">📅</div>
+                <span class="view-tab-label">SIJN-Agenda</span>
+            </button>
+        </div>
 
         <!-- Assessment View -->
         <div class="view-section active" id="view-assessment">
             <!-- Progress Bar - Dynamic Steps -->
-            <!-- Workflow bolletjes (zonder pijltjes) -->
-            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
-                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
-                    <div class="workflow-step" data-step="1" tabindex="0" onclick="goToScreen(1);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(1);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid var(--primary); transition: all 0.3s; pointer-events: none;">🌈</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text); pointer-events: none;">Intro</div>
-                    </div>
-                    <div class="workflow-step" data-step="2" tabindex="0" onclick="goToScreen(2);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(2);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🏠</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Start</div>
-                    </div>
-                    <div class="workflow-step" data-step="3" tabindex="0" onclick="goToScreen(3);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(3);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📊</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Domeinscan</div>
-                    </div>
-                    <div class="workflow-step" data-step="4" tabindex="0" onclick="goToScreen(4);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(4);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📋</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Overzicht</div>
-                    </div>
-                    <div class="workflow-step" data-step="5" tabindex="0" onclick="goToScreen(5);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(5);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🕸️</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Netwerk</div>
-                    </div>
-                    <div class="workflow-step" data-step="6" tabindex="0" onclick="goToScreen(6);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(6);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🎯</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Volgende stap</div>
-                    </div>
-                    <div class="workflow-step" data-step="7" tabindex="0" onclick="goToScreen(7);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(7);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔧</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Interventies</div>
-                    </div>
-                    <div class="workflow-step" data-step="8" tabindex="0" onclick="goToScreen(8);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(8);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📄</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Samenvatting</div>
-                    </div>
+            <div class="progress-container" id="progressBar">
+                <div class="progress-steps" id="progressSteps">
+                    <!-- Steps will be dynamically rendered -->
                 </div>
             </div>
 
             <!-- Screen 0: Introductie -->
             <div class="screen active" id="screen-intro">
-                <div class="card" style="max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);">
-                    <div style="text-align: center; margin-bottom: 40px; position: relative;">
-                        <h1 style="font-size: 3.5rem; margin-bottom: 15px; color: var(--primary); text-shadow: 3px 3px 0 rgba(46, 204, 113, 0.1); font-weight: 800; letter-spacing: 3px;">SIJN</h1>
-                        <h2 style="font-size: 1.8rem; font-weight: 600; color: #166534; margin: 0; letter-spacing: 2px;">Sterk in je Netwerk</h2>
+                <div class="card" style="max-width: 900px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary);">SIJN</h1>
+                        <h2 style="font-size: 1.5rem; font-weight: 400; color: var(--text-light); margin: 0;">Sterk in je Netwerk</h2>
                     </div>
                     
-                    <!-- Same playful style as modal -->
-                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #f59e0b;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🌍</span>
-                            <h3 style="font-size: 1.5rem; color: #92400e; margin: 0; font-weight: 700;">Visie</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #78350f; margin-bottom: 15px;">
+                    <!-- Visie -->
+                    <div style="margin-bottom: 35px;">
+                        <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <span>🌍</span> Visie
+                        </h3>
+                        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text);">
                             Niemand staat op zichzelf. Mensen leven, herstellen en ontwikkelen zich in verbinding met anderen. 
                             Die verbinding kan steun geven — maar kan ook ontbreken of beschadigd zijn.
                         </p>
-                        <p style="font-size: 1.2rem; line-height: 1.9; color: #78350f; font-weight: 700; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 10px; margin: 0;">
-                            💪 Sterk zijn betekent niet alles alleen kunnen.<br>
-                            ✨ Sterk zijn betekent dat steun passend en gezond is georganiseerd.
+                        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text); margin-top: 15px;">
+                            <strong>Sterk zijn betekent niet alles alleen kunnen.</strong><br>
+                            Sterk zijn betekent dat steun passend en gezond is georganiseerd.
                         </p>
                     </div>
                     
-                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #3b82f6;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🎯</span>
-                            <h3 style="font-size: 1.5rem; color: #1e40af; margin: 0; font-weight: 700;">Wat is SIJN?</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #1e3a8a;">
+                    <!-- Wat is SIJN -->
+                    <div style="margin-bottom: 35px;">
+                        <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <span>🎯</span> Wat is SIJN?
+                        </h3>
+                        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text);">
                             SIJN is een meet- en gespreksinstrument dat inzicht geeft in hoe iemand ervoor staat en hoe steun is georganiseerd. 
                             We kijken naar de huidige situatie, maken zichtbaar waar kracht en kwetsbaarheid zitten, en bepalen samen wat helpend is.
                         </p>
                     </div>
                     
-                    <div style="background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #ec4899;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">📍</span>
-                            <h3 style="font-size: 1.5rem; color: #9f1239; margin: 0; font-weight: 700;">Wat meten we?</h3>
-                        </div>
-                        <div style="display: grid; gap: 12px;">
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">😊</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Hoe het gaat op verschillende levensgebieden</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">👥</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Of er steun aanwezig is</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">🌈</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Hoe steun is verdeeld</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">🎯</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Wat op dit moment nodig is</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #6366f1;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🧭</span>
-                            <h3 style="font-size: 1.5rem; color: #3730a3; margin: 0; font-weight: 700;">Wat doen we daarna?</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #312e81;">
-                            Soms is eerst <strong>stabiliseren</strong> nodig. Soms vraagt de situatie om <strong>herstel van relaties</strong>. 
-                            Soms is het nodig om steun <strong>anders te organiseren</strong>. En soms is het <strong>behouden</strong> van wat werkt voldoende.
-                        </p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #dcfce7 0%, #86efac 50%, #4ade80 100%); border: 4px solid #16a34a; padding: 30px; border-radius: 20px; margin-bottom: 35px; box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);">
-                        <div style="text-align: center; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🔹</span>
-                        </div>
-                        <h3 style="font-size: 1.4rem; color: #14532d; margin-bottom: 15px; text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                            Kernzin
+                    <!-- Wat meten we -->
+                    <div style="margin-bottom: 35px;">
+                        <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <span>📍</span> Wat meten we?
                         </h3>
-                        <p style="font-size: 1.3rem; line-height: 2; color: #14532d; font-weight: 700; text-align: center; margin: 0;">
-                            Sterk in je Netwerk betekent:<br>
-                            <span style="font-size: 1.4rem; color: #15803d;">✨ bewust kijken naar hoe steun is georganiseerd<br>— en waar beweging mogelijk is ✨</span>
+                        <ul style="font-size: 1.05rem; line-height: 2; color: var(--text); padding-left: 25px;">
+                            <li>Hoe het gaat op verschillende levensgebieden</li>
+                            <li>Of er steun aanwezig is</li>
+                            <li>Hoe steun is verdeeld</li>
+                            <li>Wat op dit moment nodig is</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Wat doen we daarna -->
+                    <div style="margin-bottom: 35px;">
+                        <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            <span>🧭</span> Wat doen we daarna?
+                        </h3>
+                        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text);">
+                            Soms is eerst stabiliseren nodig. Soms vraagt de situatie om herstel van relaties. 
+                            Soms is het nodig om steun anders te organiseren. En soms is het behouden van wat werkt voldoende.
                         </p>
                     </div>
                     
-                    <!-- Netwerkbeweging diagram -->
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 30px; margin: 35px 0;">
-                        <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 10px; text-align: center; font-weight: 700;">
-                            Hoe werkt netwerkbeweging?
+                    <!-- Kernzin -->
+                    <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 5px solid var(--primary); padding: 25px; border-radius: 12px; margin-bottom: 35px;">
+                        <h3 style="font-size: 1.2rem; color: #166534; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                            <span>🔹</span> Kernzin
                         </h3>
-                        <p style="font-size: 0.95rem; color: var(--text-light); text-align: center; margin-bottom: 25px; line-height: 1.6;">
-                            Steun kan op verschillende manieren georganiseerd zijn. Beweging is mogelijk in alle richtingen, afhankelijk van wat de situatie vraagt. Geen enkele positie is een einddoel.
-                        </p>
-                        
-                        <svg viewBox="0 0 700 350" style="width: 100%; max-width: 700px; height: auto; margin: 0 auto; display: block;">
-                            <!-- Pijlen (eerst tekenen zodat ze achter de boxen zitten) -->
-                            <defs>
-                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                                    <polygon points="0 0, 10 3, 0 6" fill="#9ca3af" />
-                                </marker>
-                            </defs>
-                            
-                            <!-- Pijlen tussen alle posities (dikker) -->
-                            
-                            <!-- Geen netwerk → Gemengd (horizontaal) -->
-                            <line x1="460" y1="87" x2="360" y2="87" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            
-                            <!-- Gemengd <-> Informeel (verticaal) -->
-                            <line x1="295" y1="115" x2="295" y2="235" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            <line x1="305" y1="235" x2="305" y2="115" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            
-                            <!-- 1-persoons → Gemengd (diagonaal, eenrichtingsverkeer) -->
-                            <line x1="160" y1="155" x2="240" y2="105" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            
-                            <!-- 1-persoons → Informeel (diagonaal, eenrichtingsverkeer) -->
-                            <line x1="160" y1="195" x2="240" y2="245" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            
-                            <!-- Informeel <-> Formeel (horizontaal) -->
-                            <line x1="360" y1="257" x2="460" y2="257" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            <line x1="460" y1="263" x2="360" y2="263" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            
-                            <!-- Gemengd <-> Formeel (diagonaal) -->
-                            <line x1="350" y1="110" x2="470" y2="240" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
-                            <line x1="470" y1="245" x2="350" y2="115" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
-                            
-                            <!-- Geen → Informeel (diagonaal) -->
-                            <line x1="470" y1="110" x2="350" y2="240" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
-                            
-                            <!-- Geen → Formeel (verticaal) -->
-                            <line x1="520" y1="115" x2="520" y2="235" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            
-                            <!-- POSITIES -->
-                            
-                            <!-- GEMENGD NETWERK (middenboven, oranje) -->
-                            <rect x="240" y="60" width="120" height="55" rx="10" fill="#fed7aa" stroke="#f59e0b" stroke-width="3"/>
-                            <text x="300" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">GEMENGD</text>
-                            <text x="300" y="101" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
-                            
-                            <!-- GEEN NETWERK (rechtsboven, wit/grijs) -->
-                            <rect x="460" y="60" width="120" height="55" rx="10" fill="#ffffff" stroke="#9ca3af" stroke-width="3"/>
-                            <text x="520" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#4b5563">GEEN</text>
-                            <text x="520" y="101" text-anchor="middle" font-size="12" fill="#6b7280">NETWERK</text>
-                            
-                            <!-- 1-PERSOONS NETWERK (links midden, tussen gemengd en informeel, geel) -->
-                            <rect x="40" y="147" width="120" height="55" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
-                            <text x="100" y="170" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">1-PERSOONS</text>
-                            <text x="100" y="188" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
-                            
-                            <!-- INFORMEEL NETWERK (midden beneden, precies onder GEMENGD, geel) -->
-                            <rect x="240" y="235" width="120" height="55" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
-                            <text x="300" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">INFORMEEL</text>
-                            <text x="300" y="276" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
-                            
-                            <!-- FORMEEL NETWERK (rechtsonder, precies onder GEEN NETWERK, roze) -->
-                            <rect x="460" y="235" width="120" height="55" rx="10" fill="#fce7f3" stroke="#ec4899" stroke-width="3"/>
-                            <text x="520" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#9f1239">FORMEEL</text>
-                            <text x="520" y="276" text-anchor="middle" font-size="12" fill="#9f1239">NETWERK</text>
-                        </svg>
-                        
-                        <p style="font-size: 0.85rem; color: var(--text-light); text-align: center; margin-top: 20px; font-style: italic;">
-                            💡 De pijltjes tonen mogelijke bewegingen. Context bepaalt welke richting passend is.
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #15803d; font-weight: 500; font-style: italic; margin: 0;">
+                            Sterk in je Netwerk betekent: <strong>bewust kijken naar hoe steun is georganiseerd — en waar beweging mogelijk is.</strong>
                         </p>
                     </div>
-
-                    <div class="btn-group" style="margin-top: 30px;">
-                        <button class="btn btn-primary" onclick="goToScreen(2)" style="font-size: 1.1rem; padding: 14px 28px;">Beginnen →</button>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="goToScreen(1)" style="font-size: 1.2rem; padding: 16px 40px;">
+                            Begin →
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3710,51 +3581,6 @@
                         </div>
                     </div>
                     
-                    <!-- Doelgroep -->
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">🎯 Doelgroep(en)</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">Welke doelgroep(en) zijn relevant? (Je krijgt specifieke vragen per doelgroep)</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-ggz" value="ggz" onchange="toggleDoelgroep('ggz', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🧠 GGZ</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-jongeren" value="jongeren" onchange="toggleDoelgroep('jongeren', this.checked)" style="width: 18px; height: 18px;">
-                                <span>👤 Jongeren</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-mantelzorgers" value="mantelzorgers" onchange="toggleDoelgroep('mantelzorgers', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🤝 Mantelzorgers</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-ouderen" value="ouderen" onchange="toggleDoelgroep('ouderen', this.checked)" style="width: 18px; height: 18px;">
-                                <span>👴 Ouderen</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-multiproblem" value="multiproblem" onchange="toggleDoelgroep('multiproblem', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🔄 Multi-problematiek</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-sociaalmaatschappelijk" value="sociaalmaatschappelijk" onchange="toggleDoelgroep('sociaalmaatschappelijk', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🏘️ Sociaal-maatschappelijk</span>
-                            </label>
-                        </div>
-                        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 12px; font-style: italic;">💡 Per doelgroep krijg je relevante hulpvragen bij elk domein.</p>
-                    </div>
-                    
                     <!-- Doel van vandaag -->
                     <div style="margin-bottom: 30px;">
                         <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">🔘 Doel van vandaag</h3>
@@ -3788,12 +3614,6 @@
                     </div>
 
                     <div style="text-align: center; margin-top: 20px;">
-                        <button class="btn" onclick="testInterventies()" style="background: #8b5cf6; color: white; font-size: 0.9rem; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            🧪 Test postcode-filter (direct naar interventies)
-                        </button>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 15px;">
                         <button class="btn btn-secondary" onclick="resetAllData()" style="font-size: 0.85rem; padding: 8px 16px;">
                             🗑️ Reset alle data
                         </button>
@@ -3802,8 +3622,6 @@
             </div>
 
             <!-- Screen 2: Oriëntatie - Het hier en nu -->
-            <!-- ORIËNTATIE-SCHERM VERWIJDERD (MEDIUM = direct naar domeinscan) -->
-            <!-- 
             <div class="screen" id="screen-hulpvraag">
                 <div class="card">
                     <h2 style="font-size: 1.6rem; margin-bottom: 15px;">Hoe is het op dit moment?</h2>
@@ -3811,6 +3629,7 @@
                         Voor we de verschillende levensgebieden bekijken, eerst een algemene check.
                     </p>
                     
+                    <!-- Stabilisatie-check -->
                     <div style="margin-bottom: 30px;">
                         <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Is er iets dat direct aandacht nodig heeft?</h3>
                         <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -3853,14 +3672,13 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug naar Intro</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug</button>
                         <button class="btn btn-primary" onclick="saveOrientatie(); goToScreen(3)">Volgende →</button>
                     </div>
                 </div>
             </div>
-            -->
 
-            <!-- Screen 2: Domains (was Screen 3) -->
+            <!-- Screen 3: Domains -->
             <div class="screen" id="screen-domains">
                 <div class="card">
                     <h2>📊 Domeinkaart - Zelfredzaamheid</h2>
@@ -3877,7 +3695,7 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(4)">Volgende →</button>
+                        <button class="btn btn-primary" onclick="goToScreen(4)">Naar Dashboard →</button>
                     </div>
                 </div>
             </div>
@@ -3892,107 +3710,71 @@
                     <div id="domainOverviewTable"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(5)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug naar Domeinkaart</button>
+                        <button class="btn btn-primary" onclick="goToScreen(5)">Bekijk Resultaten →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 5: Netwerkpositie (LEAN) -->
-            <div class="screen" id="screen-netwerkpositie">
+            <!-- Screen 5: Results -->
+            <div class="screen" id="screen-results">
                 <div class="card">
-                    <h2>🕸️ Hoe is steun georganiseerd?</h2>
-                    <p style="color: var(--text-light); margin-bottom: 30px;">Op basis van de ingevulde domeinen zien we de volgende netwerkpositie.</p>
+                    <h2>📈 Jouw Resultaten</h2>
+                    
+                    <!-- Export buttons -->
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="exportToPrint()">
+                            🖨️ Printen
+                        </button>
+                        <button class="export-btn" onclick="copyToClipboard()">
+                            📋 Kopiëren
+                        </button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    
+                    <!-- Netwerk type legenda -->
+                    <div style="background: #f9fafb; border-radius: 12px; padding: 15px; margin: 20px 0;">
+                        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-light); margin-bottom: 10px; text-align: center;">
+                            Kleur per punt = type netwerk
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 14px; height: 14px; border-radius: 50%; background: #f59e0b; border: 2px solid white;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text);">Informeel</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 14px; height: 14px; border-radius: 50%; background: #ef4444; border: 2px solid white;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text);">Formeel</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 14px; height: 14px; border-radius: 50%; background: #8b5cf6; border: 2px solid white;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text);">Collectief</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 14px; height: 14px; border-radius: 50%; background: #94a3b8; border: 2px solid white;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text);">Geen netwerk</span>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- SIJN NETWERKKAART (compact, geen interventies) -->
-                    <div id="sijnNetwerkkaartCompact">
-                        <!-- Wordt gevuld door renderSIJNNetwerkkaartCompact() -->
+                    <div class="score-summary" id="scoreSummary"></div>
+
+                    <!-- SIJN NETWERKKAART -->
+                    <div id="sijnNetwerkkaart" style="margin-top: 40px;">
+                        <!-- Wordt gevuld door renderSIJNNetwerkkaart() -->
                     </div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(6)">Volgende →</button>
+                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(6)">Naar Samenvatting →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 6: Beoogde Beweging (LEAN - DE KERN!) -->
-            <div class="screen" id="screen-beweging">
-                <div class="card">
-                    <h2>🎯 Eerstvolgende netwerkstap</h2>
-                    <p style="color: var(--text-light); margin-bottom: 15px; font-size: 1.05rem;">Wat is de meest helpende verschuiving <strong>op dit moment</strong>?</p>
-                    
-                    <!-- Belangrijke uitleg -->
-                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px 20px; margin-bottom: 30px; border-radius: 8px;">
-                        <p style="margin: 0; font-size: 0.95rem; color: #92400e; line-height: 1.6;">
-                            💡 <strong>Let op:</strong> Je kiest hier geen interventie, maar een richting van netwerkverschuiving. Netwerkontwikkeling verloopt vaak in stappen. Stabilisatie kan voorafgaan aan verbreding.
-                        </p>
-                    </div>
-
-                    <!-- Voor/Na diagram met pijl -->
-                    <div id="netwerkBewegingDiagram" style="margin-bottom: 40px;">
-                        <!-- Wordt gevuld door renderNetwerkBewegingDiagram() -->
-                    </div>
-
-                    <div id="bewegingKeuzes">
-                        <!-- Wordt gevuld door renderBewegingKeuzes() -->
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(7)">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 7: Interventies (LEAN) -->
-            <div class="screen" id="screen-interventies">
-                <div class="card">
-                    <h2>🔧 Interventies</h2>
-                    <p style="color: var(--text-light); margin-bottom: 20px;">Selecteer maximaal 3 concrete acties die passen bij de gekozen beweging.</p>
-
-                    <!-- Postcode filter -->
-                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                            <span style="font-size: 1.2rem;">📍</span>
-                            <h3 style="font-size: 1rem; font-weight: 600; color: #1e40af; margin: 0;">Lokale interventies (optioneel)</h3>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #1e3a8a; margin-bottom: 15px; line-height: 1.5;">
-                            Met je postcode filteren we op interventies die beschikbaar zijn in jouw buurt (collectief & formeel).
-                        </p>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="text" 
-                                   id="postcodeFilter" 
-                                   placeholder="Bijv. 1234AB"
-                                   maxlength="6"
-                                   style="flex: 0 0 150px; padding: 10px 14px; border: 2px solid #60a5fa; border-radius: 8px; font-size: 1rem; text-transform: uppercase;"
-                                   oninput="this.value = this.value.toUpperCase()">
-                            <button class="btn" 
-                                    onclick="filterInterventiesByPostcode()"
-                                    style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                                Filter interventies →
-                            </button>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #64748b; margin-top: 10px; margin-bottom: 0; font-style: italic;">
-                            💡 Geen postcode? Dan tonen we algemene interventies. Je kunt altijd zelf interventies toevoegen.
-                        </p>
-                    </div>
-
-                    <!-- Lokale voorzieningen overzicht (verschijnt na filteren) -->
-                    <div id="lokaleVoorzieningenOverzicht"></div>
-
-                    <div id="interventiesVoorBeweging">
-                        <!-- Wordt gevuld door renderInterventiesVoorBeweging() -->
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(8)">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 8: SAMENVATTING (LEAN workflow) -->
+            <!-- Screen 6: SAMENVATTING (Nieuw Medium-flow scherm) -->
             <div class="screen" id="screen-samenvatting">
                 <div class="card">
                     <h2 style="font-size: 1.8rem; margin-bottom: 20px;">Wat spreken we af?</h2>
@@ -4005,7 +3787,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
                     </div>
                 </div>
@@ -4496,514 +4278,6 @@
             }
         ];
 
-        // GGZ-specifieke vragen per domein (vanuit Suus - Trimbos perspectief)
-        const ggzVragen = {
-            financien: [
-                "Zorgt geldstress voor angst of spanning?",
-                "Lukt budgetteren of raken geldzaken in de war?",
-                "Zijn er schulden ontstaan door impulsief gedrag of crisis?",
-                "Wordt er misbruik gemaakt van iemands financiële kwetsbaarheid?"
-            ],
-            dagbesteding: [
-                "Is er structuur in de dag of is het chaotisch?",
-                "Lukt het om naar werk/activiteiten te gaan bij klachten?",
-                "Wordt werk belastend door angst, stemming of concentratieproblemen?",
-                "Is er uitval of verzuim door psychische klachten?"
-            ],
-            huisvesting: [
-                "Voelt de woning veilig of juist beklemmend?",
-                "Dreigt huisuitzetting door huur-/energieschulden of overlast?",
-                "Lukt het om de woning schoon en leefbaar te houden?",
-                "Is er sociaal isolement door thuisblijven?"
-            ],
-            huiselijk: [
-                "Zijn er spanningen of conflicten in relaties thuis?",
-                "Is er sprake van emotionele of fysieke onveiligheid?",
-                "Belasten zorgtaken voor gezinsleden de situatie?",
-                "Begrijpen huisgenoten wat iemand nodig heeft bij klachten?"
-            ],
-            geestelijk: [
-                "Hoe is de stemming? (somber, angstig, vlak, wisselend?)",
-                "Zijn er suïcidegedachten of zelfbeschadigend gedrag?",
-                "Lukt het om medicatie te nemen zoals voorgeschreven?",
-                "Is er contact met GGZ of is behandeling nodig?",
-                "Hoe gaat het met slapen en eetpatroon?"
-            ],
-            lichamelijk: [
-                "Versterken psychische en lichamelijke klachten elkaar?",
-                "Lukt zelfzorg (beweging, voeding, medicatie)?",
-                "Zijn er chronische pijnen die de stemming beïnvloeden?",
-                "Wordt er voldoende medische zorg gekregen?"
-            ],
-            verslaving: [
-                "Wordt er gebruikt om klachten te dempen (zelfmedicatie)?",
-                "Verergert gebruik de psychische klachten?",
-                "Is er controle over gebruik of raakt het uit de hand?",
-                "Is er verslavingszorg en werkt die samen met GGZ?"
-            ],
-            adl: [
-                "Lukt dagelijkse zelfzorg (wassen, aankleden, eten)?",
-                "Is er hulp nodig maar niet aanwezig?",
-                "Worden taken vermeden door angst of gebrek aan energie?",
-                "Lukt administratie of raakt die in de knel?"
-            ],
-            sociaal: [
-                "Zijn er mensen die begrijpen wat iemand meemaakt?",
-                "Leidt terugtrekking tot isolement?",
-                "Voelt contact belastend of juist helpend?",
-                "Is er angst voor stigma of oordeel van anderen?"
-            ],
-            participatie: [
-                "Lukt meedoen of is er terugtrekking?",
-                "Helpt activiteit bij herstel of juist niet?",
-                "Is er angst om naar buiten te gaan of mensen te ontmoeten?",
-                "Wordt iemand gemist als deze er niet is?"
-            ],
-            justitie: [
-                "Zorgen juridische problemen voor extra stress?",
-                "Is er begeleiding bij contact met politie/justitie?",
-                "Zijn problemen ontstaan tijdens crisis of door klachten?",
-                "Wordt er rekening gehouden met psychische kwetsbaarheid?"
-            ]
-        };
-
-        // Jongeren-specifieke vragen per domein
-        const jongerenVragen = {
-            financien: [
-                "Heb je schulden opgebouwd (studieschuld, telefoon, online aankopen)?",
-                "Krijg je hulp bij budgetteren of ben je daar zelf mee bezig?",
-                "Red je het met je uitkering of salaris?",
-                "Is er druk vanuit vrienden om geld uit te geven?"
-            ],
-            dagbesteding: [
-                "Volg je een opleiding of heb je werk?",
-                "Lukt het om naar school/werk te gaan?",
-                "Heb je een duidelijk doel of plan voor de toekomst?",
-                "Is er begeleiding bij studie of werk als dat nodig is?"
-            ],
-            huisvesting: [
-                "Woon je zelfstandig of bij ouders/verzorgers?",
-                "Voel je je veilig thuis?",
-                "Heb je een stabiele woonsituatie?",
-                "Is er risico op dakloosheid of uithuisplaatsing?"
-            ],
-            huiselijk: [
-                "Hoe is de sfeer thuis?",
-                "Is er ruimte om jezelf te zijn?",
-                "Zijn er conflicten met ouders of huisgenoten?",
-                "Begrijpen ze wat je nodig hebt?"
-            ],
-            geestelijk: [
-                "Hoe gaat het met je mentaal?",
-                "Heb je last van stress, angst of somberheid?",
-                "Is er iemand bij wie je terecht kunt?",
-                "Heb je ervaring met GGZ of hulpverlening?"
-            ],
-            lichamelijk: [
-                "Hoe gaat het met je lichaam?",
-                "Sport of beweeg je?",
-                "Heb je klachten die je belemmeren?",
-                "Krijg je medische zorg als dat nodig is?"
-            ],
-            verslaving: [
-                "Gebruik je alcohol, drugs of medicijnen?",
-                "Is er controle over gebruik of is het uit de hand?",
-                "Is er druk vanuit vrienden om te gebruiken?",
-                "Weet je waar je hulp kunt krijgen als dat nodig is?"
-            ],
-            adl: [
-                "Lukt zelfzorg (wassen, eten, kamer opruimen)?",
-                "Heb je structuur in je dag?",
-                "Lukt administratie (post, afspraken, DigiD)?",
-                "Is er hulp als dat nodig is?"
-            ],
-            sociaal: [
-                "Heb je vrienden of mensen om je heen?",
-                "Voel je je verbonden of eenzaam?",
-                "Is er druk of pesten vanuit anderen?",
-                "Kun je jezelf zijn bij anderen?"
-            ],
-            participatie: [
-                "Doe je mee aan activiteiten (sport, hobby, vrijwilligerswerk)?",
-                "Voel je je onderdeel van een groep?",
-                "Is er iets wat je graag zou willen doen?",
-                "Zijn er kansen om mee te doen?"
-            ],
-            justitie: [
-                "Heb je contact met politie of justitie?",
-                "Zijn er boetes of juridische problemen?",
-                "Is er begeleiding of rechtsbijstand?",
-                "Weet je wat je rechten zijn?"
-            ]
-        };
-
-        // Mantelzorgers-specifieke vragen per domein
-        const mantelzorgersVragen = {
-            financien: [
-                "Lever je inkomen in door zorgtaken?",
-                "Heb je extra kosten door de zorgsituatie?",
-                "Ken je de financiële regelingen voor mantelzorgers?",
-                "Is er schuld ontstaan door gemiste inkomsten?"
-            ],
-            dagbesteding: [
-                "Kun je werk combineren met zorgtaken?",
-                "Heb je ruimte voor eigen activiteiten?",
-                "Is er begrip op je werk voor je zorgsituatie?",
-                "Mis je kansen door de zorgtaken?"
-            ],
-            huisvesting: [
-                "Is de woning geschikt voor de zorgsituatie?",
-                "Zijn er aanpassingen nodig?",
-                "Woon je samen met de zorgvrager?",
-                "Is er genoeg ruimte voor jezelf?"
-            ],
-            huiselijk: [
-                "Hoe is de sfeer thuis door de zorgtaken?",
-                "Is er ruimte voor je relatie/gezin?",
-                "Zijn er spanningen door de zorgsituatie?",
-                "Begrijpen anderen wat je doet?"
-            ],
-            geestelijk: [
-                "Hoe ga je om met de zorglast?",
-                "Ervaar je stress, vermoeidheid of somberheid?",
-                "Is er iemand voor jou om mee te praten?",
-                "Lukt het om grenzen te stellen?"
-            ],
-            lichamelijk: [
-                "Hoe gaat het fysiek met jou?",
-                "Ervaar je klachten door tillen of zorgtaken?",
-                "Kom je toe aan je eigen gezondheid?",
-                "Slaap je voldoende?"
-            ],
-            verslaving: [
-                "Gebruik je alcohol of medicijnen om vol te houden?",
-                "Is er risico op overbelasting?",
-                "Ken je signalen van overbelasting?",
-                "Durf je hulp te vragen?"
-            ],
-            adl: [
-                "Kom je toe aan je eigen zelfzorg?",
-                "Lukt het om je eigen dingen te doen?",
-                "Heb je tijd voor jezelf?",
-                "Is er respijtzorg beschikbaar?"
-            ],
-            sociaal: [
-                "Blijf je in contact met vrienden/familie?",
-                "Voel je je alleen in je zorgtaak?",
-                "Begrijpen anderen wat je doet?",
-                "Is er een mantelzorgersgroep of lotgenotencontact?"
-            ],
-            participatie: [
-                "Kun je blijven meedoen aan activiteiten?",
-                "Heb je ruimte voor hobby's of ontspanning?",
-                "Voel je je gezien als persoon (niet alleen als zorger)?",
-                "Zijn er mantelzorgersactiviteiten in je buurt?"
-            ],
-            justitie: [
-                "Zijn er juridische zaken rondom de zorg?",
-                "Ken je je rechten als mantelzorger?",
-                "Is er juridische ondersteuning nodig?",
-                "Weet je waar je terecht kunt?"
-            ]
-        };
-
-        // Ouderen-specifieke vragen per domein
-        const ouderenVragen = {
-            financien: [
-                "Red je het met je AOW/pensioen?",
-                "Zijn er extra kosten door zorg of beperkingen?",
-                "Wordt er misbruik gemaakt van je geld?",
-                "Lukt administratie of is er hulp nodig?"
-            ],
-            dagbesteding: [
-                "Hoe besteed je je dag?",
-                "Heb je voldoende activiteit?",
-                "Is er structuur in je week?",
-                "Zijn er dingen die je graag zou willen doen?"
-            ],
-            huisvesting: [
-                "Is de woning nog veilig en geschikt?",
-                "Zijn er aanpassingen nodig (traplift, drempels)?",
-                "Kun je blijven wonen waar je nu woont?",
-                "Is er ondersteuning in de buurt?"
-            ],
-            huiselijk: [
-                "Hoe is de sfeer thuis?",
-                "Woon je alleen of samen?",
-                "Is er voldoende contact met naasten?",
-                "Is er sprake van onveiligheid of mishandeling?"
-            ],
-            geestelijk: [
-                "Hoe voel je je in je hoofd?",
-                "Heb je last van somberheid of angst?",
-                "Mis je mensen of activiteiten?",
-                "Is er geheugen- of concentratieverlies?"
-            ],
-            lichamelijk: [
-                "Hoe gaat het met je gezondheid?",
-                "Zijn er beperkingen die je belemmeren?",
-                "Krijg je voldoende medische zorg?",
-                "Lukt medicatie innemen?"
-            ],
-            verslaving: [
-                "Gebruik je alcohol of medicijnen?",
-                "Is er controle over gebruik?",
-                "Weet je bij wie je terecht kunt?",
-                "Zijn er zorgen over gebruik?"
-            ],
-            adl: [
-                "Lukt wassen, aankleden, eten?",
-                "Is er hulp nodig bij zelfzorg?",
-                "Lukt boodschappen en huishouden?",
-                "Is er thuiszorg of huishoudelijke hulp?"
-            ],
-            sociaal: [
-                "Heb je contact met anderen?",
-                "Voel je je eenzaam?",
-                "Zijn er mensen die langskomen?",
-                "Is er een sociaal netwerk om je heen?"
-            ],
-            participatie: [
-                "Doe je mee aan activiteiten?",
-                "Ga je nog naar buiten?",
-                "Is er een club of ontmoetingsplek?",
-                "Voel je je nog onderdeel van de samenleving?"
-            ],
-            justitie: [
-                "Zijn er juridische zaken?",
-                "Is er sprake van fraude of oplichting?",
-                "Heb je juridische bijstand nodig?",
-                "Ken je je rechten?"
-            ]
-        };
-
-        // Multi-problematiek-specifieke vragen per domein
-        const multiproblemVragen = {
-            financien: [
-                "Zijn er schulden bij meerdere instanties?",
-                "Is er zicht op de financiële situatie?",
-                "Werken schuldhulp en andere hulp samen?",
-                "Zijn er juridische procedures lopend?"
-            ],
-            dagbesteding: [
-                "Is er enige structuur in de dag?",
-                "Zijn er meerdere redenen waarom werk moeilijk is?",
-                "Is er begeleiding die past bij alle problematiek?",
-                "Welke drempels zijn er om mee te doen?"
-            ],
-            huisvesting: [
-                "Is er een stabiele woonsituatie?",
-                "Dreigt huisuitzetting?",
-                "Zijn er problemen met buren of verhuurder?",
-                "Is de woning geschikt gegeven alle problemen?"
-            ],
-            huiselijk: [
-                "Is de thuissituatie veilig?",
-                "Zijn er meerdere spanningen tegelijk?",
-                "Begrijpen naasten de complexiteit?",
-                "Is er sprake van geweld of verwaarlozing?"
-            ],
-            geestelijk: [
-                "Hoe gaat het mentaal bij alles wat er speelt?",
-                "Versterken problemen elkaar?",
-                "Is er GGZ betrokken of nodig?",
-                "Lukt het om vol te houden?"
-            ],
-            lichamelijk: [
-                "Hoe is de lichamelijke gezondheid?",
-                "Zijn er meerdere gezondheidsproblemen tegelijk?",
-                "Krijg je voldoende zorg?",
-                "Werken zorgverleners samen?"
-            ],
-            verslaving: [
-                "Is verslaving onderdeel van de problematiek?",
-                "Verergert gebruik andere problemen?",
-                "Is er verslavingszorg en werkt die samen met anderen?",
-                "Wat zou helpen om grip te krijgen?"
-            ],
-            adl: [
-                "Lukt dagelijkse zorg voor jezelf?",
-                "Zijn er meerdere redenen waarom dit moeilijk is?",
-                "Is er voldoende hulp?",
-                "Werken alle hulpverleners samen?"
-            ],
-            sociaal: [
-                "Is er nog een sociaal netwerk?",
-                "Begrijpt iemand wat je meemaakt?",
-                "Is er isolement door alle problemen?",
-                "Durft iemand het nog aan om te helpen?"
-            ],
-            participatie: [
-                "Lukt meedoen nog of is er volledige uitval?",
-                "Wat zou helpen om weer aan te haken?",
-                "Is er begeleiding die past bij alle problematiek?",
-                "Zijn er kleine stappen mogelijk?"
-            ],
-            justitie: [
-                "Zijn er lopende juridische zaken?",
-                "Werken justitie en hulpverlening samen?",
-                "Is er reclassering of taakstraf?",
-                "Wordt rekening gehouden met alle problematiek?"
-            ]
-        };
-
-        // Sociaal-maatschappelijk-specifieke vragen per domein
-        const sociaalmaatschappelijkVragen = {
-            financien: [
-                "Heb je recht op toeslagen of uitkeringen?",
-                "Ken je de regelingen waar je recht op hebt?",
-                "Is er hulp nodig bij aanvragen?",
-                "Zijn er schulden bij instanties?"
-            ],
-            dagbesteding: [
-                "Heb je zinvolle tijdsbesteding?",
-                "Zijn er kansen op werk of vrijwilligerswerk?",
-                "Wat zijn barrières om mee te doen?",
-                "Is er ondersteuning beschikbaar?"
-            ],
-            huisvesting: [
-                "Is je woning betaalbaar en geschikt?",
-                "Heb je recht op huurtoeslag?",
-                "Is er dreiging van huisuitzetting?",
-                "Wat zou nodig zijn om stabiel te wonen?"
-            ],
-            huiselijk: [
-                "Hoe is de thuissituatie?",
-                "Is er sociale druk of onveiligheid?",
-                "Zijn naasten betrokken?",
-                "Is er ruimte voor ondersteuning?"
-            ],
-            geestelijk: [
-                "Hoe ga je om met stress en zorgen?",
-                "Is er ruimte voor ontspanning?",
-                "Ken je waar je hulp kunt krijgen?",
-                "Voel je je gehoord door instanties?"
-            ],
-            lichamelijk: [
-                "Heb je toegang tot goede zorg?",
-                "Zijn er kosten die zorg belemmeren?",
-                "Weet je waar je terecht kunt?",
-                "Zijn er preventieve voorzieningen beschikbaar?"
-            ],
-            verslaving: [
-                "Is verslavingszorg toegankelijk?",
-                "Zijn er kosten die zorg belemmeren?",
-                "Weet je waar je terecht kunt?",
-                "Is er begeleiding bij herstel?"
-            ],
-            adl: [
-                "Lukt zelfzorg of is er hulp nodig?",
-                "Heb je recht op ondersteuning?",
-                "Weet je waar je hulp kunt aanvragen?",
-                "Zijn er wachtlijsten of barrières?"
-            ],
-            sociaal: [
-                "Heb je contact met mensen om je heen?",
-                "Voel je je onderdeel van de buurt?",
-                "Is er een ontmoetingsplek in de buurt?",
-                "Ken je je buren?"
-            ],
-            participatie: [
-                "Doe je mee aan activiteiten in de buurt?",
-                "Voel je je welkom in de wijk?",
-                "Zijn er voorzieningen waar je gebruik van maakt?",
-                "Wat zou je graag willen doen?"
-            ],
-            justitie: [
-                "Zijn er juridische problemen?",
-                "Ken je je rechten en plichten?",
-                "Is er rechtsbijstand beschikbaar?",
-                "Weet je waar je terecht kunt?"
-            ]
-        };
-
-        // Lokale interventies per postcode/regio (voor MEDIUM → LARGE data)
-        // Later te koppelen aan externe API's zoals WaarStaatJeGemeente, lokale zorgkompassen etc.
-        const lokaleInterventies = {
-            // Voorbeeld structuur per gemeente/postcodegebied - uitgebreid met volledige details
-            // Postcode eerste 4 cijfers bepalen regio
-            '1000': { // Amsterdam
-                collectief: [
-                    { naam: 'Buurtteam', adres: 'Diverse locaties per wijk', wat: 'Laagdrempelig steunpunt voor vragen over wonen, zorg, geld, opvoeding', contact: '020-123-4567' },
-                    { naam: 'Inloophuis De Regenboog', adres: 'Stadhouderskade 159, Amsterdam', wat: 'Ontmoeting, maaltijden, activiteiten voor kwetsbare stadsbewoners', contact: '020-531-7777' },
-                    { naam: 'Straatpastoraat', adres: 'Diverse locaties', wat: 'Pastorale zorg en gesprekken voor mensen op straat', contact: '020-624-7764' }
-                ],
-                formeel: [
-                    { naam: 'Wijkteam Amsterdam', adres: 'Per stadsdeel verschillende locaties', wat: 'Professionele ondersteuning bij complexe problemen, toegang tot zorg', contact: '14020' },
-                    { naam: 'GGD Amsterdam', adres: 'Nieuwe Achtergracht 100, Amsterdam', wat: 'Publieke gezondheid, preventie, jeugdgezondheidszorg', contact: '020-555-5555' },
-                    { naam: 'Stadsbank Amsterdam', adres: 'Vijzelstraat 20, Amsterdam', wat: 'Budgetbeheer en schuldhulpverlening', contact: '020-624-5151' }
-                ],
-                // Doelgroep-specifiek met volledige details
-                ggz: [
-                    { 
-                        naam: 'Inloophuis GGZ Amsterdam', 
-                        adres: 'Bilderdijkstraat 65, Amsterdam',
-                        wat: 'Laagdrempelige ontmoeting en activiteiten voor mensen met psychische kwetsbaarheid',
-                        voor_wie: 'Mensen met GGZ-problematiek die behoefte hebben aan contact en dagbesteding',
-                        contact: '020-612-3456',
-                        aanbod: 'Creatieve workshops, gespreksgroepen, koffie-ochtenden, peer support'
-                    },
-                    {
-                        naam: 'Herstelgroep Vrankrijk',
-                        adres: 'Spuistraat 216, Amsterdam',
-                        wat: 'Lotgenotengroep gericht op herstel van psychische problemen',
-                        voor_wie: 'Mensen die in herstel zijn van depressie, angst, psychose',
-                        contact: '020-625-9654',
-                        aanbod: 'Wekelijkse bijeenkomsten, ervaringsdeskundige begeleiding, herstelplan'
-                    },
-                    {
-                        naam: 'MIND Amsterdam',
-                        adres: 'Plantage Middenlaan 14, Amsterdam',
-                        wat: 'Belangenbehartiging en ondersteuning voor mensen met psychische problemen',
-                        voor_wie: 'Iedereen met GGZ-vragen, ook naasten',
-                        contact: '020-521-6300',
-                        aanbod: 'Informatie, advies, lotgenotencontact, cursussen'
-                    }
-                ],
-                jongeren: [
-                    { naam: 'Jongerenwerker Amsterdam Oost', adres: 'Wijkpost Oost', wat: 'Ondersteuning voor jongeren bij school, thuis, vrienden', voor_wie: '12-23 jaar', contact: '020-251-2512', aanbod: 'Individuele gesprekken, groepsactiviteiten, bemiddeling' },
-                    { naam: 'JAC Amsterdam', adres: 'Overtoom 445, Amsterdam', wat: 'Jongeren Advies Centrum voor alle vragen', voor_wie: '12-25 jaar', contact: '020-412-2433', aanbod: 'Informatie, advies, doorverwijzing' }
-                ],
-                mantelzorgers: [
-                    { naam: 'Mantelzorgcafé Amsterdam', adres: 'Diverse wijken, zie website', wat: 'Ontmoeting en uitwisseling voor mantelzorgers', voor_wie: 'Mantelzorgers, alle leeftijden', contact: '020-570-2070', aanbod: 'Maandelijkse bijeenkomsten, lotgenotencontact, ontlasting' },
-                    { naam: 'Mezzo', adres: 'De Boelelaan 1109, Amsterdam', wat: 'Steun en respijtzorg voor mantelzorgers', voor_wie: 'Mantelzorgers die behoefte hebben aan verlichting', contact: '020-525-6565', aanbod: 'Respijtzorg, advies, belangenbehartiging' }
-                ],
-                multiproblem: ['StreetLab Amsterdam', 'De Regenboog Groep', 'HVO-Querido', 'Maatschappelijke opvang'],
-                sociaalmaatschappelijk: ['Wijkwinkel', 'Stadsdeel servicepunt', 'Schuldhulpmaatje Amsterdam', 'Taalcafé']
-            },
-            '3000': { // Rotterdam
-                collectief: ['Buurtcentrum', 'Inloophuis Kaap de Goede Hoop', 'Vrijwilligerscentrale Rotterdam'],
-                formeel: ['Wijkteam Rotterdam', 'GGD Rotterdam', 'Stadsbank Rotterdam'],
-                ggz: ['Inloophuis Kaap de Goede Hoop', 'MIND Rotterdam', 'Herstelgroep Rijnmond', 'Pameijer GGZ'],
-                jongeren: ['Jongerenwerk Rotterdam', 'Street Corner Work', 'Jongereninloophuis Zonnehuisgroep', 'JAC Rotterdam'],
-                mantelzorgers: ['MantelzorgNL Rotterdam', 'Mantelzorgcafé', 'Respijthuis Rotterdam', 'Samen voor Elkaar'],
-                ouderen: ['Seniorencentrum Hillegersberg', 'Ouderengroep Welzijn', 'KBO Rotterdam', 'Samen Oud Rotterdam'],
-                multiproblem: ['Bouman GGZ', 'Nieuw Wij Rotterdam', 'Straatpastoraat', 'Pauluskerk opvang'],
-                sociaalmaatschappelijk: ['Wijkwinkel', 'Deelbaarhuis', 'Schuldhulp Rotterdam', 'Taalhuis']
-            },
-            '2000': { // Haarlem
-                collectief: ['Buurtteam', 'Inloophuis Haarlem', 'Vrijwilligerscentrale Haarlem'],
-                formeel: ['Wijkteam Haarlem', 'GGD Kennemerland', 'Kredietbank Haarlem'],
-                ggz: ['Inloophuis GGZ Haarlem', 'Arkin locatie Haarlem', 'MIND Kennemerland', 'Herstelgroep'],
-                jongeren: ['Jongerenwerk Haarlem', 'JoU Jongeren Onder Één', 'JAC Haarlem', 'Inloophuis Jongeren'],
-                mantelzorgers: ['Mantelzorgpunt Haarlem', 'MantelzorgNL Kennemerland', 'Respijtzorg', 'Steunpunt Mantelzorg'],
-                ouderen: ['Seniorencentrum', 'KBO Haarlem', 'Ouderensoos', 'Welzijn Haarlem ouderen'],
-                multiproblem: ['Parnassia Bavo', 'Reclassering', 'HVO-Querido Haarlem', 'Maatschappelijke opvang'],
-                sociaalmaatschappelijk: ['Wijkservicepunt', 'Schuldhulpmaatje', 'Taalhuis Haarlem', 'Kledingbank']
-            },
-            // Default/algemeen (als postcode niet in lijst)
-            'default': {
-                collectief: ['Buurtcentrum', 'Vrijwilligerscentrale', 'Inloophuis', 'Buurtteam'],
-                formeel: ['Wijkteam', 'GGD', 'Gemeente sociale dienst', 'Huisarts'],
-                ggz: ['Inloophuis GGZ', 'MIND lokale afdeling', 'Herstelgroep', 'GGZ-zorginstelling'],
-                jongeren: ['Jongerenwerker', 'Jongerencentrum', 'JAC (Jongeren Advies Centrum)', 'Jongereninloophuis'],
-                mantelzorgers: ['Mantelzorgpunt', 'MantelzorgNL', 'Respijtzorg', 'Mantelzorgcafé'],
-                ouderen: ['Seniorencentrum', 'KBO (ouderenbond)', 'Ouderensoos', 'Welzijn ouderen'],
-                multiproblem: ['Maatschappelijke opvang', 'Reclassering', 'Daklozenopvang', 'Verslavingszorg'],
-                sociaalmaatschappelijk: ['Wijkservicepunt', 'Schuldhulpmaatje', 'Taalhuis', 'Kledingbank']
-            }
-        };
-
         const voorzieningen = {
             financien: {
                 collectief: ['Voedselbank', 'Kledingbank', 'Formulierenbrigade', 'Schuldhulpmaatje'],
@@ -5197,35 +4471,34 @@
         };
 
         // Screen configuration - dynamic based on mode
-        // LEAN WORKFLOW - met Intro als eerste stap
         const screenConfigBase = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
-            { id: 'domains', label: 'Domeinscan', emoji: '📊' },
-            { id: 'network', label: 'Overzicht', emoji: '📋' },
-            { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Volgende stap', emoji: '🎯' },
-            { id: 'interventies', label: 'Interventies', emoji: '🔧' },
-            { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
+            { id: 'hulpvraag', label: 'Hulpvraag', emoji: '❓' },
+            { id: 'domains', label: 'Domeinen', emoji: '📊' },
+            { id: 'network', label: 'Dashboard', emoji: '📊' },
+            { id: 'results', label: 'Resultaten', emoji: '📈' },
+            { id: 'advies', label: 'Advies', emoji: '🤖' },
+            { id: 'organisaties', label: 'Organisaties', emoji: '🏢' },
+            { id: 'activiteiten', label: 'Activiteiten', emoji: '📋' },
+            { id: 'summary', label: 'Overzicht', emoji: '📋' }
         ];
 
         const screenConfigPro = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
-            { id: 'domains', label: 'Domeinscan', emoji: '📊' },
-            { id: 'network', label: 'Overzicht', emoji: '📋' },
-            { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Volgende stap', emoji: '🎯' },
-            { id: 'interventies', label: 'Interventies', emoji: '🔧' },
-            { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
+            { id: 'hulpvraag', label: 'Hulpvraag', emoji: '❓' },
+            { id: 'domains', label: 'Domeinen', emoji: '📊' },
+            { id: 'network', label: 'Dashboard', emoji: '📊' },
+            { id: 'results', label: 'Resultaten', emoji: '📈' },
+            { id: 'advies', label: 'Advies', emoji: '🤖' },
+            { id: 'advies-pro', label: 'Prof. Advies', emoji: '👨‍⚕️' },
+            { id: 'organisaties', label: 'Organisaties', emoji: '🏢' },
+            { id: 'activiteiten', label: 'Activiteiten', emoji: '📋' },
+            { id: 'summary', label: 'Overzicht', emoji: '📋' }
         ];
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Default naar screenConfigBase als mode nog niet gezet is
-            const config = state.mode === 'professional' ? screenConfigPro : screenConfigBase;
-            console.log('getScreenConfig() - mode:', state.mode, '- config length:', config.length);
-            return config;
+            return state.mode === 'professional' ? screenConfigPro : screenConfigBase;
         }
 
         // Get screen number by id
@@ -5238,21 +4511,17 @@
         // State - Extended datamodel for historical tracking (v2.4+)
         let state = {
             // Metadata
-            version: '3.0',
+            version: '2.4',
             clientId: null, // Unique ID for multi-client support (future)
             createdAt: null,
             updatedAt: null,
             
             // Current assessment data
             mode: null,
-            doelgroepen: [], // Array van geselecteerde doelgroepen (bijv. ['ggz', 'jongeren'])
             doelVandaag: null,
             stabilisatie: null,
             netwerkBevestiging: null,
             netwerkToelichting: '',
-            beoogdeBeweging: null, // LEAN: gekozen netwerkbeweging
-            geselecteerdeInterventies: [], // LEAN: max 3 interventies
-            agenda: [], // Geplande afspraken
             professionalName: '',
             postcode: '',
             clientName: '',
@@ -5345,8 +4614,21 @@
 
         // AI Analysis Functions
         function showAISetup() {
-            if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar de server gestuurd voor analyse.\n\nDoorgaan?')) {
+            const apiKey = localStorage.getItem('openai_api_key');
+            
+            if (!apiKey) {
+                // Show API key setup
+                const key = prompt('⚠️ PRIVACY WAARSCHUWING\n\nDoor een OpenAI API key in te voeren, ga je ermee akkoord dat de hulpvraag naar OpenAI wordt gestuurd voor analyse.\n\n🔑 Voer je OpenAI API key in:\n(Deze wordt lokaal opgeslagen in je browser)');
+                
+                if (!key) return;
+                
+                localStorage.setItem('openai_api_key', key.trim());
                 analyzeWithAI();
+            } else {
+                // Confirm before sending
+                if (confirm('🤖 AI Analyse\n\n⚠️ De hulpvraag wordt naar OpenAI gestuurd voor analyse.\n\nDoorgaan?')) {
+                    analyzeWithAI();
+                }
             }
         }
 
@@ -5367,6 +4649,8 @@
             document.body.appendChild(loadingMsg);
 
             try {
+                const apiKey = localStorage.getItem('openai_api_key');
+                
                 const prompt = `Je bent een SIJN (Sterk In Je Netwerk) expert. Analyseer de volgende hulpvraag en beoordeel elk van de 11 levensdomeinen op een schaal van 1-3:
 
 1 = 🔴 Onvoldoende stabiel (acute problematiek, intensieve ondersteuning nodig)
@@ -5405,10 +4689,11 @@ Antwoord in dit exacte JSON formaat:
   "justitie": 3
 }`;
 
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -5462,9 +4747,10 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
-        // Clear API key (no longer needed — key is server-side)
+        // Clear API key (for testing/reset)
         function clearAIKey() {
-            alert('API key wordt nu server-side beheerd via .env');
+            localStorage.removeItem('openai_api_key');
+            alert('OpenAI API key verwijderd');
         }
 
         // Render Doelen overzicht
@@ -5712,54 +4998,22 @@ Antwoord in dit exacte JSON formaat:
         // Mode selection
         function selectMode(mode) {
             state.mode = mode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+            
+            const professionalFields = document.getElementById('professionalFields');
+            professionalFields.style.display = mode === 'professional' ? 'block' : 'none';
             saveState();
-            console.log('Mode geselecteerd:', mode);
+            renderProgressSteps();
         }
 
-        // Toggle doelgroep
-        function toggleDoelgroep(doelgroep, checked) {
-            if (checked && !state.doelgroepen.includes(doelgroep)) {
-                state.doelgroepen.push(doelgroep);
-            } else if (!checked) {
-                state.doelgroepen = state.doelgroepen.filter(d => d !== doelgroep);
-            }
-            saveState();
-            console.log('Geselecteerde doelgroepen:', state.doelgroepen);
-        }
-
-        // Test interventies (direct springen met dummy data)
-        function testInterventies() {
-            // Vul dummy data in voor snelle test
-            state.mode = 'professional';
-            state.doelVandaag = 'actie';
-            state.beoogdeBeweging = 'formeel'; // Dummy beweging
-            state.doelgroepen = ['ggz', 'ouderen']; // Test met 2 doelgroepen
-            
-            // Sla op
-            saveState();
-            
-            // Ga direct naar interventies scherm (screen 7)
-            goToScreen(7);
-            
-            // Scroll naar boven
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
         // Start assessment
         function startAssessment() {
-            console.log('startAssessment aangeroepen');
-            console.log('Huidige state.mode:', state.mode);
-            
-            // Check mode via radio button als state.mode niet gezet is
             if (!state.mode) {
-                const modeRadio = document.querySelector('input[name="modus"]:checked');
-                if (modeRadio) {
-                    state.mode = modeRadio.value;
-                    console.log('Mode gezet via radio button:', state.mode);
-                } else {
-                    alert('⚠️ Kies eerst hoe je wilt invullen (Zelfstandig of Samen met professional)');
-                    return;
-                }
+                alert('Kies eerst hoe je wilt invullen');
+                return;
             }
             
             // Sla doel van vandaag op
@@ -5771,10 +5025,12 @@ Antwoord in dit exacte JSON formaat:
             if (state.mode === 'professional') {
                 state.professionalName = document.getElementById('professionalName').value;
             }
-            
             saveState();
-            console.log('Ga naar scherm 3 (Domeinscan)');
-            goToScreen(3);
+            
+            // Show view tabs after start
+            document.getElementById('viewTabs').style.display = 'flex';
+            
+            goToScreen(2);
         }
 
         // Save oriëntatie (stabilisatie-check)
@@ -5831,117 +5087,42 @@ Antwoord in dit exacte JSON formaat:
 
         // Navigate to screen
         function goToScreen(screenNum) {
-            console.log('🔹 goToScreen aangeroepen:', screenNum);
             const config = getScreenConfig();
-            console.log('📋 Config length:', config.length, 'First item:', config[0]);
-            
             state.currentScreen = screenNum;
             saveState();
             
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
             // Get screen id from config
             const screenConfig = config[screenNum - 1];
-            console.log('🔍 screenConfig voor screenNum', screenNum, ':', screenConfig);
-            
-            if (!screenConfig) {
-                console.error('❌ Geen screenConfig gevonden voor screenNum:', screenNum, 'Config:', config);
-                alert('Fout: Scherm ' + screenNum + ' niet gevonden in configuratie');
-                return;
+            if (screenConfig) {
+                document.getElementById(`screen-${screenConfig.id}`).classList.add('active');
             }
             
-            const targetScreenId = `screen-${screenConfig.id}`;
-            const targetScreen = document.getElementById(targetScreenId);
-            console.log('🎯 Zoek naar:', targetScreenId, 'Gevonden:', targetScreen);
-            
-            if (!targetScreen) {
-                console.error('❌ Screen element niet gevonden:', targetScreenId);
-                alert('Fout: HTML element #' + targetScreenId + ' niet gevonden');
-                return;
-            }
-            
-            // Hide ALL screens first
-            console.log('👁️ Verberg alle screens...');
-            const allScreens = document.querySelectorAll('.screen');
-            console.log('Aantal screens gevonden:', allScreens.length);
-            allScreens.forEach(s => {
-                s.classList.remove('active');
-                console.log('  - Verborgen:', s.id);
-            });
-            
-            // Show target screen
-            console.log('✨ Activeer target screen:', targetScreenId);
-            targetScreen.classList.add('active');
-            console.log('✅ Classes na activatie:', targetScreen.className);
-            
-            // Check if it's actually visible
-            const computedStyle = window.getComputedStyle(targetScreen);
-            console.log('📊 Display style:', computedStyle.display);
-            
-            if (computedStyle.display === 'none') {
-                console.error('⚠️ WARNING: Screen has active class but display is still none!');
-            }
-            
-            // Toon workflow bolletjes
-            const workflowBolletjes = document.getElementById('workflowBolletjes');
-            if (workflowBolletjes) {
-                workflowBolletjes.style.display = screenNum >= 1 ? 'block' : 'none';
-            }
-            
-            // Update workflow bolletjes
-            updateWorkflowSteps(screenNum);
-            
-            // Update progress steps (hidden)
+            // Update progress steps
             renderProgressSteps();
 
-            // Load content for each screen (LEAN workflow)
+            // Show view tabs after screen 1
+            if (screenNum > 1) {
+                document.getElementById('viewTabs').style.display = 'flex';
+            }
+
+            // Load content for each screen
             const screenId = screenConfig ? screenConfig.id : '';
             if (screenId === 'hulpvraag') loadHulpvraagData();
             if (screenId === 'domains') renderDomains();
-            if (screenId === 'network') renderDashboard();
-            if (screenId === 'netwerkpositie') renderSIJNNetwerkkaartCompact();
-            if (screenId === 'beweging') { 
-                renderNetwerkBewegingDiagram(); 
-                renderBewegingKeuzes(); 
+            if (screenId === 'network') {
+                renderDashboard();
             }
-            if (screenId === 'interventies') renderInterventiesVoorBeweging();
-            if (screenId === 'samenvatting') renderSamenvatting();
+            if (screenId === 'results') renderResults();
+            if (screenId === 'advies') renderAdvice();
+            if (screenId === 'advies-pro') renderProAdvice();
+            if (screenId === 'organisaties') renderOrganisaties();
+            if (screenId === 'activiteiten') renderActiviteiten();
+            if (screenId === 'summary') renderSummary();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Update workflow bolletjes
-        function updateWorkflowSteps(currentStep) {
-            document.querySelectorAll('.workflow-step').forEach((step, index) => {
-                const stepNum = index + 1;
-                const circle = step.querySelector('div:first-child');
-                const label = step.querySelector('div:last-child');
-                
-                // TESTMODUS: Alle bolletjes zijn altijd klikbaar
-                step.style.cursor = 'pointer';
-                step.style.pointerEvents = 'auto';
-                
-                if (stepNum === currentStep) {
-                    // Active
-                    circle.style.background = 'var(--primary)';
-                    circle.style.borderColor = 'var(--primary)';
-                    circle.style.color = 'white';
-                    label.style.color = 'var(--primary)';
-                    label.style.fontWeight = '700';
-                } else if (stepNum < currentStep) {
-                    // Completed
-                    circle.style.background = 'var(--secondary)';
-                    circle.style.borderColor = 'var(--secondary)';
-                    circle.style.color = 'white';
-                    label.style.color = 'var(--text)';
-                    label.style.fontWeight = '600';
-                } else {
-                    // Future - maar wel klikbaar voor testfase
-                    circle.style.background = '#e0e0e0';
-                    circle.style.borderColor = '#e0e0e0';
-                    circle.style.color = '#666';
-                    label.style.color = 'var(--text-light)';
-                    label.style.fontWeight = '600';
-                }
-            });
         }
 
         // Load hulpvraag data
@@ -6011,14 +5192,14 @@ Antwoord in dit exacte JSON formaat:
         }
         
         function renderDomainContent(domain, details, currentScore) {
-            // MEDIUM FLOW: 3 vragen per domein + doelgroep-specifieke vragen als hulp
+            // MEDIUM FLOW: Alleen 3 simpele vragen per domein
             
             const hoeGaatHet = details.hoeGaatHet || '';
             const steunNiveau = details.steunNiveau || '';
             const actieNodig = details.actieNodig || '';
             
             return `
-                <!-- Vraag 1: Hoe gaat het? (ALTIJD) -->
+                <!-- Vraag 1: Hoe gaat het? -->
                 <div style="margin-bottom: 25px;">
                     <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
                         1️⃣ Hoe gaat het?
@@ -6033,56 +5214,18 @@ Antwoord in dit exacte JSON formaat:
                     </select>
                 </div>
                 
-                ${renderDoelgroepVragen(domain.id)}
-                
                 <!-- Vraag 2: Is er steun? -->
                 <div style="margin-bottom: 25px;">
                     <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
                         2️⃣ Is er steun?
                     </label>
-                    <select id="steun-${domain.id}" style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
-                            onchange="updateDomainDetail('${domain.id}', 'steunNiveau', this.value); toggleSteunDoorWie('${domain.id}', this.value)">
+                    <select style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
+                            onchange="updateDomainDetail('${domain.id}', 'steunNiveau', this.value)">
                         <option value="">-- Selecteer --</option>
                         <option value="voldoende" ${steunNiveau === 'voldoende' ? 'selected' : ''}>👥 Voldoende steun</option>
                         <option value="beperkt" ${steunNiveau === 'beperkt' ? 'selected' : ''}>⚠️ Beperkte steun</option>
                         <option value="geen" ${steunNiveau === 'geen' ? 'selected' : ''}>🚫 Geen steun</option>
                     </select>
-                    
-                    <!-- Door wie? (alleen bij voldoende of beperkt) -->
-                    <div id="steundoorwie-${domain.id}" style="display: ${(steunNiveau === 'voldoende' || steunNiveau === 'beperkt') ? 'block' : 'none'}; margin-top: 15px; padding: 15px; background: #f9fafb; border-radius: 8px; border: 1px solid #e0e0e0;">
-                        <label style="font-size: 0.9rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 10px;">
-                            Door wie? (voor LARGE kosten-analyse)
-                        </label>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox" 
-                                       id="steun-informeel-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'informeel', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">👨‍👩‍👧 Familie/vrienden (informeel)</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox"
-                                       id="steun-collectief-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'collectief', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">🤝 Vrijwilligers/buurt (collectief)</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox"
-                                       id="steun-formeel-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'formeel', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">🏥 Professionals/zorg (formeel)</span>
-                            </label>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 8px; margin-bottom: 0; font-style: italic;">
-                            💡 Deze data wordt gebruikt in LARGE voor kosten- en scenario-analyse
-                        </p>
-                    </div>
                 </div>
                 
                 <!-- Vraag 3: Wat is hier nu nodig? -->
@@ -6111,92 +5254,6 @@ Antwoord in dit exacte JSON formaat:
                     </div>
                 ` : ''}
             `;
-        }
-        
-        // Render doelgroep-specifieke vragen (voor alle geselecteerde doelgroepen)
-        function renderDoelgroepVragen(domainId) {
-            if (!state.doelgroepen || state.doelgroepen.length === 0) {
-                return '';
-            }
-            
-            const doelgroepConfig = {
-                ggz: { 
-                    emoji: '🧠', 
-                    label: 'GGZ', 
-                    color: '#3b82f6',
-                    gradient: 'linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%)',
-                    vragen: ggzVragen 
-                },
-                jongeren: { 
-                    emoji: '👤', 
-                    label: 'Jongeren', 
-                    color: '#8b5cf6',
-                    gradient: 'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)',
-                    vragen: jongerenVragen 
-                },
-                mantelzorgers: { 
-                    emoji: '🤝', 
-                    label: 'Mantelzorgers', 
-                    color: '#ec4899',
-                    gradient: 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)',
-                    vragen: mantelzorgersVragen 
-                },
-                ouderen: { 
-                    emoji: '👴', 
-                    label: 'Ouderen', 
-                    color: '#f59e0b',
-                    gradient: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-                    vragen: ouderenVragen 
-                },
-                multiproblem: { 
-                    emoji: '🔄', 
-                    label: 'Multi-problematiek', 
-                    color: '#ef4444',
-                    gradient: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
-                    vragen: multiproblemVragen 
-                },
-                sociaalmaatschappelijk: { 
-                    emoji: '🏘️', 
-                    label: 'Sociaal-maatschappelijk', 
-                    color: '#10b981',
-                    gradient: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
-                    vragen: sociaalmaatschappelijkVragen 
-                }
-            };
-            
-            let html = '';
-            
-            state.doelgroepen.forEach(doelgroep => {
-                const config = doelgroepConfig[doelgroep];
-                if (!config || !config.vragen[domainId]) return;
-                
-                const vragen = config.vragen[domainId];
-                if (!vragen || vragen.length === 0) return;
-                
-                const vragenHTML = vragen.map(vraag => `<li style="margin-bottom: 8px; color: var(--text);">${vraag}</li>`).join('');
-                const uniqueId = `${doelgroep}-${domainId}`;
-                
-                html += `
-                    <div style="margin-top: 25px; margin-bottom: 25px; padding: 20px; background: ${config.gradient}; border-left: 4px solid ${config.color}; border-radius: 10px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer;"
-                             onclick="document.getElementById('${uniqueId}').classList.toggle('hidden')">
-                            <span style="font-size: 1.3rem;">${config.emoji}</span>
-                            <h4 style="font-size: 1rem; font-weight: 600; color: ${config.color}; margin: 0;">${config.label} - Denk aan vragen als:</h4>
-                            <span style="font-size: 0.8rem; color: ${config.color}; margin-left: auto;">▼ Uitklappen</span>
-                        </div>
-                        <div id="${uniqueId}" class="doelgroep-vragen-content" style="margin-top: 12px;">
-                            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; line-height: 1.7;">
-                                ${vragenHTML}
-                            </ul>
-                            <p style="font-size: 0.85rem; color: #64748b; margin-top: 12px; font-style: italic; margin-bottom: 0;">
-                                💡 Deze vragen zijn bedoeld als gespreksondersteuning - niet als verplichte checklist.
-                            </p>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            return html;
         }
         
         // Sync domein score van "Hoe gaat het?" naar state.scores
@@ -6260,22 +5317,10 @@ Antwoord in dit exacte JSON formaat:
             let html = `
                 <!-- Algemene situatie -->
                 <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 15px 0; color: #166534; font-size: 1.2rem;">Context van deze scan</h3>
-                    ${state.doelgroepen && state.doelgroepen.length > 0 ? `
-                        <div style="margin-bottom: 12px;">
-                            <strong>Doelgroep:</strong> ${state.doelgroepen.map(d => {
-                                const labels = {
-                                    'ggz': '🧠 GGZ',
-                                    'jongeren': '👤 Jongeren',
-                                    'mantelzorgers': '🤝 Mantelzorgers',
-                                    'ouderen': '👴 Ouderen',
-                                    'multiproblem': '🔄 Multi-problematiek',
-                                    'sociaalmaatschappelijk': '🏘️ Sociaal-maatschappelijk'
-                                };
-                                return labels[d] || d;
-                            }).join(', ')}
-                        </div>
-                    ` : ''}
+                    <h3 style="margin: 0 0 15px 0; color: #166534; font-size: 1.2rem;">Algemene situatie</h3>
+                    <div style="margin-bottom: 12px;">
+                        <strong>Stabilisatie:</strong> ${stabilisatieText}
+                    </div>
                     <div>
                         <strong>Doel van vandaag:</strong> ${state.doelVandaag ? {
                             'overzicht': 'Snel overzicht krijgen',
@@ -6329,20 +5374,6 @@ Antwoord in dit exacte JSON formaat:
                     ` : ''}
                 </div>
                 
-                <!-- AGENDA SECTIE -->
-                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; color: #92400e; font-size: 1.2rem;">📅 Geplande Afspraken</h3>
-                        <button class="btn btn-sm" style="background: #f59e0b; color: white; border: none;" onclick="openAfspraakToevoegen()">
-                            ➕ Nieuwe afspraak
-                        </button>
-                    </div>
-                    
-                    <div id="agendaLijst">
-                        ${renderAgendaLijst()}
-                    </div>
-                </div>
-                
                 <!-- Datum -->
                 <div style="text-align: center; color: var(--text-light); font-size: 0.9rem; padding-top: 20px; border-top: 2px solid #e0e0e0;">
                     Scan uitgevoerd op: ${new Date().toLocaleDateString('nl-NL', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}
@@ -6350,174 +5381,6 @@ Antwoord in dit exacte JSON formaat:
             `;
             
             container.innerHTML = html;
-        }
-        
-        // Render agenda lijst
-        function renderAgendaLijst() {
-            if (!state.agenda || state.agenda.length === 0) {
-                return `
-                    <div style="text-align: center; padding: 30px; color: #78350f; font-style: italic;">
-                        <span style="font-size: 2rem;">📭</span><br>
-                        Nog geen afspraken gepland<br>
-                        <span style="font-size: 0.85rem;">Klik op "Nieuwe afspraak" om een afspraak toe te voegen</span>
-                    </div>
-                `;
-            }
-            
-            return state.agenda.map((afspraak, index) => `
-                <div style="background: white; border-left: 4px solid ${afspraak.voltooid ? '#22c55e' : '#f59e0b'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; align-items: start; gap: 15px;">
-                    <input type="checkbox" 
-                           ${afspraak.voltooid ? 'checked' : ''}
-                           onchange="toggleAfspraakVoltooid(${index}, this.checked)"
-                           style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
-                    <div style="flex: 1; ${afspraak.voltooid ? 'opacity: 0.6; text-decoration: line-through;' : ''}">
-                        <div style="font-weight: 700; font-size: 1rem; color: #92400e; margin-bottom: 5px;">
-                            ${afspraak.datum} om ${afspraak.tijd}
-                        </div>
-                        <div style="font-size: 0.95rem; color: var(--text); margin-bottom: 4px;">
-                            📍 ${afspraak.wat}
-                        </div>
-                        ${afspraak.waar ? `<div style="font-size: 0.85rem; color: var(--text-light);">📌 ${afspraak.waar}</div>` : ''}
-                        ${afspraak.met ? `<div style="font-size: 0.85rem; color: var(--text-light);">👤 Met: ${afspraak.met}</div>` : ''}
-                        ${afspraak.notitie ? `<div style="font-size: 0.85rem; color: var(--text-light); margin-top: 6px; padding-top: 6px; border-top: 1px dashed #fde68a; font-style: italic;">💭 ${afspraak.notitie}</div>` : ''}
-                    </div>
-                    <button onclick="verwijderAfspraak(${index})" 
-                            style="background: none; border: none; color: #dc2626; font-size: 1.2rem; cursor: pointer; padding: 5px;" 
-                            title="Verwijder afspraak">
-                        🗑️
-                    </button>
-                </div>
-            `).join('');
-        }
-        
-        // Open afspraak toevoegen modal
-        function openAfspraakToevoegen() {
-            const modal = document.createElement('div');
-            modal.id = 'afspraakModal';
-            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
-            
-            const morgen = new Date();
-            morgen.setDate(morgen.getDate() + 1);
-            const datumDefault = morgen.toISOString().split('T')[0];
-            
-            modal.innerHTML = `
-                <div style="background: white; border-radius: 16px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
-                    <h3 style="margin: 0 0 20px 0; color: var(--text);">📅 Nieuwe afspraak toevoegen</h3>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Datum *</label>
-                        <input type="date" id="afspraakDatum" value="${datumDefault}" 
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Tijd *</label>
-                        <input type="time" id="afspraakTijd" value="10:00"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Wat *</label>
-                        <input type="text" id="afspraakWat" placeholder="Bijv. Intake wijkteam"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Waar</label>
-                        <input type="text" id="afspraakWaar" placeholder="Bijv. Buurtcentrum De Pijp"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Met wie</label>
-                        <input type="text" id="afspraakMet" placeholder="Bijv. Marieke van wijkteam"
-                               style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Notitie</label>
-                        <textarea id="afspraakNotitie" placeholder="Extra opmerkingen..."
-                                  style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 80px;"></textarea>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                        <button class="btn btn-secondary" onclick="sluitAfspraakModal()">Annuleren</button>
-                        <button class="btn btn-primary" onclick="opslaanAfspraak()">Opslaan</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // Sluit afspraak modal
-        function sluitAfspraakModal() {
-            const modal = document.getElementById('afspraakModal');
-            if (modal) modal.remove();
-        }
-        
-        // Opslaan afspraak
-        function opslaanAfspraak() {
-            const datum = document.getElementById('afspraakDatum').value;
-            const tijd = document.getElementById('afspraakTijd').value;
-            const wat = document.getElementById('afspraakWat').value.trim();
-            const waar = document.getElementById('afspraakWaar').value.trim();
-            const met = document.getElementById('afspraakMet').value.trim();
-            const notitie = document.getElementById('afspraakNotitie').value.trim();
-            
-            if (!datum || !tijd || !wat) {
-                alert('⚠️ Vul minimaal datum, tijd en wat in');
-                return;
-            }
-            
-            if (!state.agenda) {
-                state.agenda = [];
-            }
-            
-            const datumFormatted = new Date(datum + 'T00:00:00').toLocaleDateString('nl-NL', {
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short'
-            });
-            
-            state.agenda.push({
-                datum: datumFormatted,
-                datumRaw: datum,
-                tijd: tijd,
-                wat: wat,
-                waar: waar,
-                met: met,
-                notitie: notitie,
-                voltooid: false,
-                toegevoegdOp: new Date().toISOString()
-            });
-            
-            // Sorteer op datum
-            state.agenda.sort((a, b) => new Date(a.datumRaw) - new Date(b.datumRaw));
-            
-            saveState();
-            sluitAfspraakModal();
-            renderSamenvatting();
-            
-            alert('✅ Afspraak toegevoegd!');
-        }
-        
-        // Toggle afspraak voltooid
-        function toggleAfspraakVoltooid(index, checked) {
-            if (state.agenda && state.agenda[index]) {
-                state.agenda[index].voltooid = checked;
-                saveState();
-                renderSamenvatting();
-            }
-        }
-        
-        // Verwijder afspraak
-        function verwijderAfspraak(index) {
-            if (confirm('Weet je zeker dat je deze afspraak wilt verwijderen?')) {
-                state.agenda.splice(index, 1);
-                saveState();
-                renderSamenvatting();
-            }
         }
         
         // Exporteer samenvatting
@@ -6537,19 +5400,7 @@ Antwoord in dit exacte JSON formaat:
             
             let text = '=== SIJN SCAN SAMENVATTING ===\n\n';
             text += `Datum: ${new Date().toLocaleDateString('nl-NL')}\n\n`;
-            
-            if (state.doelgroepen && state.doelgroepen.length > 0) {
-                const doelgroepLabels = {
-                    'ggz': '🧠 GGZ',
-                    'jongeren': '👤 Jongeren',
-                    'mantelzorgers': '🤝 Mantelzorgers',
-                    'ouderen': '👴 Ouderen',
-                    'multiproblem': '🔄 Multi-problematiek',
-                    'sociaalmaatschappelijk': '🏘️ Sociaal-maatschappelijk'
-                };
-                text += `DOELGROEP: ${state.doelgroepen.map(d => doelgroepLabels[d] || d).join(', ')}\n\n`;
-            }
-            
+            text += `STABILISATIE: ${stabilisatieLabels[state.stabilisatie] || 'Niet ingevuld'}\n\n`;
             text += `NETWERKPOSITIE: ${netwerkInfo.label}\n`;
             text += `${netwerkInfo.beschrijving}\n\n`;
             
@@ -6615,10 +5466,24 @@ Antwoord in dit exacte JSON formaat:
                         </select>
                     </div>
                     
-                    <!-- 3. Relaties helpend of belastend -->
+                    <!-- 3. Verbondenheid -->
                     <div style="margin-bottom: 15px;">
                         <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 6px;">
-                            3️⃣ Zijn relaties helpend of belastend?
+                            3️⃣ Ervaart iemand verbondenheid?
+                        </label>
+                        <select style="width: 100%; padding: 10px 14px; border: 2px solid #fed7aa; border-radius: 8px; font-size: 0.9rem;"
+                                onchange="updateDomainDetail('${domain.id}', 'verbondenheid', this.value)">
+                            <option value="">-- Selecteer --</option>
+                            <option value="verbonden" ${verbondenheid === 'verbonden' ? 'selected' : ''}>🟢 Voelt zich verbonden</option>
+                            <option value="wisselend" ${verbondenheid === 'wisselend' ? 'selected' : ''}>🟡 Wisselend</option>
+                            <option value="alleen" ${verbondenheid === 'alleen' ? 'selected' : ''}>🔴 Voelt zich alleen</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 4. Relaties helpend of belastend -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 6px;">
+                            4️⃣ Zijn relaties helpend of belastend?
                         </label>
                         <select style="width: 100%; padding: 10px 14px; border: 2px solid #fed7aa; border-radius: 8px; font-size: 0.9rem;"
                                 onchange="updateDomainDetail('${domain.id}', 'relatiesEffect', this.value); renderDomains();">
@@ -6640,10 +5505,10 @@ Antwoord in dit exacte JSON formaat:
                         </div>
                     ` : ''}
                     
-                    <!-- 4. Wat vraagt vervolg -->
+                    <!-- 5. Wat vraagt vervolg -->
                     <div style="margin-bottom: 15px;">
                         <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 6px;">
-                            4️⃣ Wat vraagt hier vervolg?
+                            5️⃣ Wat vraagt hier vervolg?
                         </label>
                         <select style="width: 100%; padding: 10px 14px; border: 2px solid #fed7aa; border-radius: 8px; font-size: 0.9rem;"
                                 onchange="updateDomainDetail('${domain.id}', 'vervolgActie', this.value)">
@@ -7371,42 +6236,6 @@ Antwoord in dit exacte JSON formaat:
             renderDomains();
         }
 
-        // Toggle "Door wie?" sectie (alleen tonen bij voldoende/beperkt steun)
-        function toggleSteunDoorWie(domainId, steunNiveau) {
-            const doorWieDiv = document.getElementById(`steundoorwie-${domainId}`);
-            if (doorWieDiv) {
-                if (steunNiveau === 'voldoende' || steunNiveau === 'beperkt') {
-                    doorWieDiv.style.display = 'block';
-                } else {
-                    doorWieDiv.style.display = 'none';
-                    // Clear data als er geen steun is
-                    if (!state.domainDetails[domainId]) {
-                        state.domainDetails[domainId] = {};
-                    }
-                    state.domainDetails[domainId].steunDoorWie = [];
-                    saveState();
-                }
-            }
-        }
-
-        // Update "Door wie?" checkboxes (voor LARGE kosten-analyse)
-        function updateSteunDoorWie(domainId, type, checked) {
-            if (!state.domainDetails[domainId]) {
-                state.domainDetails[domainId] = {};
-            }
-            if (!state.domainDetails[domainId].steunDoorWie) {
-                state.domainDetails[domainId].steunDoorWie = [];
-            }
-            
-            if (checked && !state.domainDetails[domainId].steunDoorWie.includes(type)) {
-                state.domainDetails[domainId].steunDoorWie.push(type);
-            } else if (!checked) {
-                state.domainDetails[domainId].steunDoorWie = state.domainDetails[domainId].steunDoorWie.filter(t => t !== type);
-            }
-            
-            saveState();
-        }
-
         // Toggle ondersteuningsbehoefte checkboxes
         function toggleOndersteuningBehoefte(domainId, source) {
             if (!state.domainDetails[domainId]) {
@@ -8054,207 +6883,6 @@ Antwoord in dit exacte JSON formaat:
 
         // === SIJN NETWERKPOSITIE BEPALING ===
         
-        // Context per netwerkpositie (wanneer passend)
-        function getNetwerkContext(positie) {
-            const contexten = {
-                'geen': 'Er is op dit moment rust nodig, of de situatie vraagt om zelfstandigheid. Dit beschrijft alleen hoe steun nu georganiseerd is.',
-                '1-persoons': 'Er is snelle betrokkenheid en duidelijkheid nodig. Dit kan tijdelijk passend zijn, maar vraagt aandacht bij belasting of uitval.',
-                'formeel': 'Veiligheid en structuur zijn belangrijk. Dit kan stabiliserend werken en is soms nodig als eerste stap.',
-                'informeel': 'Er zijn gezonde relaties met draagkracht. Wederkerigheid en dagelijkse betrokkenheid werken ondersteunend.',
-                'gemengd': 'Spreiding van verantwoordelijkheid vermindert kwetsbaarheid. Dit is geen einddoel, maar één manier waarop steun georganiseerd kan zijn.'
-            };
-            return contexten[positie] || 'Geen specifieke context beschikbaar.';
-        }
-        
-        // Volledige uitleg per netwerkpositie
-        function getNetwerkUitleg(positie) {
-            const uitleg = {
-                'geen': {
-                    titel: '⚪ Geen netwerk',
-                    betekenis: 'Er is op dit moment geen vaste steun aanwezig. Er is niemand die structureel betrokken is of meedenkt.',
-                    watZieJe: ['Problemen worden alleen gedragen', 'Er is weinig signalering', 'Bij tegenslag is er geen opvang'],
-                    nuance: 'Dit zegt niets over iemands waarde. Het beschrijft alleen hoe steun nu georganiseerd is.'
-                },
-                '1-persoons': {
-                    titel: '🟡 1-persoonsnetwerk',
-                    betekenis: 'De steun is vooral georganiseerd via één persoon. Dat kan een naaste zijn of een professional.',
-                    watZieJe: ['Veel verantwoordelijkheid bij één iemand', 'Kwetsbaar bij uitval', 'Snelle betrokkenheid, maar weinig spreiding'],
-                    nuance: 'Dit kan tijdelijk passend zijn. Maar het vraagt aandacht bij belasting of uitval.'
-                },
-                'formeel': {
-                    titel: '🔵 Formeel netwerk',
-                    betekenis: 'De steun komt vooral van professionals of organisaties.',
-                    watZieJe: ['Duidelijke structuur', 'Veiligheid en begeleiding', 'Weinig informele betrokkenheid'],
-                    nuance: 'Dit kan stabiliserend werken. Soms is dit nodig als eerste stap.'
-                },
-                'informeel': {
-                    titel: '🟢 Informeel netwerk',
-                    betekenis: 'De steun komt vooral uit persoonlijke relaties.',
-                    watZieJe: ['Wederkerigheid', 'Dagelijkse betrokkenheid', 'Minder professionele inzet'],
-                    nuance: 'Dit vraagt gezonde relaties en draagkracht.'
-                },
-                'gemengd': {
-                    titel: '🟣 Gemengd netwerk',
-                    betekenis: 'Steun is verdeeld tussen informele en formele bronnen.',
-                    watZieJe: ['Spreiding van verantwoordelijkheid', 'Meerdere signaleringspunten', 'Minder kwetsbaar bij uitval'],
-                    nuance: 'Dit is geen einddoel. Het is één manier waarop steun georganiseerd kan zijn.'
-                }
-            };
-            return uitleg[positie] || null;
-        }
-        
-        // Toon intro screen (geen modal meer, gewoon terug naar intro)
-        function toonIntroScreen() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('screen-intro').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Oude modal functie (niet meer gebruikt, maar behouden voor legacy)
-        function toonIntroductie() {
-            const modal = document.createElement('div');
-            modal.style = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px;';
-            modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
-            
-            modal.innerHTML = `
-                <div style="background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border-radius: 24px; padding: 40px; max-width: 800px; max-height: 85vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(46, 204, 113, 0.3); border: 4px solid var(--primary);">
-                    <div style="text-align: center; margin-bottom: 40px; position: relative;">
-                        <h1 style="font-size: 3rem; margin: 20px 0 15px 0; color: var(--primary); text-shadow: 2px 2px 0 rgba(46, 204, 113, 0.1); font-weight: 800; letter-spacing: 2px;">SIJN</h1>
-                        <h2 style="font-size: 1.6rem; font-weight: 600; color: #166534; margin: 0; letter-spacing: 1px;">Sterk in je Netwerk</h2>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #f59e0b; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -30px; right: -30px; font-size: 8rem; opacity: 0.1; transform: rotate(15deg);">🌍</div>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3));">🌍</span>
-                            <h3 style="font-size: 1.5rem; color: #92400e; margin: 0; font-weight: 700;">Visie</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #78350f; margin-bottom: 15px;">
-                            Niemand staat op zichzelf. Mensen leven, herstellen en ontwikkelen zich in verbinding met anderen. 
-                            Die verbinding kan steun geven — maar kan ook ontbreken of beschadigd zijn.
-                        </p>
-                        <p style="font-size: 1.2rem; line-height: 1.9; color: #78350f; font-weight: 700; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 10px; margin: 0;">
-                            💪 Sterk zijn betekent niet alles alleen kunnen.<br>
-                            ✨ Sterk zijn betekent dat steun passend en gezond is georganiseerd.
-                        </p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #3b82f6; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -30px; right: -30px; font-size: 8rem; opacity: 0.1; transform: rotate(-15deg);">🎯</div>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.3));">🎯</span>
-                            <h3 style="font-size: 1.5rem; color: #1e40af; margin: 0; font-weight: 700;">Wat is SIJN?</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #1e3a8a;">
-                            SIJN is een meet- en gespreksinstrument dat inzicht geeft in hoe iemand ervoor staat en hoe steun is georganiseerd. 
-                            We kijken naar de huidige situatie, maken zichtbaar waar kracht en kwetsbaarheid zitten, en bepalen samen wat helpend is.
-                        </p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #ec4899; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -30px; right: -30px; font-size: 8rem; opacity: 0.1;">📍</div>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(236, 72, 153, 0.3));">📍</span>
-                            <h3 style="font-size: 1.5rem; color: #9f1239; margin: 0; font-weight: 700;">Wat meten we?</h3>
-                        </div>
-                        <div style="display: grid; gap: 12px;">
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">😊</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Hoe het gaat op verschillende levensgebieden</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">👥</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Of er steun aanwezig is</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">🌈</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Hoe steun is verdeeld</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">🎯</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Wat op dit moment nodig is</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #6366f1; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -30px; right: -30px; font-size: 8rem; opacity: 0.1; transform: rotate(25deg);">🧭</div>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(99, 102, 241, 0.3));">🧭</span>
-                            <h3 style="font-size: 1.5rem; color: #3730a3; margin: 0; font-weight: 700;">Wat doen we daarna?</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #312e81;">
-                            Soms is eerst <strong>stabiliseren</strong> nodig. Soms vraagt de situatie om <strong>herstel van relaties</strong>. 
-                            Soms is het nodig om steun <strong>anders te organiseren</strong>. En soms is het <strong>behouden</strong> van wat werkt voldoende.
-                        </p>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, #dcfce7 0%, #86efac 50%, #4ade80 100%); border: 4px solid #16a34a; padding: 30px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 10px; left: 10px; font-size: 3rem; opacity: 0.2;">✨</div>
-                        <div style="position: absolute; bottom: 10px; right: 10px; font-size: 3rem; opacity: 0.2;">💚</div>
-                        <div style="text-align: center; margin-bottom: 15px;">
-                            <span style="font-size: 3rem; filter: drop-shadow(0 4px 12px rgba(22, 163, 74, 0.4));">🔹</span>
-                        </div>
-                        <h3 style="font-size: 1.4rem; color: #14532d; margin-bottom: 15px; text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                            Kernzin
-                        </h3>
-                        <p style="font-size: 1.3rem; line-height: 2; color: #14532d; font-weight: 700; text-align: center; margin: 0; text-shadow: 1px 1px 0 rgba(255,255,255,0.5);">
-                            Sterk in je Netwerk betekent:<br>
-                            <span style="font-size: 1.4rem; color: #15803d;">✨ bewust kijken naar hoe steun is georganiseerd<br>— en waar beweging mogelijk is ✨</span>
-                        </p>
-                    </div>
-                    
-                    <button onclick="this.parentElement.parentElement.remove()" style="background: linear-gradient(135deg, var(--primary) 0%, #16a34a 100%); color: white; border: none; padding: 16px 32px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 4px 16px rgba(46, 204, 113, 0.4); transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;"
-                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 24px rgba(46, 204, 113, 0.6)';"
-                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 16px rgba(46, 204, 113, 0.4)';">
-                        ❌ Sluiten
-                    </button>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // Toon netwerkuitleg modal
-        function toonNetwerkUitleg(positie) {
-            const uitleg = getNetwerkUitleg(positie);
-            if (!uitleg) return;
-            
-            const modal = document.createElement('div');
-            modal.style = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-            modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
-            
-            modal.innerHTML = `
-                <div style="background: white; border-radius: 16px; padding: 30px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-                    <h3 style="margin: 0 0 20px 0; font-size: 1.5rem; color: var(--text);">${uitleg.titel}</h3>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 10px;">Wat betekent dit?</h4>
-                        <p style="font-size: 1rem; line-height: 1.6; color: var(--text);">${uitleg.betekenis}</p>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 10px;">Wat zie je vaak?</h4>
-                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
-                            ${uitleg.watZieJe.map(item => `<li style="color: var(--text);">${item}</li>`).join('')}
-                        </ul>
-                    </div>
-                    
-                    <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; border-radius: 8px;">
-                        <p style="font-size: 0.95rem; line-height: 1.6; color: #166534; margin: 0; font-style: italic;">
-                            <strong>💡 Belangrijk:</strong> ${uitleg.nuance}
-                        </p>
-                    </div>
-                    
-                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 20px; background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%;">
-                        Sluiten
-                    </button>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
         function getSIJNNetwerkPositie() {
             // Tel alle supporters over alle domeinen
             let totalSupporters = 0;
@@ -8324,81 +6952,69 @@ Antwoord in dit exacte JSON formaat:
         
         // Mogelijke richtingen vanuit huidige positie
         function getMogelijkeRichtingen(huidigePositie) {
-            // Gefaseerde netwerkstappen (eerstvolgende logische beweging)
             const richtingen = {
                 'geen': [
                     {
-                        naar: 'formeel',
-                        label: '→ Formeel netwerk opbouwen',
-                        context: 'Professionele steun kan stabilisatie bieden en veiligheid creëren. Dit is vaak een eerste noodzakelijke stap.',
+                        richting: 'formeel',
+                        label: 'Versterken via professional',
                         interventies: ['Aanmelden bij wijkteam', 'Vast aanspreekpunt regelen', 'Kortdurende begeleiding starten']
                     },
                     {
-                        naar: 'informeel',
-                        label: '→ Informeel netwerk opbouwen',
-                        context: 'Directe verbinding met familie, vrienden of buurt kan een eerste stap zijn bij voldoende draagkracht.',
+                        richting: 'informeel',
+                        label: 'Informele steun opbouwen',
                         interventies: ['Contact leggen met buren', 'Activiteit zoeken', 'Vrijwilliger koppelen']
                     }
                 ],
-                '1persoons': [
+                '1-persoons': [
                     {
-                        naar: 'formeel',
-                        label: '→ Stabiliseren via formele steun',
-                        context: 'Als één persoon overbelast raakt, kan professionele steun eerst nodig zijn voordat verbreding mogelijk is.',
-                        interventies: ['Aanmelden bij wijkteam', 'Respijtzorg regelen', 'Professional koppelen']
+                        richting: 'formeel',
+                        label: 'Versterken via professional',
+                        interventies: ['Aanmelden bij wijkteam', 'Vast aanspreekpunt regelen', 'Kortdurende begeleiding starten']
                     },
                     {
-                        naar: 'informeel',
-                        label: '→ Verbreden naar informeel netwerk',
-                        context: 'Uitbreiding naar meer informele contacten spreidt de verantwoordelijkheid en vermindert kwetsbaarheid.',
-                        interventies: ['Contact herstellen', 'Activiteit zoeken', 'Buurtinitiatief starten']
+                        richting: 'informeel',
+                        label: 'Informele steun uitbreiden',
+                        interventies: ['Contact herstellen', 'Activiteit zoeken', 'Buurtinitiatief']
                     },
                     {
-                        naar: 'gemengd',
-                        label: '→ Combineren: formeel + informeel',
-                        context: 'Tijdelijk professionele steun toevoegen terwijl informeel netwerk versterkt wordt.',
-                        interventies: ['Professional betrekken', 'Netwerk coördineren', 'Gezamenlijke aanpak']
+                        richting: 'gemengd',
+                        label: 'Tijdelijk gemengd organiseren',
+                        interventies: ['Professional betrekken bij familie', 'Buddy koppelen', 'Tijdelijke combinatie steun']
                     }
                 ],
                 'informeel': [
                     {
-                        naar: 'gemengd',
-                        label: '→ Uitbreiden met formele steun',
-                        context: 'Professionele ondersteuning toevoegen bij toenemende complexiteit of belasting van het informele netwerk.',
-                        interventies: ['Professional koppelen', 'Coördinatie verbeteren', 'Ondersteuning mantelzorgers']
+                        richting: 'gemengd',
+                        label: 'Professional erbij betrekken',
+                        interventies: ['Signaleren bij netwerk', 'Coördinatie verbeteren', 'Begeleiding voor mantelzorger']
                     },
                     {
-                        naar: 'formeel',
-                        label: '→ Overstap naar formeel netwerk',
-                        context: 'Bij acute situaties of als informeel netwerk onvoldoende kan dragen, kan volledige overstap naar formele zorg nodig zijn.',
-                        interventies: ['Aanmelden wijkteam', 'Dagbesteding organiseren', 'Thuiszorg inschakelen']
+                        richting: 'formeel',
+                        label: 'Meer professionele steun',
+                        interventies: ['Aanmelden bij wijkteam', 'Dagbesteding organiseren', 'Thuiszorg inschakelen']
                     }
                 ],
                 'formeel': [
                     {
-                        naar: 'gemengd',
-                        label: '→ Informeel netwerk erbij betrekken',
-                        context: 'Familie, vrienden of buurt betrekken naast professionele zorg. Vaak een eerste stap richting meer eigen regie.',
+                        richting: 'gemengd',
+                        label: 'Informeel netwerk versterken',
                         interventies: ['Familie betrekken', 'Buddy koppelen', 'Participatieactiviteit']
                     },
                     {
-                        naar: 'informeel',
-                        label: '→ Afbouwen naar informeel netwerk',
-                        context: 'Als situatie stabiel is en informeel netwerk sterk genoeg, kan professionele zorg afgebouwd worden. Dit is vaak een latere fase.',
-                        interventies: ['Geleidelijk afbouwen', 'Overdracht naar netwerk', 'Zelfstandigheid vergroten']
+                        richting: 'informeel',
+                        label: 'Afbouwen naar informeel',
+                        interventies: ['Overdracht naar netwerk', 'Zelfstandigheid vergroten', 'Netwerk activeren']
                     }
                 ],
                 'gemengd': [
                     {
-                        naar: 'informeel',
-                        label: '→ Afschalen naar informeel netwerk',
-                        context: 'Professionele steun afbouwen als informeel netwerk voldoende draagt en situatie stabiel is.',
-                        interventies: ['Geleidelijk afbouwen', 'Overdracht naar netwerk', 'Monitoring afspraken']
+                        richting: 'informeel',
+                        label: 'Afbouwen professionele steun',
+                        interventies: ['Overdracht naar netwerk', 'Zelfstandigheid vergroten', 'Netwerk activeren']
                     },
                     {
-                        naar: 'formeel',
-                        label: '→ Intensiveren naar formeel netwerk',
-                        context: 'Bij verslechtering of crisis kan tijdelijk meer professionele zorg nodig zijn.',
+                        richting: 'formeel',
+                        label: 'Meer professionele steun',
                         interventies: ['Intensivering zorg', 'Coördinatie verbeteren', 'Extra ondersteuning']
                     }
                 ]
@@ -8701,101 +7317,60 @@ Antwoord in dit exacte JSON formaat:
                 
                 <!-- BEVESTIGINGSVRAAG -->
                 <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1e40af; font-size: 1.1rem;">Voelt dit passend?</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px; line-height: 1.5;">
-                        Is deze manier van steun organiseren passend bij de situatie, of vraagt het om aanpassing?
-                    </p>
+                    <h3 style="margin: 0 0 15px 0; color: #1e40af; font-size: 1.1rem;">Klopt dit beeld?</h3>
                     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
                         <label style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; flex: 1; background: white; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#10b981'; this.style.background='#f0fdf4';"
+                               onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#eff6ff';"
                                onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }"
                                onclick="document.getElementById('netwerkToelichting').style.display='none';">
-                            <input type="radio" name="netwerkBevestiging" value="passend" style="width: 20px; height: 20px;">
-                            <span style="font-weight: 600;">✅ Voelt passend</span>
+                            <input type="radio" name="netwerkBevestiging" value="ja" style="width: 20px; height: 20px;">
+                            <span style="font-weight: 600;">✅ Ja</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; flex: 1; background: white; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#f59e0b'; this.style.background='#fefce8';"
+                               onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#eff6ff';"
                                onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }"
                                onclick="document.getElementById('netwerkToelichting').style.display='block';">
-                            <input type="radio" name="netwerkBevestiging" value="kwetsbaar" style="width: 20px; height: 20px;">
-                            <span style="font-weight: 600;">⚠️ Voelt kwetsbaar</span>
+                            <input type="radio" name="netwerkBevestiging" value="nee" style="width: 20px; height: 20px;">
+                            <span style="font-weight: 600;">❌ Nee</span>
                         </label>
                     </div>
                     <div id="netwerkToelichting" style="display: none;">
-                        <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 8px;">
-                            Wat maakt het kwetsbaar?
-                        </label>
-                        <textarea style="width: 100%; padding: 12px; border: 2px solid #f59e0b; border-radius: 8px; font-size: 0.95rem; min-height: 80px;"
-                                  placeholder="Bijv. te weinig spreiding, druk op één persoon, geen opvang bij tegenslag..."
+                        <textarea style="width: 100%; padding: 12px; border: 2px solid #3b82f6; border-radius: 8px; font-size: 0.95rem; min-height: 80px;"
+                                  placeholder="Korte toelichting: wat klopt er niet?"
                                   onchange="saveNetwerkBevestiging(this.value)"></textarea>
                     </div>
                 </div>
                 
                 <!-- BLOK 2: Visuele netwerkkaart -->
                 <div style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 20px 0; color: var(--text); font-size: 1.2rem;">Netwerkkaart</h3>
+                    <h3 style="margin: 0 0 20px 0; color: var(--text); font-size: 1.2rem;">🟡 Netwerkkaart</h3>
                     <div style="display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
                         ${posities.map(pos => {
                             const isHuidig = pos === netwerkInfo.positie;
-                            
-                            // SIJN kleuren per positie
-                            const positieKleuren = {
-                                'geen': { bg: '#f3f4f6', border: '#9ca3af', shadow: 'rgba(156, 163, 175, 0.2)', text: '#6b7280' },
-                                '1-persoons': { bg: '#fef3c7', border: '#f59e0b', shadow: 'rgba(245, 158, 11, 0.2)', text: '#92400e' },
-                                'formeel': { bg: '#dbeafe', border: '#3b82f6', shadow: 'rgba(59, 130, 246, 0.2)', text: '#1e40af' },
-                                'informeel': { bg: '#d1fae5', border: '#10b981', shadow: 'rgba(16, 185, 129, 0.2)', text: '#065f46' },
-                                'gemengd': { bg: '#ede9fe', border: '#8b5cf6', shadow: 'rgba(139, 92, 246, 0.2)', text: '#5b21b6' }
-                            };
-                            
-                            const kleur = positieKleuren[pos];
-                            
                             return `
                                 <div style="flex: 1; min-width: 120px; text-align: center; padding: 20px 15px; border-radius: 10px; 
-                                            ${isHuidig ? `background: ${kleur.bg}; border: 3px solid ${kleur.border}; box-shadow: 0 4px 12px ${kleur.shadow};` : `background: ${kleur.bg}; border: 2px solid ${kleur.border}; opacity: 0.4;`}
-                                            transition: all 0.3s; cursor: pointer;"
-                                     onclick="toonNetwerkUitleg('${pos}')"
-                                     onmouseover="this.style.opacity='1'; this.style.transform='translateY(-2px)';"
-                                     onmouseout="if('${isHuidig}' === 'false') this.style.opacity='0.4'; this.style.transform='translateY(0)';">
-                                    <div style="font-size: 0.8rem; font-weight: 600; color: ${kleur.text};">
+                                            ${isHuidig ? 'background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: 3px solid #15803d; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);' : 'background: #f9fafb; color: #9ca3af; border: 2px dashed #d1d5db;'}
+                                            transition: all 0.3s;">
+                                    <div style="font-size: 0.8rem; font-weight: 600; ${isHuidig ? 'color: white;' : 'color: #6b7280;'}">
                                         ${positieLabels[pos]}
                                     </div>
-                                    ${isHuidig ? `<div style="margin-top: 8px; font-size: 1.5rem; color: ${kleur.border};">●</div>` : ''}
-                                    <div style="font-size: 0.7rem; color: ${kleur.text}; margin-top: 5px; opacity: 0.7;">ⓘ Klik voor uitleg</div>
+                                    ${isHuidig ? '<div style="margin-top: 8px; font-size: 1.5rem;">●</div>' : ''}
                                 </div>
                             `;
                         }).join('')}
-                    </div>
-                    
-                    <!-- Context bij huidige positie -->
-                    <div style="margin-top: 20px; padding: 15px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px;">
-                        <div style="font-weight: 700; color: #166534; margin-bottom: 8px;">Dit kan passend zijn als:</div>
-                        <div style="font-size: 0.95rem; color: #15803d; line-height: 1.6;">
-                            ${getNetwerkContext(netwerkInfo.positie)}
-                        </div>
-                        <div style="font-size: 0.85rem; color: #166534; margin-top: 10px; font-style: italic;">
-                            💡 Geen enkele netwerkvorm is per definitie beter dan een andere.
-                        </div>
                     </div>
                 </div>
                 
                 <!-- BLOK 3: Mogelijke richtingen -->
                 <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 10px 0; color: #1e40af; font-size: 1.2rem;">Waar kan beweging helpend zijn?</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; line-height: 1.5;">
-                        Dit zijn geen doelen, maar opties die kunnen passen bij deze situatie.
-                    </p>
+                    <h3 style="margin: 0 0 20px 0; color: #1e40af; font-size: 1.2rem;">🔵 Welke bewegingen zijn mogelijk?</h3>
                     ${richtingen.length > 0 ? `
                         <div style="display: flex; flex-direction: column; gap: 15px;">
                             ${richtingen.map((richting, index) => `
                                 <div style="background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 15px;">
                                     <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">
-                                        ${richting.label}
+                                        ➜ ${richting.label}
                                     </div>
-                                    ${richting.context ? `
-                                        <div style="font-size: 0.85rem; color: #1e40af; font-style: italic; margin-bottom: 10px;">
-                                            ${richting.context}
-                                        </div>
-                                    ` : ''}
                                     <div id="interventies-${index}" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 2px solid #bfdbfe;">
                                         <!-- BLOK 4: Interventies per richting -->
                                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
@@ -8839,624 +7414,6 @@ Antwoord in dit exacte JSON formaat:
             `;
             
             container.innerHTML = html;
-        }
-        
-        // LEAN: Compact netwerkpositie scherm (zonder interventies)
-        function renderSIJNNetwerkkaartCompact() {
-            const container = document.getElementById('sijnNetwerkkaartCompact');
-            if (!container) return;
-            
-            const netwerkInfo = getSIJNNetwerkPositie();
-            const posities = ['geen', '1-persoons', 'informeel', 'formeel', 'gemengd'];
-            const positieLabels = {
-                'geen': 'Geen netwerk',
-                '1-persoons': '1-persoons',
-                'informeel': 'Informeel',
-                'formeel': 'Formeel',
-                'gemengd': 'Gemengd'
-            };
-            
-            let html = `
-                <!-- Huidige situatie -->
-                <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 15px 0; color: #166534;">Huidige netwerksituatie</h3>
-                    <p style="font-size: 1.05rem; line-height: 1.6; margin: 0;">
-                        ${netwerkInfo.beschrijving}
-                    </p>
-                </div>
-                
-                <!-- Visuele kaart -->
-                <div style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 20px 0;">Netwerkkaart</h3>
-                    <div style="display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-                        ${posities.map(pos => {
-                            const isHuidig = pos === netwerkInfo.positie;
-                            const positieKleuren = {
-                                'geen': { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' },
-                                '1-persoons': { bg: '#fef3c7', border: '#f59e0b', text: '#92400e' },
-                                'formeel': { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af' },
-                                'informeel': { bg: '#d1fae5', border: '#10b981', text: '#065f46' },
-                                'gemengd': { bg: '#ede9fe', border: '#8b5cf6', text: '#5b21b6' }
-                            };
-                            const kleur = positieKleuren[pos];
-                            
-                            return `
-                                <div style="flex: 1; min-width: 100px; text-align: center; padding: 15px 10px; border-radius: 10px; 
-                                            ${isHuidig ? `background: ${kleur.bg}; border: 3px solid ${kleur.border};` : `background: ${kleur.bg}; border: 2px solid ${kleur.border}; opacity: 0.4;`}
-                                            cursor: pointer;"
-                                     onclick="toonNetwerkUitleg('${pos}')"
-                                     onmouseover="this.style.opacity='1';"
-                                     onmouseout="if('${isHuidig}' === 'false') this.style.opacity='0.4';">
-                                    <div style="font-size: 0.85rem; font-weight: 600; color: ${kleur.text};">
-                                        ${positieLabels[pos]}
-                                    </div>
-                                    ${isHuidig ? `<div style="margin-top: 5px; font-size: 1.3rem; color: ${kleur.border};">●</div>` : ''}
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                
-                <!-- Bevestiging -->
-                <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <h3 style="margin: 0 0 10px 0; color: #1e40af;">Klopt dit?</h3>
-                    <div style="display: flex; gap: 15px;">
-                        <label style="flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;"
-                               onclick="saveNetwerkBevestiging('ja', '');">
-                            <input type="radio" name="netwerkCheck" value="ja" style="margin-right: 8px;">
-                            <span>✅ Ja, dit klopt</span>
-                        </label>
-                        <label style="flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;"
-                               onclick="document.getElementById('netwerkToelichting2').style.display='block';">
-                            <input type="radio" name="netwerkCheck" value="nee" style="margin-right: 8px;">
-                            <span>❌ Nee, dit klopt niet</span>
-                        </label>
-                    </div>
-                    <div id="netwerkToelichting2" style="display: none; margin-top: 15px;">
-                        <textarea style="width: 100%; padding: 12px; border: 2px solid #f59e0b; border-radius: 8px; min-height: 60px;"
-                                  placeholder="Waarom klopt dit niet? Wat zie je anders?"
-                                  onchange="saveNetwerkBevestiging('nee', this.value)"></textarea>
-                    </div>
-                </div>
-                
-                <!-- Context -->
-                <div style="padding: 15px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px;">
-                    <div style="font-weight: 600; color: #166534; margin-bottom: 8px;">Dit kan passend zijn als:</div>
-                    <div style="font-size: 0.95rem; color: #15803d; line-height: 1.6;">
-                        ${getNetwerkContext(netwerkInfo.positie)}
-                    </div>
-                </div>
-            `;
-            
-            container.innerHTML = html;
-        }
-        
-        // Voor/Na netwerkdiagram met pijl
-        function renderNetwerkBewegingDiagram() {
-            const container = document.getElementById('netwerkBewegingDiagram');
-            if (!container) return;
-            
-            const netwerkInfo = getSIJNNetwerkPositie();
-            const huidigPositie = netwerkInfo.positie;
-            const gekozenBeweging = state.beoogdeBeweging;
-            
-            // Mapping van posities naar kleuren
-            const positieKleuren = {
-                'geen': '#f3f4f6',
-                '1persoons': '#fef3c7',
-                'informeel': '#fef3c7',
-                'formeel': '#fce7f3',
-                'gemengd': '#fed7aa'
-            };
-            
-            const html = `
-                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; margin: 30px 0;">
-                    <!-- LINKS: Huidige positie -->
-                    <div>
-                        <h3 style="text-align: center; font-size: 1rem; color: var(--text-light); margin-bottom: 15px;">📍 Je bent hier</h3>
-                        <div style="background: white; border: 3px solid #3b82f6; border-radius: 12px; padding: 20px;">
-                            ${renderNetwerkDiagramSVG(huidigPositie, null)}
-                        </div>
-                        <div style="text-align: center; margin-top: 10px; font-weight: 600; color: #1e40af;">
-                            ${netwerkInfo.label}
-                        </div>
-                    </div>
-                    
-                    <!-- MIDDEN: Pijl -->
-                    <div style="text-align: center;">
-                        <div style="font-size: 3rem; color: ${gekozenBeweging ? '#10b981' : '#d1d5db'}; transition: all 0.3s;">
-                            →
-                        </div>
-                        ${gekozenBeweging ? `
-                            <div style="font-size: 0.75rem; color: #10b981; font-weight: 600; margin-top: 5px;">
-                                Keuze gemaakt
-                            </div>
-                        ` : `
-                            <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 5px;">
-                                Kies hieronder
-                            </div>
-                        `}
-                    </div>
-                    
-                    <!-- RECHTS: Klikbare opties -->
-                    <div>
-                        <h3 style="text-align: center; font-size: 1rem; color: var(--text-light); margin-bottom: 15px;">🎯 Kies richting</h3>
-                        <div style="background: white; border: 3px solid ${gekozenBeweging ? '#10b981' : '#e5e7eb'}; border-radius: 12px; padding: 20px; transition: all 0.3s;">
-                            ${renderNetwerkDiagramSVG(huidigPositie, gekozenBeweging)}
-                        </div>
-                        ${gekozenBeweging ? `
-                            <div style="text-align: center; margin-top: 10px; font-weight: 600; color: #10b981;">
-                                ${getNetwerkPositieLabel(gekozenBeweging)}
-                            </div>
-                        ` : `
-                            <div style="text-align: center; margin-top: 10px; font-size: 0.85rem; color: var(--text-light);">
-                                Selecteer hieronder
-                            </div>
-                        `}
-                    </div>
-                </div>
-                
-                <!-- Responsive: onder elkaar op mobiel -->
-                <style>
-                    @media (max-width: 768px) {
-                        #netwerkBewegingDiagram > div {
-                            grid-template-columns: 1fr !important;
-                        }
-                        #netwerkBewegingDiagram > div > div:nth-child(2) {
-                            transform: rotate(90deg);
-                        }
-                    }
-                </style>
-            `;
-            
-            container.innerHTML = html;
-        }
-        
-        // Helper: render SVG diagram (herbruikbaar)
-        function renderNetwerkDiagramSVG(huidigPositie, gekozenBeweging) {
-            const mogelijkeRichtingen = getMogelijkeRichtingen(huidigPositie).map(r => r.naar);
-            
-            return `
-                <svg width="100%" height="200" viewBox="0 0 400 200" style="max-width: 300px; margin: 0 auto; display: block;">
-                    <!-- GEMENGD (top left) -->
-                    <circle cx="100" cy="50" r="35" 
-                            fill="${gekozenBeweging === 'gemengd' ? '#10b981' : (huidigPositie === 'gemengd' ? '#3b82f6' : (mogelijkeRichtingen.includes('gemengd') ? '#fed7aa' : '#f3f4f6'))}"
-                            stroke="${huidigPositie === 'gemengd' ? '#1e40af' : '#d1d5db'}" 
-                            stroke-width="${huidigPositie === 'gemengd' ? '4' : '2'}"
-                            opacity="${mogelijkeRichtingen.includes('gemengd') || huidigPositie === 'gemengd' || gekozenBeweging === 'gemengd' ? '1' : '0.4'}" />
-                    <text x="100" y="55" text-anchor="middle" font-size="12" font-weight="600" fill="#333">GEMENGD</text>
-                    
-                    <!-- GEEN (top right) -->
-                    <circle cx="300" cy="50" r="35" 
-                            fill="${gekozenBeweging === 'geen' ? '#10b981' : (huidigPositie === 'geen' ? '#3b82f6' : (mogelijkeRichtingen.includes('geen') ? '#f3f4f6' : '#f3f4f6'))}"
-                            stroke="${huidigPositie === 'geen' ? '#1e40af' : '#d1d5db'}" 
-                            stroke-width="${huidigPositie === 'geen' ? '4' : '2'}"
-                            opacity="${mogelijkeRichtingen.includes('geen') || huidigPositie === 'geen' || gekozenBeweging === 'geen' ? '1' : '0.4'}" />
-                    <text x="300" y="55" text-anchor="middle" font-size="12" font-weight="600" fill="#333">GEEN</text>
-                    
-                    <!-- 1-PERSOONS (middle left) -->
-                    <circle cx="100" cy="120" r="35" 
-                            fill="${gekozenBeweging === '1persoons' ? '#10b981' : (huidigPositie === '1persoons' ? '#3b82f6' : (mogelijkeRichtingen.includes('1persoons') ? '#fef3c7' : '#f3f4f6'))}"
-                            stroke="${huidigPositie === '1persoons' ? '#1e40af' : '#d1d5db'}" 
-                            stroke-width="${huidigPositie === '1persoons' ? '4' : '2'}"
-                            opacity="${mogelijkeRichtingen.includes('1persoons') || huidigPositie === '1persoons' || gekozenBeweging === '1persoons' ? '1' : '0.4'}" />
-                    <text x="100" y="120" text-anchor="middle" font-size="11" font-weight="600" fill="#333">1-PERS</text>
-                    
-                    <!-- INFORMEEL (bottom left) -->
-                    <circle cx="100" cy="180" r="35" 
-                            fill="${gekozenBeweging === 'informeel' ? '#10b981' : (huidigPositie === 'informeel' ? '#3b82f6' : (mogelijkeRichtingen.includes('informeel') ? '#fef3c7' : '#f3f4f6'))}"
-                            stroke="${huidigPositie === 'informeel' ? '#1e40af' : '#d1d5db'}" 
-                            stroke-width="${huidigPositie === 'informeel' ? '4' : '2'}"
-                            opacity="${mogelijkeRichtingen.includes('informeel') || huidigPositie === 'informeel' || gekozenBeweging === 'informeel' ? '1' : '0.4'}" />
-                    <text x="100" y="182" text-anchor="middle" font-size="10" font-weight="600" fill="#333">INFORMEEL</text>
-                    
-                    <!-- FORMEEL (bottom right) -->
-                    <circle cx="300" cy="180" r="35" 
-                            fill="${gekozenBeweging === 'formeel' ? '#10b981' : (huidigPositie === 'formeel' ? '#3b82f6' : (mogelijkeRichtingen.includes('formeel') ? '#fce7f3' : '#f3f4f6'))}"
-                            stroke="${huidigPositie === 'formeel' ? '#1e40af' : '#d1d5db'}" 
-                            stroke-width="${huidigPositie === 'formeel' ? '4' : '2'}"
-                            opacity="${mogelijkeRichtingen.includes('formeel') || huidigPositie === 'formeel' || gekozenBeweging === 'formeel' ? '1' : '0.4'}" />
-                    <text x="300" y="182" text-anchor="middle" font-size="11" font-weight="600" fill="#333">FORMEEL</text>
-                </svg>
-            `;
-        }
-        
-        // Helper: get label voor positie
-        function getNetwerkPositieLabel(positie) {
-            const labels = {
-                'geen': 'Geen netwerk',
-                '1persoons': '1-persoonsnetwerk',
-                'informeel': 'Informeel netwerk',
-                'formeel': 'Formeel netwerk',
-                'gemengd': 'Gemengd netwerk'
-            };
-            return labels[positie] || positie;
-        }
-        
-        // LEAN: Bewegingskeuze scherm (DE KERN!)
-        function renderBewegingKeuzes() {
-            const container = document.getElementById('bewegingKeuzes');
-            if (!container) return;
-            
-            const netwerkInfo = getSIJNNetwerkPositie();
-            const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
-            
-            let html = `
-                <div style="background: #e0f2fe; border: 2px solid #0284c7; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <div style="font-size: 0.95rem; color: #075985; line-height: 1.6;">
-                        <strong>📍 Huidige positie:</strong> ${netwerkInfo.label}<br>
-                        <strong>🎯 Kies eerstvolgende stap:</strong> Welke netwerkbeweging is nu het meest helpend?
-                    </div>
-                </div>
-                
-                <h3 style="font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 15px;">Mogelijke volgende stappen:</h3>
-                
-                <div style="display: flex; flex-direction: column; gap: 15px;">
-                    ${richtingen.map((richting, index) => `
-                        <label style="display: block; padding: 20px; border: 3px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s; background: white;"
-                               onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#eff6ff';"
-                               onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }"
-                               onclick="selectBeweging('${richting.naar}', ${index});">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <input type="radio" name="beweging" value="${richting.naar}" style="width: 24px; height: 24px;">
-                                <div style="flex: 1;">
-                                    <div style="font-size: 1.1rem; font-weight: 700; color: #1e40af; margin-bottom: 8px;">
-                                        ${richting.label}
-                                    </div>
-                                    ${richting.context ? `
-                                        <div style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;">
-                                            ${richting.context}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </label>
-                    `).join('')}
-                </div>
-            `;
-            
-            container.innerHTML = html;
-        }
-        
-        // LEAN: Interventies voor gekozen beweging
-        function renderInterventiesVoorBeweging() {
-            const container = document.getElementById('interventiesVoorBeweging');
-            if (!container) return;
-            
-            // Vul postcode veld in als die er is
-            setTimeout(() => {
-                const postcodeInput = document.getElementById('postcodeFilter');
-                if (postcodeInput && state.postcode) {
-                    postcodeInput.value = state.postcode;
-                }
-            }, 100);
-            
-            const gekozenBeweging = state.beoogdeBeweging;
-            if (!gekozenBeweging) {
-                container.innerHTML = '<p style="color: var(--text-light);">Geen beweging gekozen.</p>';
-                return;
-            }
-            
-            const netwerkInfo = getSIJNNetwerkPositie();
-            const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
-            const richting = richtingen.find(r => r.naar === gekozenBeweging);
-            
-            if (!richting || !richting.interventies) {
-                container.innerHTML = '<p style="color: var(--text-light);">Geen interventies beschikbaar.</p>';
-                return;
-            }
-            
-            // Voeg lokale interventies toe als postcode is ingevuld
-            let interventies = [...richting.interventies];
-            if (state.postcode) {
-                const regio = state.postcode.substring(0, 4);
-                const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
-                
-                // Voeg lokale collectieve en formele interventies toe
-                interventies = [
-                    ...interventies,
-                    ...lokaal.collectief.map(i => `${i} (lokaal collectief)`),
-                    ...lokaal.formeel.map(i => `${i} (lokaal formeel)`)
-                ];
-                
-                // Voeg doelgroep-specifieke lokale interventies toe
-                if (state.doelgroepen && state.doelgroepen.length > 0) {
-                    state.doelgroepen.forEach(doelgroep => {
-                        if (lokaal[doelgroep]) {
-                            interventies = [
-                                ...interventies,
-                                ...lokaal[doelgroep].map(i => `${i} (lokaal ${doelgroep})`)
-                            ];
-                        }
-                    });
-                }
-            }
-            
-            // Voeg custom interventies toe als die er zijn
-            if (state.customInterventies && state.customInterventies.length > 0) {
-                interventies = [
-                    ...interventies,
-                    ...state.customInterventies.map(i => `${i} (eigen toevoeging)`)
-                ];
-            }
-            
-            let html = `
-                <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">Gekozen beweging:</div>
-                    <div style="font-size: 1.05rem; color: var(--text);">${richting.label}</div>
-                </div>
-                
-                <p style="margin-bottom: 20px; color: var(--text-light);">
-                    Selecteer maximaal 3 concrete acties. Per actie kun je aangeven waar de focus ligt.
-                </p>
-                
-                <div style="display: grid; gap: 15px;">
-                    ${interventies.map((interventie, index) => `
-                        <label style="display: block; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; background: white; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#f0f9ff';"
-                               onmouseout="this.style.borderColor='#e0e0e0'; this.style.background='white';">
-                            <div style="display: flex; align-items: start; gap: 12px;">
-                                <input type="checkbox" 
-                                       id="interventie_${index}"
-                                       style="width: 20px; height: 20px; margin-top: 2px;"
-                                       onchange="toggleInterventie(${index}, this.checked)">
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: var(--text); margin-bottom: 10px;">
-                                        ${interventie}
-                                    </div>
-                                    <div id="focus_${index}" style="display: none; padding-top: 10px; border-top: 1px solid #e0e0e0;">
-                                        <!-- Bij wie / contactpersoon -->
-                                        <div style="margin-bottom: 12px;">
-                                            <label style="font-size: 0.85rem; color: var(--text-light); display: block; margin-bottom: 6px;">
-                                                👤 Bij wie / contactpersoon:
-                                            </label>
-                                            <input type="text" 
-                                                   id="contact_${index}"
-                                                   placeholder="Bijv. Jan de Vries, wijkverpleegkundige"
-                                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem;"
-                                                   onchange="saveInterventieContact(${index}, this.value)">
-                                            <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 4px; margin-bottom: 0; font-style: italic;">
-                                                💡 Optioneel: noteer de naam van de persoon binnen deze organisatie
-                                            </p>
-                                        </div>
-                                        
-                                        <!-- Focus -->
-                                        <div>
-                                            <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px;">Focus:</div>
-                                            <div style="display: flex; gap: 12px;">
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Cliënt</span>
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Netwerk</span>
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Beiden</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                    `).join('')}
-                </div>
-                
-                <!-- Handmatige toevoeging -->
-                <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border: 2px dashed #f59e0b; border-radius: 12px;">
-                    <h4 style="font-size: 1rem; font-weight: 600; color: #92400e; margin: 0 0 12px 0;">
-                        ➕ Eigen interventie toevoegen
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #78350f; margin-bottom: 12px;">
-                        Staat je interventie er niet bij? Voeg deze hier toe:
-                    </p>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" 
-                               id="customInterventie"
-                               placeholder="Bijv. Schuldhulpmaatje via kerk"
-                               style="flex: 1; padding: 10px 14px; border: 2px solid #fbbf24; border-radius: 8px; font-size: 0.95rem;">
-                        <button class="btn" 
-                                onclick="addCustomInterventie()"
-                                style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap;">
-                            Toevoegen
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            container.innerHTML = html;
-        }
-        
-        // Voeg custom interventie toe
-        function addCustomInterventie() {
-            const input = document.getElementById('customInterventie');
-            const interventie = input.value.trim();
-            
-            if (!interventie) {
-                alert('⚠️ Vul eerst een interventie in');
-                return;
-            }
-            
-            // Sla custom interventie op in state
-            if (!state.customInterventies) {
-                state.customInterventies = [];
-            }
-            state.customInterventies.push(interventie);
-            saveState();
-            
-            // Toon feedback
-            alert(`✅ Interventie toegevoegd: "${interventie}"`);
-            
-            // Reset input
-            input.value = '';
-            
-            // Herlaad interventies
-            renderInterventiesVoorBeweging();
-        }
-        
-        // Helper: Selecteer beweging
-        function selectBeweging(naar, index) {
-            state.beoogdeBeweging = naar;
-            saveState();
-            document.getElementById('btnNaarInterventies').disabled = false;
-            renderNetwerkBewegingDiagram(); // Update diagram met gekozen beweging
-        }
-        
-        // Filter interventies op basis van postcode
-        function filterInterventiesByPostcode() {
-            const postcodeInput = document.getElementById('postcodeFilter');
-            const postcode = postcodeInput.value.trim().toUpperCase();
-            
-            if (!postcode) {
-                alert('⚠️ Vul eerst een postcode in (bijv. 1234AB)');
-                return;
-            }
-            
-            // Valideer postcode format (4 cijfers + 2 letters)
-            const postcodeRegex = /^[0-9]{4}[A-Z]{2}$/;
-            if (!postcodeRegex.test(postcode)) {
-                alert('⚠️ Ongeldige postcode. Gebruik format: 1234AB');
-                return;
-            }
-            
-            // Sla postcode op in state (voor LARGE analyse)
-            state.postcode = postcode;
-            saveState();
-            
-            // Haal regio (eerste 4 cijfers)
-            const regio = postcode.substring(0, 4);
-            
-            // Haal lokale interventies
-            const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
-            
-            // Bepaal regio naam
-            const regioNamen = {
-                '1000': 'Amsterdam',
-                '3000': 'Rotterdam',
-                '2000': 'Haarlem'
-            };
-            const regioNaam = regioNamen[regio] || 'jouw regio';
-            
-            // Toon lokale voorzieningen overzicht
-            const overzichtContainer = document.getElementById('lokaleVoorzieningenOverzicht');
-            if (overzichtContainer) {
-                // Doelgroep config voor labels en kleuren
-                const doelgroepConfig = {
-                    ggz: { emoji: '🧠', label: 'GGZ', color: '#3b82f6', bg: '#dbeafe' },
-                    jongeren: { emoji: '👤', label: 'Jongeren', color: '#8b5cf6', bg: '#ede9fe' },
-                    mantelzorgers: { emoji: '🤝', label: 'Mantelzorgers', color: '#ec4899', bg: '#fce7f3' },
-                    ouderen: { emoji: '👴', label: 'Ouderen', color: '#f59e0b', bg: '#fef3c7' },
-                    multiproblem: { emoji: '🔄', label: 'Multi-problematiek', color: '#ef4444', bg: '#fee2e2' },
-                    sociaalmaatschappelijk: { emoji: '🏘️', label: 'Sociaal-maatschappelijk', color: '#10b981', bg: '#d1fae5' }
-                };
-                
-                let html = `
-                    <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <span style="font-size: 1.3rem;">✅</span>
-                            <h3 style="font-size: 1.1rem; font-weight: 700; color: #065f46; margin: 0;">Lokale voorzieningen in ${regioNaam} (${postcode})</h3>
-                        </div>
-                        
-                        <!-- Algemene voorzieningen -->
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <span>🤝</span> Collectieve voorzieningen (buurthuizen, vrijwilligers)
-                            </h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                ${lokaal.collectief.map(voorziening => `
-                                    <div style="background: white; border: 2px solid #86efac; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 1.1rem;">📍</span>
-                                        <span style="font-size: 0.9rem; font-weight: 600; color: #065f46;">${voorziening}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <span>🏥</span> Formele voorzieningen (professionals, wijkteams)
-                            </h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                ${lokaal.formeel.map(voorziening => `
-                                    <div style="background: white; border: 2px solid #86efac; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 1.1rem;">🏢</span>
-                                        <span style="font-size: 0.9rem; font-weight: 600; color: #065f46;">${voorziening}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                `;
-                
-                // Voeg doelgroep-specifieke voorzieningen toe als die doelgroep geselecteerd is
-                if (state.doelgroepen && state.doelgroepen.length > 0) {
-                    html += `<hr style="border: none; border-top: 2px dashed #86efac; margin: 20px 0;">`;
-                    html += `<h4 style="font-size: 1.05rem; font-weight: 700; color: #047857; margin-bottom: 15px;">🎯 Doelgroep-specifieke voorzieningen</h4>`;
-                    
-                    state.doelgroepen.forEach(doelgroep => {
-                        if (lokaal[doelgroep] && lokaal[doelgroep].length > 0) {
-                            const config = doelgroepConfig[doelgroep];
-                            html += `
-                                <div style="margin-bottom: 15px;">
-                                    <h5 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; color: ${config.color};">
-                                        <span>${config.emoji}</span> ${config.label}
-                                    </h5>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                        ${lokaal[doelgroep].map(voorziening => `
-                                            <div style="background: ${config.bg}; border: 2px solid ${config.color}; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 1.1rem;">${config.emoji}</span>
-                                                <span style="font-size: 0.9rem; font-weight: 600; color: #1f2937;">${voorziening}</span>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    });
-                }
-                
-                html += `
-                        <p style="font-size: 0.85rem; color: #047857; margin-top: 15px; margin-bottom: 0; font-style: italic;">
-                            💡 Deze voorzieningen zijn automatisch toegevoegd aan de interventies hieronder.
-                        </p>
-                    </div>
-                `;
-                
-                overzichtContainer.innerHTML = html;
-            }
-            
-            // Herlaad interventies met lokale opties
-            renderInterventiesVoorBeweging();
-            
-            console.log('Postcode gefilterd:', postcode, 'Regio:', regio, 'Lokale interventies:', lokaal);
-        }
-        
-        // Helper: Toggle interventie
-        function toggleInterventie(index, checked) {
-            const focusDiv = document.getElementById(`focus_${index}`);
-            if (focusDiv) {
-                focusDiv.style.display = checked ? 'block' : 'none';
-            }
-            
-            // Tel geselecteerde interventies
-            const selected = document.querySelectorAll('#interventiesVoorBeweging input[type="checkbox"]:checked').length;
-            if (selected > 3) {
-                document.getElementById(`interventie_${index}`).checked = false;
-                focusDiv.style.display = 'none';
-                alert('Maximaal 3 interventies selecteren');
-            }
-        }
-        
-        // Sla contactpersoon per interventie op (voor LARGE tracking)
-        function saveInterventieContact(index, contact) {
-            if (!state.interventieContacts) {
-                state.interventieContacts = {};
-            }
-            state.interventieContacts[index] = contact;
-            saveState();
-            console.log('Contactpersoon opgeslagen voor interventie', index, ':', contact);
         }
         
         // Render results
@@ -9726,11 +7683,11 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // OpenAI API configuration
-        // OpenAI key is now stored server-side in .env
+        const OPENAI_API_KEY = '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';
         
         // Brave Search API configuration
         // Get your free API key at: https://brave.com/search/api/
-        // Brave search is proxied through the server at /brave-search
+        const BRAVE_API_KEY = 'BSAX21VLfhXyIjl8tzWViFXlaDC4Mql';
 
         // Generate SIJN-based advice with GPT
         async function renderAdvice(forceRegenerate = false) {
@@ -9848,10 +7805,11 @@ Geef je antwoord in dit exacte HTML-formaat:
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -10093,10 +8051,11 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
@@ -10965,7 +8924,7 @@ END:VEVENT
             if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
                 localStorage.removeItem('welzijnswerker_v2');
                 state = {
-                    version: '3.0',
+                    version: '2.4',
                     clientId: 'client_' + Date.now(),
                     createdAt: new Date().toISOString(),
                     updatedAt: null,
@@ -11001,12 +8960,12 @@ END:VEVENT
                         kanbanLog: []
                     }
                 };
-                document.querySelectorAll('input[name="modus"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[name="doelVandaag"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+                document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
                 document.getElementById('professionalFields').style.display = 'none';
-                if (document.getElementById('postcodeFilter')) document.getElementById('postcodeFilter').value = '';
-                if (document.getElementById('professionalName')) document.getElementById('professionalName').value = '';
+                document.getElementById('postcode').value = '';
+                document.getElementById('professionalName').value = '';
+                document.getElementById('viewTabs').style.display = 'none';
+                switchView('assessment');
                 goToScreen(1);
             }
         }
@@ -11015,42 +8974,30 @@ END:VEVENT
         loadState();
         renderProgressSteps();
         
-        // Herstel doelgroep-checkboxes
-        if (state.doelgroepen && state.doelgroepen.length > 0) {
-            state.doelgroepen.forEach(doelgroep => {
-                const checkbox = document.getElementById(`doelgroep-${doelgroep}`);
-                if (checkbox) {
-                    checkbox.checked = true;
-                }
-            });
-        }
-        
-        // Start op INTRO scherm (scherm 1)
-        if (state.currentScreen && state.currentScreen >= 1) {
-            // Hervat waar je was
-            goToScreen(state.currentScreen);
+        // Als geen mode gekozen, toon intro
+        if (!state.mode) {
+            // Toon intro-scherm
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-intro').classList.add('active');
+        } else if (state.currentScreen > 1) {
+            document.getElementById('viewTabs').style.display = 'flex';
+            if (state.currentView === 'kanban') {
+                switchView('kanban');
+            } else if (state.currentView === 'agenda') {
+                switchView('agenda');
+            } else {
+                goToScreen(state.currentScreen);
+            }
         } else {
-            // Begin bij intro (scherm 1)
+            // Mode is gekozen, maar nog op scherm 1 (start)
             goToScreen(1);
         }
         
-        // Herstel mode keuze
         if (state.mode) {
-            const modeRadio = document.querySelector(`input[name="modus"][value="${state.mode}"]`);
-            if (modeRadio) {
-                modeRadio.checked = true;
-            }
+            document.querySelector(`[data-mode="${state.mode}"]`)?.classList.add('selected');
             if (state.mode === 'professional') {
                 document.getElementById('professionalFields').style.display = 'block';
                 document.getElementById('professionalName').value = state.professionalName || '';
-            }
-        }
-        
-        // Herstel doel van vandaag
-        if (state.doelVandaag) {
-            const doelRadio = document.querySelector(`input[name="doelVandaag"][value="${state.doelVandaag}"]`);
-            if (doelRadio) {
-                doelRadio.checked = true;
             }
         }
         if (state.postcode) {
