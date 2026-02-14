@@ -5668,6 +5668,7 @@ Antwoord in dit exacte JSON formaat:
         function renderProgressSteps() {
             const config = getScreenConfig();
             const container = document.getElementById('progressSteps');
+            if (!container) return;
             
             container.innerHTML = config.map((step, i) => {
                 const stepNum = i + 1;
