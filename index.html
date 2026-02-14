@@ -4335,10 +4335,10 @@
 
         // Score-to-emoji/color helpers
         function scoreEmoji(score) {
-            return scoreEmoji(score);
+            return score === 1 ? '🔴' : score === 2 ? '🟡' : score === 3 ? '🟢' : '⚪';
         }
         function scoreColor(score) {
-            return scoreColor(score);
+            return score === 1 ? '#dc2626' : score === 2 ? '#eab308' : score === 3 ? '#10b981' : '#94a3b8';
         }
 
         // Brave API key (not used - searches go through proxy)
