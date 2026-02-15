@@ -3567,40 +3567,61 @@
         <!-- Assessment View -->
         <div class="view-section active" id="view-assessment">
             <!-- Progress Bar - Dynamic Steps -->
+            <!-- Voortgangsindicator (Lisa feedback) -->
+            <div id="voortgangsPercentage" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 12px 20px; text-align: center; border-bottom: 2px solid var(--primary); display: none;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px;">
+                    <span id="voortgangTekst">Stap 1 van 11: Intro</span> <span id="voortgangEmoji">🌈</span>
+                </div>
+                <div style="width: 100%; max-width: 400px; height: 8px; background: #d1fae5; border-radius: 10px; margin: 0 auto; overflow: hidden;">
+                    <div id="voortgangBalk" style="height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 10px; width: 9%; transition: width 0.4s ease;"></div>
+                </div>
+                <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
+                    <span id="voortgangPercentageTekst">9%</span> voltooid
+                </div>
+            </div>
+
             <!-- Workflow bolletjes (zonder pijltjes) -->
             <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
-                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
-                    <div class="workflow-step" data-step="1" tabindex="0" onclick="goToScreen(1);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(1);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid var(--primary); transition: all 0.3s; pointer-events: none;">🌈</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text); pointer-events: none;">Intro</div>
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <div class="workflow-step" data-step="1" tabindex="0" onclick="goToScreen(1);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(1);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid var(--primary); transition: all 0.3s; pointer-events: none;">🌈</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text); pointer-events: none;">Intro</div>
                     </div>
-                    <div class="workflow-step" data-step="2" tabindex="0" onclick="goToScreen(2);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(2);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🏠</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Start</div>
+                    <div class="workflow-step" data-step="2" tabindex="0" onclick="goToScreen(2);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(2);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🏠</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Start</div>
                     </div>
-                    <div class="workflow-step" data-step="3" tabindex="0" onclick="goToScreen(3);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(3);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📊</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Domeinscan</div>
+                    <div class="workflow-step" data-step="3" tabindex="0" onclick="goToScreen(3);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(3);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🎯</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Triage</div>
                     </div>
-                    <div class="workflow-step" data-step="4" tabindex="0" onclick="goToScreen(4);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(4);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📋</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Overzicht</div>
+                    <div class="workflow-step" data-step="4" tabindex="0" onclick="goToScreen(4);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(4);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📊</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Domeinscan</div>
                     </div>
-                    <div class="workflow-step" data-step="5" tabindex="0" onclick="goToScreen(5);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(5);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🕸️</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Netwerk</div>
+                    <div class="workflow-step" data-step="5" tabindex="0" onclick="goToScreen(5);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(5);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">👥</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Steun</div>
                     </div>
-                    <div class="workflow-step" data-step="6" tabindex="0" onclick="goToScreen(6);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(6);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🎯</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Volgende stap</div>
+                    <div class="workflow-step" data-step="6" tabindex="0" onclick="goToScreen(6);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(6);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📋</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Overzicht</div>
                     </div>
-                    <div class="workflow-step" data-step="7" tabindex="0" onclick="goToScreen(7);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(7);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔧</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Interventies</div>
+                    <div class="workflow-step" data-step="7" tabindex="0" onclick="goToScreen(7);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(7);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🕸️</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Netwerk</div>
                     </div>
-                    <div class="workflow-step" data-step="8" tabindex="0" onclick="goToScreen(8);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(8);}" style="text-align: center; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin: 0 auto 5px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📄</div>
-                        <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Samenvatting</div>
+                    <div class="workflow-step" data-step="8" tabindex="0" onclick="goToScreen(8);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(8);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔄</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Beweging</div>
+                    </div>
+                    <div class="workflow-step" data-step="9" tabindex="0" onclick="goToScreen(9);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(9);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔧</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Interventies</div>
+                    </div>
+                    <div class="workflow-step" data-step="10" tabindex="0" onclick="goToScreen(10);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(10);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📄</div>
+                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Besluit</div>
                     </div>
                 </div>
             </div>
@@ -3788,6 +3809,33 @@
                             💡 Pijlen tonen <strong>mogelijke bewegingen</strong>. In deze scan kiezen we bewust: 
                             <span style="color: #15803d; font-weight: 600;">waar moet steun gepositioneerd worden?</span>
                         </p>
+                    </div>
+
+                    <!-- Tijd- en auto-save indicatie (Lisa + Karin feedback) -->
+                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: 20px; margin: 30px 0; border: 2px solid #0ea5e9;">
+                        <div style="display: grid; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.5rem;">⏱️</span>
+                                <div>
+                                    <div style="font-weight: 700; color: #075985; font-size: 0.95rem;">Geschatte tijd: 25-30 minuten</div>
+                                    <div style="font-size: 0.85rem; color: #0c4a6e;">11 stappen — je kunt tussendoor pauzeren</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.5rem;">💾</span>
+                                <div>
+                                    <div style="font-weight: 700; color: #075985; font-size: 0.95rem;">Je voortgang wordt automatisch opgeslagen</div>
+                                    <div style="font-size: 0.85rem; color: #0c4a6e;">Je kunt later op dezelfde computer verder</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.5rem;">🔬</span>
+                                <div>
+                                    <div style="font-weight: 700; color: #075985; font-size: 0.95rem;">Dit instrument is in ontwikkeling</div>
+                                    <div style="font-size: 0.85rem; color: #0c4a6e;">Versie 3.0 — toetsingsfase</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="btn-group" style="margin-top: 30px;">
@@ -4138,12 +4186,44 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(9)">Volgende →</button>
+                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreen(9)">Volgende →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 7: Interventies (LEAN) -->
+            <!-- Screen 9: Strategische Reflectie (RPA Stap 3) -->
+            <div class="screen" id="screen-reflectie">
+                <div class="card">
+                    <h2>💭 Strategische Reflectie</h2>
+                    <p style="color: var(--text-light); margin-bottom: 10px; font-size: 1.05rem;">
+                        Nu je positionele keuzes hebt gemaakt, reflecteren we op de haalbaarheid en impact.
+                    </p>
+                    
+                    <!-- Uitleg Strategische Analyse -->
+                    <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-left: 4px solid #6366f1; padding: 20px; margin-bottom: 30px; border-radius: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <span style="font-size: 2rem;">📖</span>
+                            <h3 style="font-size: 1.2rem; color: #3730a3; margin: 0; font-weight: 700;">Strategische Analyse</h3>
+                        </div>
+                        <p style="margin: 0; font-size: 0.95rem; color: #312e81; line-height: 1.7;">
+                            <strong>Analyse zonder besluit = blijven hangen in het systeemplafond.</strong><br>
+                            Positionele keuzes zonder reflectie op haalbaarheid, proportionaliteit en regie leiden niet tot duurzame verandering.
+                            Deze stap helpt om bewust te blijven van wat de gekozen beweging betekent.
+                        </p>
+                    </div>
+
+                    <div id="reflectieVragen" style="margin-bottom: 30px;">
+                        <!-- Wordt gevuld door renderReflectieVragen() -->
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(8)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(10)">Naar interventies →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 10: Interventies (LEAN) -->
             <div class="screen" id="screen-interventies">
                 <div class="card">
                     <h2>🔧 Interventies</h2>
@@ -5641,13 +5721,14 @@
         const screenConfigBase = [
             { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
-            { id: 'triage', label: 'Selecteer domeinen', emoji: '🎯' },
-            { id: 'domains', label: 'Domeinscan', emoji: '📊' },
-            { id: 'huidige-steun', label: 'Huidige steun', emoji: '👥' },
+            { id: 'triage', label: 'Waar speelt het?', emoji: '🎯' },
+            { id: 'domains', label: 'Hoe gaat het?', emoji: '📊' },
+            { id: 'huidige-steun', label: 'Wie helpt nu?', emoji: '👥' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
-            { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Positionele keuze', emoji: '🔄' },
-            { id: 'interventies', label: 'Interventies', emoji: '🔧' },
+            { id: 'netwerkpositie', label: 'Netwerkkaart', emoji: '🕸️' },
+            { id: 'beweging', label: 'Wat moet veranderen?', emoji: '🔄' },
+            { id: 'reflectie', label: 'Is dit realistisch?', emoji: '💭' },
+            { id: 'interventies', label: 'Wat gaan we doen?', emoji: '🔧' },
             { id: 'samenvatting', label: 'Besluit', emoji: '📄' }
         ];
 
@@ -5731,6 +5812,11 @@
             // Ondersteuningsstructuur per domein (voor Medium → Large koppeling)
             ondersteuningsstructuur: {
                 // Format: { '0': { draaglagen: ['informeel', 'collectief', 'formeel'], collectiefDetail: ['schuldhulpmaatje'], formeelDetail: ['budgetbeheer'], bewegingsrichting: 'stabiliseren' } }
+            },
+            
+            // Strategische reflectie per domein (RPA Stap 3)
+            strategischeReflectie: {
+                // Format: { '0': { duurzaamheid: 'haalbaar', proportionaliteit: 'proportioneel', verantwoordelijke: 'Naam', evaluatieDatum: '2023-06-01', toelichting: '...' } }
             }
         };
 
@@ -5750,13 +5836,28 @@
                         kanbanLog: []
                     };
                 }
-                // Migrate scores from 1-10 to 1-5 scale
+                // Ensure strategischeReflectie exists (migration for RPA Stap 3)
+                if (!parsed.strategischeReflectie) {
+                    parsed.strategischeReflectie = {};
+                }
+                // Ensure ondersteuningsstructuur exists
+                if (!parsed.ondersteuningsstructuur) {
+                    parsed.ondersteuningsstructuur = {};
+                }
+                // Migrate scores from old 1-10 scale to current 1-3 scale
+                // 1-3 → 1 (🔴 Actie nodig), 4-7 → 2 (🟡 Kwetsbaar), 8-10 → 3 (🟢 Stabiel)
                 if (parsed.scores) {
                     Object.keys(parsed.scores).forEach(key => {
                         const oldScore = parsed.scores[key];
-                        if (oldScore > 5) {
-                            // Convert 1-10 to 1-5: Math.ceil(score / 2)
-                            parsed.scores[key] = Math.ceil(oldScore / 2);
+                        if (oldScore > 3) {
+                            // Convert old 1-10 or 1-5 scores to 1-3 scale
+                            if (oldScore >= 8) {
+                                parsed.scores[key] = 3; // Stabiel
+                            } else if (oldScore >= 4) {
+                                parsed.scores[key] = 2; // Kwetsbaar
+                            } else {
+                                parsed.scores[key] = 1; // Actie nodig
+                            }
                         }
                     });
                 }
@@ -6346,6 +6447,7 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'network') renderDashboard();
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
             if (screenId === 'beweging') renderVoorNaVisualisatie();
+            if (screenId === 'reflectie') renderReflectieVragen();
             if (screenId === 'interventies') { 
                 renderInterventiesVoorBeweging();
                 renderConcreteVoorzieningen();
@@ -6389,6 +6491,38 @@ Antwoord in dit exacte JSON formaat:
                     label.style.fontWeight = '600';
                 }
             });
+            
+            // Update voortgangsindicator (Lisa feedback)
+            const config = getScreenConfig();
+            const totalSteps = config.length;
+            const percentage = Math.round((currentStep / totalSteps) * 100);
+            const currentScreenConfig = config[currentStep - 1];
+            
+            const voortgangDiv = document.getElementById('voortgangsPercentage');
+            const voortgangTekst = document.getElementById('voortgangTekst');
+            const voortgangEmoji = document.getElementById('voortgangEmoji');
+            const voortgangBalk = document.getElementById('voortgangBalk');
+            const voortgangPercentageTekst = document.getElementById('voortgangPercentageTekst');
+            
+            if (voortgangDiv && currentStep > 1) {
+                // Toon voortgangsbalk vanaf stap 2 (niet op intro)
+                voortgangDiv.style.display = 'block';
+                if (voortgangTekst && currentScreenConfig) {
+                    voortgangTekst.textContent = `Stap ${currentStep} van ${totalSteps}: ${currentScreenConfig.label}`;
+                }
+                if (voortgangEmoji && currentScreenConfig) {
+                    voortgangEmoji.textContent = currentScreenConfig.emoji;
+                }
+                if (voortgangBalk) {
+                    voortgangBalk.style.width = percentage + '%';
+                }
+                if (voortgangPercentageTekst) {
+                    voortgangPercentageTekst.textContent = percentage + '%';
+                }
+            } else if (voortgangDiv) {
+                // Verberg op intro
+                voortgangDiv.style.display = 'none';
+            }
         }
 
         // Load hulpvraag data
@@ -12640,7 +12774,167 @@ END:VEVENT
                 state.ondersteuningsstructuur[domainId] = { draaglagen: [], bewegingsrichting: null };
             }
             
+            // VEILIGHEIDSCHECK: Waarschuwing bij afschalen formeel + kwetsbare doelgroepen (Suus feedback)
+            if (richting === 'afschalen' && state.doelgroepen) {
+                const kwetsbareDoelgroepen = ['ggz', 'jongeren', 'ouderen'];
+                const isKwetsbaar = state.doelgroepen.some(dg => kwetsbareDoelgroepen.includes(dg));
+                
+                if (isKwetsbaar) {
+                    const domainName = domains.find(d => d.id === domainId)?.name || 'dit domein';
+                    const doelgroepenTekst = state.doelgroepen.filter(dg => kwetsbareDoelgroepen.includes(dg))
+                        .map(dg => {
+                            return { 'ggz': 'GGZ', 'jongeren': 'jongeren', 'ouderen': 'ouderen' }[dg];
+                        }).join(', ');
+                    
+                    const confirmed = confirm(
+                        `⚠️ VEILIGHEIDSCHECK\n\n` +
+                        `Je kiest voor "Afschalen formeel" bij ${domainName}.\n` +
+                        `Doelgroep: ${doelgroepenTekst}\n\n` +
+                        `Let op: Bij kwetsbare doelgroepen alleen afschalen formeel:\n` +
+                        `• Ná stabilisatie\n` +
+                        `• Met veiligheidsplan\n` +
+                        `• In overleg met behandelaar/hulpverlener\n\n` +
+                        `Is dit veilig en verantwoord?`
+                    );
+                    
+                    if (!confirmed) {
+                        // Reset selectie
+                        return;
+                    }
+                }
+            }
+            
             state.ondersteuningsstructuur[domainId].bewegingsrichting = richting;
+            saveState();
+            renderVoorNaVisualisatie();
+        }
+        
+        // === STRATEGISCHE REFLECTIE (RPA Stap 3) ===
+        
+        function renderReflectieVragen() {
+            const container = document.getElementById('reflectieVragen');
+            if (!container) return;
+            
+            // Domeinen waar een beweging is gekozen
+            const domeinenMetBeweging = domains.filter(d => {
+                const ondersteuning = state.ondersteuningsstructuur[d.id];
+                return ondersteuning && ondersteuning.bewegingsrichting;
+            });
+            
+            if (domeinenMetBeweging.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: #fef2f2; border-radius: 12px; border: 2px solid #fecaca;">
+                        <p style="font-size: 1.1rem; color: #991b1b; margin: 0;">
+                            ⚠️ Ga eerst terug naar 'Positionele keuze' en kies een beweging voor minimaal 1 domein.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const bewegingLabels = {
+                'stabiliseren': 'Stabiliseren',
+                'vervangen': 'Vervangen',
+                'opschalen': 'Opschalen',
+                'afschalen': 'Afschalen',
+                'stoppen': 'Stoppen'
+            };
+            
+            const html = domeinenMetBeweging.map(domain => {
+                const ondersteuning = state.ondersteuningsstructuur[domain.id] || {};
+                const reflectie = state.strategischeReflectie[domain.id] || {};
+                const beweging = ondersteuning.bewegingsrichting;
+                
+                return `
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                            <span style="font-size: 2rem;">${domain.emoji}</span>
+                            <div>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h3>
+                                <div style="font-size: 0.9rem; color: #6b7280; margin-top: 4px;">
+                                    Gekozen beweging: <strong style="color: var(--primary);">${bewegingLabels[beweging]}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reflectievragen -->
+                        <div style="display: grid; gap: 20px;">
+                            
+                            <!-- 1. Duurzaamheid / Haalbaarheid -->
+                            <div>
+                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
+                                    🌱 Is deze beweging realistisch en haalbaar?
+                                </label>
+                                <select onchange="setReflectie('${domain.id}', 'duurzaamheid', this.value)"
+                                        style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
+                                    <option value="">-- Selecteer --</option>
+                                    <option value="haalbaar" ${reflectie.duurzaamheid === 'haalbaar' ? 'selected' : ''}>Ja, dit is realistisch haalbaar</option>
+                                    <option value="twijfel" ${reflectie.duurzaamheid === 'twijfel' ? 'selected' : ''}>Twijfel — dit vraagt extra inspanning</option>
+                                    <option value="risico" ${reflectie.duurzaamheid === 'risico' ? 'selected' : ''}>Risico — netwerkdraagkracht is onzeker</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 2. Proportionaliteit -->
+                            <div>
+                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
+                                    ⚖️ Is de intensiteit van steun proportioneel aan de situatie?
+                                </label>
+                                <select onchange="setReflectie('${domain.id}', 'proportionaliteit', this.value)"
+                                        style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
+                                    <option value="">-- Selecteer --</option>
+                                    <option value="proportioneel" ${reflectie.proportionaliteit === 'proportioneel' ? 'selected' : ''}>Proportioneel — past bij de behoefte</option>
+                                    <option value="te-licht" ${reflectie.proportionaliteit === 'te-licht' ? 'selected' : ''}>Te licht — meer steun nodig</option>
+                                    <option value="te-zwaar" ${reflectie.proportionaliteit === 'te-zwaar' ? 'selected' : ''}>Te zwaar — kan lichter/anders</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 3. Regiehelderheid -->
+                            <div>
+                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
+                                    🎯 Wie is verantwoordelijk voor deze beweging? (regie)
+                                </label>
+                                <input type="text" 
+                                       placeholder="Naam professional, organisatie of cliënt zelf..."
+                                       value="${reflectie.verantwoordelijke || ''}"
+                                       onchange="setReflectie('${domain.id}', 'verantwoordelijke', this.value)"
+                                       style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
+                            </div>
+                            
+                            <!-- 4. Evaluatiemoment -->
+                            <div>
+                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
+                                    📅 Wanneer evalueren we of deze beweging werkt?
+                                </label>
+                                <input type="date" 
+                                       value="${reflectie.evaluatieDatum || ''}"
+                                       onchange="setReflectie('${domain.id}', 'evaluatieDatum', this.value)"
+                                       style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
+                            </div>
+                            
+                            <!-- 5. Toelichting (optioneel) -->
+                            <div>
+                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
+                                    💬 Toelichting / aandachtspunten (optioneel)
+                                </label>
+                                <textarea 
+                                    placeholder="Bijv: afbouw formele zorg pas na stabilisatie informeel netwerk..."
+                                    rows="3"
+                                    onchange="setReflectie('${domain.id}', 'toelichting', this.value)"
+                                    style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem; resize: vertical;">${reflectie.toelichting || ''}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        function setReflectie(domainId, veld, waarde) {
+            if (!state.strategischeReflectie[domainId]) {
+                state.strategischeReflectie[domainId] = {};
+            }
+            state.strategischeReflectie[domainId][veld] = waarde;
             saveState();
         }
         
@@ -12810,7 +13104,7 @@ END:VEVENT
             }
             
             if (completedCount < domainsToCheck.length) {
-                showToast(`${completedCount} van ${domainsToCheck.length} domeinen ingevuld. Je kunt nu verder, of meer invullen.', 'info');
+                showToast(`${completedCount} van ${domainsToCheck.length} domeinen ingevuld. Je kunt nu verder, of meer invullen.`, 'info');
             } else {
                 showToast('Alle domeinen ingevuld! ✓', 'success');
             }
@@ -12832,6 +13126,103 @@ END:VEVENT
             'positionelekeuze': 'De bewuste keuze waar steun vandaan komt: informeel (persoonlijk), collectief (maatschappelijk) of formeel (professioneel). Dit bepaalt wie wat doet.',
             'systeemplafond': 'De grens waarbinnen het zorgsysteem blijft draaien zonder echte verandering. Meer van hetzelfde helpt niet - anders organiseren wel.'
         };
+
+        // Reset all
+        function resetAll() {
+            if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
+                localStorage.removeItem('welzijnswerker_v2');
+                state = {
+                    version: '3.0',
+                    clientId: 'client_' + Date.now(),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: null,
+                    mode: null,
+                    professionalName: '',
+                    postcode: '',
+                    clientName: '',
+                    clientBirthdate: '',
+                    hulpvraag: '',
+                    wens: '',
+                    scores: {},
+                    notes: {},
+                    domainDetails: {},
+                    network: [],
+                    ratings: {},
+                    ratingNotes: {},
+                    currentScreen: 1,
+                    currentView: 'assessment',
+                    kanbanCards: [],
+                    gptAdviceInterventions: [],
+                    activities: [],
+                    selectedActivities: [],
+                    agendaActivities: [],
+                    agendaMonth: new Date().getMonth(),
+                    agendaYear: new Date().getFullYear(),
+                    cachedProAdvice: null,
+                    cachedClientAdvice: null,
+                    history: {
+                        assessments: [],
+                        networkChanges: [],
+                        adviceLog: [],
+                        activityLog: [],
+                        kanbanLog: []
+                    },
+                    ondersteuningsstructuur: {},
+                    strategischeReflectie: {}
+                };
+                document.querySelectorAll('input[name="modus"]').forEach(r => r.checked = false);
+                document.querySelectorAll('input[name="doelVandaag"]').forEach(r => r.checked = false);
+                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+                document.getElementById('professionalFields').style.display = 'none';
+                if (document.getElementById('postcodeFilter')) document.getElementById('postcodeFilter').value = '';
+                if (document.getElementById('professionalName')) document.getElementById('professionalName').value = '';
+                goToScreen(1);
+            }
+        }
+
+        // Initialize
+        loadState();
+        renderProgressSteps();
+        
+        // Herstel doelgroep-checkboxes
+        if (state.doelgroepen && state.doelgroepen.length > 0) {
+            state.doelgroepen.forEach(doelgroep => {
+                const checkbox = document.getElementById(`doelgroep-${doelgroep}`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+        
+        // Start op INTRO scherm (scherm 1)
+        if (state.currentScreen && state.currentScreen >= 1) {
+            // Hervat waar je was
+            goToScreen(state.currentScreen);
+        } else {
+            // Begin bij intro (scherm 1)
+            goToScreen(1);
+        }
+        
+        // Herstel mode keuze
+        if (state.mode) {
+            const modeRadio = document.querySelector(`input[name="modus"][value="${state.mode}"]`);
+            if (modeRadio) {
+                modeRadio.checked = true;
+            }
+            if (state.mode === 'professional') {
+                document.getElementById('professionalFields').style.display = 'block';
+                document.getElementById('professionalName').value = state.professionalName || '';
+            }
+        }
+        
+        // Herstel doel van vandaag
+        if (state.doelVandaag) {
+            const doelRadio = document.querySelector(`input[name="doelVandaag"][value="${state.doelVandaag}"]`);
+            if (doelRadio) {
+                doelRadio.checked = true;
+            }
+        }
+        // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
         
     </script>
 </body>
