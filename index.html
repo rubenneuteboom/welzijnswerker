@@ -3440,6 +3440,109 @@
             max-height: 0;
             opacity: 0;
         }
+        
+        /* Tooltips & Help System (Prioriteit 1 - Fase 2) */
+        .tooltip-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: help;
+            margin-left: 6px;
+            position: relative;
+            user-select: none;
+        }
+        
+        .tooltip-trigger:hover {
+            background: var(--primary-dark);
+        }
+        
+        .tooltip-content {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: #1f2937;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: normal;
+            width: 280px;
+            max-width: 90vw;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        
+        .tooltip-trigger:hover .tooltip-content {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-12px);
+            pointer-events: auto;
+        }
+        
+        .tooltip-content::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1f2937;
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .toast.success {
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+        
+        .toast.warning {
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+        }
+        
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
     </style>
 </head>
 <body>
@@ -3877,7 +3980,15 @@
             <!-- Screen 3: TRIAGE - Selecteer relevante domeinen (Prioriteit 1) -->
             <div class="screen" id="screen-triage">
                 <div class="card">
-                    <h2 style="font-size: 1.8rem; margin-bottom: 20px;">🎯 Waar ligt de focus?</h2>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                        🎯 Waar ligt de focus?
+                        <span style="position: relative;">
+                            <span class="tooltip-trigger">
+                                ?
+                                <span class="tooltip-content">Selecteer 3-5 domeinen waar het NU speelt. Je hoeft niet álles in te vullen - focus op wat belangrijk is.</span>
+                            </span>
+                        </span>
+                    </h2>
                     <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text); margin-bottom: 30px;">
                         We hebben 11 levensgebieden. <strong>Niet alles hoeft nu beoordeeld te worden.</strong><br>
                         Selecteer de gebieden waar het <strong>op dit moment</strong> speelt of waar je aandacht aan wilt geven.
@@ -3931,12 +4042,15 @@
                     <!-- Risico-signalering -->
                     <div id="riskAlert" style="display: none;"></div>
                     
+                    <!-- Voortgangsindicator (Prioriteit 1 - Fase 2) -->
+                    <div id="domainProgress" style="margin-bottom: 25px;"></div>
+                    
                     <!-- Domeinkaart: Uitklapbare kaarten per domein -->
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(5)">Volgende →</button>
+                        <button class="btn btn-primary" onclick="checkDomainsAndContinue()">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -6310,6 +6424,44 @@ Antwoord in dit exacte JSON formaat:
             const domainsToShow = selectedDomains.length > 0 
                 ? domains.filter(d => selectedDomains.includes(d.id))
                 : domains;
+            
+            // Voortgangsindicator (Prioriteit 1 - Fase 2)
+            const completedCount = domainsToShow.filter(d => {
+                const details = state.domainDetails[d.id] || {};
+                return details.hoeGaatHet && details.hoeGaatHet !== 'nog-open';
+            }).length;
+            
+            const progressPercent = domainsToShow.length > 0 
+                ? Math.round((completedCount / domainsToShow.length) * 100)
+                : 0;
+            
+            const progressContainer = document.getElementById('domainProgress');
+            if (progressContainer) {
+                progressContainer.innerHTML = `
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-weight: 600; color: var(--text);">Voortgang</span>
+                            <span style="font-weight: 700; color: var(--primary);">${completedCount} / ${domainsToShow.length} domeinen ingevuld</span>
+                        </div>
+                        <div style="width: 100%; height: 12px; background: #f3f4f6; border-radius: 6px; overflow: hidden;">
+                            <div style="width: ${progressPercent}%; height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%); transition: width 0.3s ease;"></div>
+                        </div>
+                        ${completedCount === 0 ? `
+                            <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px; margin-bottom: 0;">
+                                💡 Vul tenminste 1 domein in om door te kunnen naar de netwerkanalyse.
+                            </p>
+                        ` : completedCount < domainsToShow.length ? `
+                            <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px; margin-bottom: 0;">
+                                ✨ Je bent goed bezig! Nog ${domainsToShow.length - completedCount} domein${domainsToShow.length - completedCount > 1 ? 'en' : ''} te gaan.
+                            </p>
+                        ` : `
+                            <p style="font-size: 0.9rem; color: var(--primary); margin-top: 10px; margin-bottom: 0; font-weight: 600;">
+                                ✓ Alle geselecteerde domeinen ingevuld! Je kunt nu verder.
+                            </p>
+                        `}
+                    </div>
+                `;
+            }
             
             container.innerHTML = domainsToShow.map(domain => {
                 const score = state.scores[domain.id] || 0;
@@ -12242,9 +12394,12 @@ END:VEVENT
             // Als niets geselecteerd, selecteer dan alles
             if (!state.selectedDomains || state.selectedDomains.length === 0) {
                 state.selectedDomains = domains.map(d => d.id);
+                showToast('Alle domeinen geselecteerd', 'info');
+            } else {
+                showToast(`${state.selectedDomains.length} domeinen geselecteerd`, 'success');
             }
             
-            saveState();
+            saveState(true);
             goToScreen(4); // Naar DOMEINSCAN
         }
         
@@ -12290,8 +12445,9 @@ END:VEVENT
                         </div>
                         
                         <div style="margin-bottom: 15px;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
+                            <label style="display: flex; align-items: center; font-weight: 600; margin-bottom: 12px; color: var(--text);">
                                 Wie draagt nu? (meerdere opties mogelijk)
+                                ${createTooltip(tooltips.positionelekeuze)}
                             </label>
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('informeel') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('informeel') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px;">
@@ -12299,21 +12455,21 @@ END:VEVENT
                                         ${draaglagen.includes('informeel') ? 'checked' : ''}
                                         onchange="toggleHuidigeDraaglaag('${domain.id}', 'informeel', this.checked)"
                                         style="width: 18px; height: 18px; cursor: pointer;">
-                                    <span style="font-weight: 600;">Informeel</span>
+                                    <span style="font-weight: 600;">Informeel ${createTooltip(tooltips.informeel)}</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('collectief') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('collectief') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px;">
                                     <input type="checkbox" 
                                         ${draaglagen.includes('collectief') ? 'checked' : ''}
                                         onchange="toggleHuidigeDraaglaag('${domain.id}', 'collectief', this.checked)"
                                         style="width: 18px; height: 18px; cursor: pointer;">
-                                    <span style="font-weight: 600;">Collectief</span>
+                                    <span style="font-weight: 600;">Collectief ${createTooltip(tooltips.collectief)}</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('formeel') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('formeel') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px;">
                                     <input type="checkbox" 
                                         ${draaglagen.includes('formeel') ? 'checked' : ''}
                                         onchange="toggleHuidigeDraaglaag('${domain.id}', 'formeel', this.checked)"
                                         style="width: 18px; height: 18px; cursor: pointer;">
-                                    <span style="font-weight: 600;">Formeel</span>
+                                    <span style="font-weight: 600;">Formeel ${createTooltip(tooltips.formeel)}</span>
                                 </label>
                             </div>
                         </div>
@@ -12414,17 +12570,20 @@ END:VEVENT
                         
                         <!-- Bewegingsrichting samenvatting -->
                         <div style="background: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #92400e; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; color: #92400e; margin-bottom: 8px;">
                                 🔄 Beweging:
+                                <span style="position: relative;">
+                                    ${createTooltip('Kies de gewenste verandering. Dit bepaalt welke interventies passend zijn.')}
+                                </span>
                             </div>
                             <select onchange="setBewegingsrichtingVoorNa('${domain.id}', this.value)" 
                                     style="width: 100%; padding: 10px; border: 2px solid #fbbf24; border-radius: 6px;">
                                 <option value="">-- Kies beweging --</option>
-                                <option value="stabiliseren" ${beweging === 'stabiliseren' ? 'selected' : ''}>Stabiliseren (blijft zoals het is)</option>
-                                <option value="vervangen" ${beweging === 'vervangen' ? 'selected' : ''}>Vervangen (zelfde niveau, andere uitvoerder)</option>
-                                <option value="opschalen" ${beweging === 'opschalen' ? 'selected' : ''}>Opschalen (meer/intensiever)</option>
-                                <option value="afschalen" ${beweging === 'afschalen' ? 'selected' : ''}>Afschalen (minder/lichter)</option>
-                                <option value="stoppen" ${beweging === 'stoppen' ? 'selected' : ''}>Stoppen (ondersteuning beëindigen)</option>
+                                <option value="stabiliseren" ${beweging === 'stabiliseren' ? 'selected' : ''}>Stabiliseren — ${tooltips.stabiliseren}</option>
+                                <option value="vervangen" ${beweging === 'vervangen' ? 'selected' : ''}>Vervangen — ${tooltips.vervangen}</option>
+                                <option value="opschalen" ${beweging === 'opschalen' ? 'selected' : ''}>Opschalen — ${tooltips.opschalen}</option>
+                                <option value="afschalen" ${beweging === 'afschalen' ? 'selected' : ''}>Afschalen — ${tooltips.afschalen}</option>
+                                <option value="stoppen" ${beweging === 'stoppen' ? 'selected' : ''}>Stoppen — ${tooltips.stoppen}</option>
                             </select>
                         </div>
                     </div>
@@ -12587,6 +12746,92 @@ END:VEVENT
             state.ondersteuningsstructuur[domainId].evaluatieDatum = datum;
             saveState();
         }
+        
+        // === TOOLTIPS & FEEDBACK SYSTEEM (Prioriteit 1 - Fase 2) ===
+        
+        // Helper: Tooltip HTML genereren
+        function createTooltip(text) {
+            return `
+                <span class="tooltip-trigger">
+                    ?
+                    <span class="tooltip-content">${text}</span>
+                </span>
+            `;
+        }
+        
+        // Helper: Toast notificatie tonen
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = {
+                'success': '✓',
+                'warning': '⚠',
+                'info': 'ℹ'
+            }[type] || '✓';
+            
+            toast.innerHTML = `
+                <span style="font-size: 1.2rem;">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Helper: Extend saveState with optional feedback
+        const originalSaveState = saveState;
+        saveState = function(showFeedback = false) {
+            originalSaveState();
+            if (showFeedback) {
+                showToast('Opgeslagen', 'success');
+            }
+        };
+        
+        // Helper: Check domeinen voor zachte validatie
+        function checkDomainsAndContinue() {
+            const selectedDomains = state.selectedDomains || [];
+            const domainsToCheck = selectedDomains.length > 0 
+                ? domains.filter(d => selectedDomains.includes(d.id))
+                : domains;
+            
+            const completedCount = domainsToCheck.filter(d => {
+                const details = state.domainDetails[d.id] || {};
+                return details.hoeGaatHet && details.hoeGaatHet !== 'nog-open';
+            }).length;
+            
+            if (completedCount === 0) {
+                showToast('💡 Nog geen domeinen ingevuld. Vul er tenminste 1 in voor een netwerkanalyse.', 'warning');
+                return;
+            }
+            
+            if (completedCount < domainsToCheck.length) {
+                showToast(`${completedCount} van ${domainsToCheck.length} domeinen ingevuld. Je kunt nu verder, of meer invullen.', 'info');
+            } else {
+                showToast('Alle domeinen ingevuld! ✓', 'success');
+            }
+            
+            goToScreen(5);
+        }
+        
+        // Tooltips definities
+        const tooltips = {
+            'informeel': 'Persoonlijk netwerk: familie, vrienden, buren, kennissen. Mensen die je kent en die je uit zichzelf helpen.',
+            'collectief': 'Maatschappelijke organisaties: buurthuizen, vrijwilligers, verenigingen, kerken, wijkteams. Niet-professionele maar georganiseerde steun.',
+            'formeel': 'Professionele zorg: hulpverleners, therapeuten, artsen, zorginstellingen. Mensen die betaald worden om te helpen.',
+            'stabiliseren': 'De huidige situatie behouden. Ondersteuning blijft zoals het nu is.',
+            'vervangen': 'Zelfde niveau van ondersteuning, maar door andere personen of organisaties.',
+            'opschalen': 'Meer of intensievere ondersteuning. Kan tijdelijk zijn om daarna af te bouwen.',
+            'afschalen': 'Minder of lichtere ondersteuning. Gericht op meer zelfredzaamheid.',
+            'stoppen': 'Ondersteuning beëindigen. Bijvoorbeeld omdat het doel bereikt is of de behoefte er niet meer is.',
+            'triage': 'Selecteer 3-5 domeinen waar het NU speelt. Je hoeft niet álles in te vullen - focus op wat belangrijk is.',
+            'positionelekeuze': 'De bewuste keuze waar steun vandaan komt: informeel (persoonlijk), collectief (maatschappelijk) of formeel (professioneel). Dit bepaalt wie wat doet.',
+            'systeemplafond': 'De grens waarbinnen het zorgsysteem blijft draaien zonder echte verandering. Meer van hetzelfde helpt niet - anders organiseren wel.'
+        };
         
     </script>
 </body>
