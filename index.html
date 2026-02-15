@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welzijnswerker v2.4 Medium (GPT) - SIJN Levensdomeinen</title>
+    <title>RPA Positionele Analyse - Relationeel-Positioneel Analysemodel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -1382,7 +1382,7 @@
             color: #78350f;
         }
 
-        /* SIJN Overzichtstabel */
+        /* RPA Overzichtstabel */
         .overview-table {
             width: 100%;
             border-collapse: collapse;
@@ -1508,7 +1508,7 @@
             margin-top: 5px;
         }
 
-        /* SIJN Domain Details (6 aspecten) */
+        /* RPA Domain Details (6 aspecten) */
         .domain-details-toggle {
             background: var(--primary-light);
             border: none;
@@ -2359,7 +2359,7 @@
             gap: 5px;
         }
 
-        /* SIJN Agenda Styles */
+        /* RPA Agenda Styles */
         .agenda-container {
             background: var(--white);
             border-radius: var(--radius);
@@ -3446,15 +3446,15 @@
     <header style="display: flex; justify-content: space-between; align-items: center;">
         <div>
             <h1>
-                Welzijnswerker
-                <span class="version-badge">v2.9 MEDIUM</span>
+                RPA Positionele Analyse
+                <span class="version-badge">v3.0</span>
             </h1>
-            <p>SIJN Levensdomeinen & Netwerkanalyse</p>
+            <p>Relationeel-Positioneel Analysemodel</p>
         </div>
-        <!-- TODO: Later uitbreiden naar uitgebreidere SIJN Methodiek slide -->
-        <!-- <button onclick="toonSIJNMethodiek();" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+        <!-- TODO: Later uitbreiden naar uitgebreidere RPA Methodiek slide -->
+        <!-- <button onclick="toonRPAMethodiek();" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
             <span>ℹ️</span>
-            <span>SIJN Methodiek</span>
+            <span>RPA Methodiek</span>
         </button> -->
     </header>
 
@@ -3506,93 +3506,114 @@
             <div class="screen active" id="screen-intro">
                 <div class="card" style="max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);">
                     <div style="text-align: center; margin-bottom: 40px; position: relative;">
-                        <h1 style="font-size: 3.5rem; margin-bottom: 15px; color: var(--primary); text-shadow: 3px 3px 0 rgba(46, 204, 113, 0.1); font-weight: 800; letter-spacing: 3px;">SIJN</h1>
-                        <h2 style="font-size: 1.8rem; font-weight: 600; color: #166534; margin: 0; letter-spacing: 2px;">Sterk in je Netwerk</h2>
+                        <h1 style="font-size: 3.5rem; margin-bottom: 15px; color: var(--primary); text-shadow: 3px 3px 0 rgba(46, 204, 113, 0.1); font-weight: 800; letter-spacing: 3px;">RPA</h1>
+                        <h2 style="font-size: 1.3rem; font-weight: 600; color: #166534; margin: 0; letter-spacing: 1px;">Relationeel-Positioneel Analysemodel</h2>
+                        <p style="font-size: 0.95rem; color: #6b7280; margin-top: 8px; font-style: italic;">Positionele Analyse: bewust kiezen hoe steun georganiseerd wordt</p>
                     </div>
                     
-                    <!-- Same playful style as modal -->
+                    <!-- Waarom dit instrument? (Lisa + Jan) -->
                     <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #f59e0b;">
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🌍</span>
-                            <h3 style="font-size: 1.5rem; color: #92400e; margin: 0; font-weight: 700;">Visie</h3>
+                            <span style="font-size: 3rem;">⚠️</span>
+                            <h3 style="font-size: 1.5rem; color: #92400e; margin: 0; font-weight: 700;">Het Probleem</h3>
                         </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #78350f; margin-bottom: 15px;">
-                            Niemand staat op zichzelf. Mensen leven, herstellen en ontwikkelen zich in verbinding met anderen. 
-                            Die verbinding kan steun geven — maar kan ook ontbreken of beschadigd zijn.
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #78350f; margin-bottom: 12px;">
+                            Te vaak blijven mensen vastzitten in zorg die niet (meer) past. Soms is er te veel formele zorg, 
+                            soms te weinig steun, soms ontbreekt informele verbinding. Het systeem raakt vol, maar mensen komen niet verder.
                         </p>
-                        <p style="font-size: 1.2rem; line-height: 1.9; color: #78350f; font-weight: 700; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 10px; margin: 0;">
-                            💪 Sterk zijn betekent niet alles alleen kunnen.<br>
-                            ✨ Sterk zijn betekent dat steun passend en gezond is georganiseerd.
+                        <p style="font-size: 1.15rem; line-height: 1.9; color: #78350f; font-weight: 700; background: rgba(255,255,255,0.6); padding: 15px; border-radius: 10px; margin: 0; border-left: 4px solid #f59e0b;">
+                            💡 We lopen tegen het <strong>systeemplafond</strong> aan:<br>
+                            meer van hetzelfde helpt niet — <strong>anders organiseren</strong> wel.
                         </p>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #3b82f6;">
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
                             <span style="font-size: 3rem;">🎯</span>
-                            <h3 style="font-size: 1.5rem; color: #1e40af; margin: 0; font-weight: 700;">Wat is SIJN?</h3>
+                            <h3 style="font-size: 1.5rem; color: #1e40af; margin: 0; font-weight: 700;">Wat is RPA?</h3>
                         </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #1e3a8a;">
-                            SIJN is een meet- en gespreksinstrument dat inzicht geeft in hoe iemand ervoor staat en hoe steun is georganiseerd. 
-                            We kijken naar de huidige situatie, maken zichtbaar waar kracht en kwetsbaarheid zitten, en bepalen samen wat helpend is.
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #1e3a8a; margin-bottom: 12px;">
+                            RPA is een <strong>besluitvormingsinstrument</strong> voor positionele keuzes in zorg en welzijn.
+                        </p>
+                        <p style="font-size: 1.05rem; line-height: 1.8; color: #1e3a8a;">
+                            We analyseren niet om te analyseren — we analyseren om te <strong>beslissen</strong>: 
+                            hoe moet steun <em>gepositioneerd</em> worden? Informeel, collectief of formeel? 
+                            Stabiliseren, opschalen, afschalen of vervangen?
                         </p>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #ec4899;">
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
                             <span style="font-size: 3rem;">📍</span>
-                            <h3 style="font-size: 1.5rem; color: #9f1239; margin: 0; font-weight: 700;">Wat meten we?</h3>
+                            <h3 style="font-size: 1.5rem; color: #9f1239; margin: 0; font-weight: 700;">In 3 stappen</h3>
                         </div>
-                        <div style="display: grid; gap: 12px;">
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">😊</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Hoe het gaat op verschillende levensgebieden</span>
+                        <div style="display: grid; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); padding: 14px; border-radius: 10px; border-left: 4px solid #ec4899;">
+                                <span style="font-size: 1.8rem;">1️⃣</span>
+                                <div>
+                                    <div style="font-size: 1.05rem; color: #9f1239; font-weight: 700;">Waar speelt het?</div>
+                                    <div style="font-size: 0.9rem; color: #be123c;">Selecteer 3-5 relevante levensgebieden</div>
+                                </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">👥</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Of er steun aanwezig is</span>
+                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); padding: 14px; border-radius: 10px; border-left: 4px solid #ec4899;">
+                                <span style="font-size: 1.8rem;">2️⃣</span>
+                                <div>
+                                    <div style="font-size: 1.05rem; color: #9f1239; font-weight: 700;">Wie draagt nu?</div>
+                                    <div style="font-size: 0.9rem; color: #be123c;">Maak huidige netwerkpositie zichtbaar</div>
+                                </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">🌈</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Hoe steun is verdeeld</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px;">
-                                <span style="font-size: 1.5rem;">🎯</span>
-                                <span style="font-size: 1.05rem; color: #9f1239; font-weight: 600;">Wat op dit moment nodig is</span>
+                            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.7); padding: 14px; border-radius: 10px; border-left: 4px solid #ec4899;">
+                                <span style="font-size: 1.8rem;">3️⃣</span>
+                                <div>
+                                    <div style="font-size: 1.05rem; color: #9f1239; font-weight: 700;">Wat is de positionele keuze?</div>
+                                    <div style="font-size: 0.9rem; color: #be123c;">Besluit: stabiliseren, opschalen, afschalen, vervangen of stoppen</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #6366f1;">
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🧭</span>
-                            <h3 style="font-size: 1.5rem; color: #3730a3; margin: 0; font-weight: 700;">Wat doen we daarna?</h3>
+                            <span style="font-size: 3rem;">🔄</span>
+                            <h3 style="font-size: 1.5rem; color: #3730a3; margin: 0; font-weight: 700;">Niet méér, maar anders</h3>
                         </div>
-                        <p style="font-size: 1.1rem; line-height: 1.9; color: #312e81;">
-                            Soms is eerst <strong>stabiliseren</strong> nodig. Soms vraagt de situatie om <strong>herstel van relaties</strong>. 
-                            Soms is het nodig om steun <strong>anders te organiseren</strong>. En soms is het <strong>behouden</strong> van wat werkt voldoende.
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #312e81; margin-bottom: 12px;">
+                            RPA gaat <strong>niet</strong> over meer zorg toevoegen. Het gaat over <strong>bewust kiezen</strong> 
+                            hoe steun gepositioneerd wordt: informeel, collectief of formeel.
+                        </p>
+                        <p style="font-size: 1.05rem; line-height: 1.8; color: #312e81;">
+                            Soms betekent dat afschalen van formele zorg en versterken van informeel. 
+                            Soms juist tijdelijk opschalen om daarna duurzaam te kunnen afbouwen. 
+                            Altijd bewust, meetbaar, en samen besloten.
                         </p>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #dcfce7 0%, #86efac 50%, #4ade80 100%); border: 4px solid #16a34a; padding: 30px; border-radius: 20px; margin-bottom: 35px; box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);">
                         <div style="text-align: center; margin-bottom: 15px;">
-                            <span style="font-size: 3rem;">🔹</span>
+                            <span style="font-size: 3rem;">💎</span>
                         </div>
                         <h3 style="font-size: 1.4rem; color: #14532d; margin-bottom: 15px; text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                            Kernzin
+                            De kerngedachte
                         </h3>
-                        <p style="font-size: 1.3rem; line-height: 2; color: #14532d; font-weight: 700; text-align: center; margin: 0;">
-                            Sterk in je Netwerk betekent:<br>
-                            <span style="font-size: 1.4rem; color: #15803d;">✨ bewust kijken naar hoe steun is georganiseerd<br>— en waar beweging mogelijk is ✨</span>
+                        <p style="font-size: 1.35rem; line-height: 1.9; color: #14532d; font-weight: 700; text-align: center; margin: 0;">
+                            <span style="font-size: 1.5rem; color: #15803d;">⚡ Analyse zonder besluit</span><br>
+                            <span style="font-size: 1.3rem; color: #166534;">= blijven hangen in het systeemplafond</span><br><br>
+                            <span style="font-size: 1.5rem; color: #15803d;">✨ Positionele keuze</span><br>
+                            <span style="font-size: 1.3rem; color: #166534;">= doorbraak naar duurzame steun</span>
                         </p>
                     </div>
                     
                     <!-- Netwerkbeweging diagram -->
                     <div style="background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 30px; margin: 35px 0;">
                         <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 10px; text-align: center; font-weight: 700;">
-                            Hoe werkt netwerkbeweging?
+                            Netwerkposities
                         </h3>
-                        <p style="font-size: 0.95rem; color: var(--text-light); text-align: center; margin-bottom: 25px; line-height: 1.6;">
-                            Steun kan op verschillende manieren georganiseerd zijn. Beweging is mogelijk in alle richtingen, afhankelijk van wat de situatie vraagt. Geen enkele positie is een einddoel.
+                        <p style="font-size: 1rem; color: var(--text-light); text-align: center; margin-bottom: 10px; line-height: 1.7;">
+                            Steun kan op verschillende manieren gepositioneerd zijn. <strong>Beweging is altijd mogelijk</strong> — 
+                            de vraag is: welke richting is nu passend?
+                        </p>
+                        <p style="font-size: 0.9rem; color: #dc2626; text-align: center; margin-bottom: 20px; font-weight: 600; background: #fef2f2; padding: 10px; border-radius: 8px;">
+                            ⚠️ Geen enkele positie is "beter" of "slechter" — context bepaalt wat werkt.
                         </p>
                         
                         <svg viewBox="0 0 700 350" style="width: 100%; max-width: 700px; height: auto; margin: 0 auto; display: block;">
@@ -3660,8 +3681,9 @@
                             <text x="520" y="276" text-anchor="middle" font-size="12" fill="#9f1239">NETWERK</text>
                         </svg>
                         
-                        <p style="font-size: 0.85rem; color: var(--text-light); text-align: center; margin-top: 20px; font-style: italic;">
-                            💡 De pijltjes tonen mogelijke bewegingen. Context bepaalt welke richting passend is.
+                        <p style="font-size: 0.9rem; color: var(--text-light); text-align: center; margin-top: 20px; line-height: 1.6;">
+                            💡 Pijlen tonen <strong>mogelijke bewegingen</strong>. In deze scan kiezen we bewust: 
+                            <span style="color: #15803d; font-weight: 600;">waar moet steun gepositioneerd worden?</span>
                         </p>
                     </div>
 
@@ -3756,30 +3778,21 @@
                         <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 12px; font-style: italic;">💡 Per doelgroep krijg je relevante hulpvragen bij elk domein.</p>
                     </div>
                     
-                    <!-- Doel van vandaag -->
+                    <!-- Postcode (Prioriteit 1 - vroeg vragen) -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">🔘 Doel van vandaag</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">Wat is op dit moment het belangrijkste?</p>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="doelVandaag" value="overzicht" style="width: 20px; height: 20px;">
-                                <span style="font-weight: 600;">Snel overzicht krijgen</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="doelVandaag" value="actie" style="width: 20px; height: 20px;">
-                                <span style="font-weight: 600;">Kijken waar direct actie nodig is</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="doelVandaag" value="vooruitkijken" style="width: 20px; height: 20px;">
-                                <span style="font-weight: 600;">Samen vooruitkijken</span>
-                            </label>
-                        </div>
+                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">📍 Postcode</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">
+                            Met je postcode kunnen we direct concrete voorzieningen in jouw buurt tonen.
+                        </p>
+                        <input type="text" 
+                               id="postcodeStart" 
+                               placeholder="Bijv. 1012AB"
+                               maxlength="6"
+                               style="width: 200px; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; text-transform: uppercase;"
+                               oninput="this.value = this.value.toUpperCase()">
+                        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 8px; font-style: italic;">
+                            💡 Optioneel - maar helpt om relevante voorzieningen te vinden
+                        </p>
                     </div>
 
                     <div class="btn-group">
@@ -3803,7 +3816,7 @@
             </div>
 
             <!-- Screen 2: Oriëntatie - Het hier en nu -->
-            <!-- ORIËNTATIE-SCHERM VERWIJDERD (MEDIUM = direct naar domeinscan) -->
+            <!-- ORIËNTATIE-SCHERM VERWIJDERD (Positionele Analyse = direct naar domeinscan) -->
             <!-- 
             <div class="screen" id="screen-hulpvraag">
                 <div class="card">
@@ -3861,7 +3874,52 @@
             </div>
             -->
 
-            <!-- Screen 2: Domains (was Screen 3) -->
+            <!-- Screen 3: TRIAGE - Selecteer relevante domeinen (Prioriteit 1) -->
+            <div class="screen" id="screen-triage">
+                <div class="card">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 20px;">🎯 Waar ligt de focus?</h2>
+                    <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text); margin-bottom: 30px;">
+                        We hebben 11 levensgebieden. <strong>Niet alles hoeft nu beoordeeld te worden.</strong><br>
+                        Selecteer de gebieden waar het <strong>op dit moment</strong> speelt of waar je aandacht aan wilt geven.
+                    </p>
+                    
+                    <!-- Uitleg waarom -->
+                    <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 18px 22px; margin-bottom: 30px; border-radius: 10px;">
+                        <p style="margin: 0; font-size: 0.95rem; color: #1e40af; line-height: 1.6;">
+                            💡 <strong>Waarom selecteren?</strong> Dit voorkomt dat je 33+ vragen moet doorlopen. 
+                            We focussen op wat <em>nu relevant is</em>. Andere gebieden kun je later altijd nog toevoegen.
+                        </p>
+                    </div>
+                    
+                    <!-- Domein selectie grid -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Klik op de gebieden die relevant zijn:</h3>
+                        <div id="triageDomainGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+                            <!-- Wordt gevuld door renderTriageDomainGrid() -->
+                        </div>
+                    </div>
+                    
+                    <!-- Geselecteerde teller -->
+                    <div id="triageCounter" style="text-align: center; padding: 15px; background: #f0fdf4; border-radius: 10px; margin-bottom: 25px;">
+                        <span style="font-size: 1.1rem; font-weight: 600; color: #166534;">
+                            <span id="triageCount">0</span> van 11 gebieden geselecteerd
+                        </span>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
+                        <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
+                            Volgende → (<span id="triageCountBtn">0</span> gebieden)
+                        </button>
+                    </div>
+                    
+                    <p style="text-align: center; margin-top: 15px; font-size: 0.85rem; color: var(--text-light); font-style: italic;">
+                        💡 Je kunt later altijd nog domeinen toevoegen
+                    </p>
+                </div>
+            </div>
+
+            <!-- Screen 4: Domains (Domeinscan) -->
             <div class="screen" id="screen-domains">
                 <div class="card">
                     <h2>📊 Domeinkaart - Zelfredzaamheid</h2>
@@ -3877,37 +3935,66 @@
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(4)">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 4: Dashboard -->
-            <div class="screen" id="screen-network">
-                <div class="card">
-                    <h2>📊 SIJN Overzicht</h2>
-                    <p>Complete status van alle 11 levensdomeinen</p>
-
-                    <!-- Overzichtstabel -->
-                    <div id="domainOverviewTable"></div>
-
-                    <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
                         <button class="btn btn-primary" onclick="goToScreen(5)">Volgende →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 5: Netwerkpositie (LEAN) -->
+            <!-- Screen 5: HUIDIGE STEUN (Prioriteit 1 - Kernstap) -->
+            <div class="screen" id="screen-huidige-steun">
+                <div class="card">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 20px;">👥 Wie draagt nu?</h2>
+                    <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text); margin-bottom: 30px;">
+                        Voor elk domein waar het speelt, kijken we: <strong>wie biedt nu steun?</strong><br>
+                        Dit helpt om de huidige netwerkpositie te zien.
+                    </p>
+                    
+                    <!-- Uitleg -->
+                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 18px 22px; margin-bottom: 30px; border-radius: 10px;">
+                        <p style="margin: 0; font-size: 0.95rem; color: #92400e; line-height: 1.6;">
+                            💡 <strong>Let op:</strong> Dit gaat niet om "ideaal", maar om <strong>hoe het nu is</strong>. 
+                            We kijken straks pas naar wat anders zou kunnen.
+                        </p>
+                    </div>
+                    
+                    <!-- Per domein: Wie draagt? -->
+                    <div id="huidigeSteunPerDomein">
+                        <!-- Wordt gevuld door renderHuidigeSteunPerDomein() -->
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
+                        <button class="btn btn-primary" onclick="saveHuidigeSteun(); goToScreen(6)">Volgende →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 6: Dashboard/Overzicht -->
+            <div class="screen" id="screen-network">
+                <div class="card">
+                    <h2>📊 RPA Overzicht</h2>
+                    <p>Complete status van alle 11 levensdomeinen</p>
+
+                    <!-- Overzichtstabel -->
+                    <div id="domainOverviewTable"></div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(7)">Volgende →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 7: Netwerkpositie (LEAN) -->
             <div class="screen" id="screen-netwerkpositie">
                 <div class="card">
                     <h2>🕸️ Hoe is steun georganiseerd?</h2>
                     <p style="color: var(--text-light); margin-bottom: 30px;">Op basis van de ingevulde domeinen zien we de volgende netwerkpositie.</p>
 
-                    <!-- SIJN NETWERKKAART (compact, geen interventies) -->
+                    <!-- RPA NETWERKKAART (compact, geen interventies) -->
                     <div id="sijnNetwerkkaartCompact">
-                        <!-- Wordt gevuld door renderSIJNNetwerkkaartCompact() -->
+                        <!-- Wordt gevuld door renderRPANetwerkkaartCompact() -->
                     </div>
 
                     <div class="btn-group">
@@ -3930,18 +4017,14 @@
                         </p>
                     </div>
 
-                    <!-- Voor/Na diagram met pijl -->
-                    <div id="netwerkBewegingDiagram" style="margin-bottom: 40px;">
-                        <!-- Wordt gevuld door renderNetwerkBewegingDiagram() -->
-                    </div>
-
-                    <div id="bewegingKeuzes">
-                        <!-- Wordt gevuld door renderBewegingKeuzes() -->
+                    <!-- Voor/Na diagram per domein (Prioriteit 1) -->
+                    <div id="voorNaVisualisatie" style="margin-bottom: 30px;">
+                        <!-- Wordt gevuld door renderVoorNaVisualisatie() -->
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(7)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-primary" id="btnNaarInterventies" onclick="goToScreen(9)">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4006,7 +4089,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreen(9)">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
                     </div>
                 </div>
@@ -4016,7 +4099,7 @@
             <div class="screen" id="screen-advies">
                 <div class="card">
                     <h2>🤖 Persoonlijk Advies</h2>
-                    <p>Op basis van de SIJN-methodiek en uw resultaten</p>
+                    <p>Op basis van de RPA-methodiek en uw resultaten</p>
                     
                     <div class="advice-box" id="adviceBox"></div>
 
@@ -4145,7 +4228,7 @@
                             📋 Naar Actieplan
                         </button>
                         <button class="btn btn-success" onclick="switchView('agenda')">
-                            📅 Naar SIJN-Agenda
+                            📅 Naar RPA-Agenda
                         </button>
                     </div>
                 </div>
@@ -4239,10 +4322,10 @@
             </div>
         </div>
 
-        <!-- SIJN Agenda View -->
+        <!-- RPA Agenda View -->
         <div class="view-section" id="view-agenda">
             <div class="card">
-                <h2>📅 SIJN-Agenda</h2>
+                <h2>📅 RPA-Agenda</h2>
                 <p>Uw ingeplande activiteiten voor de komende weken</p>
 
                 <div class="agenda-container">
@@ -4344,8 +4427,8 @@
         // Brave API key (not used - searches go through proxy)
         const BRAVE_API_KEY = null;
 
-        // Data - Domains (SIJN Levensdomeinen)
-        // Zelfredzaamheid niveaus (SIJN 3-niveau systeem: 🔴🟡🟢)
+        // Data - Domains (RPA Levensdomeinen)
+        // Zelfredzaamheid niveaus (RPA 3-niveau systeem: 🔴🟡🟢)
         // Legacy labels (niet meer gebruikt - oude 1-5 systeem)
         const zelfredzaamheidLabels = {
             1: { niveau: '1. Acuut probleem', kleur: '#dc2626', desc: 'Ernstige problemen, mogelijk gevaar' },
@@ -4355,7 +4438,7 @@
             5: { niveau: '5. Volledig zelfstandig', kleur: '#10b981', desc: 'Geen hulp nodig, uitstekend functioneren' }
         };
         
-        // Domein-specifieke zelfredzaamheid labels (SIJN methodiek, schaal 1-5)
+        // Domein-specifieke zelfredzaamheid labels (RPA methodiek, schaal 1-5)
         // Nieuwe 3-niveau zelfredzaamheid: 🔴 Rood / 🟡 Geel / 🟢 Groen
         const zelfredzaamheidPerDomein = {
             geestelijk: {
@@ -4935,7 +5018,7 @@
             ]
         };
 
-        // Lokale interventies per postcode/regio (voor MEDIUM → LARGE data)
+        // Lokale interventies per postcode/regio (voor Positionele Analyse → Strategische Analyse data)
         // Later te koppelen aan externe API's zoals WaarStaatJeGemeente, lokale zorgkompassen etc.
         const lokaleInterventies = {
             // Voorbeeld structuur per gemeente/postcodegebied - uitgebreid met volledige details
@@ -5020,6 +5103,231 @@
                 multiproblem: ['Maatschappelijke opvang', 'Reclassering', 'Daklozenopvang', 'Verslavingszorg'],
                 sociaalmaatschappelijk: ['Wijkservicepunt', 'Schuldhulpmaatje', 'Taalhuis', 'Kledingbank']
             }
+        };
+
+        // Collectieve vormen per domein + doelgroep (voor ondersteuningsstructuur)
+        // Gebruikt in Positionele Analyse → Strategische Analyse data-verzameling
+        const collectieveVormen = {
+            financien: {
+                algemeen: ['Schuldhulpmaatje', 'Buurtteam', 'Wijkcentrum', 'Formulierenbrigade', 'Buddy financiële administratie', 'Anders'],
+                ggz: ['Schuldhulpmaatje GGZ-gericht', 'Ervaringsdeskundige financiën', 'Peer support groep schulden', 'Lotgenotengroep geldzorgen', 'Anders'],
+                jongeren: ['Jongerenbuddy', 'Jongerenwerk (geldzaken)', 'Wijkcoach jongeren', 'Peer support', 'Anders'],
+                mantelzorgers: ['Mantelzorgmaatje', 'Respijtzorg vrijwilligers', 'Buurtnetwerk', 'Kerkelijke hulp', 'Anders'],
+                ouderen: ['Seniorenmaatje', 'Ouderenhulp financiën', 'Buurtnetwerk senioren', 'KBO-hulpdienst', 'Anders'],
+                multiproblem: ['Buurtteam intensief', 'Maatjesproject', 'Straatpastoraat', 'Lotgenotengroep', 'Anders'],
+                sociaalmaatschappelijk: ['Schuldhulpmaatje', 'Wijkbuddy', 'Taalhuis (aanvragen)', 'Buurtteam', 'Anders']
+            },
+            dagbesteding: {
+                algemeen: ['Vrijwilligerswerk', 'Buurtcentrum activiteiten', 'Sportvereniging', 'Hobbyclub', 'Maatjesproject dagbesteding', 'Anders'],
+                ggz: ['Herstelacademie', 'Arbeidsmaatje GGZ', 'Dagbesteding herstelgroep', 'Ervaringsdeskundige begeleiding', 'Anders'],
+                jongeren: ['Jongerenwerk', 'Sportvereniging', 'Jongereninloophuis', 'Stage-/werkmaatje', 'Anders'],
+                mantelzorgers: ['Respijtzorg vrijwilligers', 'Mantelzorgcafé', 'Afleiding/ontspanning', 'Anders'],
+                ouderen: ['Seniorenactiviteiten', 'Ouderensoos', 'Vrijwilligerswerk senioren', 'Wandelgroep', 'Anders'],
+                multiproblem: ['Dagopvang', 'Laagdrempelige werkplek', 'Straatpastoraat', 'Herstelgroep', 'Anders'],
+                sociaalmaatschappelijk: ['Buurtcentrum', 'Taalcafé', 'Klusjesproject', 'Ontmoetingsplek', 'Anders']
+            },
+            huisvesting: {
+                algemeen: ['Buurtteam wonen', 'Woningmaatje', 'Woningstichting vrijwilligers', 'Buurthulp klussen', 'Anders'],
+                ggz: ['Woningmaatje GGZ', 'Peer support wonen', 'Bewonersbegeleiding lotgenoten', 'Anders'],
+                jongeren: ['Jongerenmaatje wonen', 'Kamerverhuur begeleiding', 'Buddyproject zelfstandig wonen', 'Anders'],
+                mantelzorgers: ['Mantelzorgondersteuning aanpassingen', 'Vrijwilligers klussen', 'Buurtnetwerk', 'Anders'],
+                ouderen: ['Seniorenmaatje wonen', 'Aanpassingen vrijwilligers', 'Wooncorporatie senioren', 'KBO-hulpdienst', 'Anders'],
+                multiproblem: ['Woonmaatje', 'Buurtteam intensief', 'Herstelwonen begeleiding', 'Anders'],
+                sociaalmaatschappelijk: ['Wijkservicepunt', 'Buurthulp', 'Woningcorporatie maatwerk', 'Anders']
+            },
+            huiselijk: {
+                algemeen: ['Gezinsmaatje', 'Buurtmoeders', 'Thuisbegeleiding vrijwilligers', 'Opvoedgroep', 'Anders'],
+                ggz: ['Gezinsmaatje GGZ', 'Lotgenotengroep gezin', 'Peer support ouderschap', 'Anders'],
+                jongeren: ['Jongeren- en gezinsmaatje', 'Opvoedgroep', 'Ouder-kind activiteiten', 'Anders'],
+                mantelzorgers: ['Mantelzorgmaatje', 'Gezinsondersteuning', 'Respijtzorg', 'Anders'],
+                ouderen: ['Seniorenmaatje', 'Buurtnetwerk', 'Ouderenadviseur relaties', 'Anders'],
+                multiproblem: ['Gezinsmaatje intensief', 'Buurtmoeders', 'Veiligheidsnetwerk', 'Anders'],
+                sociaalmaatschappelijk: ['Buurtmoeders', 'Gezinsmaatje', 'Opvoedgroep', 'Thuisbegeleiding vrijwilligers', 'Anders']
+            },
+            geestelijk: {
+                algemeen: ['Lotgenotengroep', 'Herstelgroep', 'Mindfulness groep', 'Gespreksgroep', 'Ervaringsdeskundige', 'Anders'],
+                ggz: ['Herstelgroep GGZ', 'WRAP-groep', 'Peer support', 'Ervaringsdeskundige begeleiding', 'Lotgenotengroep psychose/depressie/angst', 'Anders'],
+                jongeren: ['Jongerengroep mentaal', 'Peer support jongeren', 'Jongereninloophuis', 'Anders'],
+                mantelzorgers: ['Mantelzorggroep mentale druk', 'Steungroep', 'Lotgenotencontact', 'Anders'],
+                ouderen: ['Seniorengroep mentaal', 'Lotgenotengroep rouw/verlies', 'Gespreksgroep ouderen', 'Anders'],
+                multiproblem: ['Herstelgroep breed', 'Lotgenotengroep multi', 'Peer support', 'Anders'],
+                sociaalmaatschappelijk: ['Inloophuis gesprek', 'Lotgenotengroep', 'Buurtpastoraat', 'Anders']
+            },
+            lichamelijk: {
+                algemeen: ['Beweeggroep', 'Wandelgroep', 'Sportmaatje', 'Gezondheidsgroep', 'Anders'],
+                ggz: ['Beweeggroep GGZ', 'Sportmaatje herstel', 'Yoga/mindful bewegen', 'Anders'],
+                jongeren: ['Sportvereniging', 'Beweegmaatje', 'Jongerensport', 'Anders'],
+                mantelzorgers: ['Beweeggroep mantelzorgers', 'Ontspanningsactiviteit', 'Anders'],
+                ouderen: ['Seniorengym', 'Wandelgroep ouderen', 'Beweegmaatje', 'Anders'],
+                multiproblem: ['Laagdrempelig sporten', 'Beweeggroep herstel', 'Anders'],
+                sociaalmaatschappelijk: ['Buurtbeweeggroep', 'Gratis sportles', 'Wandelgroep', 'Anders']
+            },
+            verslaving: {
+                algemeen: ['AA/NA groep', 'Lotgenotengroep verslaving', 'Herstelgroep', 'Buddy nuchter blijven', 'Anders'],
+                ggz: ['Dubbele diagnose groep', 'AA/NA GGZ', 'Herstelgroep verslaving+GGZ', 'Anders'],
+                jongeren: ['Jongerengroep verslaving', 'Peer support jongeren', 'Preventieproject', 'Anders'],
+                mantelzorgers: ['Steungroep naasten verslaving', 'Al-Anon', 'Lotgenotencontact', 'Anders'],
+                ouderen: ['Seniorengroep alcoholproblematiek', 'Lotgenotengroep', 'Anders'],
+                multiproblem: ['AA/NA', 'Herstelgroep breed', 'Straatpastoraat', 'Anders'],
+                sociaalmaatschappelijk: ['AA/NA', 'Buurtpastoraat', 'Inloophuis herstel', 'Anders']
+            },
+            adl: {
+                algemeen: ['Huishoudelijke hulp vrijwilligers', 'Buurthulp', 'Maatje ADL', 'Klusjesproject', 'Anders'],
+                ggz: ['ADL-maatje GGZ', 'Herstelondersteuning thuis', 'Peer support zelfzorg', 'Anders'],
+                jongeren: ['Jongerenmaatje zelfstandigheid', 'Buddy huishouden', 'Anders'],
+                mantelzorgers: ['Respijtzorg vrijwilligers', 'Huishoudelijke hulp', 'Mantelzorgondersteuning', 'Anders'],
+                ouderen: ['Seniorenmaatje', 'Hulp bij huishouden', 'KBO-hulpdienst', 'Maaltijdvoorziening', 'Anders'],
+                multiproblem: ['ADL-ondersteuning breed', 'Woonmaatje', 'Dagopvang met ADL-hulp', 'Anders'],
+                sociaalmaatschappelijk: ['Buurthulp', 'Wijkservicepunt', 'Klusjesproject', 'Anders']
+            },
+            sociaal: {
+                algemeen: ['Buurtcentrum', 'Maatjesproject', 'Wijkactiviteiten', 'Sportvereniging', 'Hobbyclub', 'Anders'],
+                ggz: ['Inloophuis GGZ', 'Herstelgroep sociaal', 'Ervaringsdeskundige contact', 'Lotgenotengroep', 'Anders'],
+                jongeren: ['Jongerenwerk', 'Jongereninloophuis', 'Sportvereniging', 'Jongerengroep', 'Anders'],
+                mantelzorgers: ['Mantelzorgcafé', 'Steungroep', 'Respijtzorg sociaal', 'Anders'],
+                ouderen: ['Seniorencentrum', 'Ouderensoos', 'KBO-activiteiten', 'Buurtnetwerk', 'Anders'],
+                multiproblem: ['Inloophuis laagdrempelig', 'Buurtcentrum', 'Straatpastoraat', 'Anders'],
+                sociaalmaatschappelijk: ['Buurtcentrum', 'Wijkactiviteiten', 'Ontmoetingsplek', 'Taalcafé', 'Anders']
+            },
+            participatie: {
+                algemeen: ['Vrijwilligerswerk', 'Buurtactiviteiten', 'Sportvereniging', 'Culturele activiteiten', 'Kerk/moskee/tempel', 'Anders'],
+                ggz: ['Herstelacademie', 'Participatieproject GGZ', 'Ervaringsdeskundige werk', 'Kunstproject', 'Anders'],
+                jongeren: ['Jongerenwerk participatie', 'Jongereninitiatief', 'Sportclub', 'Muziek/cultuur', 'Anders'],
+                mantelzorgers: ['Mantelzorgactiviteiten', 'Lotgenotengroep', 'Ontspanning', 'Anders'],
+                ouderen: ['Seniorenparticipatie', 'KBO-activiteiten', 'Vrijwilligerswerk senioren', 'Anders'],
+                multiproblem: ['Participatieproject laagdrempelig', 'Buurtactiviteiten', 'Dagopvang participatie', 'Anders'],
+                sociaalmaatschappelijk: ['Buurtactiviteiten', 'Participatieproject', 'Taalcafé', 'Vrijwilligerswerk', 'Anders']
+            },
+            justitie: {
+                algemeen: ['Reclasseringsmaatje', 'Buddy re-integratie', 'Lotgenotengroep', 'Buurtteam juridisch', 'Anders'],
+                ggz: ['Forensische nazorg peer', 'Herstelgroep justitie+GGZ', 'Anders'],
+                jongeren: ['Jongerenreclassering maatje', 'Buddy jeugd justitie', 'Jongerengroep herstel', 'Anders'],
+                mantelzorgers: ['Steungroep naasten justitie', 'Lotgenotencontact', 'Anders'],
+                ouderen: ['Seniorenmaatje juridisch', 'Ouderenhulp rechten', 'Anders'],
+                multiproblem: ['Reclasseringsmaatje', 'Herstelgroep breed', 'Straatpastoraat', 'Anders'],
+                sociaalmaatschappelijk: ['Rechtswinkelmaaatje', 'Buurtteam juridisch', 'Buddy re-integratie', 'Anders']
+            }
+        };
+
+        // Formele zorgtypen per domein (domeinspecifiek, NIET doelgroep-gefilterd)
+        // Gebruikt in Positionele Analyse → Strategische Analyse voor kostenanalyse
+        const formeleZorgtypen = {
+            financien: [
+                'Budgetbeheer (Wlz/Wmo)',
+                'Beschermingsbewind',
+                'Schuldhulpverlening gemeente',
+                'WSNP-traject',
+                'Financieel coach (Wmo)',
+                'Budgetcoaching',
+                'Anders'
+            ],
+            dagbesteding: [
+                'Dagbesteding Wmo',
+                'Dagbesteding Wlz',
+                'Arbeidsmatige dagbesteding',
+                'Participatiebaan',
+                'Beschut werk',
+                'Job coach',
+                'Arbeidsre-integratie',
+                'Anders'
+            ],
+            huisvesting: [
+                'Ambulante woonbegeleiding (Wmo)',
+                'Beschermd wonen (Wmo)',
+                'Begeleiding zelfstandig wonen',
+                'Woonvoorzieningen (aanpassingen)',
+                'WLZ-verblijf (verpleeghuis)',
+                'Tijdelijke opvang/crisisopvang',
+                'Maatschappelijke opvang',
+                'Anders'
+            ],
+            huiselijk: [
+                'Gezinsbegeleiding (Jeugdwet/Wmo)',
+                'Opvoedhulp',
+                'Systeemtherapie gezin',
+                'Veiligheidshuis',
+                'Jeugdbescherming',
+                'Pleegzorg',
+                'Voogdij',
+                'Anders'
+            ],
+            geestelijk: [
+                'Ambulante GGZ (basis)',
+                'Ambulante GGZ (gespecialiseerd)',
+                'FACT (flexibele assertive community treatment)',
+                'Crisisdienst GGZ',
+                'Dagbehandeling GGZ',
+                'Klinische opname',
+                'Beschermd wonen GGZ',
+                'RIBW (beschermd wonen licht)',
+                'POH-GGZ (huisarts)',
+                'Eerstelijns psycholoog',
+                'Anders'
+            ],
+            lichamelijk: [
+                'Thuiszorg (persoonlijke verzorging)',
+                'Verpleging thuis',
+                'Fysiotherapie',
+                'Ergotherapie',
+                'Medische hulpmiddelen',
+                'Revalidatie',
+                'Huisartsenzorg',
+                'Specialistische zorg',
+                'WLZ-zorg (verpleeghuis)',
+                'Anders'
+            ],
+            verslaving: [
+                'Ambulante verslavingszorg',
+                'Klinische detox',
+                'Klinische behandeling verslaving',
+                'Dagbehandeling verslaving',
+                'Beschermd wonen verslaving',
+                'Dubbele diagnose behandeling',
+                'Nazorg/terugvalpreventie',
+                'Substitutieprogramma (methadon)',
+                'Anders'
+            ],
+            adl: [
+                'Huishoudelijke hulp (Wmo)',
+                'Persoonlijke verzorging (Wlz/Wmo)',
+                'Thuiszorg ADL',
+                'Begeleiding individueel (Wmo)',
+                'ADL-training',
+                'Dagbesteding met ADL-ondersteuning',
+                'WLZ-zorg (volledig)',
+                'Anders'
+            ],
+            sociaal: [
+                'Begeleiding individueel (Wmo)',
+                'Begeleiding groep (Wmo)',
+                'Dagbesteding sociaal',
+                'Ambulante begeleiding sociaal',
+                'Maatschappelijk werk',
+                'Welzijnswerk',
+                'Anders'
+            ],
+            participatie: [
+                'Begeleiding individueel participatie',
+                'Dagbesteding participatie',
+                'Arbeidsmatige dagbesteding',
+                'Beschut werk',
+                'Participatiebaan',
+                'Jobcoaching',
+                'Vrijwilligerswerk begeleiding',
+                'Anders'
+            ],
+            justitie: [
+                'Reclassering (toezicht)',
+                'Forensische zorg',
+                'Taakstraf begeleiding',
+                'Maatschappelijke opvang justitie',
+                'Beschermd wonen forensisch',
+                'Ambulante forensische zorg',
+                'Penitentiaire inrichting',
+                'Elektronisch toezicht',
+                'Rechtsbijstand (gesubsidieerd)',
+                'Anders'
+            ]
         };
 
         const voorzieningen = {
@@ -5219,12 +5527,14 @@
         const screenConfigBase = [
             { id: 'intro', label: 'Intro', emoji: '🌈' },
             { id: 'start', label: 'Start', emoji: '🏠' },
+            { id: 'triage', label: 'Selecteer domeinen', emoji: '🎯' },
             { id: 'domains', label: 'Domeinscan', emoji: '📊' },
+            { id: 'huidige-steun', label: 'Huidige steun', emoji: '👥' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
             { id: 'netwerkpositie', label: 'Netwerk', emoji: '🕸️' },
-            { id: 'beweging', label: 'Volgende stap', emoji: '🎯' },
+            { id: 'beweging', label: 'Positionele keuze', emoji: '🔄' },
             { id: 'interventies', label: 'Interventies', emoji: '🔧' },
-            { id: 'samenvatting', label: 'Samenvatting', emoji: '📄' }
+            { id: 'samenvatting', label: 'Besluit', emoji: '📄' }
         ];
 
         // Get current screen config based on mode
@@ -5265,7 +5575,13 @@
             wens: '',
             scores: {},
             notes: {},
-            // SIJN domein details (6 aspecten per domein)
+            
+            // Triage: geselecteerde domeinen (Prioriteit 1 verbetering)
+            selectedDomains: [], // Array van domein IDs waar focus op ligt
+            
+            // Huidige steun per domein (Prioriteit 1 verbetering)
+            huidigeSteun: {}, // { domainId: { draaglagen: ['informeel', 'collectief'], details: {...} } }
+            // RPA domein details (6 aspecten per domein)
             domainDetails: {}, // { domeinId: { vraagVan, netwerkSteun, leverancier, ondersteuning, ervaring, ondersteuners: [{naam, relatieType, frequentie, beoordeling}] } }
             network: [],
             ratings: {},
@@ -5296,6 +5612,11 @@
                 activityLog: [],
                 // Kanban progress: [{date, cardId, fromColumn, toColumn}]
                 kanbanLog: []
+            },
+            
+            // Ondersteuningsstructuur per domein (voor Medium → Large koppeling)
+            ondersteuningsstructuur: {
+                // Format: { '0': { draaglagen: ['informeel', 'collectief', 'formeel'], collectiefDetail: ['schuldhulpmaatje'], formeelDetail: ['budgetbeheer'], bewegingsrichting: 'stabiliseren' } }
             }
         };
 
@@ -5376,7 +5697,7 @@
             document.body.appendChild(loadingMsg);
 
             try {
-                const prompt = `Je bent een SIJN (Sterk In Je Netwerk) expert. Analyseer de volgende hulpvraag en beoordeel elk van de 11 levensdomeinen op een schaal van 1-3:
+                const prompt = `Je bent een RPA (Relationeel-Positioneel Analysemodel) expert. Analyseer de volgende hulpvraag en beoordeel elk van de 11 levensdomeinen op een schaal van 1-3:
 
 1 = 🔴 Onvoldoende stabiel (acute problematiek, intensieve ondersteuning nodig)
 2 = 🟡 Gedeeltelijk zelfstandig (kwetsbaar maar hanteerbaar, regelmatige ondersteuning)
@@ -5385,7 +5706,7 @@
 Hulpvraag: "${hulpvraag}"
 ${wens ? `Wens: "${wens}"` : ''}
 
-De 11 SIJN levensdomeinen zijn:
+De 11 RPA levensdomeinen zijn:
 1. Geestelijke gezondheid
 2. Financiën
 3. Huisvesting
@@ -5772,18 +6093,18 @@ Antwoord in dit exacte JSON formaat:
                 }
             }
             
-            // Sla doel van vandaag op
-            const doelVandaag = document.querySelector('input[name="doelVandaag"]:checked');
-            if (doelVandaag) {
-                state.doelVandaag = doelVandaag.value;
-            }
-            
             if (state.mode === 'professional') {
                 state.professionalName = document.getElementById('professionalName').value;
             }
             
+            // Sla postcode op (Prioriteit 1)
+            const postcodeInput = document.getElementById('postcodeStart');
+            if (postcodeInput && postcodeInput.value) {
+                state.postcode = postcodeInput.value.toUpperCase();
+            }
+            
             saveState();
-            console.log('Ga naar scherm 3 (Domeinscan)');
+            console.log('Ga naar scherm 3 (TRIAGE - domein selectie)');
             goToScreen(3);
         }
 
@@ -5902,17 +6223,19 @@ Antwoord in dit exacte JSON formaat:
             // Update progress steps (hidden)
             renderProgressSteps();
 
-            // Load content for each screen (LEAN workflow)
+            // Load content for each screen (LEAN workflow + Prioriteit 1)
             const screenId = screenConfig ? screenConfig.id : '';
             if (screenId === 'hulpvraag') loadHulpvraagData();
+            if (screenId === 'triage') renderTriageDomainGrid();
             if (screenId === 'domains') renderDomains();
+            if (screenId === 'huidige-steun') renderHuidigeSteunPerDomein();
             if (screenId === 'network') renderDashboard();
-            if (screenId === 'netwerkpositie') renderSIJNNetwerkkaartCompact();
-            if (screenId === 'beweging') { 
-                renderNetwerkBewegingDiagram(); 
-                renderBewegingKeuzes(); 
+            if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
+            if (screenId === 'beweging') renderVoorNaVisualisatie();
+            if (screenId === 'interventies') { 
+                renderInterventiesVoorBeweging();
+                renderConcreteVoorzieningen();
             }
-            if (screenId === 'interventies') renderInterventiesVoorBeweging();
             if (screenId === 'samenvatting') renderSamenvatting();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5982,7 +6305,13 @@ Antwoord in dit exacte JSON formaat:
             // Update risk alert
             updateRiskAlert();
             
-            container.innerHTML = domains.map(domain => {
+            // Filter op geselecteerde domeinen (TRIAGE)
+            const selectedDomains = state.selectedDomains || [];
+            const domainsToShow = selectedDomains.length > 0 
+                ? domains.filter(d => selectedDomains.includes(d.id))
+                : domains;
+            
+            container.innerHTML = domainsToShow.map(domain => {
                 const score = state.scores[domain.id] || 0;
                 const isExpanded = domain.id === activeDomainId;
                 const details = state.domainDetails[domain.id] || {};
@@ -6021,7 +6350,7 @@ Antwoord in dit exacte JSON formaat:
         }
         
         function renderDomainContent(domain, details, currentScore) {
-            // MEDIUM FLOW: 3 vragen per domein + doelgroep-specifieke vragen als hulp
+            // Positionele Analyse FLOW: 3 vragen per domein + doelgroep-specifieke vragen als hulp
             
             const hoeGaatHet = details.hoeGaatHet || '';
             const steunNiveau = details.steunNiveau || '';
@@ -6061,36 +6390,61 @@ Antwoord in dit exacte JSON formaat:
                     <!-- Door wie? (alleen bij voldoende of beperkt) -->
                     <div id="steundoorwie-${domain.id}" style="display: ${(steunNiveau === 'voldoende' || steunNiveau === 'beperkt') ? 'block' : 'none'}; margin-top: 15px; padding: 15px; background: #f9fafb; border-radius: 8px; border: 1px solid #e0e0e0;">
                         <label style="font-size: 0.9rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 10px;">
-                            Door wie? (voor LARGE kosten-analyse)
+                            Door wie? (voor Strategische Analyse kosten-analyse)
                         </label>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox" 
-                                       id="steun-informeel-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'informeel', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">👨‍👩‍👧 Familie/vrienden (informeel)</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox"
-                                       id="steun-collectief-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'collectief', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">🤝 Vrijwilligers/buurt (collectief)</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="checkbox"
-                                       id="steun-formeel-${domain.id}"
-                                       ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'checked' : ''}
-                                       onchange="updateSteunDoorWie('${domain.id}', 'formeel', this.checked)"
-                                       style="width: 18px; height: 18px;">
-                                <span style="font-size: 0.95rem;">🏥 Professionals/zorg (formeel)</span>
-                            </label>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <!-- Informeel -->
+                            <div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
+                                    <input type="checkbox" 
+                                           id="steun-informeel-${domain.id}"
+                                           ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'checked' : ''}
+                                           onchange="updateSteunDoorWie('${domain.id}', 'informeel', this.checked)"
+                                           style="width: 18px; height: 18px;">
+                                    <span style="font-size: 0.95rem; font-weight: 600;">👨‍👩‍👧 Informeel</span>
+                                </label>
+                                <div id="steun-informeel-detail-${domain.id}" style="display: ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'block' : 'none'}; margin-left: 26px; background: white; padding: 12px; border-radius: 6px; border: 1px solid #d1d5db;">
+                                    <div id="steun-informeel-personen-${domain.id}" style="margin-bottom: 10px;">
+                                        ${renderInformeleSteunPersonen(domain.id, details)}
+                                    </div>
+                                    <button onclick="addInformeelPersoon('${domain.id}')" style="padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer;">
+                                        + Persoon toevoegen
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Collectief -->
+                            <div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
+                                    <input type="checkbox"
+                                           id="steun-collectief-${domain.id}"
+                                           ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'checked' : ''}
+                                           onchange="updateSteunDoorWie('${domain.id}', 'collectief', this.checked)"
+                                           style="width: 18px; height: 18px;">
+                                    <span style="font-size: 0.95rem; font-weight: 600;">🤝 Collectief</span>
+                                </label>
+                                <div id="steun-collectief-detail-${domain.id}" style="display: ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'block' : 'none'}; margin-left: 26px; background: #f0fdf4; padding: 12px; border-radius: 6px; border-left: 3px solid #10b981;">
+                                    ${renderCollectieveSteunOpties(domain.id, details)}
+                                </div>
+                            </div>
+                            
+                            <!-- Formeel -->
+                            <div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
+                                    <input type="checkbox"
+                                           id="steun-formeel-${domain.id}"
+                                           ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'checked' : ''}
+                                           onchange="updateSteunDoorWie('${domain.id}', 'formeel', this.checked)"
+                                           style="width: 18px; height: 18px;">
+                                    <span style="font-size: 0.95rem; font-weight: 600;">🏥 Formeel</span>
+                                </label>
+                                <div id="steun-formeel-detail-${domain.id}" style="display: ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'block' : 'none'}; margin-left: 26px; background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                                    ${renderFormeleSteunOpties(domain.id, details)}
+                                </div>
+                            </div>
                         </div>
                         <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 8px; margin-bottom: 0; font-style: italic;">
-                            💡 Deze data wordt gebruikt in LARGE voor kosten- en scenario-analyse
+                            💡 Deze data wordt gebruikt in Strategische Analyse voor kosten- en scenario-analyse
                         </p>
                     </div>
                 </div>
@@ -6253,7 +6607,7 @@ Antwoord in dit exacte JSON formaat:
             const stabilisatieText = stabilisatieLabels[state.stabilisatie] || '⚪ Niet ingevuld';
             
             // Netwerkpositie
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             
             // Domeinen met actie nodig
             const actienodigDomeinen = domains.filter(d => {
@@ -6272,7 +6626,7 @@ Antwoord in dit exacte JSON formaat:
                 <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
                     <h3 style="margin: 0 0 15px 0; color: #166534; font-size: 1.2rem;">Context van deze scan</h3>
                     ${state.doelgroepen && state.doelgroepen.length > 0 ? `
-                        <div style="margin-bottom: 12px;">
+                        <div>
                             <strong>Doelgroep:</strong> ${state.doelgroepen.map(d => {
                                 const labels = {
                                     'ggz': '🧠 GGZ',
@@ -6285,14 +6639,7 @@ Antwoord in dit exacte JSON formaat:
                                 return labels[d] || d;
                             }).join(', ')}
                         </div>
-                    ` : ''}
-                    <div>
-                        <strong>Doel van vandaag:</strong> ${state.doelVandaag ? {
-                            'overzicht': 'Snel overzicht krijgen',
-                            'actie': 'Kijken waar direct actie nodig is',
-                            'vooruitkijken': 'Samen vooruitkijken'
-                        }[state.doelVandaag] : 'Niet ingevuld'}
-                    </div>
+                    ` : '<p style="color: var(--text-light); font-style: italic; margin: 0;">Geen specifieke doelgroep geselecteerd</p>'}
                 </div>
                 
                 <!-- Netwerkpositie -->
@@ -6338,6 +6685,9 @@ Antwoord in dit exacte JSON formaat:
                         <p style="color: var(--text-light); font-style: italic;">Geen specifieke acties bepaald.</p>
                     ` : ''}
                 </div>
+                
+                <!-- POSITIONELE BESLISSINGEN (Prioriteit 1) -->
+                ${renderPositioneleBeslissingen()}
                 
                 <!-- AGENDA SECTIE -->
                 <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
@@ -6538,14 +6888,14 @@ Antwoord in dit exacte JSON formaat:
                 'direct-actie': '🔴 Direct actie nodig'
             };
             
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             
             const actienodigDomeinen = domains.filter(d => {
                 const details = state.domainDetails[d.id] || {};
                 return details.actieNodig === 'actie';
             });
             
-            let text = '=== SIJN SCAN SAMENVATTING ===\n\n';
+            let text = '=== RPA POSITIONELE ANALYSE ===\n\n';
             text += `Datum: ${new Date().toLocaleDateString('nl-NL')}\n\n`;
             
             if (state.doelgroepen && state.doelgroepen.length > 0) {
@@ -6566,12 +6916,116 @@ Antwoord in dit exacte JSON formaat:
             if (actienodigDomeinen.length > 0) {
                 text += 'ACTIE NODIG:\n';
                 actienodigDomeinen.forEach(d => {
+                    const details = state.domainDetails[d.id] || {};
                     text += `- ${d.emoji} ${d.name}\n`;
+                    
+                    // Voeg "Door wie?" info toe
+                    if (details.steunDoorWie && details.steunDoorWie.length > 0) {
+                        text += `  Huidige steun: ${details.steunDoorWie.join(', ')}\n`;
+                        
+                        if (details.steunInformeelPersonen && details.steunInformeelPersonen.length > 0) {
+                            text += `    Informeel: ${details.steunInformeelPersonen.join(', ')}\n`;
+                        }
+                        
+                        if (details.steunCollectiefOpties && details.steunCollectiefOpties.length > 0) {
+                            text += `    Collectief: ${details.steunCollectiefOpties.join(', ')}\n`;
+                        }
+                        
+                        if (details.steunFormeelOpties && details.steunFormeelOpties.length > 0) {
+                            text += `    Formeel: ${details.steunFormeelOpties.join(', ')}\n`;
+                        }
+                    }
+                });
+                text += '\n';
+            }
+            
+            // Ondersteuningsstructuur per domein (voor Strategische Analyse)
+            const domeinenMetOndersteuning = domains.filter(d => {
+                const ondersteuning = state.ondersteuningsstructuur[d.id];
+                return ondersteuning && ondersteuning.draaglagen && ondersteuning.draaglagen.length > 0;
+            });
+            
+            if (domeinenMetOndersteuning.length > 0) {
+                text += 'ONDERSTEUNINGSSTRUCTUUR:\n';
+                domeinenMetOndersteuning.forEach(d => {
+                    const ondersteuning = state.ondersteuningsstructuur[d.id];
+                    text += `\n${d.emoji} ${d.name}:\n`;
+                    text += `  Dragende lagen: ${ondersteuning.draaglagen.join(', ')}\n`;
+                    
+                    if (ondersteuning.collectiefDetail && ondersteuning.collectiefDetail.length > 0) {
+                        text += `  Collectief: ${ondersteuning.collectiefDetail.join(', ')}\n`;
+                    }
+                    
+                    if (ondersteuning.formeelDetail && ondersteuning.formeelDetail.length > 0) {
+                        text += `  Formeel: ${ondersteuning.formeelDetail.join(', ')}\n`;
+                    }
+                    
+                    if (ondersteuning.bewegingsrichting) {
+                        const bewegingLabels = {
+                            'stabiliseren': 'Stabiliseren',
+                            'vervangen': 'Vervangen',
+                            'opschalen': 'Opschalen',
+                            'afschalen': 'Afschalen',
+                            'stoppen': 'Stoppen'
+                        };
+                        text += `  Beweging: ${bewegingLabels[ondersteuning.bewegingsrichting] || ondersteuning.bewegingsrichting}\n`;
+                    }
+                });
+                text += '\n';
+            }
+            
+            // POSITIONELE BESLISSINGEN (Prioriteit 1)
+            const domeinenMetBeslissing = domains.filter(d => {
+                return state.huidigeSteun && state.huidigeSteun[d.id] && 
+                       state.huidigeSteun[d.id].draaglagen && 
+                       state.huidigeSteun[d.id].draaglagen.length > 0;
+            });
+            
+            if (domeinenMetBeslissing.length > 0) {
+                text += '\n=== POSITIONELE BESLISSINGEN ===\n';
+                text += '(Niet méér zorg, maar anders gepositioneerd)\n\n';
+                
+                domeinenMetBeslissing.forEach(d => {
+                    const huidig = state.huidigeSteun[d.id] || { draaglagen: [] };
+                    const gewenst = state.ondersteuningsstructuur[d.id] || {};
+                    
+                    text += `${d.emoji} ${d.name}:\n`;
+                    text += `  Huidig: ${huidig.draaglagen.join(', ')}\n`;
+                    text += `  Gewenst: ${(gewenst.draaglagen || huidig.draaglagen).join(', ')}\n`;
+                    
+                    if (gewenst.bewegingsrichting) {
+                        const bewegingLabels = {
+                            'stabiliseren': 'Stabiliseren',
+                            'vervangen': 'Vervangen',
+                            'opschalen': 'Opschalen',
+                            'afschalen': 'Afschalen',
+                            'stoppen': 'Stoppen'
+                        };
+                        text += `  Beweging: ${bewegingLabels[gewenst.bewegingsrichting]}\n`;
+                    }
+                    
+                    if (gewenst.verantwoordelijke) {
+                        text += `  Verantwoordelijke: ${gewenst.verantwoordelijke}\n`;
+                    }
+                    
+                    if (gewenst.evaluatieDatum) {
+                        const datum = new Date(gewenst.evaluatieDatum);
+                        text += `  Evaluatiemoment: ${datum.toLocaleDateString('nl-NL')}\n`;
+                    }
+                    
+                    text += '\n';
                 });
             }
             
+            text += '\n=== Data voor Strategische Analyse ===\n';
+            text += 'Deze positionele analyse kan worden gebruikt voor:\n';
+            text += '- Kostenanalyse huidig vs. gewenst scenario\n';
+            text += '- Netwerkverschuiving impact berekening\n';
+            text += '- Beleidsmatige onderbouwing\n';
+            text += '- Evaluatie effectiviteit netwerkbewegingen\n';
+            
             navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Samenvatting gekopieerd naar klembord!');
+                alert('✅ Samenvatting gekopieerd naar klembord!\n\nInclusive ondersteuningsstructuur voor Strategische Analyse.');
             }).catch(() => {
                 alert('❌ Kon niet kopiëren. Selecteer handmatig.');
             });
@@ -7098,7 +7552,7 @@ Antwoord in dit exacte JSON formaat:
         
         // Copy summary to clipboard
         function copyToClipboard() {
-            let summary = '=== SIJN Domeinoverzicht ===\n\n';
+            let summary = '=== RPA Domeinoverzicht ===\n\n';
             
             domains.forEach(domain => {
                 const score = state.scores[domain.id];
@@ -7399,7 +7853,7 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
-        // Update "Door wie?" checkboxes (voor LARGE kosten-analyse)
+        // Update "Door wie?" checkboxes (voor Strategische Analyse kosten-analyse)
         function updateSteunDoorWie(domainId, type, checked) {
             if (!state.domainDetails[domainId]) {
                 state.domainDetails[domainId] = {};
@@ -7412,9 +7866,164 @@ Antwoord in dit exacte JSON formaat:
                 state.domainDetails[domainId].steunDoorWie.push(type);
             } else if (!checked) {
                 state.domainDetails[domainId].steunDoorWie = state.domainDetails[domainId].steunDoorWie.filter(t => t !== type);
+                // Clear namen als checkbox wordt uitgezet
+                if (type === 'informeel') state.domainDetails[domainId].steunInformeelNamen = '';
+                if (type === 'collectief') state.domainDetails[domainId].steunCollectiefNamen = '';
+                if (type === 'formeel') state.domainDetails[domainId].steunFormeelNamen = '';
+            }
+            
+            // Toon/verberg detailveld
+            const detailDiv = document.getElementById(`steun-${type}-detail-${domainId}`);
+            if (detailDiv) {
+                detailDiv.style.display = checked ? 'block' : 'none';
+            }
+            
+            // Clear data als checkbox wordt uitgezet
+            if (!checked) {
+                if (type === 'informeel') state.domainDetails[domainId].steunInformeelPersonen = [];
+                if (type === 'collectief') state.domainDetails[domainId].steunCollectiefOpties = [];
+                if (type === 'formeel') state.domainDetails[domainId].steunFormeelOpties = [];
             }
             
             saveState();
+            renderDomains();
+        }
+
+        // Render informele steun personen
+        function renderInformeleSteunPersonen(domainId, details) {
+            const personen = details.steunInformeelPersonen || [];
+            
+            if (personen.length === 0) {
+                return '<p style="font-size: 0.85rem; color: #6b7280; font-style: italic; margin: 0;">Nog geen personen toegevoegd</p>';
+            }
+            
+            return personen.map((persoon, index) => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 6px;">
+                    <span style="font-size: 0.9rem;">${persoon}</span>
+                    <button onclick="deleteInformeelPersoon('${domainId}', ${index})" 
+                            style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 1.1rem; padding: 0 8px;">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Voeg informeel persoon toe
+        function addInformeelPersoon(domainId) {
+            const naam = prompt('Wie helpt er? (bijv. "Partner", "Zus Anna", "Buurvrouw Karin")');
+            if (!naam || naam.trim() === '') return;
+            
+            if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
+            if (!state.domainDetails[domainId].steunInformeelPersonen) {
+                state.domainDetails[domainId].steunInformeelPersonen = [];
+            }
+            
+            state.domainDetails[domainId].steunInformeelPersonen.push(naam.trim());
+            saveState();
+            renderDomains();
+        }
+
+        // Verwijder informeel persoon
+        function deleteInformeelPersoon(domainId, index) {
+            if (!state.domainDetails[domainId] || !state.domainDetails[domainId].steunInformeelPersonen) return;
+            
+            state.domainDetails[domainId].steunInformeelPersonen.splice(index, 1);
+            saveState();
+            renderDomains();
+        }
+
+        // Render collectieve steun opties
+        function renderCollectieveSteunOpties(domainId, details) {
+            const actieveDoelgroep = state.doelgroepen && state.doelgroepen.length > 0 ? 
+                state.doelgroepen[0] : 'algemeen';
+            
+            const opties = collectieveVormen[domainId] ? 
+                (collectieveVormen[domainId][actieveDoelgroep] || collectieveVormen[domainId]['algemeen'] || []) : [];
+            
+            if (opties.length === 0) {
+                return '<p style="font-size: 0.85rem; color: #6b7280; font-style: italic; margin: 0;">Geen opties beschikbaar voor dit domein</p>';
+            }
+            
+            const geselecteerd = details.steunCollectiefOpties || [];
+            
+            return `
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    ${opties.map(optie => `
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 8px; background: ${geselecteerd.includes(optie) ? 'white' : 'transparent'}; border: 1px solid ${geselecteerd.includes(optie) ? '#10b981' : 'transparent'}; border-radius: 4px;">
+                            <input type="checkbox" 
+                                   ${geselecteerd.includes(optie) ? 'checked' : ''}
+                                   onchange="toggleCollectieveSteun('${domainId}', '${optie.replace(/'/g, "\\'")}', this.checked)"
+                                   style="width: 16px; height: 16px; cursor: pointer;">
+                            <span style="font-size: 0.85rem;">${optie}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Toggle collectieve steun optie
+        function toggleCollectieveSteun(domainId, optie, checked) {
+            if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
+            if (!state.domainDetails[domainId].steunCollectiefOpties) {
+                state.domainDetails[domainId].steunCollectiefOpties = [];
+            }
+            
+            const opties = state.domainDetails[domainId].steunCollectiefOpties;
+            
+            if (checked && !opties.includes(optie)) {
+                opties.push(optie);
+            } else if (!checked) {
+                const index = opties.indexOf(optie);
+                if (index > -1) opties.splice(index, 1);
+            }
+            
+            saveState();
+            renderDomains();
+        }
+
+        // Render formele steun opties
+        function renderFormeleSteunOpties(domainId, details) {
+            const opties = formeleZorgtypen[domainId] || [];
+            
+            if (opties.length === 0) {
+                return '<p style="font-size: 0.85rem; color: #6b7280; font-style: italic; margin: 0;">Geen opties beschikbaar voor dit domein</p>';
+            }
+            
+            const geselecteerd = details.steunFormeelOpties || [];
+            
+            return `
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    ${opties.map(optie => `
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 8px; background: ${geselecteerd.includes(optie) ? 'white' : 'transparent'}; border: 1px solid ${geselecteerd.includes(optie) ? '#3b82f6' : 'transparent'}; border-radius: 4px;">
+                            <input type="checkbox" 
+                                   ${geselecteerd.includes(optie) ? 'checked' : ''}
+                                   onchange="toggleFormeleSteun('${domainId}', '${optie.replace(/'/g, "\\'")}', this.checked)"
+                                   style="width: 16px; height: 16px; cursor: pointer;">
+                            <span style="font-size: 0.85rem;">${optie}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Toggle formele steun optie
+        function toggleFormeleSteun(domainId, optie, checked) {
+            if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
+            if (!state.domainDetails[domainId].steunFormeelOpties) {
+                state.domainDetails[domainId].steunFormeelOpties = [];
+            }
+            
+            const opties = state.domainDetails[domainId].steunFormeelOpties;
+            
+            if (checked && !opties.includes(optie)) {
+                opties.push(optie);
+            } else if (!checked) {
+                const index = opties.indexOf(optie);
+                if (index > -1) opties.splice(index, 1);
+            }
+            
+            saveState();
+            renderDomains();
         }
 
         // Toggle ondersteuningsbehoefte checkboxes
@@ -7532,6 +8141,8 @@ Antwoord in dit exacte JSON formaat:
                 const hoeGaatHet = details.hoeGaatHet || '';
                 const steunNiveau = details.steunNiveau || '';
                 const actieNodig = details.actieNodig || '';
+                const ondersteuning = state.ondersteuningsstructuur[domain.id] || {};
+                const isExpanded = ondersteuning.expanded || false;
                 
                 // Hoe gaat het?
                 let hoeText = '';
@@ -7578,24 +8189,49 @@ Antwoord in dit exacte JSON formaat:
                     actieKleur = 'color: #9ca3af;';
                 }
                 
+                // Ondersteunings-badge (toon icoon als er ondersteuning is ingevuld)
+                const heeftOndersteuning = ondersteuning.draaglagen && ondersteuning.draaglagen.length > 0;
+                const ondersteuningsBadge = heeftOndersteuning ? 
+                    '<span style="color: #10b981; font-size: 1.2rem;">✓</span>' : 
+                    '<span style="color: #d1d5db; font-size: 1.2rem;">○</span>';
+                
+                // Render ondersteunings-blok (uitklapbaar)
+                const ondersteuningsBlok = isExpanded ? renderOndersteuningsBlok(domain.id) : '';
+                
                 return `
-                    <tr onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; ${rowBackground}">
-                        <td>
+                    <tr style="${rowBackground}">
+                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer;">
                             <div class="domain-cell">
                                 <span class="domain-emoji">${domain.emoji}</span>
                                 <span class="domain-name">${domain.name}</span>
                             </div>
                         </td>
-                        <td style="text-align: center;">
+                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem; ${hoeKleur}">${hoeText}</span>
                         </td>
-                        <td style="text-align: center;">
+                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem;">${steunText}</span>
                         </td>
-                        <td style="text-align: center;">
+                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem; ${actieKleur}">${actieText}</span>
                         </td>
+                        <td style="text-align: center;">
+                            <button 
+                                onclick="event.stopPropagation(); toggleOndersteuningsBlok('${domain.id}');" 
+                                style="background: none; border: none; cursor: pointer; font-size: 1.5rem; padding: 8px;"
+                                title="Ondersteuningsstructuur">
+                                🔧
+                            </button>
+                            ${ondersteuningsBadge}
+                        </td>
                     </tr>
+                    ${isExpanded ? `
+                    <tr>
+                        <td colspan="5" style="padding: 0; background: #f9fafb;">
+                            ${ondersteuningsBlok}
+                        </td>
+                    </tr>
+                    ` : ''}
                 `;
             }).join('');
             
@@ -7612,6 +8248,7 @@ Antwoord in dit exacte JSON formaat:
                             <th style="text-align: center;">Hoe gaat het?</th>
                             <th style="text-align: center;">Is er steun?</th>
                             <th style="text-align: center;">Wat is nu nodig?</th>
+                            <th style="text-align: center; width: 100px;">Ondersteuning</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -7619,6 +8256,250 @@ Antwoord in dit exacte JSON formaat:
                     </tbody>
                 </table>
             `;
+        }
+
+        // Toggle ondersteuningsstructuur blok
+        function toggleOndersteuningsBlok(domainId) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = {
+                    draaglagen: [],
+                    collectiefDetail: [],
+                    formeelDetail: [],
+                    bewegingsrichting: null,
+                    expanded: false
+                };
+            }
+            state.ondersteuningsstructuur[domainId].expanded = !state.ondersteuningsstructuur[domainId].expanded;
+            saveState();
+            renderDomainOverviewTable();
+        }
+
+        // Render ondersteuningsstructuur blok
+        function renderOndersteuningsBlok(domainId) {
+            const domain = domains.find(d => d.id === domainId);
+            if (!domain) return '';
+            
+            const ondersteuning = state.ondersteuningsstructuur[domainId] || {
+                draaglagen: [],
+                collectiefDetail: [],
+                formeelDetail: [],
+                bewegingsrichting: null
+            };
+            
+            const draaglagen = ondersteuning.draaglagen || [];
+            const collectiefDetail = ondersteuning.collectiefDetail || [];
+            const formeelDetail = ondersteuning.formeelDetail || [];
+            const bewegingsrichting = ondersteuning.bewegingsrichting || null;
+            
+            // Bepaal welke doelgroep actief is (eerste geselecteerde doelgroep)
+            const actieveDoelgroep = state.doelgroepen && state.doelgroepen.length > 0 ? 
+                state.doelgroepen[0] : 'algemeen';
+            
+            // Haal collectieve vormen en formele zorgtypen op
+            const collectieveOpties = collectieveVormen[domainId] ? 
+                (collectieveVormen[domainId][actieveDoelgroep] || collectieveVormen[domainId]['algemeen'] || []) : [];
+            const formeleOpties = formeleZorgtypen[domainId] || [];
+            
+            return `
+                <div style="padding: 25px; background: white; border-top: 3px solid var(--primary);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <span style="font-size: 1.5rem;">${domain.emoji}</span>
+                        <h3 style="margin: 0; color: var(--text);">Ondersteuningsstructuur: ${domain.name}</h3>
+                    </div>
+                    
+                    <!-- Dragende lagen -->
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
+                            Wie draagt nu? (meerdere opties mogelijk)
+                        </label>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('informeel') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('informeel') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px; transition: all 0.2s;">
+                                <input type="checkbox" 
+                                    ${draaglagen.includes('informeel') ? 'checked' : ''}
+                                    onchange="toggleDraaglaag('${domainId}', 'informeel', this.checked)"
+                                    style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-weight: 600;">Informeel</span>
+                                <span style="font-size: 0.85rem; color: var(--text-light);">(familie, vrienden, buren)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('collectief') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('collectief') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px; transition: all 0.2s;">
+                                <input type="checkbox" 
+                                    ${draaglagen.includes('collectief') ? 'checked' : ''}
+                                    onchange="toggleDraaglaag('${domainId}', 'collectief', this.checked)"
+                                    style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-weight: 600;">Collectief</span>
+                                <span style="font-size: 0.85rem; color: var(--text-light);">(buurtteam, maatjes, vrijwilligers)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('formeel') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('formeel') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px; transition: all 0.2s;">
+                                <input type="checkbox" 
+                                    ${draaglagen.includes('formeel') ? 'checked' : ''}
+                                    onchange="toggleDraaglaag('${domainId}', 'formeel', this.checked)"
+                                    style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-weight: 600;">Formeel</span>
+                                <span style="font-size: 0.85rem; color: var(--text-light);">(professionals, wijkteams, zorg)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Collectief specificatie -->
+                    ${draaglagen.includes('collectief') ? `
+                    <div style="margin-bottom: 25px; padding: 20px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid var(--secondary);">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
+                            Collectieve ondersteuning - wat precies?
+                        </label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px;">
+                            ${collectieveOpties.map(optie => `
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: ${collectiefDetail.includes(optie) ? 'white' : 'transparent'}; border: 1px solid ${collectiefDetail.includes(optie) ? 'var(--secondary)' : '#d1d5db'}; border-radius: 6px;">
+                                    <input type="checkbox" 
+                                        ${collectiefDetail.includes(optie) ? 'checked' : ''}
+                                        onchange="toggleCollectiefDetail('${domainId}', '${optie.replace(/'/g, "\\'")}', this.checked)"
+                                        style="width: 16px; height: 16px; cursor: pointer;">
+                                    <span style="font-size: 0.95rem;">${optie}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Formeel specificatie -->
+                    ${draaglagen.includes('formeel') ? `
+                    <div style="margin-bottom: 25px; padding: 20px; background: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
+                            Formele zorg - welke typen?
+                        </label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px;">
+                            ${formeleOpties.map(optie => `
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: ${formeelDetail.includes(optie) ? 'white' : 'transparent'}; border: 1px solid ${formeelDetail.includes(optie) ? '#3b82f6' : '#d1d5db'}; border-radius: 6px;">
+                                    <input type="checkbox" 
+                                        ${formeelDetail.includes(optie) ? 'checked' : ''}
+                                        onchange="toggleFormeelDetail('${domainId}', '${optie.replace(/'/g, "\\'")}', this.checked)"
+                                        style="width: 16px; height: 16px; cursor: pointer;">
+                                    <span style="font-size: 0.95rem;">${optie}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Bewegingsrichting -->
+                    <div style="margin-bottom: 20px; padding: 20px; background: #fefce8; border-radius: 8px; border-left: 4px solid #eab308;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
+                            🔄 Gewenste beweging voor dit domein
+                        </label>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            ${['stabiliseren', 'vervangen', 'opschalen', 'afschalen', 'stoppen'].map(richting => {
+                                const labels = {
+                                    'stabiliseren': 'Stabiliseren (blijft zoals het is)',
+                                    'vervangen': 'Vervangen (zelfde niveau, andere uitvoerder)',
+                                    'opschalen': 'Opschalen (meer/intensiever)',
+                                    'afschalen': 'Afschalen (minder/lichter)',
+                                    'stoppen': 'Stoppen (ondersteuning beëindigen)'
+                                };
+                                return `
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${bewegingsrichting === richting ? '#fef3c7' : 'white'}; border: 2px solid ${bewegingsrichting === richting ? '#eab308' : '#e5e7eb'}; border-radius: 8px;">
+                                        <input type="radio" 
+                                            name="beweging-${domainId}" 
+                                            value="${richting}"
+                                            ${bewegingsrichting === richting ? 'checked' : ''}
+                                            onchange="setBewegingsrichting('${domainId}', '${richting}')"
+                                            style="width: 18px; height: 18px; cursor: pointer;">
+                                        <span style="font-weight: 600;">${labels[richting]}</span>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: right; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                        <button onclick="toggleOndersteuningsBlok('${domainId}')" class="btn btn-secondary">
+                            Sluiten
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle draaglaag
+        function toggleDraaglaag(domainId, draaglaag, isChecked) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = {
+                    draaglagen: [],
+                    collectiefDetail: [],
+                    formeelDetail: [],
+                    bewegingsrichting: null
+                };
+            }
+            
+            const draaglagen = state.ondersteuningsstructuur[domainId].draaglagen || [];
+            
+            if (isChecked && !draaglagen.includes(draaglaag)) {
+                draaglagen.push(draaglaag);
+            } else if (!isChecked) {
+                const index = draaglagen.indexOf(draaglaag);
+                if (index > -1) draaglagen.splice(index, 1);
+                
+                // Clear details als draaglaag wordt uitgezet
+                if (draaglaag === 'collectief') {
+                    state.ondersteuningsstructuur[domainId].collectiefDetail = [];
+                } else if (draaglaag === 'formeel') {
+                    state.ondersteuningsstructuur[domainId].formeelDetail = [];
+                }
+            }
+            
+            state.ondersteuningsstructuur[domainId].draaglagen = draaglagen;
+            saveState();
+            renderDomainOverviewTable();
+        }
+
+        // Toggle collectief detail
+        function toggleCollectiefDetail(domainId, optie, isChecked) {
+            if (!state.ondersteuningsstructuur[domainId]) return;
+            
+            const details = state.ondersteuningsstructuur[domainId].collectiefDetail || [];
+            
+            if (isChecked && !details.includes(optie)) {
+                details.push(optie);
+            } else if (!isChecked) {
+                const index = details.indexOf(optie);
+                if (index > -1) details.splice(index, 1);
+            }
+            
+            state.ondersteuningsstructuur[domainId].collectiefDetail = details;
+            saveState();
+            renderDomainOverviewTable();
+        }
+
+        // Toggle formeel detail
+        function toggleFormeelDetail(domainId, optie, isChecked) {
+            if (!state.ondersteuningsstructuur[domainId]) return;
+            
+            const details = state.ondersteuningsstructuur[domainId].formeelDetail || [];
+            
+            if (isChecked && !details.includes(optie)) {
+                details.push(optie);
+            } else if (!isChecked) {
+                const index = details.indexOf(optie);
+                if (index > -1) details.splice(index, 1);
+            }
+            
+            state.ondersteuningsstructuur[domainId].formeelDetail = details;
+            saveState();
+            renderDomainOverviewTable();
+        }
+
+        // Set bewegingsrichting
+        function setBewegingsrichting(domainId, richting) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = {
+                    draaglagen: [],
+                    collectiefDetail: [],
+                    formeelDetail: [],
+                    bewegingsrichting: null
+                };
+            }
+            
+            state.ondersteuningsstructuur[domainId].bewegingsrichting = richting;
+            saveState();
+            renderDomainOverviewTable();
         }
 
         function renderSpiderChart() {
@@ -8062,7 +8943,7 @@ Antwoord in dit exacte JSON formaat:
             badge.className = `network-type-badge ${networkInfo.className}`;
         }
 
-        // === SIJN NETWERKPOSITIE BEPALING ===
+        // === RPA NETWERKPOSITIE BEPALING ===
         
         // Context per netwerkpositie (wanneer passend)
         function getNetwerkContext(positie) {
@@ -8129,8 +9010,9 @@ Antwoord in dit exacte JSON formaat:
             modal.innerHTML = `
                 <div style="background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border-radius: 24px; padding: 40px; max-width: 800px; max-height: 85vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(46, 204, 113, 0.3); border: 4px solid var(--primary);">
                     <div style="text-align: center; margin-bottom: 40px; position: relative;">
-                        <h1 style="font-size: 3rem; margin: 20px 0 15px 0; color: var(--primary); text-shadow: 2px 2px 0 rgba(46, 204, 113, 0.1); font-weight: 800; letter-spacing: 2px;">SIJN</h1>
-                        <h2 style="font-size: 1.6rem; font-weight: 600; color: #166534; margin: 0; letter-spacing: 1px;">Sterk in je Netwerk</h2>
+                        <h1 style="font-size: 3rem; margin: 20px 0 15px 0; color: var(--primary); text-shadow: 2px 2px 0 rgba(46, 204, 113, 0.1); font-weight: 800; letter-spacing: 2px;">RPA</h1>
+                        <h2 style="font-size: 1.3rem; font-weight: 600; color: #166534; margin: 0; letter-spacing: 1px;">Relationeel-Positioneel Analysemodel</h2>
+                        <p style="font-size: 0.95rem; color: #6b7280; margin-top: 8px; font-style: italic;">Positionele Analyse: bewust kiezen hoe steun georganiseerd wordt</p>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 3px solid #f59e0b; position: relative; overflow: hidden;">
@@ -8153,10 +9035,10 @@ Antwoord in dit exacte JSON formaat:
                         <div style="position: absolute; top: -30px; right: -30px; font-size: 8rem; opacity: 0.1; transform: rotate(-15deg);">🎯</div>
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
                             <span style="font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.3));">🎯</span>
-                            <h3 style="font-size: 1.5rem; color: #1e40af; margin: 0; font-weight: 700;">Wat is SIJN?</h3>
+                            <h3 style="font-size: 1.5rem; color: #1e40af; margin: 0; font-weight: 700;">Wat is RPA?</h3>
                         </div>
                         <p style="font-size: 1.1rem; line-height: 1.9; color: #1e3a8a;">
-                            SIJN is een meet- en gespreksinstrument dat inzicht geeft in hoe iemand ervoor staat en hoe steun is georganiseerd. 
+                            RPA is een meet- en gespreksinstrument dat inzicht geeft in hoe iemand ervoor staat en hoe steun is georganiseerd. 
                             We kijken naar de huidige situatie, maken zichtbaar waar kracht en kwetsbaarheid zitten, en bepalen samen wat helpend is.
                         </p>
                     </div>
@@ -8208,9 +9090,11 @@ Antwoord in dit exacte JSON formaat:
                         <h3 style="font-size: 1.4rem; color: #14532d; margin-bottom: 15px; text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
                             Kernzin
                         </h3>
-                        <p style="font-size: 1.3rem; line-height: 2; color: #14532d; font-weight: 700; text-align: center; margin: 0; text-shadow: 1px 1px 0 rgba(255,255,255,0.5);">
-                            Sterk in je Netwerk betekent:<br>
-                            <span style="font-size: 1.4rem; color: #15803d;">✨ bewust kijken naar hoe steun is georganiseerd<br>— en waar beweging mogelijk is ✨</span>
+                        <p style="font-size: 1.25rem; line-height: 1.9; color: #14532d; font-weight: 700; text-align: center; margin: 0; text-shadow: 1px 1px 0 rgba(255,255,255,0.5);">
+                            <span style="font-size: 1.4rem; color: #15803d;">⚡ Analyse zonder besluit</span><br>
+                            <span style="font-size: 1.2rem; color: #166534;">= blijven hangen in het systeemplafond</span><br><br>
+                            <span style="font-size: 1.4rem; color: #15803d;">✨ Positionele keuze</span><br>
+                            <span style="font-size: 1.2rem; color: #166534;">= doorbraak naar duurzame steun</span>
                         </p>
                     </div>
                     
@@ -8265,7 +9149,7 @@ Antwoord in dit exacte JSON formaat:
             document.body.appendChild(modal);
         }
         
-        function getSIJNNetwerkPositie() {
+        function getRPANetwerkPositie() {
             // Tel alle supporters over alle domeinen
             let totalSupporters = 0;
             let informalCount = 0;
@@ -8680,12 +9564,12 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
-        // Render SIJN Netwerkkaart
-        function renderSIJNNetwerkkaart() {
+        // Render RPA Netwerkkaart
+        function renderRPANetwerkkaart() {
             const container = document.getElementById('sijnNetwerkkaart');
             if (!container) return;
             
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
             
             const posities = ['geen', '1-persoons', 'informeel', 'formeel', 'gemengd'];
@@ -8748,7 +9632,7 @@ Antwoord in dit exacte JSON formaat:
                         ${posities.map(pos => {
                             const isHuidig = pos === netwerkInfo.positie;
                             
-                            // SIJN kleuren per positie
+                            // RPA kleuren per positie
                             const positieKleuren = {
                                 'geen': { bg: '#f3f4f6', border: '#9ca3af', shadow: 'rgba(156, 163, 175, 0.2)', text: '#6b7280' },
                                 '1-persoons': { bg: '#fef3c7', border: '#f59e0b', shadow: 'rgba(245, 158, 11, 0.2)', text: '#92400e' },
@@ -8852,11 +9736,11 @@ Antwoord in dit exacte JSON formaat:
         }
         
         // LEAN: Compact netwerkpositie scherm (zonder interventies)
-        function renderSIJNNetwerkkaartCompact() {
+        function renderRPANetwerkkaartCompact() {
             const container = document.getElementById('sijnNetwerkkaartCompact');
             if (!container) return;
             
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             const posities = ['geen', '1-persoons', 'informeel', 'formeel', 'gemengd'];
             const positieLabels = {
                 'geen': 'Geen netwerk',
@@ -8946,7 +9830,7 @@ Antwoord in dit exacte JSON formaat:
             const container = document.getElementById('netwerkBewegingDiagram');
             if (!container) return;
             
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             const huidigPositie = netwerkInfo.positie;
             const gekozenBeweging = state.beoogdeBeweging;
             
@@ -9088,7 +9972,7 @@ Antwoord in dit exacte JSON formaat:
             const container = document.getElementById('bewegingKeuzes');
             if (!container) return;
             
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
             
             let html = `
@@ -9147,7 +10031,7 @@ Antwoord in dit exacte JSON formaat:
                 return;
             }
             
-            const netwerkInfo = getSIJNNetwerkPositie();
+            const netwerkInfo = getRPANetwerkPositie();
             const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
             const richting = richtingen.find(r => r.naar === gekozenBeweging);
             
@@ -9278,6 +10162,9 @@ Antwoord in dit exacte JSON formaat:
             `;
             
             container.innerHTML = html;
+            
+            // Render concrete voorzieningen als ondersteuningsstructuur en postcode zijn ingevuld
+            renderConcreteVoorzieningen();
         }
         
         // Voeg custom interventie toe
@@ -9332,7 +10219,7 @@ Antwoord in dit exacte JSON formaat:
                 return;
             }
             
-            // Sla postcode op in state (voor LARGE analyse)
+            // Sla postcode op in state (voor Strategische Analyse analyse)
             state.postcode = postcode;
             saveState();
             
@@ -9441,6 +10328,227 @@ Antwoord in dit exacte JSON formaat:
             renderInterventiesVoorBeweging();
             
             console.log('Postcode gefilterd:', postcode, 'Regio:', regio, 'Lokale interventies:', lokaal);
+            
+            // Render concrete voorzieningen op basis van ondersteuningsstructuur
+            renderConcreteVoorzieningen();
+        }
+        
+        // Render concrete voorzieningen op basis van ondersteuningsstructuur
+        function renderConcreteVoorzieningen() {
+            const container = document.getElementById('lokaleVoorzieningenOverzicht');
+            if (!container) return;
+            
+            // Check of postcode is ingevuld
+            if (!state.postcode) {
+                container.innerHTML = `
+                    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                        <p style="margin: 0; color: #92400e;">
+                            ⚠️ <strong>Vul eerst een postcode in</strong> om concrete voorzieningen te zien die passen bij je ondersteuningsstructuur.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Haal regio op basis van postcode
+            const regio = state.postcode.substring(0, 4);
+            const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
+            
+            const regioNamen = {
+                '1000': 'Amsterdam',
+                '3000': 'Rotterdam',
+                '2000': 'Haarlem'
+            };
+            const regioNaam = regioNamen[regio] || 'jouw regio';
+            
+            // Verzamel alle domeinen met ondersteuningsstructuur
+            const domeinenMetOndersteuning = domains.filter(d => {
+                const ondersteuning = state.ondersteuningsstructuur[d.id];
+                return ondersteuning && ondersteuning.draaglagen && ondersteuning.draaglagen.length > 0;
+            });
+            
+            if (domeinenMetOndersteuning.length === 0) {
+                container.innerHTML = `
+                    <div style="background: #e0e7ff; border: 2px solid #6366f1; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                        <p style="margin: 0; color: #3730a3;">
+                            💡 <strong>Nog geen ondersteuningsstructuur ingevuld</strong><br>
+                            Ga naar het OVERZICHT-scherm en klik op 🔧 bij de domeinen om de ondersteuningsstructuur in te vullen.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render voorzieningen per domein
+            let html = `
+                <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 3px solid #10b981; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                        <span style="font-size: 1.5rem;">📍</span>
+                        <div>
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: #065f46; margin: 0;">Concrete voorzieningen in ${regioNaam}</h3>
+                            <p style="font-size: 0.9rem; color: #047857; margin: 5px 0 0 0;">Op basis van jouw ondersteuningsstructuur (${state.postcode})</p>
+                        </div>
+                    </div>
+            `;
+            
+            domeinenMetOndersteuning.forEach(domain => {
+                const ondersteuning = state.ondersteuningsstructuur[domain.id];
+                const draaglagen = ondersteuning.draaglagen || [];
+                const collectiefDetail = ondersteuning.collectiefDetail || [];
+                const formeelDetail = ondersteuning.formeelDetail || [];
+                
+                html += `
+                    <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; border-left: 5px solid var(--primary);">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <span style="font-size: 1.3rem;">${domain.emoji}</span>
+                            <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h4>
+                        </div>
+                        
+                        <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 12px; font-style: italic;">
+                            Dragende lagen: ${draaglagen.join(', ')}
+                        </div>
+                `;
+                
+                // Collectieve voorzieningen
+                if (draaglagen.includes('collectief') && collectiefDetail.length > 0) {
+                    html += `
+                        <div style="margin-bottom: 15px;">
+                            <h5 style="font-size: 0.95rem; font-weight: 600; color: #047857; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <span>🤝</span> Collectieve ondersteuning
+                            </h5>
+                            <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border-left: 3px solid #10b981;">
+                `;
+                    
+                    // Match collectiefDetail met lokaleInterventies
+                    collectiefDetail.forEach(categorie => {
+                        // Zoek matchende voorzieningen in lokaal.collectief
+                        const matchendeVoorzieningen = lokaal.collectief.filter(voorziening => {
+                            // Simpele keyword matching (kan verfijnd worden)
+                            const categorieLower = categorie.toLowerCase();
+                            const voorzieningLower = voorziening.toLowerCase();
+                            
+                            // Check verschillende matches
+                            if (categorieLower.includes('buurtteam') && voorzieningLower.includes('buurtteam')) return true;
+                            if (categorieLower.includes('schuldhulp') && voorzieningLower.includes('schuldhulp')) return true;
+                            if (categorieLower.includes('maatje') && voorzieningLower.includes('maatje')) return true;
+                            if (categorieLower.includes('wijkcentrum') && voorzieningLower.includes('wijkcentrum')) return true;
+                            if (categorieLower.includes('buurt') && voorzieningLower.includes('buurt')) return true;
+                            
+                            return false;
+                        });
+                        
+                        if (matchendeVoorzieningen.length > 0) {
+                            html += `
+                                <div style="margin-bottom: 10px;">
+                                    <div style="font-weight: 600; color: #065f46; margin-bottom: 5px;">${categorie}:</div>
+                                    ${matchendeVoorzieningen.map(voorziening => `
+                                        <div style="padding: 8px 12px; background: white; border: 1px solid #86efac; border-radius: 6px; margin-bottom: 5px; font-size: 0.9rem;">
+                                            📍 ${voorziening}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else {
+                            html += `
+                                <div style="padding: 8px 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem; color: #92400e;">
+                                    ${categorie} - <em>Geen specifieke voorziening gevonden in ${regioNaam}. Zoek lokaal of gebruik "Anders".</em>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Formele voorzieningen
+                if (draaglagen.includes('formeel') && formeelDetail.length > 0) {
+                    html += `
+                        <div style="margin-bottom: 15px;">
+                            <h5 style="font-size: 0.95rem; font-weight: 600; color: #1e40af; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <span>🏥</span> Formele zorg
+                            </h5>
+                            <div style="background: #eff6ff; padding: 12px; border-radius: 8px; border-left: 3px solid #3b82f6;">
+                `;
+                    
+                    // Match formeelDetail met lokaleInterventies
+                    formeelDetail.forEach(zorgtype => {
+                        // Zoek matchende voorzieningen in lokaal.formeel
+                        const matchendeVoorzieningen = lokaal.formeel.filter(voorziening => {
+                            const zorgtypeLower = zorgtype.toLowerCase();
+                            const voorzieningLower = voorziening.toLowerCase();
+                            
+                            // Check verschillende matches
+                            if (zorgtypeLower.includes('wijkteam') && voorzieningLower.includes('wijkteam')) return true;
+                            if (zorgtypeLower.includes('ggd') && voorzieningLower.includes('ggd')) return true;
+                            if (zorgtypeLower.includes('schuld') && voorzieningLower.includes('schuld')) return true;
+                            if (zorgtypeLower.includes('budget') && voorzieningLower.includes('budget')) return true;
+                            if (zorgtypeLower.includes('bewind') && voorzieningLower.includes('bewind')) return true;
+                            if (zorgtypeLower.includes('gemeente') && voorzieningLower.includes('gemeente')) return true;
+                            
+                            return false;
+                        });
+                        
+                        if (matchendeVoorzieningen.length > 0) {
+                            html += `
+                                <div style="margin-bottom: 10px;">
+                                    <div style="font-weight: 600; color: #1e40af; margin-bottom: 5px;">${zorgtype}:</div>
+                                    ${matchendeVoorzieningen.map(voorziening => `
+                                        <div style="padding: 8px 12px; background: white; border: 1px solid #93c5fd; border-radius: 6px; margin-bottom: 5px; font-size: 0.9rem;">
+                                            🏢 ${voorziening}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else {
+                            html += `
+                                <div style="padding: 8px 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem; color: #92400e;">
+                                    ${zorgtype} - <em>Geen specifieke voorziening gevonden in ${regioNaam}. Neem contact op met gemeente/zorgverzekeraar.</em>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Bewegingsrichting
+                if (ondersteuning.bewegingsrichting) {
+                    const bewegingLabels = {
+                        'stabiliseren': '🔵 Stabiliseren (blijft zoals het is)',
+                        'vervangen': '🔄 Vervangen (zelfde niveau, andere uitvoerder)',
+                        'opschalen': '⬆️ Opschalen (meer/intensiever)',
+                        'afschalen': '⬇️ Afschalen (minder/lichter)',
+                        'stoppen': '⏹️ Stoppen (ondersteuning beëindigen)'
+                    };
+                    html += `
+                        <div style="margin-top: 15px; padding: 10px 15px; background: #fefce8; border-left: 3px solid #eab308; border-radius: 6px;">
+                            <strong style="color: #854d0e;">Gewenste beweging:</strong> ${bewegingLabels[ondersteuning.bewegingsrichting] || ondersteuning.bewegingsrichting}
+                        </div>
+                    `;
+                }
+                
+                html += `
+                    </div>
+                `;
+            });
+            
+            html += `
+                    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px; border: 2px dashed #10b981;">
+                        <p style="font-size: 0.9rem; color: #047857; margin: 0; line-height: 1.6;">
+                            💡 <strong>Tip:</strong> Deze voorzieningen zijn geselecteerd op basis van jouw ondersteuningsstructuur uit het OVERZICHT-scherm. 
+                            Kies hieronder welke interventies je daadwerkelijk wilt inzetten.
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
         }
         
         // Helper: Toggle interventie
@@ -9459,7 +10567,7 @@ Antwoord in dit exacte JSON formaat:
             }
         }
         
-        // Sla contactpersoon per interventie op (voor LARGE tracking)
+        // Sla contactpersoon per interventie op (voor Strategische Analyse tracking)
         function saveInterventieContact(index, contact) {
             if (!state.interventieContacts) {
                 state.interventieContacts = {};
@@ -9568,8 +10676,8 @@ Antwoord in dit exacte JSON formaat:
                 </div>
             `;
 
-            // Render SIJN Netwerkkaart
-            renderSIJNNetwerkkaart();
+            // Render RPA Netwerkkaart
+            renderRPANetwerkkaart();
         }
         
         // Render network growth path
@@ -9742,7 +10850,7 @@ Antwoord in dit exacte JSON formaat:
         // Get your free API key at: https://brave.com/search/api/
         // Brave search is proxied through the server at /brave-search
 
-        // Generate SIJN-based advice with GPT
+        // Generate RPA-based advice with GPT
         async function renderAdvice(forceRegenerate = false) {
             const adviceBox = document.getElementById('adviceBox');
             
@@ -9757,7 +10865,7 @@ Antwoord in dit exacte JSON formaat:
                 <div style="text-align: center; padding: 40px;">
                     <div style="font-size: 48px; margin-bottom: 16px;">🤖</div>
                     <h3>AI-advies wordt gegenereerd...</h3>
-                    <p style="color: var(--text-light);">Even geduld, we analyseren uw situatie volgens de SIJN-methodiek.</p>
+                    <p style="color: var(--text-light);">Even geduld, we analyseren uw situatie volgens de RPA-methodiek.</p>
                     <div style="margin-top: 20px;">
                         <div class="loading-bar"><div class="loading-bar-inner"></div></div>
                     </div>
@@ -9805,7 +10913,7 @@ Antwoord in dit exacte JSON formaat:
             };
             const clientAge = calculateAge(state.clientBirthdate);
 
-            const prompt = `Je bent een ervaren welzijnswerker die advies geeft volgens de SIJN-methodiek (Sterk In Je Netwerk). 
+            const prompt = `Je bent een ervaren welzijnswerker die advies geeft volgens de RPA-methodiek (Relationeel-Positioneel Analysemodel). 
 Analyseer de volgende cliëntgegevens en geef een persoonlijk, empathisch advies in het Nederlands.
 
 ## Cliëntgegevens
@@ -9814,7 +10922,7 @@ Postcode: ${state.postcode || 'Niet opgegeven'}
 ${state.hulpvraag ? `Hulpvraag: ${state.hulpvraag}` : ''}
 ${state.wens ? `Belangrijkste wens: "${state.wens}"` : ''}
 
-## Domeinkaart Scores (SIJN 3-niveau systeem)
+## Domeinkaart Scores (RPA 3-niveau systeem)
 Legenda: 🔴 = Onvoldoende stabiel | 🟡 = Gedeeltelijk zelfstandig | 🟢 = Zelfstandig/stabiel
 ${domainScores}
 
@@ -9866,7 +10974,7 @@ Geef je antwoord in dit exacte HTML-formaat:
                     body: JSON.stringify({
                         model: 'gpt-4o-mini',
                         messages: [
-                            { role: 'system', content: 'Je bent een ervaren welzijnswerker die de SIJN-methodiek (Sterk In Je Netwerk) toepast. Je geeft warme, empathische maar concrete adviezen. Je antwoordt altijd in correct Nederlands.' },
+                            { role: 'system', content: 'Je bent een ervaren welzijnswerker die de RPA-methodiek (Relationeel-Positioneel Analysemodel) toepast. Je geeft warme, empathische maar concrete adviezen. Je antwoordt altijd in correct Nederlands.' },
                             { role: 'user', content: prompt }
                         ],
                         temperature: 0.7,
@@ -10185,7 +11293,7 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
                     <button class="advice-regenerate-btn" onclick="renderAdvice(true)">🔄 Opnieuw genereren</button>
                 </div>
                 <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 16px;">
-                    <em>Gegenereerd op basis van uw gegevens volgens de SIJN-methodiek</em>
+                    <em>Gegenereerd op basis van uw gegevens volgens de RPA-methodiek</em>
                 </p>
                 ${adviceHtml}
             `;
@@ -10630,7 +11738,7 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 
             let ics = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Welzijnswerker//SIJN Agenda//NL
+PRODID:-//Welzijnswerker//RPA Agenda//NL
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 `;
@@ -10652,7 +11760,7 @@ END:VEVENT
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'sijn-agenda.ics';
+            a.download = 'rpa-agenda.ics';
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -11012,7 +12120,6 @@ END:VEVENT
                     }
                 };
                 document.querySelectorAll('input[name="modus"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[name="doelVandaag"]').forEach(r => r.checked = false);
                 document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
                 document.getElementById('professionalFields').style.display = 'none';
                 if (document.getElementById('postcodeFilter')) document.getElementById('postcodeFilter').value = '';
@@ -11057,14 +12164,430 @@ END:VEVENT
         }
         
         // Herstel doel van vandaag
-        if (state.doelVandaag) {
-            const doelRadio = document.querySelector(`input[name="doelVandaag"][value="${state.doelVandaag}"]`);
-            if (doelRadio) {
-                doelRadio.checked = true;
-            }
-        }
         const postcodeEl = document.getElementById('postcodeFilter');
         if (postcodeEl && state.postcode) postcodeEl.value = state.postcode;
+        
+        // === TRIAGE FUNCTIES (Prioriteit 1) ===
+        
+        function renderTriageDomainGrid() {
+            const container = document.getElementById('triageDomainGrid');
+            if (!container) return;
+            
+            const selectedDomains = state.selectedDomains || [];
+            
+            const html = domains.map(domain => {
+                const isSelected = selectedDomains.includes(domain.id);
+                return `
+                    <div onclick="toggleDomainSelection('${domain.id}')" 
+                         style="padding: 20px; border: 3px solid ${isSelected ? 'var(--primary)' : '#e0e0e0'}; 
+                                background: ${isSelected ? 'var(--primary-light)' : 'white'}; 
+                                border-radius: 12px; cursor: pointer; transition: all 0.2s;
+                                display: flex; align-items: center; gap: 15px;"
+                         onmouseover="if(!${isSelected}) { this.style.borderColor='#10b981'; this.style.background='#f0fdf4'; }"
+                         onmouseout="if(!${isSelected}) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
+                        <div style="font-size: 2.5rem;">${domain.emoji}</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 4px;">
+                                ${domain.name}
+                            </div>
+                            <div style="font-size: 0.85rem; color: var(--text-light);">
+                                ${domain.desc}
+                            </div>
+                        </div>
+                        <div style="font-size: 1.8rem;">
+                            ${isSelected ? '✅' : '⚪'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+            updateTriageCounter();
+        }
+        
+        function toggleDomainSelection(domainId) {
+            if (!state.selectedDomains) state.selectedDomains = [];
+            
+            const index = state.selectedDomains.indexOf(domainId);
+            if (index > -1) {
+                state.selectedDomains.splice(index, 1);
+            } else {
+                state.selectedDomains.push(domainId);
+            }
+            
+            saveState();
+            renderTriageDomainGrid();
+        }
+        
+        function updateTriageCounter() {
+            const count = (state.selectedDomains || []).length;
+            const counterEl = document.getElementById('triageCount');
+            const counterBtnEl = document.getElementById('triageCountBtn');
+            
+            if (counterEl) counterEl.textContent = count;
+            if (counterBtnEl) counterBtnEl.textContent = count;
+            
+            // Knop tekst aanpassen
+            const btn = document.getElementById('btnTriageNext');
+            if (btn) {
+                if (count === 0) {
+                    btn.innerHTML = 'Volgende → (alle 11 domeinen)';
+                } else {
+                    btn.innerHTML = `Volgende → (${count} ${count === 1 ? 'domein' : 'domeinen'})`;
+                }
+            }
+        }
+        
+        function saveTriageAndContinue() {
+            // Als niets geselecteerd, selecteer dan alles
+            if (!state.selectedDomains || state.selectedDomains.length === 0) {
+                state.selectedDomains = domains.map(d => d.id);
+            }
+            
+            saveState();
+            goToScreen(4); // Naar DOMEINSCAN
+        }
+        
+        // Render triage bij laden van scherm
+        if (window.location.hash === '#triage' || state.currentScreen === 3) {
+            renderTriageDomainGrid();
+        }
+        
+        // === HUIDIGE STEUN FUNCTIES (Prioriteit 1) ===
+        
+        function renderHuidigeSteunPerDomein() {
+            const container = document.getElementById('huidigeSteunPerDomein');
+            if (!container) return;
+            
+            // Alleen domeinen die ingevuld zijn (hoeGaatHet is niet leeg)
+            const relevanteDomeinen = domains.filter(d => {
+                const selected = state.selectedDomains || [];
+                const details = state.domainDetails[d.id] || {};
+                return selected.includes(d.id) && details.hoeGaatHet && details.hoeGaatHet !== 'nog-open';
+            });
+            
+            if (relevanteDomeinen.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 12px;">
+                        <p style="font-size: 1.1rem; color: var(--text-light); margin: 0;">
+                            ⚠️ Nog geen domeinen ingevuld.<br>
+                            Ga eerst terug en vul tenminste 1 domein in.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const html = relevanteDomeinen.map(domain => {
+                const huidigeSteun = state.huidigeSteun[domain.id] || { draaglagen: [] };
+                const draaglagen = huidigeSteun.draaglagen || [];
+                
+                return `
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                            <span style="font-size: 2rem;">${domain.emoji}</span>
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
+                                Wie draagt nu? (meerdere opties mogelijk)
+                            </label>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('informeel') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('informeel') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px;">
+                                    <input type="checkbox" 
+                                        ${draaglagen.includes('informeel') ? 'checked' : ''}
+                                        onchange="toggleHuidigeDraaglaag('${domain.id}', 'informeel', this.checked)"
+                                        style="width: 18px; height: 18px; cursor: pointer;">
+                                    <span style="font-weight: 600;">Informeel</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('collectief') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('collectief') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px;">
+                                    <input type="checkbox" 
+                                        ${draaglagen.includes('collectief') ? 'checked' : ''}
+                                        onchange="toggleHuidigeDraaglaag('${domain.id}', 'collectief', this.checked)"
+                                        style="width: 18px; height: 18px; cursor: pointer;">
+                                    <span style="font-weight: 600;">Collectief</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 16px; background: ${draaglagen.includes('formeel') ? 'var(--primary-light)' : '#f9fafb'}; border: 2px solid ${draaglagen.includes('formeel') ? 'var(--primary)' : '#e5e7eb'}; border-radius: 8px;">
+                                    <input type="checkbox" 
+                                        ${draaglagen.includes('formeel') ? 'checked' : ''}
+                                        onchange="toggleHuidigeDraaglaag('${domain.id}', 'formeel', this.checked)"
+                                        style="width: 18px; height: 18px; cursor: pointer;">
+                                    <span style="font-weight: 600;">Formeel</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        function toggleHuidigeDraaglaag(domainId, draaglaag, checked) {
+            if (!state.huidigeSteun) state.huidigeSteun = {};
+            if (!state.huidigeSteun[domainId]) state.huidigeSteun[domainId] = { draaglagen: [] };
+            
+            const draaglagen = state.huidigeSteun[domainId].draaglagen || [];
+            
+            if (checked && !draaglagen.includes(draaglaag)) {
+                draaglagen.push(draaglaag);
+            } else if (!checked) {
+                const index = draaglagen.indexOf(draaglaag);
+                if (index > -1) draaglagen.splice(index, 1);
+            }
+            
+            state.huidigeSteun[domainId].draaglagen = draaglagen;
+            saveState();
+        }
+        
+        function saveHuidigeSteun() {
+            // Data is al opgeslagen via toggles, niets extra nodig
+            saveState();
+        }
+        
+        // === VOOR/NA VISUALISATIE (Prioriteit 1) ===
+        
+        function renderVoorNaVisualisatie() {
+            const container = document.getElementById('voorNaVisualisatie');
+            if (!container) return;
+            
+            // Domeinen met huidige steun ingevuld
+            const domeinenMetSteun = domains.filter(d => {
+                return state.huidigeSteun && state.huidigeSteun[d.id] && 
+                       state.huidigeSteun[d.id].draaglagen && 
+                       state.huidigeSteun[d.id].draaglagen.length > 0;
+            });
+            
+            if (domeinenMetSteun.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: #f9fafb; border-radius: 12px;">
+                        <p style="font-size: 1.1rem; color: var(--text-light); margin: 0;">
+                            ⚠️ Ga eerst terug en vul de huidige steun in.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const html = domeinenMetSteun.map(domain => {
+                const huidig = state.huidigeSteun[domain.id] || { draaglagen: [] };
+                const gewenst = state.ondersteuningsstructuur[domain.id] || {};
+                const beweging = gewenst.bewegingsrichting || null;
+                
+                return `
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                            <span style="font-size: 2rem;">${domain.emoji}</span>
+                            <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h3>
+                        </div>
+                        
+                        <!-- Voor/Na visualisatie -->
+                        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; margin-bottom: 25px;">
+                            <!-- HUIDIG -->
+                            <div>
+                                <div style="font-size: 0.9rem; font-weight: 600; color: #6b7280; margin-bottom: 12px; text-align: center;">
+                                    HUIDIG
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    ${renderDraaglaagBadge('Informeel', huidig.draaglagen.includes('informeel'), false)}
+                                    ${renderDraaglaagBadge('Collectief', huidig.draaglagen.includes('collectief'), false)}
+                                    ${renderDraaglaagBadge('Formeel', huidig.draaglagen.includes('formeel'), false)}
+                                </div>
+                            </div>
+                            
+                            <!-- PIJL -->
+                            <div style="font-size: 2.5rem; color: var(--primary);">→</div>
+                            
+                            <!-- GEWENST -->
+                            <div>
+                                <div style="font-size: 0.9rem; font-weight: 600; color: #6b7280; margin-bottom: 12px; text-align: center;">
+                                    GEWENST
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    ${renderDraaglaagBadge('Informeel', huidig.draaglagen.includes('informeel'), true, domain.id, 'informeel')}
+                                    ${renderDraaglaagBadge('Collectief', huidig.draaglagen.includes('collectief'), true, domain.id, 'collectief')}
+                                    ${renderDraaglaagBadge('Formeel', huidig.draaglagen.includes('formeel'), true, domain.id, 'formeel')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bewegingsrichting samenvatting -->
+                        <div style="background: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #92400e; margin-bottom: 8px;">
+                                🔄 Beweging:
+                            </div>
+                            <select onchange="setBewegingsrichtingVoorNa('${domain.id}', this.value)" 
+                                    style="width: 100%; padding: 10px; border: 2px solid #fbbf24; border-radius: 6px;">
+                                <option value="">-- Kies beweging --</option>
+                                <option value="stabiliseren" ${beweging === 'stabiliseren' ? 'selected' : ''}>Stabiliseren (blijft zoals het is)</option>
+                                <option value="vervangen" ${beweging === 'vervangen' ? 'selected' : ''}>Vervangen (zelfde niveau, andere uitvoerder)</option>
+                                <option value="opschalen" ${beweging === 'opschalen' ? 'selected' : ''}>Opschalen (meer/intensiever)</option>
+                                <option value="afschalen" ${beweging === 'afschalen' ? 'selected' : ''}>Afschalen (minder/lichter)</option>
+                                <option value="stoppen" ${beweging === 'stoppen' ? 'selected' : ''}>Stoppen (ondersteuning beëindigen)</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        function renderDraaglaagBadge(label, isActive, isEditable, domainId, draaglaag) {
+            const activeStyle = isActive ? 'background: #10b981; color: white; font-weight: 600;' : 'background: #f3f4f6; color: #9ca3af;';
+            
+            if (!isEditable) {
+                return `
+                    <div style="padding: 10px 16px; border-radius: 6px; ${activeStyle}">
+                        ${label} ${isActive ? '✓' : '○'}
+                    </div>
+                `;
+            }
+            
+            // Editable version
+            return `
+                <label style="padding: 10px 16px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; ${activeStyle}">
+                    <input type="checkbox" 
+                           ${isActive ? 'checked' : ''}
+                           onchange="toggleGewensteDraaglaag('${domainId}', '${draaglaag}', this.checked)"
+                           style="width: 18px; height: 18px;">
+                    ${label}
+                </label>
+            `;
+        }
+        
+        function toggleGewensteDraaglaag(domainId, draaglaag, checked) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = { draaglagen: [], bewegingsrichting: null };
+            }
+            
+            const draaglagen = state.ondersteuningsstructuur[domainId].draaglagen || [];
+            
+            if (checked && !draaglagen.includes(draaglaag)) {
+                draaglagen.push(draaglaag);
+            } else if (!checked) {
+                const index = draaglagen.indexOf(draaglaag);
+                if (index > -1) draaglagen.splice(index, 1);
+            }
+            
+            state.ondersteuningsstructuur[domainId].draaglagen = draaglagen;
+            saveState();
+            renderVoorNaVisualisatie();
+        }
+        
+        function setBewegingsrichtingVoorNa(domainId, richting) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = { draaglagen: [], bewegingsrichting: null };
+            }
+            
+            state.ondersteuningsstructuur[domainId].bewegingsrichting = richting;
+            saveState();
+        }
+        
+        // === POSITIONELE BESLISSINGEN RENDER (Prioriteit 1) ===
+        
+        function renderPositioneleBeslissingen() {
+            const domeinenMetBeweging = domains.filter(d => {
+                return state.huidigeSteun && state.huidigeSteun[d.id] && 
+                       state.huidigeSteun[d.id].draaglagen && 
+                       state.huidigeSteun[d.id].draaglagen.length > 0;
+            });
+            
+            if (domeinenMetBeweging.length === 0) {
+                return '';
+            }
+            
+            const bewegingLabels = {
+                'stabiliseren': 'Stabiliseren (blijft zoals het is)',
+                'vervangen': 'Vervangen (zelfde niveau, andere uitvoerder)',
+                'opschalen': 'Opschalen (meer/intensiever)',
+                'afschalen': 'Afschalen (minder/lichter)',
+                'stoppen': 'Stoppen (ondersteuning beëindigen)'
+            };
+            
+            let html = `
+                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 3px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
+                    <h3 style="margin: 0 0 20px 0; color: #92400e; font-size: 1.3rem;">
+                        🔄 Positionele Beslissingen
+                    </h3>
+                    <p style="font-size: 0.95rem; color: #78350f; margin-bottom: 20px; line-height: 1.6;">
+                        <strong>Dit zijn de afgesproken netwerkbewegingen:</strong> niet méér zorg, maar anders gepositioneerd.
+                    </p>
+            `;
+            
+            domeinenMetBeweging.forEach(domain => {
+                const huidig = state.huidigeSteun[domain.id] || { draaglagen: [] };
+                const gewenst = state.ondersteuningsstructuur[domain.id] || {};
+                const beweging = gewenst.bewegingsrichting;
+                
+                html += `
+                    <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 5px solid #f59e0b;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                            <span style="font-size: 1.8rem;">${domain.emoji}</span>
+                            <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h4>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 15px; align-items: center; margin-bottom: 12px; font-size: 0.9rem;">
+                            <div>
+                                <div style="font-weight: 600; color: #6b7280; margin-bottom: 6px;">Huidig:</div>
+                                ${huidig.draaglagen.map(d => `<div style="padding: 4px 8px; background: #e5e7eb; border-radius: 4px; margin-bottom: 3px;">${d}</div>`).join('')}
+                            </div>
+                            <div style="font-size: 1.5rem; color: #f59e0b;">→</div>
+                            <div>
+                                <div style="font-weight: 600; color: #6b7280; margin-bottom: 6px;">Gewenst:</div>
+                                ${(gewenst.draaglagen || huidig.draaglagen).map(d => `<div style="padding: 4px 8px; background: #d1fae5; border-radius: 4px; margin-bottom: 3px;">${d}</div>`).join('')}
+                            </div>
+                        </div>
+                        
+                        ${beweging ? `
+                            <div style="padding: 10px 15px; background: #fef3c7; border-radius: 6px; border-left: 3px solid #f59e0b;">
+                                <strong style="color: #92400e;">Beweging:</strong> ${bewegingLabels[beweging] || beweging}
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Ruimte voor verantwoordelijke/evaluatie (handmatig invullen) -->
+                        <div style="margin-top: 12px; padding: 12px; background: #f9fafb; border-radius: 6px; border: 1px dashed #d1d5db;">
+                            <div style="margin-bottom: 8px;">
+                                <strong style="font-size: 0.85rem; color: #6b7280;">Verantwoordelijke:</strong>
+                                <input type="text" 
+                                       placeholder="Naam professional..."
+                                       value="${gewenst.verantwoordelijke || ''}"
+                                       onchange="setVerantwoordelijke('${domain.id}', this.value)"
+                                       style="width: 100%; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; margin-top: 4px; font-size: 0.9rem;">
+                            </div>
+                            <div>
+                                <strong style="font-size: 0.85rem; color: #6b7280;">Evaluatiemoment:</strong>
+                                <input type="date" 
+                                       value="${gewenst.evaluatieDatum || ''}"
+                                       onchange="setEvaluatieDatum('${domain.id}', this.value)"
+                                       style="width: 100%; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; margin-top: 4px; font-size: 0.9rem;">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+        
+        function setVerantwoordelijke(domainId, naam) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = {};
+            }
+            state.ondersteuningsstructuur[domainId].verantwoordelijke = naam;
+            saveState();
+        }
+        
+        function setEvaluatieDatum(domainId, datum) {
+            if (!state.ondersteuningsstructuur[domainId]) {
+                state.ondersteuningsstructuur[domainId] = {};
+            }
+            state.ondersteuningsstructuur[domainId].evaluatieDatum = datum;
+            saveState();
+        }
+        
     </script>
 </body>
 </html>
