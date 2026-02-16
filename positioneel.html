@@ -3755,10 +3755,10 @@
                             
                             <!-- POSITIES -->
                             
-                            <!-- GEMENGD NETWERK (middenboven, oranje) -->
-                            <rect x="240" y="60" width="120" height="55" rx="10" fill="#fed7aa" stroke="#f59e0b" stroke-width="3"/>
-                            <text x="300" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">GEMENGD</text>
-                            <text x="300" y="101" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
+                            <!-- GEMENGD NETWERK (middenboven, paars 🟣) -->
+                            <rect x="240" y="60" width="120" height="55" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="3"/>
+                            <text x="300" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">GEMENGD</text>
+                            <text x="300" y="101" text-anchor="middle" font-size="12" fill="#5b21b6">NETWERK</text>
                             
                             <!-- GEEN NETWERK (rechtsboven, wit/grijs) -->
                             <rect x="460" y="60" width="120" height="55" rx="10" fill="#ffffff" stroke="#9ca3af" stroke-width="3"/>
@@ -3770,20 +3770,24 @@
                             <text x="100" y="170" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">1-PERSOONS</text>
                             <text x="100" y="188" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
                             
-                            <!-- INFORMEEL NETWERK (midden beneden, precies onder GEMENGD, geel) -->
-                            <rect x="240" y="235" width="120" height="55" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
-                            <text x="300" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">INFORMEEL</text>
-                            <text x="300" y="276" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
+                            <!-- INFORMEEL NETWERK (midden beneden, precies onder GEMENGD, groen 🟢) -->
+                            <rect x="240" y="235" width="120" height="55" rx="10" fill="#d1fae5" stroke="#10b981" stroke-width="3"/>
+                            <text x="300" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">INFORMEEL</text>
+                            <text x="300" y="276" text-anchor="middle" font-size="12" fill="#065f46">NETWERK</text>
                             
-                            <!-- FORMEEL NETWERK (rechtsonder, precies onder GEEN NETWERK, roze) -->
-                            <rect x="460" y="235" width="120" height="55" rx="10" fill="#fce7f3" stroke="#ec4899" stroke-width="3"/>
-                            <text x="520" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#9f1239">FORMEEL</text>
-                            <text x="520" y="276" text-anchor="middle" font-size="12" fill="#9f1239">NETWERK</text>
+                            <!-- FORMEEL NETWERK (rechtsonder, precies onder GEEN NETWERK, blauw 🔵) -->
+                            <rect x="460" y="235" width="120" height="55" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
+                            <text x="520" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">FORMEEL</text>
+                            <text x="520" y="276" text-anchor="middle" font-size="12" fill="#1e40af">NETWERK</text>
                         </svg>
                         
-                        <p style="font-size: 0.9rem; color: var(--text-light); text-align: center; margin-top: 15px;">
-                            Pijlen tonen mogelijke bewegingen tussen posities.
-                        </p>
+                        <div style="background: #f0f9ff; padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #3b82f6;">
+                            <p style="font-size: 0.95rem; color: #0c4a6e; margin: 0; line-height: 1.7;">
+                                <strong>💡 Deze 5 netwerkposities zie je straks terug in de analyse.</strong><br>
+                                We bepalen samen: waar staat de cliënt nu? En welke beweging is passend?
+                                De pijlen tonen mogelijke richtingen — beweging is altijd mogelijk.
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Praktisch -->
@@ -4090,8 +4094,13 @@
             <!-- Screen 7: Netwerkpositie (LEAN) -->
             <div class="screen" id="screen-netwerkpositie">
                 <div class="card">
-                    <h2>🕸️ Hoe is steun georganiseerd?</h2>
-                    <p style="color: var(--text-light); margin-bottom: 30px;">Op basis van de ingevulde domeinen zien we de volgende netwerkpositie.</p>
+                    <h2>🕸️ Netwerkpositie</h2>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">
+                        Je zag in de intro de 5 netwerkposities (⚪ Geen • 🟡 1-persoons • 🟢 Informeel • 🔵 Formeel • 🟣 Gemengd).
+                    </p>
+                    <p style="color: var(--text); margin-bottom: 30px; font-weight: 600;">
+                        Op basis van jouw antwoorden lijkt de cliënt nu in deze positie te staan:
+                    </p>
 
                     <!-- RPA NETWERKKAART (compact, geen interventies) -->
                     <div id="sijnNetwerkkaartCompact">
