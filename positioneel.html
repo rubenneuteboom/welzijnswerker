@@ -4046,36 +4046,7 @@
                 </div>
             </div>
 
-            <!-- Screen 5: HUIDIGE STEUN (Prioriteit 1 - Kernstap) -->
-            <div class="screen" id="screen-huidige-steun">
-                <div class="card">
-                    <h2 style="font-size: 1.8rem; margin-bottom: 20px;">👥 Wie draagt nu?</h2>
-                    <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text); margin-bottom: 30px;">
-                        Voor elk domein waar het speelt, kijken we: <strong>wie biedt nu steun?</strong><br>
-                        Dit helpt om de huidige netwerkpositie te zien.
-                    </p>
-                    
-                    <!-- Uitleg -->
-                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 18px 22px; margin-bottom: 30px; border-radius: 10px;">
-                        <p style="margin: 0; font-size: 0.95rem; color: #92400e; line-height: 1.6;">
-                            💡 <strong>Let op:</strong> Dit gaat niet om "ideaal", maar om <strong>hoe het nu is</strong>. 
-                            We kijken straks pas naar wat anders zou kunnen.
-                        </p>
-                    </div>
-                    
-                    <!-- Per domein: Wie draagt? -->
-                    <div id="huidigeSteunPerDomein">
-                        <!-- Wordt gevuld door renderHuidigeSteunPerDomein() -->
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                        <button class="btn btn-primary" onclick="saveHuidigeSteun(); goToScreen(6)">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 6: Dashboard/Overzicht -->
+            <!-- Screen 5: Dashboard/Overzicht (hernummerd van 6) -->
             <div class="screen" id="screen-network">
                 <div class="card">
                     <h2>📊 RPA Overzicht</h2>
@@ -5678,7 +5649,6 @@
             { id: 'start', label: 'Start', emoji: '🏠' },
             { id: 'triage', label: 'Waar speelt het?', emoji: '🎯' },
             { id: 'domains', label: 'Hoe gaat het?', emoji: '📊' },
-            { id: 'huidige-steun', label: 'Wie helpt nu?', emoji: '👥' },
             { id: 'network', label: 'Overzicht', emoji: '📋' },
             { id: 'netwerkpositie', label: 'Netwerkkaart', emoji: '🕸️' },
             { id: 'beweging', label: 'Wat moet veranderen?', emoji: '🔄' },
@@ -6389,7 +6359,6 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'hulpvraag') loadHulpvraagData();
             if (screenId === 'triage') renderTriageDomainGrid();
             if (screenId === 'domains') renderDomains();
-            if (screenId === 'huidige-steun') renderHuidigeSteunPerDomein();
             if (screenId === 'network') renderDashboard();
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
             if (screenId === 'beweging') renderVoorNaVisualisatie();
