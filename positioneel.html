@@ -8567,6 +8567,7 @@ Antwoord in dit exacte JSON formaat:
                 const formeelOrganisaties = details.steunFormeelOrganisaties || [];
                 let wieHelptIcon = '';
                 let wieHelptText = '';
+                let wieHelptKleur = '';
                 
                 // Tel totaal aantal helpers
                 const totalHelpers = informeelPersonen.length + collectiefOpties.length + formeelOrganisaties.length;
@@ -8575,20 +8576,25 @@ Antwoord in dit exacte JSON formaat:
                 if (!details.hoeGaatHet || details.hoeGaatHet === 'nog-open') {
                     wieHelptIcon = '⚪';
                     wieHelptText = 'Nog open';
+                    wieHelptKleur = 'color: #9ca3af;';
                 } else if (totalHelpers === 0) {
                     wieHelptIcon = '○';
                     wieHelptText = 'Zelfstandig';
+                    wieHelptKleur = 'color: #6b7280;';
                 } else if (totalHelpers === 1) {
                     // Toon de naam van die ene helper
                     if (informeelPersonen.length === 1) {
                         wieHelptIcon = '👤';
                         wieHelptText = informeelPersonen[0];
+                        wieHelptKleur = 'color: #10b981; font-weight: 600;';
                     } else if (collectiefOpties.length === 1) {
                         wieHelptIcon = '🤝';
                         wieHelptText = collectiefOpties[0].substring(0, 20) + (collectiefOpties[0].length > 20 ? '...' : '');
+                        wieHelptKleur = 'color: #f59e0b; font-weight: 600;';
                     } else if (formeelOrganisaties.length === 1) {
                         wieHelptIcon = '🏥';
                         wieHelptText = formeelOrganisaties[0].substring(0, 20) + (formeelOrganisaties[0].length > 20 ? '...' : '');
+                        wieHelptKleur = 'color: #3b82f6; font-weight: 600;';
                     }
                 } else {
                     // Meerdere helpers - toon namen tot max 3
@@ -8604,6 +8610,7 @@ Antwoord in dit exacte JSON formaat:
                     
                     if ((hasInformal || hasCollective) && hasProfessional) {
                         wieHelptIcon = '🔄';
+                        wieHelptKleur = 'color: #8b5cf6; font-weight: 600;';
                         if (totalHelpers <= 3) {
                             wieHelptText = alleNamen.join(', ');
                         } else {
@@ -8611,6 +8618,7 @@ Antwoord in dit exacte JSON formaat:
                         }
                     } else if (hasProfessional) {
                         wieHelptIcon = '🏥';
+                        wieHelptKleur = 'color: #3b82f6; font-weight: 600;';
                         if (formeelOrganisaties.length <= 3) {
                             wieHelptText = formeelOrganisaties.join(', ');
                         } else {
@@ -8618,6 +8626,7 @@ Antwoord in dit exacte JSON formaat:
                         }
                     } else if (hasInformal || hasCollective) {
                         wieHelptIcon = '👥';
+                        wieHelptKleur = 'color: #10b981; font-weight: 600;';
                         if (totalHelpers <= 3) {
                             wieHelptText = alleNamen.join(', ');
                         } else {
@@ -8626,6 +8635,7 @@ Antwoord in dit exacte JSON formaat:
                     } else {
                         wieHelptIcon = '❓';
                         wieHelptText = 'Nog bepalen';
+                        wieHelptKleur = 'color: #9ca3af;';
                     }
                 }
                 
@@ -8648,7 +8658,7 @@ Antwoord in dit exacte JSON formaat:
                         </td>
                         <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center; padding: 12px;" title="Klik voor details">
                             <div style="font-size: 1.3rem; line-height: 1;">${wieHelptIcon}</div>
-                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 4px; font-weight: 500;">${wieHelptText}</div>
+                            <div style="font-size: 0.85rem; margin-top: 4px; ${wieHelptKleur}">${wieHelptText}</div>
                         </td>
                     </tr>
                 `;
