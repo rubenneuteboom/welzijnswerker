@@ -6606,6 +6606,9 @@ Antwoord in dit exacte JSON formaat:
                 
                 ${renderDoelgroepVragen(domain.id)}
                 
+                <!-- Samenvatting: Wie helpt nu? (altijd zichtbaar) -->
+                ${renderWieHelptNuSamenvatting(domain.id, details)}
+                
                 <!-- Vraag 2: Is er steun? -->
                 <div style="margin-bottom: 25px;">
                     <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
@@ -8218,6 +8221,80 @@ Antwoord in dit exacte JSON formaat:
             renderDomains();
         }
 
+        // Render "Wie helpt nu?" samenvatting (altijd zichtbaar)
+        function renderWieHelptNuSamenvatting(domainId, details) {
+            const steunDoorWie = details.steunDoorWie || [];
+            const informeelPersonen = details.steunInformeelPersonen || [];
+            const collectiefOpties = details.steunCollectiefOpties || [];
+            const formeelOrganisaties = details.steunFormeelOrganisaties || [];
+            
+            let items = [];
+            
+            // Informeel
+            if (steunDoorWie.includes('informeel') && informeelPersonen.length > 0) {
+                informeelPersonen.forEach(persoon => {
+                    items.push({ icon: '👤', text: persoon, type: 'informeel' });
+                });
+            }
+            
+            // Collectief
+            if (steunDoorWie.includes('collectief') && collectiefOpties.length > 0) {
+                collectiefOpties.forEach(optie => {
+                    items.push({ icon: '🤝', text: optie, type: 'collectief' });
+                });
+            }
+            
+            // Formeel
+            if (steunDoorWie.includes('formeel') && formeelOrganisaties.length > 0) {
+                formeelOrganisaties.forEach(org => {
+                    items.push({ icon: '🏥', text: org, type: 'formeel' });
+                });
+            }
+            
+            // Als niets ingevuld
+            if (items.length === 0) {
+                return `
+                    <div style="background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                        <div style="font-size: 1rem; font-weight: 600; color: #6b7280; margin-bottom: 8px;">
+                            👥 Wie helpt nu?
+                        </div>
+                        <p style="font-size: 0.9rem; color: #9ca3af; margin: 0; font-style: italic;">
+                            ○ Zelfstandig / nog niet ingevuld
+                        </p>
+                        <p style="font-size: 0.8rem; color: #9ca3af; margin-top: 8px; margin-bottom: 0;">
+                            💡 Vul bij "Is er steun?" in wie er helpt
+                        </p>
+                    </div>
+                `;
+            }
+            
+            // Toon samenvatting
+            return `
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <div style="font-size: 1rem; font-weight: 600; color: #166534; margin-bottom: 12px;">
+                        👥 Wie helpt nu?
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        ${items.map(item => `
+                            <div style="display: flex; align-items: start; gap: 10px; padding: 10px; background: white; border-radius: 8px; border-left: 3px solid ${
+                                item.type === 'informeel' ? '#10b981' : 
+                                item.type === 'collectief' ? '#f59e0b' : 
+                                '#3b82f6'
+                            };">
+                                <span style="font-size: 1.3rem; line-height: 1;">${item.icon}</span>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);">${item.text}</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 2px;">
+                                        ${item.type === 'informeel' ? 'Familie/vriend' : item.type === 'collectief' ? 'Collectieve voorziening' : 'Professioneel'}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
         // Render informele steun personen
         function renderInformeleSteunPersonen(domainId, details) {
             const personen = details.steunInformeelPersonen || [];
@@ -8518,45 +8595,56 @@ Antwoord in dit exacte JSON formaat:
                     actieKleur = 'color: #9ca3af;';
                 }
                 
-                // Wie helpt nu? (bepaal op basis van supporters/inzet)
-                const supporters = details.supporters || [];
-                const inzet = details.inzet || [];
+                // Wie helpt nu? (bepaal op basis van steunDoorWie)
+                const steunDoorWie = details.steunDoorWie || [];
+                const informeelPersonen = details.steunInformeelPersonen || [];
+                const collectiefOpties = details.steunCollectiefOpties || [];
+                const formeelOrganisaties = details.steunFormeelOrganisaties || [];
                 let wieHelptIcon = '';
                 let wieHelptText = '';
+                
+                // Tel totaal aantal helpers
+                const totalHelpers = informeelPersonen.length + collectiefOpties.length + formeelOrganisaties.length;
                 
                 // Check of domein is ingevuld
                 if (!details.hoeGaatHet || details.hoeGaatHet === 'nog-open') {
                     wieHelptIcon = '⚪';
                     wieHelptText = 'Nog open';
-                } else if (inzet.includes('geen') || supporters.length === 0) {
+                } else if (totalHelpers === 0) {
                     wieHelptIcon = '○';
                     wieHelptText = 'Zelfstandig';
-                } else if (supporters.length === 1) {
-                    wieHelptIcon = '👤';
-                    wieHelptText = '1 persoon';
+                } else if (totalHelpers === 1) {
+                    // Toon de naam van die ene helper
+                    if (informeelPersonen.length === 1) {
+                        wieHelptIcon = '👤';
+                        wieHelptText = informeelPersonen[0];
+                    } else if (collectiefOpties.length === 1) {
+                        wieHelptIcon = '🤝';
+                        wieHelptText = collectiefOpties[0].substring(0, 20) + (collectiefOpties[0].length > 20 ? '...' : '');
+                    } else if (formeelOrganisaties.length === 1) {
+                        wieHelptIcon = '🏥';
+                        wieHelptText = formeelOrganisaties[0].substring(0, 20) + (formeelOrganisaties[0].length > 20 ? '...' : '');
+                    }
                 } else {
-                    // Check types
-                    const hasInformal = supporters.some(s => s.type === 'informal');
-                    const hasProfessional = supporters.some(s => s.type === 'professional');
-                    const hasCollective = supporters.some(s => s.type === 'collective');
+                    // Meerdere helpers
+                    const hasInformal = steunDoorWie.includes('informeel');
+                    const hasProfessional = steunDoorWie.includes('formeel');
+                    const hasCollective = steunDoorWie.includes('collectief');
                     
-                    if (hasInformal && hasProfessional) {
+                    if ((hasInformal || hasCollective) && hasProfessional) {
                         wieHelptIcon = '🔄';
-                        wieHelptText = 'Gemengd';
+                        wieHelptText = `${totalHelpers} (gemengd)`;
                     } else if (hasProfessional) {
                         wieHelptIcon = '🏥';
-                        wieHelptText = 'Professional';
+                        wieHelptText = `${formeelOrganisaties.length} professional(s)`;
                     } else if (hasInformal || hasCollective) {
                         wieHelptIcon = '👥';
-                        wieHelptText = 'Meerdere';
+                        wieHelptText = `${totalHelpers} personen`;
                     } else {
                         wieHelptIcon = '❓';
                         wieHelptText = 'Nog bepalen';
                     }
                 }
-                
-                // Render ondersteunings-blok (uitklapbaar)
-                const ondersteuningsBlok = isExpanded ? renderOndersteuningsBlok(domain.id) : '';
                 
                 return `
                     <tr style="${rowBackground}">
@@ -8575,21 +8663,11 @@ Antwoord in dit exacte JSON formaat:
                         <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem; ${actieKleur}">${actieText}</span>
                         </td>
-                        <td 
-                            onclick="event.stopPropagation(); toggleOndersteuningsBlok('${domain.id}');" 
-                            style="text-align: center; cursor: pointer; padding: 12px;"
-                            title="${wieHelptText} - klik voor details">
-                            <div style="font-size: 1.5rem; line-height: 1;">${wieHelptIcon}</div>
-                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 4px;">${wieHelptText}</div>
+                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center; padding: 12px;" title="Klik voor details">
+                            <div style="font-size: 1.3rem; line-height: 1;">${wieHelptIcon}</div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 4px; font-weight: 500;">${wieHelptText}</div>
                         </td>
                     </tr>
-                    ${isExpanded ? `
-                    <tr>
-                        <td colspan="5" style="padding: 0; background: #f9fafb;">
-                            ${ondersteuningsBlok}
-                        </td>
-                    </tr>
-                    ` : ''}
                 `;
             }).join('');
             
