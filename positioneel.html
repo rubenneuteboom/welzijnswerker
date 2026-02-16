@@ -8518,11 +8518,42 @@ Antwoord in dit exacte JSON formaat:
                     actieKleur = 'color: #9ca3af;';
                 }
                 
-                // Ondersteunings-badge (toon icoon als er ondersteuning is ingevuld)
-                const heeftOndersteuning = ondersteuning.draaglagen && ondersteuning.draaglagen.length > 0;
-                const ondersteuningsBadge = heeftOndersteuning ? 
-                    '<span style="color: #10b981; font-size: 1.2rem;">✓</span>' : 
-                    '<span style="color: #d1d5db; font-size: 1.2rem;">○</span>';
+                // Wie helpt nu? (bepaal op basis van supporters/inzet)
+                const supporters = details.supporters || [];
+                const inzet = details.inzet || [];
+                let wieHelptIcon = '';
+                let wieHelptText = '';
+                
+                // Check of domein is ingevuld
+                if (!details.hoeGaatHet || details.hoeGaatHet === 'nog-open') {
+                    wieHelptIcon = '⚪';
+                    wieHelptText = 'Nog open';
+                } else if (inzet.includes('geen') || supporters.length === 0) {
+                    wieHelptIcon = '○';
+                    wieHelptText = 'Zelfstandig';
+                } else if (supporters.length === 1) {
+                    wieHelptIcon = '👤';
+                    wieHelptText = '1 persoon';
+                } else {
+                    // Check types
+                    const hasInformal = supporters.some(s => s.type === 'informal');
+                    const hasProfessional = supporters.some(s => s.type === 'professional');
+                    const hasCollective = supporters.some(s => s.type === 'collective');
+                    
+                    if (hasInformal && hasProfessional) {
+                        wieHelptIcon = '🔄';
+                        wieHelptText = 'Gemengd';
+                    } else if (hasProfessional) {
+                        wieHelptIcon = '🏥';
+                        wieHelptText = 'Professional';
+                    } else if (hasInformal || hasCollective) {
+                        wieHelptIcon = '👥';
+                        wieHelptText = 'Meerdere';
+                    } else {
+                        wieHelptIcon = '❓';
+                        wieHelptText = 'Nog bepalen';
+                    }
+                }
                 
                 // Render ondersteunings-blok (uitklapbaar)
                 const ondersteuningsBlok = isExpanded ? renderOndersteuningsBlok(domain.id) : '';
@@ -8544,14 +8575,12 @@ Antwoord in dit exacte JSON formaat:
                         <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem; ${actieKleur}">${actieText}</span>
                         </td>
-                        <td style="text-align: center;">
-                            <button 
-                                onclick="event.stopPropagation(); toggleOndersteuningsBlok('${domain.id}');" 
-                                style="background: none; border: none; cursor: pointer; font-size: 1.5rem; padding: 8px;"
-                                title="Ondersteuningsstructuur">
-                                🔧
-                            </button>
-                            ${ondersteuningsBadge}
+                        <td 
+                            onclick="event.stopPropagation(); toggleOndersteuningsBlok('${domain.id}');" 
+                            style="text-align: center; cursor: pointer; padding: 12px;"
+                            title="${wieHelptText} - klik voor details">
+                            <div style="font-size: 1.5rem; line-height: 1;">${wieHelptIcon}</div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 4px;">${wieHelptText}</div>
                         </td>
                     </tr>
                     ${isExpanded ? `
@@ -8577,7 +8606,7 @@ Antwoord in dit exacte JSON formaat:
                             <th style="text-align: center;">Hoe gaat het?</th>
                             <th style="text-align: center;">Is er steun?</th>
                             <th style="text-align: center;">Wat is nu nodig?</th>
-                            <th style="text-align: center; width: 100px;">Ondersteuning</th>
+                            <th style="text-align: center; width: 120px;">Wie helpt nu?</th>
                         </tr>
                     </thead>
                     <tbody>
