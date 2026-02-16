@@ -4285,6 +4285,7 @@
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(9)">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
+                        <button class="btn" onclick="exportVoorStrategischeAnalyse()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">📊 Export voor strategische analyse</button>
                     </div>
                 </div>
             </div>
@@ -7315,6 +7316,103 @@ Antwoord in dit exacte JSON formaat:
             }).catch(() => {
                 alert('❌ Kon niet kopiëren. Selecteer handmatig.');
             });
+        }
+        
+        // STRATEGISCHE EXPORT VOOR NIVEAU 3
+        function exportVoorStrategischeAnalyse() {
+            // Privacy consent check
+            const consent = confirm(
+                '📊 Exporteren voor strategische analyse (Niveau 3)\n\n' +
+                '✅ Deze data wordt gebruikt voor:\n' +
+                '- Kosten-impact analyse\n' +
+                '- Maatschappelijke effectmeting\n' +
+                '- Beleidsonderbouwing\n\n' +
+                '🔒 Privacy:\n' +
+                '- Persoonlijke gegevens worden NIET geëxporteerd\n' +
+                '- Alleen domeinscores en positionele keuzes\n' +
+                '- Data blijft anoniem\n\n' +
+                'Akkoord?'
+            );
+            
+            if (!consent) return;
+            
+            // Bereid export data voor (privacy-safe)
+            const exportData = {
+                metadata: {
+                    version: '3.0',
+                    exportDatum: new Date().toISOString(),
+                    bron: 'RPA Positionele Analyse - Niveau 2',
+                    doelgroepen: state.doelgroepen || []
+                },
+                
+                // Domein scores (anoniem)
+                domeinen: domains.map(d => {
+                    const details = state.domainDetails[d.id] || {};
+                    const huidig = state.huidigeSteun[d.id] || {};
+                    const ondersteuning = state.ondersteuningsstructuur[d.id] || {};
+                    const reflectie = state.strategischeReflectie[d.id] || {};
+                    
+                    return {
+                        id: d.id,
+                        naam: d.name,
+                        emoji: d.emoji,
+                        
+                        // Huidige situatie
+                        huidigeDraaglagen: huidig.draaglagen || [],
+                        actieNodig: details.actieNodig === 'actie',
+                        
+                        // Positionele keuze
+                        gewensteDraaglagen: ondersteuning.draaglagen || huidig.draaglagen || [],
+                        bewegingsrichting: ondersteuning.bewegingsrichting || null,
+                        
+                        // Strategische reflectie
+                        reflectie: {
+                            duurzaamheid: reflectie.duurzaamheid || null,
+                            proportionaliteit: reflectie.proportionaliteit || null,
+                            verantwoordelijke: reflectie.verantwoordelijke ? 'Ja' : 'Nee', // Privacy: niet naam
+                            evaluatieDatum: reflectie.evaluatieDatum || null,
+                            toelichting: reflectie.toelichting || null
+                        },
+                        
+                        // Details voor kostenberekening
+                        steunDoorWie: details.steunDoorWie || [],
+                        ondersteuningsfrequentie: details.steunFrequentie || null
+                    };
+                }),
+                
+                // Gekozen interventies (voor kostenberekening)
+                interventies: (state.geselecteerdeInterventies || []).map(i => ({
+                    titel: i.titel || i.title,
+                    type: i.type,
+                    categorie: i.categorie || i.category,
+                    positie: i.positie || i.position
+                })),
+                
+                // Netwerk positie
+                netwerkpositie: getRPANetwerkPositie(),
+                
+                // Stabilisatie overall
+                stabilisatie: state.stabilisatie || null
+            };
+            
+            // Download als JSON
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `RPA-strategisch-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            alert(
+                '✅ Export geslaagd!\n\n' +
+                '📄 Bestand gedownload: RPA-strategisch-*.json\n\n' +
+                '🎯 Volgende stap:\n' +
+                '1. Open Niveau 3 (Strategische Netwerkimpactanalyse)\n' +
+                '2. Klik op "📥 Importeer positionele analyse"\n' +
+                '3. Selecteer dit bestand\n\n' +
+                '🔒 Privacy: Geen persoonlijke gegevens geëxporteerd'
+            );
         }
         
         // Render SOCIAAL NETWERK block (speciale vragen)
