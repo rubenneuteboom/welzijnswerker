@@ -8598,13 +8598,13 @@ Antwoord in dit exacte JSON formaat:
                     
                     if ((hasInformal || hasCollective) && hasProfessional) {
                         wieHelptIcon = '🔄';
-                        wieHelptText = `${totalHelpers} (gemengd)`;
+                        wieHelptText = `Gemengd (${totalHelpers})`;
                     } else if (hasProfessional) {
                         wieHelptIcon = '🏥';
-                        wieHelptText = `${formeelOrganisaties.length} professional(s)`;
+                        wieHelptText = `Formeel (${formeelOrganisaties.length})`;
                     } else if (hasInformal || hasCollective) {
                         wieHelptIcon = '👥';
-                        wieHelptText = `${totalHelpers} personen`;
+                        wieHelptText = `Informeel (${totalHelpers})`;
                     } else {
                         wieHelptIcon = '❓';
                         wieHelptText = 'Nog bepalen';
