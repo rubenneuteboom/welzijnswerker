@@ -327,13 +327,13 @@
         <div class="progress-bar">
             <div class="progress-fill" id="progressBar"></div>
         </div>
-        <div class="progress-text" id="progressText">Stap 0 van 7</div>
+        <div class="progress-text" id="progressText">Stap 0 van 8</div>
 
         <!-- Screen 0: Intro -->
         <div class="screen active" id="screen0">
             <div class="card">
                 <h2>Welkom! 👋</h2>
-                <p>In <strong>5 minuten</strong> krijg je een helder overzicht van 6 belangrijke levensgebieden:</p>
+                <p>In <strong>5-7 minuten</strong> krijg je een helder overzicht van 7 belangrijke levensgebieden:</p>
                 <ul style="line-height: 2; margin: 20px 0 20px 30px;">
                     <li>💰 Financiën</li>
                     <li>🧠 Geestelijke gezondheid</li>
@@ -341,6 +341,7 @@
                     <li>👨‍👩‍👧 Huiselijke relaties</li>
                     <li>👥 Sociaal netwerk</li>
                     <li>💼 Dagbesteding & werk</li>
+                    <li>💪 Lichamelijke gezondheid</li>
                 </ul>
 
                 <div class="alert alert-info">
@@ -361,16 +362,17 @@
             </div>
         </div>
 
-        <!-- Screens 1-6: Domain questions -->
+        <!-- Screens 1-7: Domain questions -->
         <div class="screen" id="screen1"></div>
         <div class="screen" id="screen2"></div>
         <div class="screen" id="screen3"></div>
         <div class="screen" id="screen4"></div>
         <div class="screen" id="screen5"></div>
         <div class="screen" id="screen6"></div>
+        <div class="screen" id="screen7"></div>
 
-        <!-- Screen 7: Results -->
-        <div class="screen" id="screen7">
+        <!-- Screen 8: Results -->
+        <div class="screen" id="screen8">
             <div class="card">
                 <h2>📊 Jouw overzicht</h2>
                 <div id="resultsSummary"></div>
@@ -544,6 +546,34 @@
                         ],
                         urgent: null
                     }
+                },
+                {
+                    id: 'lichamelijk',
+                    emoji: '💪',
+                    title: 'Lichamelijke gezondheid',
+                    description: 'Denk aan: chronische ziektes, pijn, mobiliteit, medicijnen, doktersbezoek',
+                    hulp: {
+                        info: [
+                            { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare gezondheidsinformatie' },
+                            { name: 'Gezondheidsplein.nl', url: 'https://www.gezondheidsplein.nl', desc: 'Info over ziektes en behandelingen' },
+                            { name: 'Mijn Gezondheidsgids', url: 'https://www.mijngezondheidsgids.nl', desc: 'Persoonlijk gezondheidsplan' }
+                        ],
+                        chat: [
+                            { name: 'Huisartsenpost chat', desc: 'Via je eigen huisarts' },
+                            { name: 'Apotheek WhatsApp', desc: 'Vraag je apotheek' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Voor lichamelijke klachten' },
+                            { name: 'Fysiotherapeut', desc: 'Bij bewegingsklachten (soms gratis)' },
+                            { name: 'Wijkverpleegkundige', desc: 'Via huisarts' }
+                        ],
+                        bellen: [
+                            { name: 'Huisarts', desc: 'Lokaal nummer' },
+                            { name: 'Huisartsenpost', tel: '088-0030600', desc: 'Buiten kantooruren (niet spoed)' },
+                            { name: 'Zorgverzekering', desc: 'Voor vragen over vergoedingen' }
+                        ],
+                        urgent: 'Bij spoed: 112 | Bij twijfel spoed: Huisartsenpost 088-0030600'
+                    }
                 }
             ],
             answers: {},
@@ -585,7 +615,7 @@
                             <div class="btn-group">
                                 <button class="btn-secondary" onclick="app.goToScreen(${screenNum - 1})">← Vorige</button>
                                 <button class="btn-primary" id="next${screenNum}" onclick="app.goToScreen(${screenNum + 1})" disabled>
-                                    ${screenNum === 6 ? 'Bekijk resultaat →' : 'Volgende →'}
+                                    ${screenNum === 7 ? 'Bekijk resultaat →' : 'Volgende →'}
                                 </button>
                             </div>
                         </div>
@@ -622,7 +652,7 @@
                 this.updateProgress();
                 
                 // If results screen, generate results
-                if (num === 7) {
+                if (num === 8) {
                     this.showResults();
                 }
                 
@@ -631,7 +661,7 @@
             },
 
             updateProgress() {
-                const total = 7;
+                const total = 8;
                 const percentage = (this.currentScreen / total) * 100;
                 
                 document.getElementById('progressBar').style.width = percentage + '%';
