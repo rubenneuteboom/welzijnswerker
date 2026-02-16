@@ -3823,36 +3823,6 @@
                         Soms is eerst stabiliseren belangrijk. Daarna kunnen we samen kijken hoe steun georganiseerd kan worden.
                     </p>
                     
-                    <!-- Hoe wil je invullen -->
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">🔘 Hoe wil je dit invullen?</h3>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="modus" value="self" onclick="selectMode('self')" style="width: 20px; height: 20px;">
-                                <span style="font-weight: 600;">Zelfstandig</span>
-                            </label>
-                            <label style="display: flex; align-items: flex-start; gap: 12px; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="modus" value="professional" onclick="selectMode('professional'); document.getElementById('professionalFields').style.display='block';" style="width: 20px; height: 20px; margin-top: 2px;">
-                                <div>
-                                    <div style="font-weight: 600; margin-bottom: 4px;">Samen met een professional</div>
-                                    <div style="font-size: 0.85rem; color: var(--text-light);">Je kunt dit samen invullen en bespreken.</div>
-                                </div>
-                            </label>
-                        </div>
-                        
-                        <div id="professionalFields" style="display: none; margin-top: 15px; padding: 15px; background: #f9fafb; border-radius: 8px;">
-                            <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 6px;">
-                                Naam professional (optioneel)
-                            </label>
-                            <input type="text" id="professionalName" placeholder="Bijv. Maria, maatschappelijk werker"
-                                   style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem;">
-                        </div>
-                    </div>
-                    
                     <!-- Doelgroep -->
                     <div style="margin-bottom: 30px;">
                         <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">🎯 Doelgroep(en)</h3>
@@ -6274,18 +6244,9 @@ Antwoord in dit exacte JSON formaat:
             
             // Check mode via radio button als state.mode niet gezet is
             if (!state.mode) {
-                const modeRadio = document.querySelector('input[name="modus"]:checked');
-                if (modeRadio) {
-                    state.mode = modeRadio.value;
-                    console.log('Mode gezet via radio button:', state.mode);
-                } else {
-                    alert('⚠️ Kies eerst hoe je wilt invullen (Zelfstandig of Samen met professional)');
-                    return;
-                }
-            }
-            
-            if (state.mode === 'professional') {
-                state.professionalName = document.getElementById('professionalName').value;
+                // Niveau 2 is altijd samen met professional
+                state.mode = 'professional';
+                console.log('Mode: professional (niveau 2)');
             }
             
             // Sla postcode op (Prioriteit 1)
