@@ -385,11 +385,17 @@
                     </div>
                 </div>
 
+                <div class="alert alert-info" style="margin-top: 30px;">
+                    <span style="font-size: 1.5rem;">💼</span>
+                    <div>
+                        <strong>Wil je dieper analyseren?</strong><br>
+                        Voor professionals is er Niveau 2: Positionele Analyse (samen met een professional alle 11 levensdomeinen in detail).
+                    </div>
+                </div>
+
                 <div class="btn-group">
-                    <button class="btn-secondary" onclick="app.reset()">🔄 Opnieuw</button>
-                    <button class="btn-primary" onclick="window.open('positioneel.html', '_blank')">
-                        Uitgebreide analyse (Niveau 2) →
-                    </button>
+                    <button class="btn-secondary" onclick="app.reset()">🔄 Nieuwe scan</button>
+                    <button class="btn-secondary" onclick="window.print()">🖨️ Print resultaten</button>
                 </div>
             </div>
         </div>
@@ -404,6 +410,17 @@
                     emoji: '💰',
                     title: 'Financiën',
                     description: 'Denk aan: inkomen, schulden, rondkomen, rekeningen betalen',
+                    tips_goed: [
+                        'Check maandelijks je budget (Nibud.nl/budgetcheck)',
+                        'Bouw een spaarbuffer op (3 maanden vaste lasten)',
+                        'Ken je rechten: toeslagen, zorgtoeslag (belastingdienst.nl)'
+                    ],
+                    tips_beter: [
+                        'Maak een budgetplan (Nibud.nl - gratis tool)',
+                        'Vraag budgetadvies (gratis via schuldhulpmaatje)',
+                        'Check of je alle toeslagen gebruikt',
+                        'Praat met je werkgever over loonstrook/voorschot'
+                    ],
                     hulp: {
                         info: [
                             { name: 'Nibud.nl', url: 'https://www.nibud.nl', desc: 'Budgetadvies en rekentools' },
@@ -428,6 +445,17 @@
                     emoji: '🧠',
                     title: 'Geestelijke gezondheid',
                     description: 'Denk aan: somberheid, angst, stress, slaapproblemen, zorgen',
+                    tips_goed: [
+                        'Beweeg 30 min per dag (wandelen helpt!)',
+                        'Spreek vrienden/familie regelmatig',
+                        'Zorg voor voldoende slaap (7-8 uur)'
+                    ],
+                    tips_beter: [
+                        'Praat met iemand die je vertrouwt',
+                        '113.nl - gratis zelfhulp online',
+                        'Structuur in je dag (vaste tijden)',
+                        'Probeer te bewegen (helpt tegen somberheid)'
+                    ],
                     hulp: {
                         info: [
                             { name: '113.nl', url: 'https://www.113.nl', desc: 'Suïcidepreventie en zelfhulp' },
@@ -453,6 +481,16 @@
                     emoji: '🏠',
                     title: 'Wonen',
                     description: 'Denk aan: betaalbare woning, veilige buurt, thuisvoelen',
+                    tips_goed: [
+                        'Ken je huurrechten (woonbond.nl)',
+                        'Onderhoud je woning goed',
+                        'Ken je buren (veilig gevoel + sociale steun)'
+                    ],
+                    tips_beter: [
+                        'Problemen met verhuurder? → Woonbond.nl (gratis advies)',
+                        'Te duur? → Check huurtoeslag (belastingdienst.nl)',
+                        'Wil je verhuizen? → Inschrijven op HuisjeHuisje.nl'
+                    ],
                     hulp: {
                         info: [
                             { name: 'Woonbond.nl', url: 'https://www.woonbond.nl', desc: 'Huurrechten en advies' },
@@ -477,6 +515,17 @@
                     emoji: '👨‍👩‍👧',
                     title: 'Huiselijke relaties',
                     description: 'Denk aan: partner, kinderen, familie thuis, sfeer',
+                    tips_goed: [
+                        'Praat met elkaar (echt luisteren)',
+                        'Quality time samen (geen telefoons)',
+                        'Waardeer elkaar (kleine dingen tellen)'
+                    ],
+                    tips_beter: [
+                        'Praat over wat lastig is (niet tijdens ruzie)',
+                        'Zoek samen iets leuks te doen',
+                        'Overweeg relatiecoach/cursus (vaak gratis via gemeente)',
+                        'Ikvertrouwjou.nl - ervaringen lezen kan helpen'
+                    ],
                     hulp: {
                         info: [
                             { name: 'Veiligthuis.nl/herken', url: 'https://www.veiligthuis.nl/herken', desc: '"Is dit normaal?" test (anoniem)' },
@@ -501,6 +550,17 @@
                     emoji: '👥',
                     title: 'Sociaal netwerk',
                     description: 'Denk aan: vrienden, familie, contact, eenzaamheid',
+                    tips_goed: [
+                        'Blijf contact houden (ook als het druk is)',
+                        'Af en toe nieuwe mensen ontmoeten',
+                        'Vriendschappen zijn tweezijdig (geven en nemen)'
+                    ],
+                    tips_beter: [
+                        'Ga naar buurthuis activiteit (koffie-ochtend)',
+                        'Vrijwilligerswerk (vrijwilligerswerk.nl)',
+                        'Sportclub/hobby (nieuwe mensen ontmoeten)',
+                        'Buurtapp gebruiken (Nextdoor, Facebook buurtgroep)'
+                    ],
                     hulp: {
                         info: [
                             { name: 'SamenDoenSamenLeven.nl', url: 'https://www.samendoensamenleven.nl', desc: 'Activiteiten in je buurt' },
@@ -526,6 +586,17 @@
                     emoji: '💼',
                     title: 'Dagbesteding & werk',
                     description: 'Denk aan: werk, opleiding, vrijwilligerswerk, nuttige tijdsbesteding',
+                    tips_goed: [
+                        'Blijf jezelf ontwikkelen (cursussen, leren)',
+                        'Onderhoud je netwerk (collega\'s, LinkedIn)',
+                        'Let op werk-privé balans'
+                    ],
+                    tips_beter: [
+                        'Vrijwilligerswerk (zinvol + netwerk opbouwen)',
+                        'Cursus/opleiding (vaak gratis via UWV)',
+                        'Denk na over je kwaliteiten (waar ben je goed in?)',
+                        'Praat met jobcoach (gratis via gemeente)'
+                    ],
                     hulp: {
                         info: [
                             { name: 'Werk.nl', url: 'https://www.werk.nl', desc: 'Vacatures, scholing' },
@@ -552,6 +623,18 @@
                     emoji: '💪',
                     title: 'Lichamelijke gezondheid',
                     description: 'Denk aan: chronische ziektes, pijn, mobiliteit, medicijnen, doktersbezoek',
+                    tips_goed: [
+                        'Beweeg 30 min per dag (wandelen telt!)',
+                        'Eet gezond (groente en fruit)',
+                        'Voldoende drinken (1.5-2L water)',
+                        'Check-ups bij huisarts (vooral na 50)'
+                    ],
+                    tips_beter: [
+                        'Begin klein (10 min wandelen per dag)',
+                        'Fysiotherapeut bij pijnklachten (vaak vergoed)',
+                        'Thuisarts.nl - tips gezond leven',
+                        'Praat met je huisarts over je zorgen'
+                    ],
                     hulp: {
                         info: [
                             { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare gezondheidsinformatie' },
@@ -700,15 +783,39 @@
                     html += `<div class="result-item goed">
                         <strong style="display: block; margin-bottom: 8px;">🟢 Gaat goed (${goed.length})</strong>
                         ${goed.map(d => `${d.emoji} ${d.title}`).join(', ')}
+                        
+                        <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="margin-top: 12px; background: #dcfce7; border-color: #22c55e;">
+                            <strong>💡 Blijf zo doorgaan - tips ▼</strong>
+                        </div>
+                        <div class="hulp-content">
+                            ${goed.map(d => `
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #22c55e;">${d.emoji} ${d.title}:</strong>
+                                    <ul style="margin: 8px 0 0 20px; line-height: 1.8;">
+                                        ${d.tips_goed.map(tip => `<li>${tip}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>`;
                 }
                 
                 // Kan beter
                 if (beter.length > 0) {
-                    html += `<div class="result-item beter">
-                        <strong style="display: block; margin-bottom: 8px;">🟡 Kan beter (${beter.length})</strong>
-                        ${beter.map(d => `${d.emoji} ${d.title}`).join(', ')}
-                    </div>`;
+                    beter.forEach(domain => {
+                        html += `<div class="result-item beter">
+                            <strong style="display: block; margin-bottom: 8px;">🟡 ${domain.emoji} ${domain.title}</strong>
+                            
+                            <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="background: #fef3c7; border-color: #f59e0b;">
+                                <strong>💪 Wat kan helpen? Klik hier ▼</strong>
+                            </div>
+                            <div class="hulp-content">
+                                <ul style="margin: 8px 0 0 20px; line-height: 1.8;">
+                                    ${domain.tips_beter.map(tip => `<li>${tip}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                    });
                 }
                 
                 // Actie nodig (met hulp)
