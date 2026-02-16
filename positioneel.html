@@ -8591,20 +8591,38 @@ Antwoord in dit exacte JSON formaat:
                         wieHelptText = formeelOrganisaties[0].substring(0, 20) + (formeelOrganisaties[0].length > 20 ? '...' : '');
                     }
                 } else {
-                    // Meerdere helpers
+                    // Meerdere helpers - toon namen tot max 3
                     const hasInformal = steunDoorWie.includes('informeel');
                     const hasProfessional = steunDoorWie.includes('formeel');
                     const hasCollective = steunDoorWie.includes('collectief');
                     
+                    // Verzamel alle namen
+                    let alleNamen = [];
+                    alleNamen = alleNamen.concat(informeelPersonen);
+                    alleNamen = alleNamen.concat(collectiefOpties.map(o => o.substring(0, 15) + (o.length > 15 ? '...' : '')));
+                    alleNamen = alleNamen.concat(formeelOrganisaties);
+                    
                     if ((hasInformal || hasCollective) && hasProfessional) {
                         wieHelptIcon = '🔄';
-                        wieHelptText = `Gemengd (${totalHelpers})`;
+                        if (totalHelpers <= 3) {
+                            wieHelptText = alleNamen.join(', ');
+                        } else {
+                            wieHelptText = alleNamen.slice(0, 2).join(', ') + ` +${totalHelpers - 2}`;
+                        }
                     } else if (hasProfessional) {
                         wieHelptIcon = '🏥';
-                        wieHelptText = `Formeel (${formeelOrganisaties.length})`;
+                        if (formeelOrganisaties.length <= 3) {
+                            wieHelptText = formeelOrganisaties.join(', ');
+                        } else {
+                            wieHelptText = formeelOrganisaties.slice(0, 2).join(', ') + ` +${formeelOrganisaties.length - 2}`;
+                        }
                     } else if (hasInformal || hasCollective) {
                         wieHelptIcon = '👥';
-                        wieHelptText = `Informeel (${totalHelpers})`;
+                        if (totalHelpers <= 3) {
+                            wieHelptText = alleNamen.join(', ');
+                        } else {
+                            wieHelptText = alleNamen.slice(0, 2).join(', ') + ` +${totalHelpers - 2}`;
+                        }
                     } else {
                         wieHelptIcon = '❓';
                         wieHelptText = 'Nog bepalen';
