@@ -4104,9 +4104,9 @@
             <!-- Screen 9: Strategische Reflectie (RPA Stap 3) -->
             <div class="screen" id="screen-reflectie">
                 <div class="card">
-                    <h2>💭 Strategische Reflectie</h2>
+                    <h2>💭 Even teruglooppen</h2>
                     <p style="color: var(--text-light); margin-bottom: 10px; font-size: 1.05rem;">
-                        Nu je positionele keuzes hebt gemaakt, reflecteren we op de haalbaarheid en impact.
+                        Klopt de richting die we samen gekozen hebben? Is het realistisch en past de inzet bij de situatie?
                     </p>
                     
                     <!-- Uitleg kort -->
@@ -13970,11 +13970,12 @@ END:VEVENT
             }
             
             const bewegingLabels = {
-                'stabiliseren': 'Stabiliseren',
-                'vervangen': 'Vervangen',
-                'opschalen': 'Opschalen',
-                'afschalen': 'Afschalen',
-                'stoppen': 'Stoppen'
+                'stabiliseren': 'Stabiliseren <span style="font-weight:400;color:#6b7280;">(blijft zoals het is)</span>',
+                'vervangen':    'Vervangen <span style="font-weight:400;color:#6b7280;">(andere persoon of organisatie, zelfde niveau)</span>',
+                'opschalen':    'Opschalen <span style="font-weight:400;color:#6b7280;">(meer of intensievere steun)</span>',
+                'afschalen':    'Afschalen <span style="font-weight:400;color:#6b7280;">(minder steun, meer zelfstandig)</span>',
+                'ontlasten':    '🛡️ Netwerk ontlasten <span style="font-weight:400;color:#6b7280;">(formele inzet beschermt informeel netwerk)</span>',
+                'stoppen':      'Stoppen <span style="font-weight:400;color:#6b7280;">(ondersteuning beëindigen)</span>'
             };
             
             const html = domeinenMetBeweging.map(domain => {
@@ -13989,7 +13990,7 @@ END:VEVENT
                             <div>
                                 <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h3>
                                 <div style="font-size: 0.9rem; color: #6b7280; margin-top: 4px;">
-                                    Gekozen beweging: <strong style="color: var(--primary);">${bewegingLabels[beweging]}</strong>
+                                    Gekozen beweging: <strong style="color: var(--primary);">${bewegingLabels[beweging] || beweging}</strong>
                                 </div>
                             </div>
                         </div>
