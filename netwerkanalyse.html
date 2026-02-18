@@ -164,6 +164,29 @@
             font-size: 1.8rem;
         }
 
+        .age-chip {
+            padding: 10px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #4a5568;
+            background: #f7fafc;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .age-chip:hover {
+            border-color: #667eea;
+            background: #eef2ff;
+            color: #434190;
+        }
+        .age-chip.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
         /* Buttons */
         .btn-group {
             display: flex;
@@ -352,6 +375,16 @@
                     </div>
                 </div>
 
+                <div style="margin: 24px 0;">
+                    <p style="text-align: center; font-weight: 600; color: #4a5568; margin-bottom: 12px;">Kies je leeftijdscategorie <span style="font-weight: 400; color: #a0aec0;">(optioneel — voor tips op maat)</span></p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;" id="ageCategoryGroup">
+                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)">🧒 t/m 17 jaar</div>
+                        <div class="age-chip" data-cat="jongvolwassene" onclick="app.selectAge('jongvolwassene', this)">👨 18 – 30 jaar</div>
+                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)">👩 31 – 64 jaar</div>
+                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)">👴 65+ jaar</div>
+                    </div>
+                </div>
+
                 <p style="font-size: 0.9rem; color: #718096; margin-top: 20px;">
                     🔒 <strong>Privacy:</strong> Jouw antwoorden blijven op dit apparaat. Niets wordt opgeslagen op een server.
                 </p>
@@ -416,6 +449,32 @@
                         'Check of je alle toeslagen gebruikt',
                         'Praat met je werkgever over loonstrook/voorschot'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Leer van je ouders over rekeningen en sparen',
+                            'Als je 18 wordt: vraag zorgtoeslag en studiefinanciering aan',
+                            'Gratis hulp bij geldzaken: Schuldhulpmaatje voor jongeren',
+                            'Bijzondere bijstand aanvragen bij gemeente als het krap is'
+                        ],
+                        jongvolwassene: [
+                            'Check zorgtoeslag en huurtoeslag — veel mensen missen dit',
+                            'Begin met een kleine spaarbuffer (ook €10/maand helpt)',
+                            'Bij studielening: check welke terugbetaalregeling voor jou geldt',
+                            'Praat met jobcoach als werk/inkomen niet lukt (gratis via gemeente)'
+                        ],
+                        volwassene: [
+                            'Check regelmatig of je toeslagen hebt bij inkomensdaling',
+                            'Pensioenopbouw checken: Mijnpensioenoverzicht.nl',
+                            'Bij schulden: schakel vroeg schuldhulp in (voorkomt escalatie)',
+                            'Budgetcoaching via wijkteam is gratis en laagdrempelig'
+                        ],
+                        ouder: [
+                            'AOW tijdig aanvragen (5 jaar voor pensioenleeftijd bij SVB)',
+                            'Vraag kwijtschelding gemeentelijke belastingen aan',
+                            'Compensatieregelingen zorgkosten checken via CAK.nl',
+                            'Gratis financieel advies bij Seniorentelefoon: 0800-2525'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: 'Nibud.nl', url: 'https://www.nibud.nl', desc: 'Budgetadvies en rekentools' },
@@ -451,6 +510,32 @@
                         'Structuur in je dag (vaste tijden)',
                         'Probeer te bewegen (helpt tegen somberheid)'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Vertel het aan een vertrouwde volwassene (juf, trainer, oom/tante)',
+                            'Kindertelefoon: 0800-0432 — gratis, anoniem, ook chatten',
+                            'Je school kan een counselor of psycholoog inschakelen',
+                            'Hulp vragen is sterk — je hoeft dit niet alleen te dragen'
+                        ],
+                        jongvolwassene: [
+                            'Studenten kunnen gratis naar de studentenpsycholoog',
+                            'MIND YoungMinds: lotgenotencontact voor jongvolwassenen',
+                            'Online therapie (iPractice, NiceDay) heeft weinig wachttijd',
+                            'Vroeg hulp zoeken voorkomt dat het erger wordt'
+                        ],
+                        volwassene: [
+                            'POH-GGZ via huisarts is de snelste en laagdrempeligste route',
+                            'Stress door werk? Arbo-arts of bedrijfsmaatschappelijk werk',
+                            'Mantelzorgondersteuning als zorg voor anderen je uitput',
+                            'Online therapie (eMental Health) zonder wachtlijst'
+                        ],
+                        ouder: [
+                            'Somberheid en eenzaamheid zijn behandelbaar — niet normaal bij oud worden',
+                            'Rouwverwerking na verlies partner: via huisarts of Rouwcentrum',
+                            'Ouderenpsychiatrie is gespecialiseerd in jouw situatie',
+                            'Buurthuis activiteiten helpen aantoonbaar tegen somberheid'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: '113.nl', url: 'https://www.113.nl', desc: 'Suïcidepreventie en zelfhulp' },
@@ -486,6 +571,30 @@
                         'Te duur? → Check huurtoeslag (belastingdienst.nl)',
                         'Wil je verhuizen? → Inschrijven op HuisjeHuisje.nl'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Is het thuis onveilig? Praat met een vertrouwd persoon of bel Veilig Thuis: 0800-2000',
+                            'Je mag altijd vragen om een andere slaapplek als het thuis niet goed gaat',
+                            'School of wijkteam kan helpen als wonen een probleem is'
+                        ],
+                        jongvolwassene: [
+                            'Inschrijven bij woningcorporatie kost niks en telt inschrijftijd op',
+                            'Anti-kraakwonen als tijdelijke oplossing (via Camelot, Ad Hoc)',
+                            'Huurtoeslag aanvragen via belastingdienst.nl — check of je recht hebt',
+                            'Urgentieverklaring aanvragen als thuissituatie niet langer gaat'
+                        ],
+                        volwassene: [
+                            'Praat vroeg met woningcorporatie bij dreigende huurachterstand',
+                            'Bij schuld: schuldhulp inschakelen vóór uitzetting dreigt',
+                            'WMO-aanpassing woning aanvragen voor gezin of mantelzorg'
+                        ],
+                        ouder: [
+                            'WMO-aanpassing aanvragen: drempels, handgrepen, traplift (gemeente vergoedt)',
+                            'Gelijkvloerse seniorenwoning zoeken via woningcorporatie',
+                            'Wmo-consulent gratis thuisbezoek aanvragen voor advies',
+                            'Valpreventie thuis: gemeente vergoedt soms eenvoudige aanpassingen'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: 'Woonbond.nl', url: 'https://www.woonbond.nl', desc: 'Huurrechten en advies' },
@@ -521,6 +630,32 @@
                         'Overweeg relatiecoach/cursus (vaak gratis via gemeente)',
                         'Ikvertrouwjou.nl - ervaringen lezen kan helpen'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Conflicten thuis? Praat met iemand buiten je gezin',
+                            'Kindertelefoon: 0800-0432 — ook voor situaties thuis',
+                            'Jij bent niet verantwoordelijk voor problemen van volwassenen thuis',
+                            'Je hoeft niet te kiezen tussen je ouders'
+                        ],
+                        jongvolwassene: [
+                            'Grenzen aangeven mag je leren — ook naar je ouders',
+                            'Eerste relatie: het is normaal dat het soms moeilijk is',
+                            'Gratis relatiegesprekken via wijkteam of huisarts',
+                            'Als het niet veilig voelt: Veilig Thuis 0800-2000'
+                        ],
+                        volwassene: [
+                            'Relatiecoaching is gewoon en helpt echt (vaak vergoed)',
+                            'Ouderschap is zwaar: Stevig Ouderschap cursus (gratis via gemeente)',
+                            'Mantelzorg voor ouders naast eigen gezin: vraag respijtzorg aan',
+                            'Buurtbemiddeling lost meer op dan je denkt (gratis, lokaal)'
+                        ],
+                        ouder: [
+                            'Verlies van partner: rouwondersteuning via huisarts of Rouwcentrum',
+                            'Weinig contact met kinderen/kleinkinderen? Maatjesproject kan helpen',
+                            'Eenzaamheid in relatie is behandelbaar — praat met huisarts',
+                            'Humanitas Thuisadministratie biedt ook sociaal contact'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: 'Veiligthuis.nl/herken', url: 'https://www.veiligthuis.nl/herken', desc: '"Is dit normaal?" test (anoniem)' },
@@ -556,6 +691,32 @@
                         'Sportclub/hobby (nieuwe mensen ontmoeten)',
                         'Buurtapp gebruiken (Nextdoor, Facebook buurtgroep)'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Sport of hobby is de beste manier om vrienden te maken',
+                            'Pesten? Meld het bij school en praat erover thuis',
+                            'Online vrienden tellen ook — maar zorg ook voor echte ontmoetingen',
+                            'Nieuwe school = nieuwe kans voor nieuwe vriendschappen'
+                        ],
+                        jongvolwassene: [
+                            'Nieuwe stad of studie? Proeflessen en intro-activiteiten zijn echt voor jou',
+                            'Vrijwilligerswerk verbindt en vult ook je CV',
+                            'Introvert? Eén echte vriend is genoeg als fundament — bouw van daaruit',
+                            'Sportclub of hobby groep: makkelijkste manier om mensen te leren kennen'
+                        ],
+                        volwassene: [
+                            'Buren leren kennen via buurtapp (Nextdoor) of buurtborrel',
+                            'Vriendschappen kosten onderhoud — plan bewust contact in',
+                            'Eenzaamheid is taboe maar heel gewoon — praat erover met huisarts',
+                            'Kleine dingen met collega\'s (koffie, wandellunch) bouwen echte connecties'
+                        ],
+                        ouder: [
+                            'Seniorenprogramma buurthuis: laagdrempelig en bewezen effectief',
+                            'Thuisbezoek van vrijwilliger via Humanitas of Maatjesproject',
+                            'Digitale vaardigheden leren helpt om contact te houden met (klein)kinderen',
+                            'Ouderenbonden organiseren activiteiten in jouw wijk'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: 'SamenDoenSamenLeven.nl', url: 'https://www.samendoensamenleven.nl', desc: 'Activiteiten in je buurt' },
@@ -592,6 +753,32 @@
                         'Denk na over je kwaliteiten (waar ben je goed in?)',
                         'Praat met jobcoach (gratis via gemeente)'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'School is je belangrijkste fundament — vraag hulp als het niet lukt',
+                            'Bijbaan kan zinvol zijn, maar mag niet ten koste van school gaan',
+                            'Hobby\'s zijn je toekomstige netwerk en vaardigheden',
+                            'Gratis studiekeuzegesprek via school of gemeente'
+                        ],
+                        jongvolwassene: [
+                            'UWV biedt gratis loopbaanadvies en begeleiding bij werk zoeken',
+                            'Stagegesprekken openen deuren — ook als er geen stage is',
+                            'Burn-out op je 25e is reëel — herken de signalen vroeg',
+                            'Mbo-4 of zij-instroom zijn legit als eerste stap — geen schaamte'
+                        ],
+                        volwassene: [
+                            'Burn-out: meld je vroeg bij arbo-arts (niet na 2 jaar)',
+                            'Re-integratie via UWV als je langdurig ziek bent',
+                            'Mantelzorg + werk combineren? Respijtzorg via WMO verlicht de druk',
+                            'Pensioenplanning: check via Mijnpensioenoverzicht.nl'
+                        ],
+                        ouder: [
+                            'Vrijwilligerswerk geeft structuur en betekenis na pensionering',
+                            'Volksuniversiteit of seniorencursussen: zinvol en sociaal',
+                            'Bijklussen naast pensioen mag (belastingvrij tot bepaalde grens)',
+                            'Mantelzorg voor anderen is ook waardevolle dagbesteding'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: 'Werk.nl', url: 'https://www.werk.nl', desc: 'Vacatures, scholing' },
@@ -630,6 +817,32 @@
                         'Thuisarts.nl - tips gezond leven',
                         'Praat met je huisarts over je zorgen'
                     ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Tieners hebben 9 uur slaap nodig — slaaptekort remt alles',
+                            'Beweeg minstens een uur per dag (ook gewoon buiten)',
+                            'Eet gevarieerd: Voedingscentrum.nl heeft simpele tips',
+                            'Iets klopt niet in je lichaam? Praat met huisarts — ook voor puberteitsvragen'
+                        ],
+                        jongvolwassene: [
+                            'Slaaptekort en chronische stress zijn de grootste boosdoeners',
+                            'Preventieve huisartscheck wordt vergoed — plan hem gewoon in',
+                            'Bewegen hoeft niet in de sportschool: fietsen, wandelen telt ook mee',
+                            'Alcohol en drugs hebben meer impact op jonge hersenen — informeer je'
+                        ],
+                        volwassene: [
+                            'Jaarlijkse gezondheidscheck via huisarts is zinvol boven de 40',
+                            'Chronische rugklachten? Fysiotherapie via huisarts',
+                            'Stress verminderen versterkt je immuunsysteem — neem dat serieus',
+                            '30 min bewegen per dag verlaagt risico op kanker, diabetes en hart-/vaatziekten'
+                        ],
+                        ouder: [
+                            'Valpreventie: "Sterk & Stabiel" programma via gemeente (bewezen effectief)',
+                            'Gratis medicatieoverzicht via apotheek — check wisselwerkingen',
+                            'Gehoor- of gezichtsproblemen vroeg aanpakken vermindert valongelukken',
+                            'Bewegen op leeftijd: seniorensport, zwemmen, wandelclub — gemeente heeft overzicht'
+                        ]
+                    },
                     hulp: {
                         info: [
                             { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare gezondheidsinformatie' },
@@ -655,11 +868,17 @@
                 }
             ],
             answers: {},
+            ageCategory: null, // jongere | jongvolwassene | volwassene | ouder
 
             init() {
                 this.loadFromStorage();
                 this.renderDomainScreens();
                 this.updateProgress();
+                // Herstel visuele selectie leeftijdscategorie
+                if (this.ageCategory) {
+                    const chip = document.querySelector(`.age-chip[data-cat="${this.ageCategory}"]`);
+                    if (chip) chip.classList.add('selected');
+                }
             },
 
             renderDomainScreens() {
@@ -768,8 +987,27 @@
                 const goed = this.domains.filter(d => this.answers[d.id] === 'goed');
                 const beter = this.domains.filter(d => this.answers[d.id] === 'beter');
                 const actie = this.domains.filter(d => this.answers[d.id] === 'actie');
+
+                // Helper: kies leeftijdsspecifieke tips of val terug op generiek
+                const ageCat = this.ageCategory;
+                const ageLabelMap = { jongere: '🧒 t/m 17 jaar', jongvolwassene: '👨 18–30 jaar', volwassene: '👩 31–64 jaar', ouder: '👴 65+' };
+                const getTips = (domain) => {
+                    if (ageCat && domain.tips_leeftijd && domain.tips_leeftijd[ageCat]) {
+                        return domain.tips_leeftijd[ageCat];
+                    }
+                    return domain.tips_beter;
+                };
                 
                 let html = '<div class="result-summary">';
+
+                // Leeftijdsbadge tonen als gekozen
+                if (ageCat) {
+                    html += `<div style="text-align:center; margin-bottom: 16px;">
+                        <span style="background:#667eea; color:white; padding:6px 16px; border-radius:999px; font-size:0.85rem; font-weight:600;">
+                            Tips op maat voor: ${ageLabelMap[ageCat]}
+                        </span>
+                    </div>`;
+                }
                 
                 // Summary counts
                 html += `
@@ -822,7 +1060,7 @@
                             </div>
                             <div class="hulp-content">
                                 <ul style="margin: 8px 0 0 20px; line-height: 1.8;">
-                                    ${domain.tips_beter.map(tip => `<li>${tip}</li>`).join('')}
+                                    ${getTips(domain).map(tip => `<li>${tip}</li>`).join('')}
                                 </ul>
                             </div>
                         </div>`;
@@ -916,21 +1154,42 @@
                 return html;
             },
 
+            selectAge(category, element) {
+                this.ageCategory = (this.ageCategory === category) ? null : category; // toggle
+                document.querySelectorAll('.age-chip').forEach(c => c.classList.remove('selected'));
+                if (this.ageCategory) element.classList.add('selected');
+                this.saveToStorage();
+            },
+
             saveToStorage() {
-                localStorage.setItem('rpa_niveau1', JSON.stringify(this.answers));
+                localStorage.setItem('rpa_niveau1', JSON.stringify({
+                    answers: this.answers,
+                    ageCategory: this.ageCategory
+                }));
             },
 
             loadFromStorage() {
                 const saved = localStorage.getItem('rpa_niveau1');
                 if (saved) {
-                    this.answers = JSON.parse(saved);
+                    try {
+                        const parsed = JSON.parse(saved);
+                        // Support both old format (just answers) and new format
+                        if (parsed.answers) {
+                            this.answers = parsed.answers;
+                            this.ageCategory = parsed.ageCategory || null;
+                        } else {
+                            this.answers = parsed; // old format
+                        }
+                    } catch(e) { /* ignore */ }
                 }
             },
 
             reset() {
                 if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Je antwoorden worden gewist.')) {
                     this.answers = {};
+                    this.ageCategory = null;
                     localStorage.removeItem('rpa_niveau1');
+                    document.querySelectorAll('.age-chip').forEach(c => c.classList.remove('selected'));
                     this.goToScreen(0);
                 }
             }
