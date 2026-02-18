@@ -6715,28 +6715,43 @@ Antwoord in dit exacte JSON formaat:
                 </div>
 
                 ${renderDoelgroepVragen(domain.id)}
-                
-                <!-- Samenvatting: Wie helpt nu? (altijd zichtbaar) -->
-                ${renderWieHelptNuSamenvatting(domain.id, details)}
-                
-                <!-- Stoplicht toelichting -->
-                <p style="font-size:0.78rem;color:#9ca3af;margin:-8px 0 14px;padding-left:2px;">
+
+                <!-- Supporters -->
+                <p style="font-size:0.78rem;color:#9ca3af;margin:0 0 10px;padding-left:2px;">
                     Voeg iedereen toe die betrokken is — ook als de steun onvoldoende of belemmerend werkt.
                 </p>
 
-                <!-- Steun label (afgeleid van supporters) -->
-                <div id="steunLabel-${domain.id}"></div>
-                
-                ${state.mode === 'professional' ? `
-                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-                        <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 8px;">
-                            📝 Notitie (optioneel)
-                        </label>
-                        <textarea style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; min-height: 80px;"
-                                  placeholder="Observaties en aantekeningen..."
-                                  onchange="updateNote('${domain.id}', this.value)">${esc(state.notes[domain.id])}</textarea>
-                    </div>
-                ` : ''}
+                ${(function() {
+                    const sups = details.supporters || [];
+                    const cards = sups.map((s, i) => {
+                        const typeColor = s.type === 'informal' ? '#10b981' : s.type === 'collective' ? '#f59e0b' : s.type === 'woonpartner' ? '#8b5cf6' : '#3b82f6';
+                        const typeLabel = s.type === 'informal' ? '👤 Informeel' : s.type === 'collective' ? '🤝 Collectief' : s.type === 'woonpartner' ? '🏘️ Woonpartner' : '🏥 Formeel';
+                        return `<div style="background:white;border:1px solid #e5e7eb;border-left:4px solid ${typeColor};border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:700;color:#374151;">${s.name || 'Naamloos'}</div>
+                                <div style="font-size:0.78rem;color:#9ca3af;">${typeLabel}${s.relation ? ' · ' + s.relation : ''}${s.effect ? ' · ' + s.effect : ''}</div>
+                            </div>
+                            <button onclick="editSupporter('${domain.id}', ${i})" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px;">✏️</button>
+                            <button onclick="removeSupporter('${domain.id}', ${i})" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px;">🗑️</button>
+                        </div>`;
+                    }).join('');
+                    const empty = sups.length === 0 ? `<div style="background:#f9fafb;border:2px dashed #d1d5db;border-radius:10px;padding:14px;margin-bottom:10px;text-align:center;">
+                        <p style="font-size:0.88rem;color:#9ca3af;margin:0;font-style:italic;">Wie is er al betrokken? Ook als het niet goed gaat.</p>
+                    </div>` : '';
+                    return empty + cards;
+                })()}
+
+                <button class="btn btn-primary" onclick="addSupporter('${domain.id}')" style="width:100%;padding:12px;margin-bottom:16px;">
+                    ➕ Steunfiguur toevoegen
+                </button>
+
+                <!-- Notitie -->
+                <div>
+                    <label style="font-size:0.82rem;font-weight:600;color:var(--text-light);display:block;margin-bottom:6px;">📝 Notitie (optioneel)</label>
+                    <textarea style="width:100%;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.9rem;min-height:60px;box-sizing:border-box;"
+                              placeholder="Observaties en aantekeningen..."
+                              onchange="updateNote('${domain.id}', this.value)">${esc(state.notes[domain.id])}</textarea>
+                </div>
             `;
         }
         
