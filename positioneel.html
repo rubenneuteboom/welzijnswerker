@@ -4030,7 +4030,7 @@
                     
                     <!-- Domein selectie grid -->
                     <div style="margin-bottom:20px;">
-                        <div id="triageDomainGrid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:12px;">
+                        <div id="triageDomainGrid" style="display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;">
                             <!-- Wordt gevuld door renderTriageDomainGrid() -->
                         </div>
                     </div>
@@ -13670,7 +13670,7 @@ END:VEVENT
                          onmouseout="if(!${isSelected}){this.style.borderColor='#e0e0e0';this.style.background='white';}">
                         <div style="font-size:2rem;">${domain.emoji}</div>
                         <div style="flex:1;">
-                            <div style="font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:2px;">${domain.name}</div>
+                            <div style="font-size:${domain.name.length > 16 ? '0.82rem' : '0.95rem'};font-weight:700;color:var(--text);margin-bottom:2px;">${domain.name}</div>
                             <div style="font-size:0.78rem;color:var(--text-light);">${domain.desc}</div>
                         </div>
                         <div style="font-size:1.5rem;">${isSelected ? '✅' : '⚪'}</div>
