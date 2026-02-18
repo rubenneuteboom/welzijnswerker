@@ -9110,6 +9110,170 @@ Antwoord in dit exacte JSON formaat:
         function renderDomainOverviewTable() {
             const container = document.getElementById('domainOverviewTable');
             if (!container) return;
+            renderNetworkBlocks(container);
+        }
+
+        function renderNetworkBlocks(container) {
+            // Helper: haal supporters per type op voor een domein
+            function getSupportersVanType(domainId, type) {
+                const details = state.domainDetails[domainId] || {};
+                // Nieuwe data (modal-gebaseerd)
+                const supporters = details.supporters || [];
+                const uitNieuw = supporters.filter(s => s.type === type).map(s => ({
+                    naam: s.name,
+                    rol: (s.roles && s.roles[0]) || s.relation || '',
+                    draagkracht: s.draagkracht || ''
+                }));
+                if (uitNieuw.length > 0) return uitNieuw;
+                // Legacy fallback
+                if (type === 'informal') return (details.steunInformeelPersonen || []).map(n => ({ naam: n, rol: '', draagkracht: '' }));
+                if (type === 'collective') return (details.steunCollectiefOpties || []).map(n => ({ naam: n, rol: '', draagkracht: '' }));
+                if (type === 'professional') return (details.steunFormeelOrganisaties || []).map(n => ({ naam: n, rol: '', draagkracht: '' }));
+                return [];
+            }
+
+            // Categoriseer domeinen (alleen ingevulde)
+            const ingevuld = domains.filter(d => {
+                const det = state.domainDetails[d.id] || {};
+                return det.hoeGaatHet && det.hoeGaatHet !== 'nog-open';
+            });
+
+            const zelfstandig = ingevuld.filter(d => {
+                const det = state.domainDetails[d.id] || {};
+                const supporters = det.supporters || [];
+                const legacyCount = (det.steunInformeelPersonen||[]).length + (det.steunCollectiefOpties||[]).length + (det.steunFormeelOrganisaties||[]).length;
+                return supporters.length === 0 && legacyCount === 0 && det.actieNodig !== 'actie';
+            });
+
+            const witteVlekken = ingevuld.filter(d => {
+                const det = state.domainDetails[d.id] || {};
+                const supporters = det.supporters || [];
+                const legacyCount = (det.steunInformeelPersonen||[]).length + (det.steunCollectiefOpties||[]).length + (det.steunFormeelOrganisaties||[]).length;
+                return supporters.length === 0 && legacyCount === 0 && det.actieNodig === 'actie';
+            });
+
+            const domeinInBlok = (domainId, type) => getSupportersVanType(domainId, type).length > 0 ||
+                (state.domainDetails[domainId] && state.domainDetails[domainId].supporters &&
+                 state.domainDetails[domainId].supporters.some(s => s.type === type));
+
+            const nogingevuld = domains.filter(d => {
+                const det = state.domainDetails[d.id] || {};
+                return !det.hoeGaatHet || det.hoeGaatHet === 'nog-open';
+            });
+
+            // Domeinkaartje helper
+            function domeinKaartje(domain) {
+                const det = state.domainDetails[domain.id] || {};
+                const isActie = det.actieNodig === 'actie';
+                const isMonitor = det.actieNodig === 'monitoren';
+                const border = isActie ? '2px solid #dc2626' : isMonitor ? '2px solid #ca8a04' : '1px solid #e5e7eb';
+                const bg = isActie ? '#fff5f5' : isMonitor ? '#fffbeb' : '#fff';
+                const badge = isActie ? '<span style="font-size:0.65rem;background:#dc2626;color:white;border-radius:4px;padding:1px 5px;margin-left:4px;">actie</span>' :
+                              isMonitor ? '<span style="font-size:0.65rem;background:#ca8a04;color:white;border-radius:4px;padding:1px 5px;margin-left:4px;">let op</span>' : '';
+                return `<div onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);"
+                    style="background:${bg};border:${border};border-radius:8px;padding:8px 10px;cursor:pointer;margin-bottom:6px;transition:all 0.2s;"
+                    onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='${bg}'">
+                    <div style="font-size:0.85rem;font-weight:600;color:#374151;">${domain.emoji} ${domain.name}${badge}</div>
+                </div>`;
+            }
+
+            // Blok helper met supporters
+            function domeinKaartjeMetSupporters(domain, type) {
+                const det = state.domainDetails[domain.id] || {};
+                const supporters = getSupportersVanType(domain.id, type);
+                const isActie = det.actieNodig === 'actie';
+                const isMonitor = det.actieNodig === 'monitoren';
+                const border = isActie ? '2px solid #dc2626' : isMonitor ? '2px solid #ca8a04' : '1px solid #e5e7eb';
+                const bg = isActie ? '#fff5f5' : isMonitor ? '#fffbeb' : '#fff';
+                const badge = isActie ? '<span style="font-size:0.62rem;background:#dc2626;color:white;border-radius:3px;padding:1px 4px;">actie</span>' :
+                              isMonitor ? '<span style="font-size:0.62rem;background:#ca8a04;color:white;border-radius:3px;padding:1px 4px;">let op</span>' : '';
+
+                const personenHTML = supporters.map(s => {
+                    const dk = s.draagkracht === 'overbelast' ? ' 🔴' : s.draagkracht === 'onder-druk' ? ' 🟡' : '';
+                    return `<div style="font-size:0.75rem;color:#6b7280;padding:2px 0;display:flex;align-items:center;gap:4px;">
+                        <span>👤 ${s.naam}${dk}</span>${s.rol ? `<span style="color:#9ca3af;">— ${s.rol}</span>` : ''}
+                    </div>`;
+                }).join('');
+
+                return `<div onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);"
+                    style="background:${bg};border:${border};border-radius:8px;padding:8px 10px;cursor:pointer;margin-bottom:6px;"
+                    onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='${bg}'">
+                    <div style="font-size:0.85rem;font-weight:600;color:#374151;margin-bottom:${supporters.length?'4px':'0'};">${domain.emoji} ${domain.name} ${badge}</div>
+                    ${personenHTML}
+                </div>`;
+            }
+
+            const blokken = [
+                { type: 'informal',     label: 'Informeel netwerk', emoji: '🟢', kleur: '#f0fdf4', rand: '#16a34a', tekstkleur: '#166534' },
+                { type: 'collective',   label: 'Collectief',        emoji: '🟡', kleur: '#fefce8', rand: '#ca8a04', tekstkleur: '#92400e' },
+                { type: 'professional', label: 'Formeel',           emoji: '🔵', kleur: '#eff6ff', rand: '#2563eb', tekstkleur: '#1e40af' },
+                { type: 'woonpartner',  label: 'Woonpartner',       emoji: '🏘️', kleur: '#faf5ff', rand: '#7c3aed', tekstkleur: '#5b21b6' }
+            ];
+
+            // Totaalindruk
+            const actieCount = ingevuld.filter(d => (state.domainDetails[d.id]||{}).actieNodig === 'actie').length;
+            const indruk = actieCount >= 2 ? '🔴 Vraagt direct aandacht' : actieCount === 1 ? '🟡 Vraagt aandacht' : ingevuld.length > 0 ? '🟢 Overwegend stabiel' : '⚪ Nog niet ingevuld';
+            const indrukBg = actieCount >= 2 ? '#fef2f2' : actieCount === 1 ? '#fefce8' : '#f0fdf4';
+            const indrukRand = actieCount >= 2 ? '#dc2626' : actieCount === 1 ? '#ca8a04' : '#16a34a';
+
+            container.innerHTML = `
+                <!-- Totaalindruk -->
+                <div style="background:${indrukBg};border:2px solid ${indrukRand};border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:1.2rem;font-weight:700;color:#374151;">${indruk}</span>
+                    <span style="font-size:0.8rem;color:#6b7280;">${ingevuld.length} van ${domains.length} domeinen ingevuld</span>
+                </div>
+
+                ${zelfstandig.length > 0 ? `
+                <!-- Zelfstandig -->
+                <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+                    <div style="font-size:0.9rem;font-weight:700;color:#166534;margin-bottom:8px;">✅ Regelt dit zelf</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        ${zelfstandig.map(d => `
+                            <span onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${d.id}'), 100);"
+                                style="background:white;border:1px solid #16a34a;border-radius:6px;padding:5px 10px;font-size:0.82rem;font-weight:600;color:#166534;cursor:pointer;">
+                                ${d.emoji} ${d.name}
+                            </span>`).join('')}
+                    </div>
+                </div>` : ''}
+
+                <!-- 4 blokken in grid -->
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:${witteVlekken.length > 0 ? '14px' : '0'};">
+                    ${blokken.map(blok => {
+                        const domeinenInBlok = ingevuld.filter(d => getSupportersVanType(d.id, blok.type).length > 0);
+                        return `<div style="background:${blok.kleur};border:2px solid ${blok.rand};border-radius:10px;padding:14px;">
+                            <div style="font-size:0.85rem;font-weight:700;color:${blok.tekstkleur};margin-bottom:10px;">${blok.emoji} ${blok.label}</div>
+                            ${domeinenInBlok.length > 0 ?
+                                domeinenInBlok.map(d => domeinKaartjeMetSupporters(d, blok.type)).join('') :
+                                `<div style="font-size:0.8rem;color:#9ca3af;font-style:italic;padding:8px 0;">Geen steun uit dit netwerk</div>`
+                            }
+                        </div>`;
+                    }).join('')}
+                </div>
+
+                ${witteVlekken.length > 0 ? `
+                <!-- Witte vlekken -->
+                <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:10px;padding:14px 18px;margin-bottom:6px;">
+                    <div style="font-size:0.9rem;font-weight:700;color:#dc2626;margin-bottom:8px;">⚠️ Witte vlekken — actie nodig, geen steun zichtbaar</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        ${witteVlekken.map(d => `
+                            <span onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${d.id}'), 100);"
+                                style="background:white;border:2px solid #dc2626;border-radius:6px;padding:5px 10px;font-size:0.82rem;font-weight:600;color:#dc2626;cursor:pointer;">
+                                ${d.emoji} ${d.name}
+                            </span>`).join('')}
+                    </div>
+                </div>` : ''}
+
+                ${nogingevuld.length > 0 ? `
+                <!-- Nog niet ingevuld -->
+                <div style="margin-top:10px;">
+                    <span style="font-size:0.78rem;color:#9ca3af;">Nog niet ingevuld: ${nogingevuld.map(d => d.emoji + ' ' + d.name).join(' · ')}</span>
+                </div>` : ''}
+            `;
+        }
+
+        function renderDomainOverviewTable_OLD() {
+            const container = document.getElementById('domainOverviewTable_unused');
+            if (!container) return;
             
             // Bereken totaalindruk (simpele taal) - gebruik nieuwe velden
             const filledDomains = domains.filter(d => {
