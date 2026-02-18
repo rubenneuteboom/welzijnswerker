@@ -6738,21 +6738,31 @@ Antwoord in dit exacte JSON formaat:
                             : zelf === false
                                 ? `<span style="font-size:0.78rem;color:#991b1b;">${stoplichtStatus === 'steun-nodig' ? '🚨 Witte vlek — geen steun aanwezig' : '💡 Nog geen steun betrokken'}</span>`
                                 : '';
+                        const situatie = details.situatie || null;
+                        const sitLabel = situatie === 'zelfstandig'
+                            ? '<span style="font-size:0.78rem;color:#92400e;">⚠️ Regelt het zelf maar kwetsbaar — netwerk activeren</span>'
+                            : situatie === 'iemand'
+                                ? '<span style="font-size:0.78rem;color:#1e40af;">👇 Voeg diegene toe in de lijst hieronder</span>'
+                                : situatie === 'niemand'
+                                    ? `<span style="font-size:0.78rem;color:#991b1b;">${stoplichtStatus === 'steun-nodig' ? '🚨 Witte vlek — geen steun aanwezig' : '💡 Nog geen steun betrokken'}</span>`
+                                    : '';
+                        const btn = (val, emoji, label, activeColor, activeBg) => {
+                            const active = situatie === val;
+                            return `<button onclick="updateDomainDetail('${domain.id}','situatie','${val}');renderDomains();"
+                                style="border:2px solid ${active?activeColor:'#e5e7eb'};background:${active?activeBg:'white'};
+                                       color:${active?activeColor:'#6b7280'};border-radius:6px;padding:6px 12px;
+                                       font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;">
+                                ${emoji} ${label}
+                            </button>`;
+                        };
                         return `<div style="background:#f9fafb;border-radius:8px;padding:10px 14px;margin-bottom:12px;">
-                            <p style="font-size:0.82rem;font-weight:600;color:#374151;margin:0 0 8px;">Regelt de cliënt dit nu zelf?</p>
+                            <p style="font-size:0.82rem;font-weight:600;color:#374151;margin:0 0 8px;">Huidige situatie:</p>
                             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                                <button onclick="updateDomainDetail('${domain.id}','zelfstandig',true);renderDomains();"
-                                    style="border:2px solid ${zelf===true?'#16a34a':'#e5e7eb'};background:${zelf===true?'#dcfce7':'white'};
-                                           color:${zelf===true?'#166534':'#6b7280'};border-radius:6px;padding:6px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
-                                    ✅ Ja, zelfstandig
-                                </button>
-                                <button onclick="updateDomainDetail('${domain.id}','zelfstandig',false);renderDomains();"
-                                    style="border:2px solid ${zelf===false?'#dc2626':'#e5e7eb'};background:${zelf===false?'#fee2e2':'white'};
-                                           color:${zelf===false?'#991b1b':'#6b7280'};border-radius:6px;padding:6px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
-                                    🚫 Nee, er is niemand
-                                </button>
-                                ${contextLabel}
+                                ${btn('zelfstandig','✅','Regelt het zelf','#16a34a','#dcfce7')}
+                                ${btn('iemand','👥','Er is iemand','#3b82f6','#dbeafe')}
+                                ${btn('niemand','🚫','Staat er alleen voor','#dc2626','#fee2e2')}
                             </div>
+                            ${sitLabel ? `<div style="margin-top:8px;">${sitLabel}</div>` : ''}
                         </div>`;
                     }
                 })() : ''}
