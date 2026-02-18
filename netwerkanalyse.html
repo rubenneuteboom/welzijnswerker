@@ -814,6 +814,7 @@
                     emoji: '💪',
                     title: 'Lichamelijke gezondheid',
                     description: 'Denk aan: chronische ziektes, pijn, mobiliteit, medicijnen, doktersbezoek',
+                    context_note: 'Als je zorg nodig hebt — bijvoorbeeld de tandarts die je al een tijdje uitstelt, of fysio voor die rug — tel dat ook mee bij je antwoord.',
                     tips_goed: [
                         'Beweeg 30 min per dag (wandelen telt!)',
                         'Eet gezond (groente en fruit)',
@@ -829,34 +830,34 @@
                     tips_leeftijd: {
                         jongere: [
                             'Tieners hebben 9 uur slaap nodig — slaaptekort remt alles',
-                            'Beweeg minstens een uur per dag (ook gewoon buiten)',
-                            'Eet gevarieerd: Voedingscentrum.nl heeft simpele tips',
-                            'Iets klopt niet in je lichaam? Praat met huisarts — ook voor puberteitsvragen'
+                            'Iets klopt niet in je lichaam? Praat met huisarts — ook voor puberteitsvragen',
+                            'Tandarts of fysio te duur? Bijzondere bijstand kan meebetalen — vraag het aan je gemeente',
+                            'Je hebt recht op zorg. Dat uitstellen maakt het bijna altijd duurder én zwaarder'
                         ],
                         jongvolwassene: [
-                            'Slaaptekort en chronische stress zijn de grootste boosdoeners',
-                            'Preventieve huisartscheck wordt vergoed — plan hem gewoon in',
-                            'Bewegen hoeft niet in de sportschool: fietsen, wandelen telt ook mee',
-                            'Alcohol en drugs hebben meer impact op jonge hersenen — informeer je'
+                            'Tandarts niet meer naar gegaan? Je bent niet de enige — maar het loopt op. Sociale Tandartsen Netwerk helpt',
+                            'Fysio niet vergoed? Check je aanvullende verzekering of vraag het wijkteam',
+                            'Zorgverzekeringslijn: 0900-9999 — gratis advies over wat vergoed wordt',
+                            'Preventieve huisartscheck is gratis — plan hem gewoon in'
                         ],
                         volwassene: [
-                            'Jaarlijkse gezondheidscheck via huisarts is zinvol boven de 40',
-                            'Chronische rugklachten? Fysiotherapie via huisarts',
-                            'Stress verminderen versterkt je immuunsysteem — neem dat serieus',
-                            '30 min bewegen per dag verlaagt risico op kanker, diabetes en hart-/vaatziekten'
+                            'Sla de tandarts of fysio niet over omdat het "te duur" lijkt — er zijn bijna altijd opties',
+                            'Bijzondere bijstand: gemeente kan meebetalen aan tandarts, bril of fysio',
+                            'Zorgverzekeringslijn: 0900-9999 — gratis advies over vergoedingen',
+                            'Chronische rugklachten? Fysiotherapie via huisarts is vaak (deels) vergoed'
                         ],
                         ouder: [
                             'Valpreventie: "Sterk & Stabiel" programma via gemeente (bewezen effectief)',
+                            'Gehoor of gezicht minder? Aanpakken vermindert valongelukken én eenzaamheid',
                             'Gratis medicatieoverzicht via apotheek — check wisselwerkingen',
-                            'Gehoor- of gezichtsproblemen vroeg aanpakken vermindert valongelukken',
-                            'Bewegen op leeftijd: seniorensport, zwemmen, wandelclub — gemeente heeft overzicht'
+                            'WMO kan hulpmiddelen vergoeden die uw zorgverzekering niet dekt — vraag de gemeente'
                         ]
                     },
                     hulp: {
                         info: [
                             { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare gezondheidsinformatie' },
-                            { name: 'Gezondheidsplein.nl', url: 'https://www.gezondheidsplein.nl', desc: 'Info over ziektes en behandelingen' },
-                            { name: 'Mijn Gezondheidsgids', url: 'https://www.mijngezondheidsgids.nl', desc: 'Persoonlijk gezondheidsplan' }
+                            { name: 'Sociaal Tandartsen Netwerk', url: 'https://www.sociaal-tandartsen-netwerk.nl', desc: 'Tandarts voor mensen die het niet kunnen betalen' },
+                            { name: 'Regelhulp.nl', url: 'https://www.regelhulp.nl', desc: 'Welke zorg en vergoeding past bij mij?' }
                         ],
                         chat: [
                             { name: 'Huisartsenpost chat', desc: 'Via je eigen huisarts' },
@@ -864,13 +865,13 @@
                         ],
                         persoonlijk: [
                             { name: 'Huisarts', desc: 'Voor lichamelijke klachten' },
-                            { name: 'Fysiotherapeut', desc: 'Bij bewegingsklachten (soms gratis)' },
-                            { name: 'Wijkverpleegkundige', desc: 'Via huisarts' }
+                            { name: 'Wijkteam', desc: 'Helpt uitzoeken wat vergoed wordt' },
+                            { name: 'Fysiotherapeut', desc: 'Bij bewegingsklachten (soms gratis)' }
                         ],
                         bellen: [
+                            { name: 'Zorgverzekeringslijn', tel: '0900-9999', desc: 'Gratis advies over wat vergoed wordt' },
                             { name: 'Huisarts', desc: 'Lokaal nummer' },
-                            { name: 'Huisartsenpost', tel: '088-0030600', desc: 'Buiten kantooruren (niet spoed)' },
-                            { name: 'Zorgverzekering', desc: 'Voor vragen over vergoedingen' }
+                            { name: 'Huisartsenpost', tel: '088-0030600', desc: 'Buiten kantooruren (niet spoed)' }
                         ],
                         urgent: 'Bij spoed: 112 | Bij twijfel spoed: Huisartsenpost 088-0030600'
                     }
@@ -903,6 +904,11 @@
                             <div class="domain-emoji">${domain.emoji}</div>
                             <div class="domain-title">${domain.title}</div>
                             <div class="domain-description">${domain.description}</div>
+
+                            ${domain.context_note ? `
+                            <div style="background: #eff6ff; border-left: 3px solid #93c5fd; border-radius: 8px; padding: 12px 16px; margin: 0 0 20px 0; font-size: 0.9rem; color: #1e40af; line-height: 1.5;">
+                                💡 ${domain.context_note}
+                            </div>` : ''}
 
                             <p style="text-align: center; margin-bottom: 25px;">Hoe gaat het met ${domain.title.toLowerCase()}?</p>
 

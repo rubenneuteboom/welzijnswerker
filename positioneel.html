@@ -8592,7 +8592,23 @@ Antwoord in dit exacte JSON formaat:
                 }
             });
 
-            // 5. Mogelijke overbelasting: 1 persoon actief op 4+ domeinen
+            // 5. Zorgmijding: lichamelijk domein kwetsbaar maar geen formele zorgondersteuning
+            const lichamelijkDetails = state.domainDetails['lichamelijk'] || {};
+            const lichamelijkKwetsbaar = lichamelijkDetails.hoeGaatHet === 'gaat-niet-goed' || lichamelijkDetails.hoeGaatHet === 'wisselend';
+            const lichamelijkSupporters = lichamelijkDetails.supporters || [];
+            const heeftZorgprofessional = lichamelijkSupporters.some(s => s.type === 'professional');
+            if (lichamelijkKwetsbaar && !heeftZorgprofessional) {
+                yellow.push({
+                    id: 'zorgmijding',
+                    tekst: `<strong>💊 Mogelijk zorgmijding:</strong> Lichamelijke gezondheid staat als kwetsbaar gemarkeerd maar er is geen zorgprofessional zichtbaar in het netwerk.`,
+                    acties: [
+                        { label: '💬 Bespreek toegang tot zorg', fn: `showToast('Vraag: Ga je naar de tandarts of fysio als dat nodig is? Veel mensen stellen zorg uit vanwege kosten of schaamte. Bijzondere bijstand, Zorgverzekeringslijn (0900-9999) en het Sociaal Tandartsen Netwerk kunnen helpen.', 'info')` }
+                    ],
+                    tip: 'Veel mensen slaan zorg over omdat het te duur lijkt of omdat ze niet weten wat vergoed wordt. Dat is geen onwil — dat zijn drempels. Bespreek het zonder oordeel.'
+                });
+            }
+
+            // 6. Mogelijke overbelasting: 1 persoon actief op 4+ domeinen
             const supporterDomeinCount = {};
             allSupporters.forEach(s => {
                 const key = s.name + '_' + s.type;
