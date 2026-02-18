@@ -3581,49 +3581,14 @@
             </div>
 
             <!-- Workflow bolletjes (zonder pijltjes) -->
-            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
-                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
-                    <div class="workflow-step" data-step="1" tabindex="0" onclick="goToScreen(1);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(1);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid var(--primary); transition: all 0.3s; pointer-events: none;">🌈</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text); pointer-events: none;">Intro</div>
-                    </div>
-                    <div class="workflow-step" data-step="2" tabindex="0" onclick="goToScreen(2);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(2);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🏠</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Start</div>
-                    </div>
-                    <div class="workflow-step" data-step="3" tabindex="0" onclick="goToScreen(3);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(3);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🎯</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Triage</div>
-                    </div>
-                    <div class="workflow-step" data-step="4" tabindex="0" onclick="goToScreen(4);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(4);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📊</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Domeinscan</div>
-                    </div>
-                    <div class="workflow-step" data-step="5" tabindex="0" onclick="goToScreen(5);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(5);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📋</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Overzicht</div>
-                    </div>
-                    <div class="workflow-step" data-step="6" tabindex="0" onclick="goToScreen(6);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(6);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🕸️</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Netwerk</div>
-                    </div>
-                    <div class="workflow-step" data-step="7" tabindex="0" onclick="goToScreen(7);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(7);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔄</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Beweging</div>
-                    </div>
-                    <div class="workflow-step" data-step="8" tabindex="0" onclick="goToScreen(8);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(8);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">🔧</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Interventies</div>
-                    </div>
-                    <div class="workflow-step" data-step="9" tabindex="0" onclick="goToScreen(9);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(9);}" style="text-align: center; cursor: pointer; padding: 6px 8px; border-radius: 12px; transition: all 0.3s; outline: none;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 4px; border: 3px solid #e0e0e0; transition: all 0.3s; pointer-events: none;">📄</div>
-                        <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-light); pointer-events: none;">Besluit</div>
-                    </div>
+            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 12px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
+                <div id="workflowStepsDynamic" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <!-- Dynamisch gegenereerd door renderWorkflowBolletjes() -->
                 </div>
             </div>
 
-            <!-- Screen 0: Introductie -->
-            <div class="screen active" id="screen-intro">
+            <!-- Screen 0: Introductie (verborgen - inhoud verplaatst naar screen-start) -->
+            <div class="screen" id="screen-intro" style="display:none!important">
                 <div class="card" style="max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);">
                     <div style="text-align: center; margin-bottom: 30px;">
                         <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary); font-weight: 800;">RPA Positionele Analyse</h1>
@@ -3808,20 +3773,36 @@
                     </div>
 
                     <div class="btn-group" style="margin-top: 25px;">
-                        <button class="btn btn-primary" onclick="goToScreen(2)" style="font-size: 1.1rem; padding: 14px 28px;">Start gesprek →</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('triage')" style="font-size: 1.1rem; padding: 14px 28px;">Start gesprek →</button>
                     </div>
                 </div>
             </div>
 
             <!-- Screen 1: Start -->
-            <div class="screen" id="screen-start">
+            <div class="screen active" id="screen-start">
                 <div class="card">
-                    <h2 style="font-size: 1.8rem; line-height: 1.4; margin-bottom: 20px;">Samen kijken hoe het gaat — en wat nu helpend is.</h2>
-                    
-                    <p style="font-size: 1rem; line-height: 1.7; color: var(--text); margin-bottom: 30px;">
-                        In deze scan kijken we naar verschillende levensgebieden. We zien hoe het gaat, of er steun is, en wat nu nodig is.<br>
-                        Soms is eerst stabiliseren belangrijk. Daarna kunnen we samen kijken hoe steun georganiseerd kan worden.
-                    </p>
+                    <div style="text-align:center;margin-bottom:24px;">
+                        <h1 style="font-size:2rem;margin-bottom:6px;color:var(--primary);font-weight:800;">RPA Positionele Analyse</h1>
+                        <p style="font-size:0.95rem;color:#166534;font-weight:600;margin:0;">Niveau 2 · Samen met de cliënt</p>
+                    </div>
+
+                    <!-- Compacte 3-stappen intro -->
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:28px;">
+                        <div style="background:#f0fdf4;border-left:4px solid #22c55e;border-radius:8px;padding:12px 14px;">
+                            <div style="font-weight:700;color:#166534;margin-bottom:4px;">1️⃣ Focusgebieden</div>
+                            <div style="font-size:0.83rem;color:#15803d;">Waar speelt het nu? Selecteer 3-5 domeinen.</div>
+                        </div>
+                        <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:12px 14px;">
+                            <div style="font-weight:700;color:#1e40af;margin-bottom:4px;">2️⃣ Wie helpt waar?</div>
+                            <div style="font-size:0.83rem;color:#1e3a8a;">Breng het netwerk in kaart per domein.</div>
+                        </div>
+                        <div style="background:#faf5ff;border-left:4px solid #a855f7;border-radius:8px;padding:12px 14px;">
+                            <div style="font-weight:700;color:#7e22ce;margin-bottom:4px;">3️⃣ Bewuste beweging
+                                <span class="tooltip-trigger" style="font-size:0.75rem;cursor:help;" title="Beweging = de bewuste keuze om de positie van steun te verschuiven — niet meer of minder zorg, maar anders georganiseerd.">?</span>
+                            </div>
+                            <div style="font-size:0.83rem;color:#6b21a8;">Kies samen de beste netwerkstap.</div>
+                        </div>
+                    </div>
                     
                     <!-- Doelgroep -->
                     <div style="margin-bottom: 30px;">
@@ -3891,16 +3872,21 @@
                         </button>
                     </div>
 
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button class="btn" onclick="testInterventies()" style="background: #8b5cf6; color: white; font-size: 0.9rem; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            🧪 Test postcode-filter (direct naar interventies)
-                        </button>
+                    <!-- Dev tools verborgen in productie -->
+                    <div style="display:none;" id="devTools">
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn" onclick="testInterventies()" style="background: #8b5cf6; color: white; font-size: 0.9rem; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                🧪 Test postcode-filter
+                            </button>
+                        </div>
+                        <div style="text-align: center; margin-top: 15px;">
+                            <button class="btn btn-secondary" onclick="resetAllData()" style="font-size: 0.85rem; padding: 8px 16px;">
+                                🗑️ Reset alle data
+                            </button>
+                        </div>
                     </div>
-
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button class="btn btn-secondary" onclick="resetAllData()" style="font-size: 0.85rem; padding: 8px 16px;">
-                            🗑️ Reset alle data
-                        </button>
+                    <div style="text-align:center;margin-top:10px;">
+                        <button onclick="document.getElementById('devTools').style.display=document.getElementById('devTools').style.display==='none'?'block':'none'" style="background:none;border:none;color:#d1d5db;font-size:0.7rem;cursor:pointer;">⚙️</button>
                     </div>
                 </div>
             </div>
@@ -4005,7 +3991,7 @@
                     </div>
                     
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(2)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('start')">← Terug</button>
                         <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
                             Volgende → (<span id="triageCountBtn">0</span> gebieden)
                         </button>
@@ -4036,7 +4022,7 @@
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(3)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('triage')">← Terug</button>
                         <button class="btn btn-primary" onclick="checkDomainsAndContinue()">Volgende →</button>
                     </div>
                 </div>
@@ -4054,15 +4040,21 @@
                     <!-- Overzichtstabel -->
                     <div id="domainOverviewTable"></div>
 
+                    <!-- Netwerkpositie (samengevoegd) -->
+                    <div id="netwerkpositieInNetwork" style="margin-top:24px;padding-top:20px;border-top:2px solid #f0fdf4;">
+                        <h3 style="font-size:1.05rem;color:#374151;margin:0 0 12px;font-weight:700;">🕸️ Netwerkpositie</h3>
+                        <div id="sijnNetwerkkaartCompact2"></div>
+                    </div>
+
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(7)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('domains')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('beweging')">Volgende →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Screen 7: Netwerkpositie (LEAN) -->
-            <div class="screen" id="screen-netwerkpositie">
+            <!-- Screen 7: Netwerkpositie (LEAN) - samengevoegd met screen-network -->
+            <div class="screen" id="screen-netwerkpositie" style="display:none!important">
                 <div class="card">
                     <h2>🕸️ Netwerkpositie</h2>
                     <p style="color: var(--text-light); margin-bottom: 20px;">
@@ -4078,8 +4070,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(6)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('domains')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('beweging')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4103,8 +4095,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreen(9)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('network')">← Terug</button>
+                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreenById('reflectie')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4117,16 +4109,11 @@
                         Nu je positionele keuzes hebt gemaakt, reflecteren we op de haalbaarheid en impact.
                     </p>
                     
-                    <!-- Uitleg Strategische Analyse -->
-                    <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-left: 4px solid #6366f1; padding: 20px; margin-bottom: 30px; border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                            <span style="font-size: 2rem;">📖</span>
-                            <h3 style="font-size: 1.2rem; color: #3730a3; margin: 0; font-weight: 700;">Strategische Analyse</h3>
-                        </div>
-                        <p style="margin: 0; font-size: 0.95rem; color: #312e81; line-height: 1.7;">
-                            <strong>Analyse zonder besluit = blijven hangen in het systeemplafond.</strong><br>
-                            Positionele keuzes zonder reflectie op haalbaarheid, proportionaliteit en regie leiden niet tot duurzame verandering.
-                            Deze stap helpt om bewust te blijven van wat de gekozen beweging betekent.
+                    <!-- Uitleg kort -->
+                    <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:14px 18px;margin-bottom:24px;border-radius:8px;">
+                        <p style="margin:0;font-size:0.9rem;color:#166534;line-height:1.6;">
+                            Twee verplichte vragen per domein: is de beweging <strong>haalbaar</strong> en is de inzet <strong>proportioneel</strong>?
+                            Regie en evaluatiedatum zijn optioneel maar worden wel meegenomen in de analyse.
                         </p>
                     </div>
 
@@ -4135,8 +4122,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(8)">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(10)">Naar interventies →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('beweging')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('interventies')">Naar interventies →</button>
                     </div>
                 </div>
             </div>
@@ -4187,8 +4174,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreen(8)">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('reflectie')">← Terug</button>
+                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreenById('samenvatting')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4254,7 +4241,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(9)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('interventies')">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
                         <button class="btn" onclick="exportVoorStrategischeAnalyse()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">📊 Export voor strategische analyse</button>
                     </div>
@@ -4270,7 +4257,7 @@
                     <div class="advice-box" id="adviceBox"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(6)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('reflectie')">← Terug</button>
                         <button class="btn btn-primary" onclick="goToNextFromAdvies()">Volgende →</button>
                     </div>
                 </div>
@@ -4285,7 +4272,7 @@
                     <div class="pro-advice-box" id="proAdviceBox"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(7)">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('network')">← Terug</button>
                         <button class="btn btn-primary" onclick="goToScreen(getScreenNumber('organisaties'))">Bekijk Organisaties →</button>
                     </div>
                 </div>
@@ -5692,16 +5679,14 @@
         // Screen configuration - dynamic based on mode
         // LEAN WORKFLOW - met Intro als eerste stap
         const screenConfigBase = [
-            { id: 'intro', label: 'Intro', emoji: '🌈' },
-            { id: 'start', label: 'Start', emoji: '🏠' },
-            { id: 'triage', label: 'Waar speelt het?', emoji: '🎯' },
-            { id: 'domains', label: 'Hoe gaat het?', emoji: '📊' },
-            { id: 'network', label: 'Overzicht', emoji: '📋' },
-            { id: 'netwerkpositie', label: 'Netwerkkaart', emoji: '🕸️' },
-            { id: 'beweging', label: 'Wat moet veranderen?', emoji: '🔄' },
-            { id: 'reflectie', label: 'Is dit realistisch?', emoji: '💭' },
-            { id: 'interventies', label: 'Wat gaan we doen?', emoji: '🔧' },
-            { id: 'samenvatting', label: 'Besluit', emoji: '📄' }
+            { id: 'start',       label: 'Start',          emoji: '🏠' },
+            { id: 'triage',      label: 'Focusgebieden',  emoji: '🎯' },
+            { id: 'domains',     label: 'Domeinscan',     emoji: '📊' },
+            { id: 'network',     label: 'Overzicht',      emoji: '📋' },
+            { id: 'beweging',    label: 'Beweging',       emoji: '🔄' },
+            { id: 'reflectie',   label: 'Reflectie',      emoji: '💭' },
+            { id: 'interventies',label: 'Interventies',   emoji: '🔧' },
+            { id: 'samenvatting',label: 'Besluit',        emoji: '📄' }
         ];
 
         // Get current screen config based on mode
@@ -6311,8 +6296,8 @@ Antwoord in dit exacte JSON formaat:
             }
             
             saveState();
-            console.log('Ga naar scherm 3 (TRIAGE - domein selectie)');
-            goToScreen(3);
+            console.log('Ga naar triage');
+            goToScreenById('triage');
         }
 
         // Save oriëntatie (stabilisatie-check)
@@ -6368,7 +6353,15 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // Navigate to screen
+        function goToScreenById(id) {
+            const n = getScreenNumber(id);
+            if (n > 0) goToScreen(n);
+            else console.warn('⚠️ goToScreenById: onbekend screen-id:', id);
+        }
+
         function goToScreen(screenNum) {
+            // Accept string IDs too
+            if (typeof screenNum === 'string') { goToScreenById(screenNum); return; }
             console.log('🔹 goToScreen aangeroepen:', screenNum);
             const config = getScreenConfig();
             console.log('📋 Config length:', config.length, 'First item:', config[0]);
@@ -6425,6 +6418,7 @@ Antwoord in dit exacte JSON formaat:
             }
             
             // Update workflow bolletjes
+            renderWorkflowBolletjes();
             updateWorkflowSteps(screenNum);
             
             // Update progress steps (hidden)
@@ -6435,7 +6429,7 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'hulpvraag') loadHulpvraagData();
             if (screenId === 'triage') renderTriageDomainGrid();
             if (screenId === 'domains') renderDomains();
-            if (screenId === 'network') renderDashboard();
+            if (screenId === 'network') { renderDashboard(); setTimeout(() => renderRPANetwerkkaartCompact2(), 100); }
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
             if (screenId === 'beweging') renderVoorNaVisualisatie();
             if (screenId === 'reflectie') renderReflectieVragen();
@@ -6449,6 +6443,33 @@ Antwoord in dit exacte JSON formaat:
         }
         
         // Update workflow bolletjes
+        function renderRPANetwerkkaartCompact2() {
+            // Render netwerkkaart in het overzichtsscherm (samengevoegd)
+            const container = document.getElementById('sijnNetwerkkaartCompact2');
+            if (!container) return;
+            const orig = document.getElementById('sijnNetwerkkaartCompact');
+            if (orig) container.innerHTML = orig.innerHTML;
+            else { renderRPANetwerkkaartCompact(); const o = document.getElementById('sijnNetwerkkaartCompact'); if (o) container.innerHTML = o.innerHTML; }
+        }
+
+        function renderWorkflowBolletjes() {
+            const container = document.getElementById('workflowStepsDynamic');
+            if (!container) return;
+            const config = getScreenConfig();
+            container.innerHTML = config.map((step, i) => {
+                const stepNum = i + 1;
+                return `<div class="workflow-step" data-step="${stepNum}" tabindex="0"
+                    onclick="goToScreen(${stepNum});"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(${stepNum});}"
+                    style="text-align:center;cursor:pointer;padding:6px 8px;border-radius:12px;transition:all 0.3s;outline:none;"
+                    onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'"
+                    onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#e0e0e0;color:#666;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 4px;border:3px solid #e0e0e0;transition:all 0.3s;pointer-events:none;">${step.emoji}</div>
+                    <div style="font-size:0.65rem;font-weight:600;color:var(--text-light);pointer-events:none;">${step.label}</div>
+                </div>`;
+            }).join('');
+        }
+
         function updateWorkflowSteps(currentStep) {
             document.querySelectorAll('.workflow-step').forEach((step, index) => {
                 const stepNum = index + 1;
@@ -9265,22 +9286,22 @@ Antwoord in dit exacte JSON formaat:
                 
                 return `
                     <tr style="${rowBackground}">
-                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer;">
+                        <td onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer;">
                             <div class="domain-cell">
                                 <span class="domain-emoji">${domain.emoji}</span>
                                 <span class="domain-name">${domain.name}</span>
                             </div>
                         </td>
-                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
+                        <td onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem; ${hoeKleur}">${hoeText}</span>
                         </td>
-                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
+                        <td onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem;">${steunText}</span>
                         </td>
-                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
+                        <td onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center;">
                             <span style="font-size: 1.1rem; ${actieKleur}">${actieText}</span>
                         </td>
-                        <td onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center; padding: 12px;" title="Klik voor details">
+                        <td onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);" style="cursor: pointer; text-align: center; padding: 12px;" title="Klik voor details">
                             <div style="font-size: 1.3rem; line-height: 1;">${wieHelptIcon}</div>
                             <div style="font-size: 0.85rem; margin-top: 4px; ${wieHelptKleur}">${wieHelptText}</div>
                         </td>
@@ -9763,7 +9784,7 @@ Antwoord in dit exacte JSON formaat:
                 return `
                     <div class="domain-quick-item" 
                          onmouseenter="showDomainDetails('${domain.id}')"
-                         onclick="goToScreen(3); setTimeout(() => toggleDomainCard('${domain.id}'), 100);">
+                         onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${domain.id}'), 100);">
                         <span class="dq-emoji">${domain.emoji}</span>
                         <span class="dq-name">${domain.name}</span>
                         <span class="dq-score score-${score}">${score || '-'}</span>
@@ -13636,71 +13657,60 @@ END:VEVENT
                             </div>
                         </div>
                         
-                        <!-- Reflectievragen -->
-                        <div style="display: grid; gap: 20px;">
+                        <!-- Reflectievragen: 2 verplicht, rest uitklapbaar -->
+                        <div style="display: grid; gap: 16px;">
                             
-                            <!-- 1. Duurzaamheid / Haalbaarheid -->
+                            <!-- 1. Haalbaarheid (verplicht) -->
                             <div>
-                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
-                                    🌱 Is deze beweging realistisch en haalbaar?
-                                </label>
+                                <label style="display:block;font-weight:600;color:var(--text);margin-bottom:6px;">🌱 Is deze beweging realistisch haalbaar?</label>
                                 <select onchange="setReflectie('${domain.id}', 'duurzaamheid', this.value)"
-                                        style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
+                                        style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.95rem;">
                                     <option value="">-- Selecteer --</option>
-                                    <option value="haalbaar" ${reflectie.duurzaamheid === 'haalbaar' ? 'selected' : ''}>Ja, dit is realistisch haalbaar</option>
-                                    <option value="twijfel" ${reflectie.duurzaamheid === 'twijfel' ? 'selected' : ''}>Twijfel — dit vraagt extra inspanning</option>
-                                    <option value="risico" ${reflectie.duurzaamheid === 'risico' ? 'selected' : ''}>Risico — netwerkdraagkracht is onzeker</option>
+                                    <option value="haalbaar" ${reflectie.duurzaamheid === 'haalbaar' ? 'selected' : ''}>Ja, realistisch haalbaar</option>
+                                    <option value="twijfel" ${reflectie.duurzaamheid === 'twijfel' ? 'selected' : ''}>Twijfel — vraagt extra inspanning</option>
+                                    <option value="risico" ${reflectie.duurzaamheid === 'risico' ? 'selected' : ''}>Risico — netwerkdraagkracht onzeker</option>
                                 </select>
                             </div>
                             
-                            <!-- 2. Proportionaliteit -->
+                            <!-- 2. Proportionaliteit (verplicht) -->
                             <div>
-                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
-                                    ⚖️ Is de intensiteit van steun proportioneel aan de situatie?
-                                </label>
+                                <label style="display:block;font-weight:600;color:var(--text);margin-bottom:6px;">⚖️ Is de intensiteit proportioneel aan de situatie?</label>
                                 <select onchange="setReflectie('${domain.id}', 'proportionaliteit', this.value)"
-                                        style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
+                                        style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.95rem;">
                                     <option value="">-- Selecteer --</option>
                                     <option value="proportioneel" ${reflectie.proportionaliteit === 'proportioneel' ? 'selected' : ''}>Proportioneel — past bij de behoefte</option>
                                     <option value="te-licht" ${reflectie.proportionaliteit === 'te-licht' ? 'selected' : ''}>Te licht — meer steun nodig</option>
                                     <option value="te-zwaar" ${reflectie.proportionaliteit === 'te-zwaar' ? 'selected' : ''}>Te zwaar — kan lichter/anders</option>
                                 </select>
                             </div>
-                            
-                            <!-- 3. Regiehelderheid -->
-                            <div>
-                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
-                                    🎯 Wie is verantwoordelijk voor deze beweging? (regie)
-                                </label>
-                                <input type="text" 
-                                       placeholder="Naam professional, organisatie of cliënt zelf..."
-                                       value="${reflectie.verantwoordelijke || ''}"
-                                       onchange="setReflectie('${domain.id}', 'verantwoordelijke', this.value)"
-                                       style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
-                            </div>
-                            
-                            <!-- 4. Evaluatiemoment -->
-                            <div>
-                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
-                                    📅 Wanneer evalueren we of deze beweging werkt?
-                                </label>
-                                <input type="date" 
-                                       value="${reflectie.evaluatieDatum || ''}"
-                                       onchange="setReflectie('${domain.id}', 'evaluatieDatum', this.value)"
-                                       style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem;">
-                            </div>
-                            
-                            <!-- 5. Toelichting (optioneel) -->
-                            <div>
-                                <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">
-                                    💬 Toelichting / aandachtspunten (optioneel)
-                                </label>
-                                <textarea 
-                                    placeholder="Bijv: afbouw formele zorg pas na stabilisatie informeel netwerk..."
-                                    rows="3"
-                                    onchange="setReflectie('${domain.id}', 'toelichting', this.value)"
-                                    style="width: 100%; padding: 10px; border: 2px solid #d1d5db; border-radius: 6px; font-size: 0.95rem; resize: vertical;">${reflectie.toelichting || ''}</textarea>
-                            </div>
+
+                            <!-- 3-5: Uitklapbaar (optioneel) -->
+                            <details style="border:1px solid #e5e7eb;border-radius:8px;padding:2px;">
+                                <summary style="padding:10px 14px;cursor:pointer;font-weight:600;color:#6b7280;font-size:0.9rem;list-style:none;display:flex;align-items:center;gap:6px;">
+                                    ＋ Extra vragen (optioneel): regie, evaluatie, toelichting
+                                </summary>
+                                <div style="padding:14px;display:grid;gap:14px;border-top:1px solid #f3f4f6;">
+                                    <div>
+                                        <label style="display:block;font-weight:600;color:var(--text);margin-bottom:6px;">🎯 Wie is verantwoordelijk voor deze beweging?</label>
+                                        <input type="text" placeholder="Professional, organisatie of cliënt zelf..."
+                                               value="${reflectie.verantwoordelijke || ''}"
+                                               onchange="setReflectie('${domain.id}', 'verantwoordelijke', this.value)"
+                                               style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-weight:600;color:var(--text);margin-bottom:6px;">📅 Wanneer evalueren we?</label>
+                                        <input type="date" value="${reflectie.evaluatieDatum || ''}"
+                                               onchange="setReflectie('${domain.id}', 'evaluatieDatum', this.value)"
+                                               style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
+                                    </div>
+                                    <div>
+                                        <label style="display:block;font-weight:600;color:var(--text);margin-bottom:6px;">💬 Toelichting / aandachtspunten</label>
+                                        <textarea placeholder="Bijv: afbouw formele zorg pas na stabilisatie..."
+                                            rows="2" onchange="setReflectie('${domain.id}', 'toelichting', this.value)"
+                                            style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;resize:vertical;">${reflectie.toelichting || ''}</textarea>
+                                    </div>
+                                </div>
+                            </details>
                         </div>
                     </div>
                 `;
@@ -13960,8 +13970,9 @@ END:VEVENT
             }
         }
 
-        // Initialize
+        // Initialize (main)
         loadState();
+        renderWorkflowBolletjes();
         renderProgressSteps();
         
         // Herstel doelgroep-checkboxes
