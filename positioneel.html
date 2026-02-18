@@ -6691,122 +6691,36 @@ Antwoord in dit exacte JSON formaat:
         }
         
         function renderDomainContent(domain, details, currentScore) {
-            // Positionele Analyse FLOW: 3 vragen per domein + doelgroep-specifieke vragen als hulp
-            
-            const hoeGaatHet = details.hoeGaatHet || '';
-            const steunNiveau = details.steunNiveau || '';
-            const actieNodig = details.actieNodig || '';
-            
+            const stoplichtStatus = (state.domainStatus || {})[domain.id] || null;
+            const stoplichtLabel = {
+                'goed': '🟢 Zelfstandig',
+                'steun-wenselijk': '🟡 Steun wenselijk',
+                'steun-nodig': '🔴 Steun nodig'
+            }[stoplichtStatus] || '⚪ Niet ingevuld';
+            const stoplichtColor = {
+                'goed': '#f0fdf4',
+                'steun-wenselijk': '#fefce8',
+                'steun-nodig': '#fef2f2'
+            }[stoplichtStatus] || '#f9fafb';
+
             return `
-                <!-- Vraag 1: Hoe gaat het? (ALTIJD) -->
-                <div style="margin-bottom: 25px;">
-                    <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
-                        1️⃣ Hoe gaat het?
-                    </label>
-                    <select style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
-                            onchange="updateDomainDetail('${domain.id}', 'hoeGaatHet', this.value); syncDomainScore('${domain.id}')">
-                        <option value="">-- Selecteer --</option>
-                        <option value="gaat-goed" ${hoeGaatHet === 'gaat-goed' ? 'selected' : ''}>🟢 Gaat goed</option>
-                        <option value="gaat-wisselend" ${hoeGaatHet === 'gaat-wisselend' ? 'selected' : ''}>🟡 Gaat wisselend</option>
-                        <option value="gaat-niet-goed" ${hoeGaatHet === 'gaat-niet-goed' ? 'selected' : ''}>🔴 Gaat niet goed</option>
-                        <option value="nog-open" ${hoeGaatHet === 'nog-open' ? 'selected' : ''}>⚪ Nog open</option>
-                    </select>
+                <!-- Stoplicht-status uit scan -->
+                <div style="background:${stoplichtColor};border-radius:8px;padding:10px 14px;margin-bottom:16px;
+                            display:flex;align-items:center;justify-content:space-between;">
+                    <span style="font-size:0.88rem;font-weight:600;color:#374151;">${stoplichtLabel}</span>
+                    <button onclick="goToScreenById('triage')"
+                        style="background:none;border:none;font-size:0.75rem;color:#9ca3af;cursor:pointer;text-decoration:underline;">
+                        aanpassen
+                    </button>
                 </div>
-                
+
                 ${renderDoelgroepVragen(domain.id)}
                 
                 <!-- Samenvatting: Wie helpt nu? (altijd zichtbaar) -->
                 ${renderWieHelptNuSamenvatting(domain.id, details)}
                 
-                <!-- Vraag 2: Is er steun? -->
-                <div style="margin-bottom: 25px;">
-                    <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
-                        2️⃣ Is er steun?
-                    </label>
-                    <select id="steun-${domain.id}" style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
-                            onchange="updateDomainDetail('${domain.id}', 'steunNiveau', this.value); toggleSteunDoorWie('${domain.id}', this.value)">
-                        <option value="">-- Selecteer --</option>
-                        <option value="voldoende" ${steunNiveau === 'voldoende' ? 'selected' : ''}>👥 Voldoende steun</option>
-                        <option value="beperkt" ${steunNiveau === 'beperkt' ? 'selected' : ''}>⚠️ Beperkte steun</option>
-                        <option value="geen" ${steunNiveau === 'geen' ? 'selected' : ''}>🚫 Geen steun</option>
-                    </select>
-                    
-                    <!-- Door wie? (alleen bij voldoende of beperkt) -->
-                    <div id="steundoorwie-${domain.id}" style="display: ${(steunNiveau === 'voldoende' || steunNiveau === 'beperkt') ? 'block' : 'none'}; margin-top: 15px; padding: 15px; background: #f9fafb; border-radius: 8px; border: 1px solid #e0e0e0;">
-                        <label style="font-size: 0.9rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 10px;">
-                            Door wie? (voor Strategische Analyse kosten-analyse)
-                        </label>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <!-- Informeel -->
-                            <div>
-                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                                    <input type="checkbox" 
-                                           id="steun-informeel-${domain.id}"
-                                           ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'checked' : ''}
-                                           onchange="updateSteunDoorWie('${domain.id}', 'informeel', this.checked)"
-                                           style="width: 18px; height: 18px;">
-                                    <span style="font-size: 0.95rem; font-weight: 600;">👨‍👩‍👧 Informeel</span>
-                                </label>
-                                <div id="steun-informeel-detail-${domain.id}" style="display: ${(details.steunDoorWie && details.steunDoorWie.includes('informeel')) ? 'block' : 'none'}; margin-left: 26px; background: white; padding: 12px; border-radius: 6px; border: 1px solid #d1d5db;">
-                                    <div id="steun-informeel-personen-${domain.id}" style="margin-bottom: 10px;">
-                                        ${renderInformeleSteunPersonen(domain.id, details)}
-                                    </div>
-                                    <button onclick="addInformeelPersoon('${domain.id}')" style="padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer;">
-                                        + Persoon toevoegen
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Collectief -->
-                            <div>
-                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                                    <input type="checkbox"
-                                           id="steun-collectief-${domain.id}"
-                                           ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'checked' : ''}
-                                           onchange="updateSteunDoorWie('${domain.id}', 'collectief', this.checked)"
-                                           style="width: 18px; height: 18px;">
-                                    <span style="font-size: 0.95rem; font-weight: 600;">🤝 Collectief</span>
-                                </label>
-                                <div id="steun-collectief-detail-${domain.id}" style="display: ${(details.steunDoorWie && details.steunDoorWie.includes('collectief')) ? 'block' : 'none'}; margin-left: 26px; background: #f0fdf4; padding: 12px; border-radius: 6px; border-left: 3px solid #10b981;">
-                                    ${renderCollectieveSteunOpties(domain.id, details)}
-                                </div>
-                            </div>
-                            
-                            <!-- Formeel -->
-                            <div>
-                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                                    <input type="checkbox"
-                                           id="steun-formeel-${domain.id}"
-                                           ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'checked' : ''}
-                                           onchange="updateSteunDoorWie('${domain.id}', 'formeel', this.checked)"
-                                           style="width: 18px; height: 18px;">
-                                    <span style="font-size: 0.95rem; font-weight: 600;">🏥 Formeel</span>
-                                </label>
-                                <div id="steun-formeel-detail-${domain.id}" style="display: ${(details.steunDoorWie && details.steunDoorWie.includes('formeel')) ? 'block' : 'none'}; margin-left: 26px; background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6;">
-                                    ${renderFormeleSteunOpties(domain.id, details)}
-                                </div>
-                            </div>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 8px; margin-bottom: 0; font-style: italic;">
-                            💡 Deze data wordt gebruikt in Strategische Analyse voor kosten- en scenario-analyse
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Vraag 3: Wat is hier nu nodig? -->
-                <div style="margin-bottom: 25px;">
-                    <label style="font-size: 1rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 12px;">
-                        3️⃣ Wat is hier nu nodig?
-                    </label>
-                    <select style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;"
-                            onchange="updateDomainDetail('${domain.id}', 'actieNodig', this.value)">
-                        <option value="">-- Selecteer --</option>
-                        <option value="geen" ${actieNodig === 'geen' ? 'selected' : ''}>🔵 Geen actie</option>
-                        <option value="monitoren" ${actieNodig === 'monitoren' ? 'selected' : ''}>🟡 Monitoren</option>
-                        <option value="actie" ${actieNodig === 'actie' ? 'selected' : ''}>🔴 Actie nodig</option>
-                        <option value="nog-niet-bepaald" ${actieNodig === 'nog-niet-bepaald' ? 'selected' : ''}>⚪ Nog niet bepaald</option>
-                    </select>
-                </div>
+                <!-- Steun label (afgeleid van supporters) -->
+                <div id="steunLabel-${domain.id}"></div>
                 
                 ${state.mode === 'professional' ? `
                     <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
@@ -7844,8 +7758,8 @@ Antwoord in dit exacte JSON formaat:
                         `).join('')}
                     </div>
                     
-                    <button class="btn btn-secondary" onclick="addSupporter('${domain.id}')" style="width: 100%; margin-top: 15px;">
-                        ➕ Voeg steunfiguur toe
+                    <button class="btn btn-primary" onclick="addSupporter('${domain.id}')" style="width:100%;margin-top:10px;padding:12px;">
+                        ➕ Steunfiguur toevoegen
                     </button>
                     
                     <!-- WAT VRAAGT VERVOLG -->
@@ -8462,15 +8376,9 @@ Antwoord in dit exacte JSON formaat:
             // Als niets ingevuld
             if (items.length === 0) {
                 return `
-                    <div style="background: #f9fafb; border: 2px dashed #d1d5db; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                        <div style="font-size: 1rem; font-weight: 600; color: #6b7280; margin-bottom: 8px;">
-                            👥 Wie helpt nu?
-                        </div>
-                        <p style="font-size: 0.9rem; color: #9ca3af; margin: 0; font-style: italic;">
-                            ○ Zelfstandig / nog niet ingevuld
-                        </p>
-                        <p style="font-size: 0.8rem; color: #9ca3af; margin-top: 8px; margin-bottom: 0;">
-                            💡 Vul bij "Is er steun?" in wie er helpt
+                    <div style="background:#f9fafb;border:2px dashed #d1d5db;border-radius:12px;padding:20px;margin-bottom:16px;text-align:center;">
+                        <p style="font-size:0.95rem;color:#9ca3af;margin:0 0 12px;font-style:italic;">
+                            Nog niemand toegevoegd
                         </p>
                     </div>
                 `;
