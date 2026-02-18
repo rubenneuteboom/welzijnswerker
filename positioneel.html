@@ -4048,6 +4048,9 @@
                     <h2>📊 RPA Overzicht</h2>
                     <p>Complete status van alle 11 levensdomeinen</p>
 
+                    <!-- Signaalscherm: automatische detectie van overlap, witte vlekken & afstemmingssignalen -->
+                    <div id="signaalPanel"></div>
+
                     <!-- Overzichtstabel -->
                     <div id="domainOverviewTable"></div>
 
@@ -5738,6 +5741,16 @@
             // Strategische reflectie per domein (RPA Stap 3)
             strategischeReflectie: {
                 // Format: { '0': { duurzaamheid: 'haalbaar', proportionaliteit: 'proportioneel', verantwoordelijke: 'Naam', evaluatieDatum: '2023-06-01', toelichting: '...' } }
+            },
+
+            // Coördinatie & afstemming (Signaalscherm)
+            coordination: {
+                regiehouder: '',         // Naam/label van regiehouder
+                mdo_planned: false,      // MDO gepland?
+                familie_gesprek_planned: false, // Familiegesprek gepland?
+                mdo_datum: '',
+                familie_datum: '',
+                notes: ''
             }
         };
 
@@ -5764,6 +5777,10 @@
                 // Ensure ondersteuningsstructuur exists
                 if (!parsed.ondersteuningsstructuur) {
                     parsed.ondersteuningsstructuur = {};
+                }
+                // Ensure coordination exists (migration from older versions)
+                if (!parsed.coordination) {
+                    parsed.coordination = { regiehouder: '', mdo_planned: false, familie_gesprek_planned: false, mdo_datum: '', familie_datum: '', notes: '' };
                 }
                 // Migrate scores from old 1-10 scale to current 1-3 scale
                 // 1-3 → 1 (🔴 Actie nodig), 4-7 → 2 (🟡 Kwetsbaar), 8-10 → 3 (🟢 Stabiel)
@@ -7979,6 +7996,19 @@ Antwoord in dit exacte JSON formaat:
                             </div>
                         </div>
                         
+                        ${supporter.type === 'professional' || supporter.type === 'collective' ? `
+                        <div class="form-group" id="consentGroup">
+                            <label>🔒 Toestemming / Privacy</label>
+                            <div class="chip-group">
+                                <div class="chip ${supporter.consent === 'ja' ? 'selected' : ''}" onclick="selectConsent('ja', event)" style="background: ${supporter.consent === 'ja' ? '#dcfce7' : ''}; border-color: ${supporter.consent === 'ja' ? '#16a34a' : ''};">✅ Toestemming</div>
+                                <div class="chip ${supporter.consent === 'beperkt' ? 'selected' : ''}" onclick="selectConsent('beperkt', event)" style="background: ${supporter.consent === 'beperkt' ? '#fef3c7' : ''}; border-color: ${supporter.consent === 'beperkt' ? '#d97706' : ''};">⚠️ Beperkt</div>
+                                <div class="chip ${supporter.consent === 'onbekend' ? 'selected' : ''}" onclick="selectConsent('onbekend', event)" style="background: ${supporter.consent === 'onbekend' ? '#f3f4f6' : ''};">❓ Onbekend</div>
+                            </div>
+                            <input type="hidden" id="supporterConsent" value="${supporter.consent || 'onbekend'}">
+                            <p style="font-size: 0.8rem; color: #6b7280; margin-top: 6px;">💡 Wat mag bijna altijd wel gedeeld: doelen en afspraken — niet diagnoses of details.</p>
+                        </div>
+                        ` : '<input type="hidden" id="supporterConsent" value="">'}
+
                         <div class="form-group">
                             <label>Effect / Ervaring</label>
                             <div class="chip-group">
@@ -8056,6 +8086,22 @@ Antwoord in dit exacte JSON formaat:
                 effect === 'Belemmerend' ? 'block' : 'none';
         }
         
+        function selectConsent(consent, event) {
+            document.getElementById('supporterConsent').value = consent;
+            const colors = { ja: { bg: '#dcfce7', border: '#16a34a' }, beperkt: { bg: '#fef3c7', border: '#d97706' }, onbekend: { bg: '#f3f4f6', border: '#d1d5db' } };
+            if (event) event.target.parentElement.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('selected');
+                chip.style.background = '';
+                chip.style.borderColor = '';
+            });
+            if (event) {
+                event.target.classList.add('selected');
+                const c = colors[consent] || {};
+                event.target.style.background = c.bg || '';
+                event.target.style.borderColor = c.border || '';
+            }
+        }
+
         function closeSupporterModal() {
             const modal = document.getElementById('supporterModal');
             if (modal) modal.remove();
@@ -8074,6 +8120,7 @@ Antwoord in dit exacte JSON formaat:
                 return;
             }
             
+            const consentEl = document.getElementById('supporterConsent');
             const supporter = {
                 name: name,
                 type: document.getElementById('supporterType').value,
@@ -8082,7 +8129,8 @@ Antwoord in dit exacte JSON formaat:
                 roles: window.selectedRoles || [],
                 effect: document.getElementById('supporterEffect').value,
                 note: document.getElementById('supporterNote').value.trim(),
-                hindranceNote: document.getElementById('supporterHindranceNote').value.trim()
+                hindranceNote: document.getElementById('supporterHindranceNote').value.trim(),
+                consent: consentEl ? consentEl.value : ''
             };
             
             if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
@@ -8279,19 +8327,9 @@ Antwoord in dit exacte JSON formaat:
             `).join('');
         }
 
-        // Voeg informeel persoon toe
+        // Voeg informeel persoon toe — via custom modal
         function addInformeelPersoon(domainId) {
-            const naam = prompt('Wie helpt er? (bijv. "Partner", "Zus Anna", "Buurvrouw Karin")');
-            if (!naam || naam.trim() === '') return;
-            
-            if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
-            if (!state.domainDetails[domainId].steunInformeelPersonen) {
-                state.domainDetails[domainId].steunInformeelPersonen = [];
-            }
-            
-            state.domainDetails[domainId].steunInformeelPersonen.push(naam.trim());
-            saveState();
-            renderDomains();
+            addInformeelPersoonModal(domainId);
         }
 
         // Verwijder informeel persoon
@@ -8458,7 +8496,308 @@ Antwoord in dit exacte JSON formaat:
         let spiderChart = null;
         let hoveredDomainId = null;
 
+        // ============================================================
+        // SIGNAALSCHERM — automatische detectie van afstemmingsissues
+        // ============================================================
+
+        function detectSignals() {
+            const red = [];
+            const yellow = [];
+            const green = [];
+
+            // Helper: alle supporters over alle domeinen
+            const allSupporters = [];
+            domains.forEach(d => {
+                const supporters = (state.domainDetails[d.id] || {}).supporters || [];
+                supporters.forEach(s => allSupporters.push({ ...s, domainId: d.id, domainLabel: d.label }));
+            });
+
+            const professionals = allSupporters.filter(s => s.type === 'professional');
+
+            // ── RODE SIGNALEN ──────────────────────────────────────────
+
+            // 1. Acuut domein zonder enige ondersteuning
+            domains.forEach(d => {
+                const details = state.domainDetails[d.id] || {};
+                const isAcuut = details.hoeGaatHet === 'gaat-niet-goed' && details.actieNodig === 'actie';
+                const hasSupporters = ((details.supporters || []).length > 0) ||
+                    (state.ondersteuningsstructuur[d.id] && (state.ondersteuningsstructuur[d.id].draaglagen || []).length > 0);
+                if (isAcuut && !hasSupporters) {
+                    red.push({
+                        id: `acuut-${d.id}`,
+                        tekst: `<strong>${d.emoji} ${d.label}</strong> vraagt direct actie maar heeft geen zichtbare ondersteuning.`,
+                        acties: [
+                            { label: '👨‍👩‍👧 Plan familiegesprek', fn: `planFamilieGesprek('${d.label}')` },
+                            { label: '🤝 Plan MDO', fn: `planMDO('${d.label}')` }
+                        ],
+                        tip: null
+                    });
+                }
+            });
+
+            // 2. 2+ professionals actief op zelfde domein zonder regiehouder
+            const domainProfCounts = {};
+            professionals.forEach(s => {
+                if (!domainProfCounts[s.domainId]) domainProfCounts[s.domainId] = [];
+                domainProfCounts[s.domainId].push(s);
+            });
+            Object.keys(domainProfCounts).forEach(domainId => {
+                const profs = domainProfCounts[domainId];
+                if (profs.length >= 2 && !state.coordination.regiehouder) {
+                    const d = domains.find(x => x.id === domainId);
+                    const namen = profs.map(p => p.name).join(' & ');
+                    red.push({
+                        id: `dubbel-${domainId}`,
+                        tekst: `<strong>${d ? d.emoji + ' ' + d.label : domainId}:</strong> ${namen} zijn beide als professional actief zonder dat er een regiehouder is vastgelegd.`,
+                        acties: [
+                            { label: '🎯 Leg regiehouder vast', fn: `openRegiehouderSelector()` },
+                            { label: '🤝 Plan MDO', fn: `planMDO('${d ? d.label : domainId}')` }
+                        ],
+                        tip: 'Twee professionals op hetzelfde domein is geen probleem — als het bewust is en afgestemd.'
+                    });
+                }
+            });
+
+            // 3. Privacy-barrière: 2+ professionals met consent onbekend
+            const profOnbekend = professionals.filter(s => !s.consent || s.consent === 'onbekend');
+            if (profOnbekend.length >= 2) {
+                red.push({
+                    id: 'privacy-barrier',
+                    tekst: `<strong>🔒 Privacy-barrière:</strong> ${profOnbekend.length} professionals hebben geen duidelijke toestemmingsstatus (${profOnbekend.map(p=>p.name).join(', ')}).`,
+                    acties: [
+                        { label: '🔒 Bekijk & vul toestemming in', fn: `openPrivacyToelichting()` }
+                    ],
+                    tip: 'Doelen en geplande afspraken mogen bijna altijd gedeeld worden — ook zonder expliciete toestemming voor details.'
+                });
+            }
+
+            // ── GELE SIGNALEN ──────────────────────────────────────────
+
+            // 4. Kwetsbaar domein met alleen formele steun (geen informeel/collectief)
+            domains.forEach(d => {
+                const details = state.domainDetails[d.id] || {};
+                const isKwetsbaar = details.hoeGaatHet === 'gaat-niet-goed' || details.hoeGaatHet === 'wisselend';
+                const supporters = details.supporters || [];
+                const heeftFormeel = supporters.some(s => s.type === 'professional');
+                const heeftInformeelOfCollectief = supporters.some(s => s.type === 'informal' || s.type === 'collective');
+                if (isKwetsbaar && heeftFormeel && !heeftInformeelOfCollectief && supporters.length > 0) {
+                    yellow.push({
+                        id: `alleen-formeel-${d.id}`,
+                        tekst: `<strong>${d.emoji} ${d.label}:</strong> Alleen formele ondersteuning, geen informeel of collectief netwerk actief.`,
+                        acties: [
+                            { label: '👨‍👩‍👧 Plan familiegesprek', fn: `planFamilieGesprek('${d.label}')` }
+                        ],
+                        tip: 'Informele steun vermindert de druk op formele zorg. Een familiegesprek kan helpen om mogelijkheden te verkennen.'
+                    });
+                }
+            });
+
+            // 5. Mogelijke overbelasting: 1 persoon actief op 4+ domeinen
+            const supporterDomeinCount = {};
+            allSupporters.forEach(s => {
+                const key = s.name + '_' + s.type;
+                if (!supporterDomeinCount[key]) supporterDomeinCount[key] = { name: s.name, type: s.type, count: 0 };
+                supporterDomeinCount[key].count++;
+            });
+            Object.values(supporterDomeinCount).forEach(sc => {
+                if (sc.count >= 4) {
+                    yellow.push({
+                        id: `overbelast-${sc.name}`,
+                        tekst: `<strong>⚠️ Mogelijk overbelast:</strong> ${sc.name} (${sc.type === 'informal' ? 'informeel' : sc.type === 'professional' ? 'professional' : 'collectief'}) biedt steun op ${sc.count} domeinen.`,
+                        acties: [
+                            { label: '💬 Bespreek draagkracht', fn: `showToast('Overbelasting bespreken: ga na of deze persoon voldoende draagkracht heeft en of taken gedeeld kunnen worden.', 'info')` }
+                        ],
+                        tip: 'Hoge betrokkenheid is waardevol — maar vraag aandacht voor de draagkracht van deze persoon.'
+                    });
+                }
+            });
+
+            // ── GROENE SIGNALEN ────────────────────────────────────────
+
+            if (state.coordination.regiehouder) {
+                green.push(`✅ Regiehouder vastgelegd: <strong>${state.coordination.regiehouder}</strong>`);
+            }
+            if (state.coordination.mdo_planned) {
+                green.push(`✅ MDO gepland${state.coordination.mdo_datum ? ' op ' + state.coordination.mdo_datum : ''}`);
+            }
+            if (state.coordination.familie_gesprek_planned) {
+                green.push(`✅ Familiegesprek gepland${state.coordination.familie_datum ? ' op ' + state.coordination.familie_datum : ''}`);
+            }
+            const hasInformeel = allSupporters.some(s => s.type === 'informal');
+            const hasFormeel = allSupporters.some(s => s.type === 'professional');
+            if (hasInformeel && hasFormeel) {
+                green.push('✅ Mix van informele en formele ondersteuning aanwezig');
+            }
+            const profMetConsent = professionals.filter(s => s.consent === 'ja' || s.consent === 'beperkt');
+            if (professionals.length > 0 && profMetConsent.length === professionals.length) {
+                green.push('✅ Alle professionals hebben een duidelijke toestemmingsstatus');
+            }
+
+            return { red, yellow, green };
+        }
+
+        function renderSignaalPanel() {
+            const container = document.getElementById('signaalPanel');
+            if (!container) return;
+
+            const { red, yellow, green } = detectSignals();
+            const totaalSignalen = red.length + yellow.length;
+
+            if (totaalSignalen === 0 && green.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = `<div style="margin-bottom: 24px;">`;
+            html += `<h3 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">
+                🚦 Afstemmingssignalen
+                <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(automatisch gedetecteerd)</span>
+            </h3>`;
+
+            // RODE signalen
+            red.forEach(sig => {
+                html += `
+                <div style="background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 1.2rem; line-height: 1;">🔴</span>
+                        <div style="flex: 1; min-width: 200px;">
+                            <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: #991b1b; line-height: 1.5;">${sig.tekst}</p>
+                            ${sig.tip ? `<p style="margin: 0 0 8px 0; font-size: 0.8rem; color: #b45309; background: #fef3c7; padding: 6px 10px; border-radius: 6px;">${sig.tip}</p>` : ''}
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                ${sig.acties.map(a => `<button onclick="${a.fn}" style="background: #dc2626; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">${a.label}</button>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            // GELE signalen
+            yellow.forEach(sig => {
+                html += `
+                <div style="background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 1.2rem; line-height: 1;">🟡</span>
+                        <div style="flex: 1; min-width: 200px;">
+                            <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: #92400e; line-height: 1.5;">${sig.tekst}</p>
+                            ${sig.tip ? `<p style="margin: 0 0 8px 0; font-size: 0.8rem; color: #6b7280; font-style: italic;">${sig.tip}</p>` : ''}
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                ${sig.acties.map(a => `<button onclick="${a.fn}" style="background: #f59e0b; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600;" onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">${a.label}</button>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            // GROENE signalen (compact)
+            if (green.length > 0) {
+                html += `
+                <div style="background: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px;">
+                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; font-weight: 600; color: #15803d;">🟢 Sterke punten</p>
+                    ${green.map(g => `<p style="margin: 0 0 4px 0; font-size: 0.85rem; color: #166534;">${g}</p>`).join('')}
+                </div>`;
+            }
+
+            // Coördinatie-acties (altijd tonen als er signalen zijn)
+            if (totaalSignalen > 0) {
+                html += `
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px;">
+                    <p style="margin: 0 0 10px 0; font-size: 0.85rem; font-weight: 600; color: #1e293b;">📋 Coördinatie vastleggen</p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px;">
+                        <label style="font-size: 0.85rem; color: #475569; white-space: nowrap;">Regiehouder:</label>
+                        <input type="text" id="regiehouderInput" value="${state.coordination.regiehouder || ''}" 
+                            placeholder="Naam professional of instelling"
+                            onchange="saveCoordination()"
+                            style="flex: 1; min-width: 180px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem;">
+                    </div>
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
+                            <input type="checkbox" id="mdoCheck" ${state.coordination.mdo_planned ? 'checked' : ''} onchange="saveCoordination()">
+                            🤝 MDO gepland
+                        </label>
+                        <input type="date" id="mdoDatum" value="${state.coordination.mdo_datum || ''}" onchange="saveCoordination()"
+                            style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; ${!state.coordination.mdo_planned ? 'display:none' : ''}">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
+                            <input type="checkbox" id="familieCheck" ${state.coordination.familie_gesprek_planned ? 'checked' : ''} onchange="saveCoordination()">
+                            👨‍👩‍👧 Familiegesprek gepland
+                        </label>
+                        <input type="date" id="familieDatum" value="${state.coordination.familie_datum || ''}" onchange="saveCoordination()"
+                            style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; ${!state.coordination.familie_gesprek_planned ? 'display:none' : ''}">
+                    </div>
+                </div>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // Wire up checkbox date visibility
+            const mdoCheck = document.getElementById('mdoCheck');
+            const familieCheck = document.getElementById('familieCheck');
+            if (mdoCheck) mdoCheck.addEventListener('change', () => {
+                const el = document.getElementById('mdoDatum');
+                if (el) el.style.display = mdoCheck.checked ? '' : 'none';
+            });
+            if (familieCheck) familieCheck.addEventListener('change', () => {
+                const el = document.getElementById('familieDatum');
+                if (el) el.style.display = familieCheck.checked ? '' : 'none';
+            });
+        }
+
+        function saveCoordination() {
+            if (!state.coordination) state.coordination = {};
+            const reg = document.getElementById('regiehouderInput');
+            const mdo = document.getElementById('mdoCheck');
+            const fam = document.getElementById('familieCheck');
+            const mdoDatum = document.getElementById('mdoDatum');
+            const famDatum = document.getElementById('familieDatum');
+            if (reg) state.coordination.regiehouder = reg.value.trim();
+            if (mdo) state.coordination.mdo_planned = mdo.checked;
+            if (fam) state.coordination.familie_gesprek_planned = fam.checked;
+            if (mdoDatum) state.coordination.mdo_datum = mdoDatum.value;
+            if (famDatum) state.coordination.familie_datum = famDatum.value;
+            saveState();
+            // Re-render groen gedeelte zonder full re-render
+            const greens = document.querySelectorAll('#signaalPanel [style*="f0fdf4"]');
+            // Soft refresh
+            renderSignaalPanel();
+        }
+
+        function planFamilieGesprek(domainLabel) {
+            if (!state.coordination) state.coordination = {};
+            state.coordination.familie_gesprek_planned = true;
+            saveState();
+            renderSignaalPanel();
+            showToast(`👨‍👩‍👧 Familiegesprek gemarkeerd als gepland${domainLabel ? ' (aanleiding: ' + domainLabel + ')' : ''}. Stel een datum in bij de coördinatie-sectie.`, 'success');
+        }
+
+        function planMDO(domainLabel) {
+            if (!state.coordination) state.coordination = {};
+            state.coordination.mdo_planned = true;
+            saveState();
+            renderSignaalPanel();
+            showToast(`🤝 MDO gemarkeerd als gepland${domainLabel ? ' (aanleiding: ' + domainLabel + ')' : ''}. Stel een datum in bij de coördinatie-sectie.`, 'success');
+        }
+
+        function openRegiehouderSelector() {
+            const name = prompt('Wie is de regiehouder? (naam professional of instelling)');
+            if (name) {
+                if (!state.coordination) state.coordination = {};
+                state.coordination.regiehouder = name.trim();
+                saveState();
+                renderSignaalPanel();
+                showToast(`🎯 Regiehouder vastgelegd: ${name}`, 'success');
+            }
+        }
+
+        function openPrivacyToelichting() {
+            showToast('💡 Privacy-tip: Wat bijna altijd gedeeld mag worden:\n• Doelen van de hulpverlening\n• Gemaakte afspraken\n• Naam en betrokken organisatie\n\nDiagnoses, financiële details en persoonlijke notities vragen expliciete toestemming. Open het steunfiguur-formulier om de toestemmingsstatus bij te werken.', 'info');
+        }
+
+        // ============================================================
+        // EINDE SIGNAALSCHERM
+        // ============================================================
+
         function renderDashboard() {
+            renderSignaalPanel();
             renderDomainOverviewTable();
         }
 
@@ -13378,6 +13717,63 @@ END:VEVENT
         }
         // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
         
+    </script>
+
+    <!-- Custom modal: Persoon toevoegen -->
+    <div id="persoonModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:14px; padding:28px 28px 22px; width:min(420px,90vw); box-shadow:0 8px 40px rgba(0,0,0,0.2); font-family: inherit;">
+            <div style="font-size:1.1rem; font-weight:600; color:#1e293b; margin-bottom:6px;">👤 Persoon toevoegen</div>
+            <div style="font-size:0.88rem; color:#64748b; margin-bottom:16px;">Wie helpt er bij dit domein?</div>
+            <input id="persoonModalInput"
+                type="text"
+                placeholder='bijv. "Partner", "Zus Anna", "Buurvrouw Karin"'
+                style="width:100%; box-sizing:border-box; padding:10px 14px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:0.95rem; outline:none; transition:border 0.15s;"
+                onfocus="this.style.borderColor='#6366f1'"
+                onblur="this.style.borderColor='#cbd5e1'"
+                onkeydown="if(event.key==='Enter') confirmPersoonModal(); if(event.key==='Escape') closePersoonModal();"
+            />
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:18px;">
+                <button onclick="closePersoonModal()" style="padding:8px 18px; border-radius:8px; border:1.5px solid #d1d5db; background:white; color:#374151; font-size:0.9rem; cursor:pointer;">Annuleren</button>
+                <button onclick="confirmPersoonModal()" style="padding:8px 18px; border-radius:8px; border:none; background:#6366f1; color:white; font-size:0.9rem; font-weight:600; cursor:pointer;">Toevoegen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let _persoonModalDomainId = null;
+
+        function addInformeelPersoonModal(domainId) {
+            _persoonModalDomainId = domainId;
+            const modal = document.getElementById('persoonModal');
+            const input = document.getElementById('persoonModalInput');
+            input.value = '';
+            modal.style.display = 'flex';
+            setTimeout(() => input.focus(), 50);
+        }
+
+        function closePersoonModal() {
+            document.getElementById('persoonModal').style.display = 'none';
+            _persoonModalDomainId = null;
+        }
+
+        function confirmPersoonModal() {
+            const naam = document.getElementById('persoonModalInput').value.trim();
+            if (!naam) return;
+            const domainId = _persoonModalDomainId;
+            closePersoonModal();
+            if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
+            if (!state.domainDetails[domainId].steunInformeelPersonen) {
+                state.domainDetails[domainId].steunInformeelPersonen = [];
+            }
+            state.domainDetails[domainId].steunInformeelPersonen.push(naam);
+            saveState();
+            renderDomains();
+        }
+
+        // Klik buiten modal → sluit
+        document.getElementById('persoonModal').addEventListener('click', function(e) {
+            if (e.target === this) closePersoonModal();
+        });
     </script>
 </body>
 </html>
