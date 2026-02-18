@@ -6614,10 +6614,15 @@ Antwoord in dit exacte JSON formaat:
                 ? domains.filter(d => selectedDomains.includes(d.id))
                 : domains;
             
-            // Voortgangsindicator (Prioriteit 1 - Fase 2)
+            // Voortgangsindicator: domein telt als ingevuld als:
+            // - supporters aanwezig, OF situatie geselecteerd, OF stoplicht ingevuld
             const completedCount = domainsToShow.filter(d => {
                 const details = state.domainDetails[d.id] || {};
-                return details.hoeGaatHet && details.hoeGaatHet !== 'nog-open';
+                const stoplicht = (state.domainStatus || {})[d.id];
+                const hasSupporters = (details.supporters || []).length > 0;
+                const hasSituatie = !!details.situatie;
+                const hasStoplicht = !!stoplicht;
+                return hasSupporters || hasSituatie || hasStoplicht || (details.hoeGaatHet && details.hoeGaatHet !== 'nog-open');
             }).length;
             
             const progressPercent = domainsToShow.length > 0 
