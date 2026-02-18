@@ -4205,6 +4205,54 @@
                         <!-- Wordt gevuld door renderSamenvatting() -->
                     </div>
 
+                    <!-- Creatieve / maatwerkoplossing -->
+                    <div style="background:#faf5ff;border:2px solid #a855f7;border-radius:12px;padding:20px;margin-bottom:20px;">
+                        <h3 style="margin:0 0 12px;color:#7e22ce;font-size:1.05rem;">💡 Creatieve of maatwerkoplossing</h3>
+                        <p style="font-size:0.85rem;color:#6b7280;margin:0 0 14px;">Noteer een oplossing die buiten standaard zorgpaden valt — ook als die (nog) niet uitvoerbaar is. Ideeën van de cliënt zelf zijn het meest waardevol. Dit wordt zichtbaar in de strategische analyse.</p>
+
+                        <div style="margin-bottom:10px;">
+                            <label style="font-size:0.85rem;font-weight:600;color:#4b5563;display:block;margin-bottom:4px;">Beschrijving van de oplossing</label>
+                            <textarea id="creatiefBeschrijving" rows="3" placeholder="Bijv: cliënt wil bij moeder inwonen en haar helpen met boodschappen, zodat zij langer zelfstandig kan wonen..." style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;resize:vertical;" onchange="saveCreatiefOplossing()">${state.creatiefOplossing.beschrijving || ''}</textarea>
+                        </div>
+
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+                            <div style="flex:1;min-width:160px;">
+                                <label style="font-size:0.85rem;font-weight:600;color:#4b5563;display:block;margin-bottom:4px;">Initiatief van</label>
+                                <select id="creatiefInitiatief" onchange="saveCreatiefOplossing()" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;">
+                                    <option value="">-- Kies --</option>
+                                    <option value="client" ${state.creatiefOplossing.initiatief==='client'?'selected':''}>💬 Cliënt zelf</option>
+                                    <option value="netwerk" ${state.creatiefOplossing.initiatief==='netwerk'?'selected':''}>👥 Netwerk (familie/vrienden)</option>
+                                    <option value="professional" ${state.creatiefOplossing.initiatief==='professional'?'selected':''}>👩‍⚕️ Professional</option>
+                                    <option value="gezamenlijk" ${state.creatiefOplossing.initiatief==='gezamenlijk'?'selected':''}>🤝 Gezamenlijk</option>
+                                </select>
+                            </div>
+                            <div style="flex:1;min-width:160px;">
+                                <label style="font-size:0.85rem;font-weight:600;color:#4b5563;display:block;margin-bottom:4px;">Status</label>
+                                <select id="creatiefStatus" onchange="saveCreatiefOplossing()" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;">
+                                    <option value="">-- Kies --</option>
+                                    <option value="in-onderzoek" ${state.creatiefOplossing.status==='in-onderzoek'?'selected':''}>🔍 In onderzoek</option>
+                                    <option value="geblokkeerd" ${state.creatiefOplossing.status==='geblokkeerd'?'selected':''}>🔴 Geblokkeerd door externe regel</option>
+                                    <option value="gelukt" ${state.creatiefOplossing.status==='gelukt'?'selected':''}>✅ Gelukt / in uitvoering</option>
+                                    <option value="niet-van-toepassing" ${state.creatiefOplossing.status==='niet-van-toepassing'?'selected':''}>— Niet van toepassing</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="belemmeringSection" style="display:${state.creatiefOplossing.status==='geblokkeerd'?'block':'none'}">
+                            <label style="font-size:0.85rem;font-weight:600;color:#4b5563;display:block;margin-bottom:4px;">Aard van de belemmering</label>
+                            <select id="creatiefBelemmering" onchange="saveCreatiefOplossing()" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;margin-bottom:8px;">
+                                <option value="">-- Kies --</option>
+                                <option value="woonregel" ${state.creatiefOplossing.belemmering==='woonregel'?'selected':''}>🏠 Woonregel / woningcorporatie</option>
+                                <option value="indicatieregel" ${state.creatiefOplossing.belemmering==='indicatieregel'?'selected':''}>📋 Indicatieregel / WMO</option>
+                                <option value="privacy" ${state.creatiefOplossing.belemmering==='privacy'?'selected':''}>🔒 Privacy / AVG</option>
+                                <option value="aanbesteding" ${state.creatiefOplossing.belemmering==='aanbesteding'?'selected':''}>💼 Aanbesteding / contract</option>
+                                <option value="financieel" ${state.creatiefOplossing.belemmering==='financieel'?'selected':''}>💰 Financieel / geen vergoeding</option>
+                                <option value="overig" ${state.creatiefOplossing.belemmering==='overig'?'selected':''}>Overig</option>
+                            </select>
+                            <textarea id="creatiefToelichtingBelemmering" rows="2" placeholder="Optioneel: kort toelichten wat er precies blokkeert..." style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;" onchange="saveCreatiefOplossing()">${state.creatiefOplossing.toelichting_belemmering||''}</textarea>
+                        </div>
+                    </div>
+
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreen(9)">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Exporteer samenvatting</button>
@@ -5743,6 +5791,15 @@
                 // Format: { '0': { duurzaamheid: 'haalbaar', proportionaliteit: 'proportioneel', verantwoordelijke: 'Naam', evaluatieDatum: '2023-06-01', toelichting: '...' } }
             },
 
+            // Creatieve of maatwerkoplossing
+            creatiefOplossing: {
+                beschrijving: '',      // Vrije beschrijving van de oplossing
+                initiatief: '',        // client | netwerk | professional | gezamenlijk
+                belemmering: '',       // woonregel | indicatieregel | privacy | aanbesteding | financieel | overig
+                status: '',            // in-onderzoek | geblokkeerd | gelukt | niet-van-toepassing
+                toelichting_belemmering: ''
+            },
+
             // Coördinatie & afstemming (Signaalscherm)
             coordination: {
                 regiehouder: '',         // Naam/label van regiehouder
@@ -5784,6 +5841,9 @@
                 }
                 if (!parsed.coordination.geplande_overleggen) {
                     parsed.coordination.geplande_overleggen = [];
+                }
+                if (!parsed.creatiefOplossing) {
+                    parsed.creatiefOplossing = { beschrijving: '', initiatief: '', belemmering: '', status: '', toelichting_belemmering: '' };
                 }
                 // Migrate scores from old 1-10 scale to current 1-3 scale
                 // 1-3 → 1 (🔴 Actie nodig), 4-7 → 2 (🟡 Kwetsbaar), 8-10 → 3 (🟢 Stabiel)
@@ -7325,7 +7385,22 @@ Antwoord in dit exacte JSON formaat:
                 netwerkpositie: getRPANetwerkPositie(),
                 
                 // Stabilisatie overall
-                stabilisatie: state.stabilisatie || null
+                stabilisatie: state.stabilisatie || null,
+
+                // Creatieve / maatwerkoplossing (geanonimiseerd)
+                creatiefOplossing: state.creatiefOplossing && state.creatiefOplossing.beschrijving ? {
+                    aanwezig: true,
+                    initiatief: state.creatiefOplossing.initiatief || null,
+                    status: state.creatiefOplossing.status || null,
+                    belemmering: state.creatiefOplossing.belemmering || null,
+                    // beschrijving en toelichting NIET exporteren (privacy)
+                } : { aanwezig: false },
+
+                // Coördinatie signalen
+                coordinatie: {
+                    regiehouder_aanwezig: !!(state.coordination && state.coordination.regiehouder),
+                    geplande_overleggen: (state.coordination && state.coordination.geplande_overleggen) || []
+                }
             };
             
             // Download als JSON
@@ -7968,6 +8043,7 @@ Antwoord in dit exacte JSON formaat:
                                 <div class="chip ${supporter.type === 'informal' ? 'selected' : ''}" onclick="selectSupporterType('informal', event)">Informeel</div>
                                 <div class="chip ${supporter.type === 'professional' ? 'selected' : ''}" onclick="selectSupporterType('professional', event)">Professional</div>
                                 <div class="chip ${supporter.type === 'collective' ? 'selected' : ''}" onclick="selectSupporterType('collective', event)">Collectief</div>
+                                <div class="chip ${supporter.type === 'woonpartner' ? 'selected' : ''}" onclick="selectSupporterType('woonpartner', event)">🏘️ Woonpartner</div>
                             </div>
                             <input type="hidden" id="supporterType" value="${supporter.type || 'informal'}">
                         </div>
@@ -7999,7 +8075,7 @@ Antwoord in dit exacte JSON formaat:
                             </div>
                         </div>
                         
-                        ${supporter.type === 'informal' || supporter.type === 'collective' ? `
+                        ${supporter.type === 'informal' ? `
                         <div class="form-group" id="draagkrachtGroup">
                             <label>💪 Draagkracht van deze persoon</label>
                             <div class="chip-group">
@@ -8012,7 +8088,7 @@ Antwoord in dit exacte JSON formaat:
                         </div>
                         ` : '<input type="hidden" id="supporterDraagkracht" value="">'}
 
-                        ${supporter.type === 'professional' || supporter.type === 'collective' ? `
+                        ${(supporter.type === 'professional' || supporter.type === 'collective' || supporter.type === 'woonpartner') ? `
                         <div class="form-group" id="consentGroup">
                             <label>🔒 Toestemming / Privacy</label>
                             <div class="chip-group">
@@ -8925,6 +9001,25 @@ Antwoord in dit exacte JSON formaat:
                 renderSignaalPanel();
                 showToast(`🎯 Regiehouder vastgelegd: ${name}`, 'success');
             }
+        }
+
+        function saveCreatiefOplossing() {
+            if (!state.creatiefOplossing) state.creatiefOplossing = {};
+            const b = document.getElementById('creatiefBeschrijving');
+            const i = document.getElementById('creatiefInitiatief');
+            const s = document.getElementById('creatiefStatus');
+            const bl = document.getElementById('creatiefBelemmering');
+            const t = document.getElementById('creatiefToelichtingBelemmering');
+            if (b) state.creatiefOplossing.beschrijving = b.value;
+            if (i) state.creatiefOplossing.initiatief = i.value;
+            if (s) {
+                state.creatiefOplossing.status = s.value;
+                const belemSection = document.getElementById('belemmeringSection');
+                if (belemSection) belemSection.style.display = s.value === 'geblokkeerd' ? 'block' : 'none';
+            }
+            if (bl) state.creatiefOplossing.belemmering = bl.value;
+            if (t) state.creatiefOplossing.toelichting_belemmering = t.value;
+            saveState();
         }
 
         function verwijderOverleg(type) {
