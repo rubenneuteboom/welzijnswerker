@@ -3587,7 +3587,7 @@
                 </div>
             </div>
 
-            <!-- Screen 0: Introductie (verborgen - inhoud verplaatst naar screen-start) -->
+            <!-- Screen 0: Toelichting methode (voor training / nieuwe gebruikers) -->
             <div class="screen" id="screen-intro" style="display:none!important">
                 <div class="card" style="max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);">
                     <div style="text-align: center; margin-bottom: 30px;">
@@ -3781,10 +3781,17 @@
             <!-- Screen 1: Start -->
             <div class="screen active" id="screen-start">
                 <div class="card">
-                    <div style="text-align:center;margin-bottom:24px;">
+                    <div style="text-align:center;margin-bottom:20px;">
                         <h1 style="font-size:2rem;margin-bottom:6px;color:var(--primary);font-weight:800;">RPA Positionele Analyse</h1>
-                        <p style="font-size:0.95rem;color:#166534;font-weight:600;margin:0;">Niveau 2 · Samen met de cliënt</p>
+                        <p style="font-size:0.95rem;color:#166534;font-weight:600;margin:0 0 8px;">Niveau 2 · Samen met de cliënt</p>
+                        <button onclick="document.getElementById('toelichtingPanel').style.display=document.getElementById('toelichtingPanel').style.display==='none'?'block':'none'"
+                            style="background:none;border:1px solid #d1d5db;border-radius:6px;padding:5px 12px;font-size:0.8rem;color:#6b7280;cursor:pointer;">
+                            ℹ️ Toelichting methode
+                        </button>
                     </div>
+
+                    <!-- Toelichting panel (verborgen, voor training) -->
+                    <div id="toelichtingPanel" style="display:none;margin-bottom:20px;">
 
                     <!-- Netwerkposities diagram (compact) -->
                     <div style="background:white;border:2px solid #e5e7eb;border-radius:12px;padding:18px;margin-bottom:20px;">
@@ -3823,7 +3830,7 @@
                     </div>
 
                     <!-- Compacte 3-stappen intro -->
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:28px;">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:20px;">
                         <div style="background:#f0fdf4;border-left:4px solid #22c55e;border-radius:8px;padding:12px 14px;">
                             <div style="font-weight:700;color:#166534;margin-bottom:4px;">1️⃣ Focusgebieden</div>
                             <div style="font-size:0.83rem;color:#15803d;">Waar speelt het nu? Selecteer 3-5 domeinen.</div>
@@ -3839,10 +3846,18 @@
                             <div style="font-size:0.83rem;color:#6b21a8;">Kies samen de beste netwerkstap.</div>
                         </div>
                     </div>
+                    </div><!-- einde toelichtingPanel -->
                     
+                    <!-- Doelgroep + postcode uitklapbaar -->
+                    <details style="border:1px solid #e5e7eb;border-radius:10px;margin-bottom:16px;">
+                        <summary style="padding:12px 16px;cursor:pointer;font-weight:600;color:#374151;list-style:none;display:flex;align-items:center;gap:8px;">
+                            ⚙️ Doelgroep &amp; postcode <span style="font-size:0.78rem;color:#9ca3af;font-weight:400;">(optioneel — geeft betere tips en lokale interventies)</span>
+                        </summary>
+                        <div style="padding:0 16px 16px;">
+
                     <!-- Doelgroep -->
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">🎯 Doelgroep(en)</h3>
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px;">🎯 Doelgroep(en)</h3>
                         <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">Welke doelgroep(en) zijn relevant? (Je krijgt specifieke vragen per doelgroep)</p>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
                             <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
@@ -3885,9 +3900,9 @@
                         <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 12px; font-style: italic;">💡 Per doelgroep krijg je relevante hulpvragen bij elk domein.</p>
                     </div>
                     
-                    <!-- Postcode (Prioriteit 1 - vroeg vragen) -->
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px;">📍 Postcode</h3>
+                    <!-- Postcode -->
+                    <div style="margin-bottom: 8px;">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 10px;">📍 Postcode</h3>
                         <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">
                             Met je postcode kunnen we direct concrete voorzieningen in jouw buurt tonen.
                         </p>
@@ -3902,9 +3917,12 @@
                         </p>
                     </div>
 
-                    <div class="btn-group">
+                        </div><!-- einde details inner -->
+                    </details><!-- einde doelgroep+postcode -->
+
+                    <div class="btn-group" style="margin-top:20px;">
                         <button class="btn btn-primary" onclick="startAssessment()" style="font-size: 1.1rem; padding: 14px 28px;">
-                            ▶️ Start de scan
+                            ▶️ Start gesprek
                         </button>
                     </div>
 
