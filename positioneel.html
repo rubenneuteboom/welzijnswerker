@@ -11251,6 +11251,152 @@ Antwoord in dit exacte JSON formaat:
         }
         
         // LEAN: Interventies voor gekozen beweging
+        // Erkende methodische instrumenten — gefilterd op beweging + doelgroep
+        const methodischeInterventies = [
+            {
+                id: 'ekc',
+                naam: 'Eigen Kracht Conferentie',
+                beschrijving: 'Het netwerk rond de cliënt maakt zelf een plan. Informeel netwerk neemt de regie.',
+                bewegingen: ['informeel', 'gemengd'],
+                doelgroepen: ['jongeren', 'multiproblem', 'ggz', 'sociaalmaatschappelijk'],
+                type: 'methodisch',
+                link: 'https://www.eigen-kracht.nl',
+                emoji: '👨‍👩‍👧'
+            },
+            {
+                id: 'familiegesprek',
+                naam: 'Informeel netwerkgesprek / familiegesprek',
+                beschrijving: 'Gestructureerd gesprek met familie, vrienden en betrokkenen om steun en rolverdeling te bespreken.',
+                bewegingen: ['informeel', 'gemengd', 'ontlasten'],
+                doelgroepen: [], // alle doelgroepen
+                type: 'methodisch',
+                emoji: '💬'
+            },
+            {
+                id: 'respijtzorg',
+                naam: 'Respijtzorg',
+                beschrijving: 'Tijdelijke vervanging van mantelzorger zodat die even op adem kan komen.',
+                bewegingen: ['formeel', 'ontlasten'],
+                doelgroepen: ['mantelzorgers', 'ouderen'],
+                type: 'methodisch',
+                emoji: '🛡️'
+            },
+            {
+                id: 'mantelzorgondersteuning',
+                naam: 'Mantelzorgondersteuning',
+                beschrijving: 'Coaching, lotgenotencontact of praktische ondersteuning voor mantelzorgers.',
+                bewegingen: ['collectief', 'ontlasten'],
+                doelgroepen: ['mantelzorgers', 'ouderen'],
+                type: 'methodisch',
+                emoji: '🤝'
+            },
+            {
+                id: 'schuldhulpmaatje',
+                naam: 'Schuldhulpmaatje',
+                beschrijving: 'Vrijwilliger helpt bij financiën en het aanvragen van voorzieningen.',
+                bewegingen: ['collectief', 'gemengd'],
+                doelgroepen: [], // alle doelgroepen
+                type: 'methodisch',
+                emoji: '💰'
+            },
+            {
+                id: 'iht',
+                naam: 'Intensieve Thuisbehandeling (IHT)',
+                beschrijving: 'Intensieve psychiatrische behandeling thuis als alternatief voor opname.',
+                bewegingen: ['formeel'],
+                doelgroepen: ['ggz'],
+                type: 'methodisch',
+                emoji: '🏥'
+            },
+            {
+                id: 'fact',
+                naam: 'FACT (Flexible ACT)',
+                beschrijving: 'Flexibele assertieve community behandeling voor mensen met ernstige psychiatrische aandoeningen.',
+                bewegingen: ['formeel'],
+                doelgroepen: ['ggz', 'multiproblem'],
+                type: 'methodisch',
+                emoji: '🧠'
+            },
+            {
+                id: 'gezinsplan',
+                naam: 'Gezinsplan / Familiegroepsplan',
+                beschrijving: 'Gezin en netwerk stellen samen met professional een plan op. Licht alternatief voor EKC.',
+                bewegingen: ['informeel', 'gemengd'],
+                doelgroepen: ['jongeren', 'multiproblem'],
+                type: 'methodisch',
+                emoji: '📋'
+            },
+            {
+                id: 'buurtbemiddeling',
+                naam: 'Buurtbemiddeling',
+                beschrijving: 'Onafhankelijke bemiddeling bij conflicten in de buurt of huiselijke omgeving.',
+                bewegingen: ['collectief', 'gemengd'],
+                doelgroepen: ['sociaalmaatschappelijk', 'multiproblem'],
+                type: 'methodisch',
+                emoji: '🏘️'
+            },
+            {
+                id: 'dagbesteding',
+                naam: 'Dagbesteding / activering',
+                beschrijving: 'Gestructureerde dagactiviteiten voor zingeving, ritme en sociale contacten.',
+                bewegingen: ['collectief', 'formeel'],
+                doelgroepen: ['ggz', 'ouderen', 'multiproblem'],
+                type: 'methodisch',
+                emoji: '☀️'
+            }
+        ];
+
+        function toggleMethodischeInterventie(id, checked) {
+            if (!state.geselecteerdeInterventies) state.geselecteerdeInterventies = [];
+            const inv = methodischeInterventies.find(i => i.id === id);
+            if (!inv) return;
+            if (checked) {
+                const totaal = state.geselecteerdeInterventies.length;
+                if (totaal >= 3) {
+                    showToast('Je kunt maximaal 3 interventies selecteren.', 'warning');
+                    renderInterventiesVoorBeweging();
+                    return;
+                }
+                if (!state.geselecteerdeInterventies.some(s => s.id === id)) {
+                    state.geselecteerdeInterventies.push({
+                        id: inv.id,
+                        titel: inv.naam,
+                        type: 'methodisch',
+                        beschrijving: inv.beschrijving,
+                        emoji: inv.emoji
+                    });
+                }
+            } else {
+                state.geselecteerdeInterventies = state.geselecteerdeInterventies.filter(s => s.id !== id);
+            }
+            saveState();
+            // Update teller
+            const sel = document.querySelectorAll('#interventiesVoorBeweging input[type="checkbox"]:checked').length;
+            const teller = document.getElementById('interventiesTeller');
+            if (teller) teller.textContent = sel;
+        }
+
+        function getMethodischeInterventiesVoorContext() {
+            // Bepaal actieve bewegingsrichtingen uit domeinen
+            const actieveBewegingen = new Set();
+            domains.forEach(d => {
+                const ond = state.ondersteuningsstructuur[d.id] || {};
+                if (ond.bewegingsrichting) actieveBewegingen.add(ond.bewegingsrichting);
+                if (ond.gewensteDraaglagen) ond.gewensteDraaglagen.forEach(l => actieveBewegingen.add(l));
+            });
+            // Voeg ook beoogdeBeweging toe
+            if (state.beoogdeBeweging) actieveBewegingen.add(state.beoogdeBeweging);
+
+            const doelgroepen = state.doelgroepen || [];
+
+            return methodischeInterventies.filter(i => {
+                const bewegingMatch = i.bewegingen.some(b => actieveBewegingen.has(b)) || actieveBewegingen.size === 0;
+                const doelgroepMatch = i.doelgroepen.length === 0 || doelgroepen.length === 0 ||
+                    i.doelgroepen.some(d => doelgroepen.includes(d));
+                return bewegingMatch && doelgroepMatch;
+            });
+        }
+
         function renderInterventiesVoorBeweging() {
             const container = document.getElementById('interventiesVoorBeweging');
             if (!container) return;
@@ -11312,14 +11458,41 @@ Antwoord in dit exacte JSON formaat:
                 ];
             }
             
+            // Methodische interventies sectie
+            const methodisch = getMethodischeInterventiesVoorContext();
+            const methodischHTML = methodisch.length > 0 ? `
+                <div style="background:#faf5ff;border:2px solid #a855f7;border-radius:12px;padding:18px;margin-bottom:20px;">
+                    <div style="font-weight:700;color:#7e22ce;margin-bottom:4px;font-size:0.95rem;">🔬 Erkende methodische instrumenten</div>
+                    <p style="font-size:0.8rem;color:#6b7280;margin:0 0 12px;">Passend bij de gekozen beweging en doelgroep. Selecteer wat ingezet wordt.</p>
+                    <div style="display:grid;gap:8px;">
+                        ${methodisch.map((inv, mi) => {
+                            const isSelected = (state.geselecteerdeInterventies || []).some(s => s.id === inv.id);
+                            return `<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:2px solid ${isSelected?'#a855f7':'#e9d5ff'};background:${isSelected?'#f3e8ff':'white'};border-radius:8px;cursor:pointer;transition:all 0.2s;"
+                                onmouseover="this.style.borderColor='#a855f7';this.style.background='#f3e8ff'"
+                                onmouseout="this.style.borderColor='${isSelected?'#a855f7':'#e9d5ff'}';this.style.background='${isSelected?'#f3e8ff':'white'}'">
+                                <input type="checkbox" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;"
+                                    ${isSelected ? 'checked' : ''}
+                                    onchange="toggleMethodischeInterventie('${inv.id}', this.checked)">
+                                <div>
+                                    <div style="font-weight:600;color:#374151;margin-bottom:2px;">${inv.emoji} ${inv.naam}</div>
+                                    <div style="font-size:0.8rem;color:#6b7280;">${inv.beschrijving}</div>
+                                    ${inv.link ? `<a href="${inv.link}" target="_blank" style="font-size:0.75rem;color:#a855f7;">↗ Meer info</a>` : ''}
+                                </div>
+                            </label>`;
+                        }).join('')}
+                    </div>
+                </div>` : '';
+
             let html = `
-                <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                     <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">Gekozen beweging:</div>
                     <div style="font-size: 1.05rem; color: var(--text);">${richting.label}</div>
                 </div>
+
+                ${methodischHTML}
                 
-                <p style="margin-bottom: 20px; color: var(--text-light);">
-                    Selecteer maximaal 3 concrete acties. Per actie kun je aangeven waar de focus ligt.
+                <p style="margin-bottom: 16px; color: var(--text-light); font-size:0.9rem;">
+                    📍 Lokale voorzieningen — selecteer maximaal 3 concrete acties samen.
                 </p>
                 
                 <div style="display: grid; gap: 15px;">
