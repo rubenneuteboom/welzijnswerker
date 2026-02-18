@@ -8051,6 +8051,27 @@ Antwoord in dit exacte JSON formaat:
                         <div class="form-group">
                             <label>Relatie / Functie</label>
                             <input type="text" id="supporterRelation" value="${supporter.relation || ''}" placeholder="Bijv. moeder, wijkteam, buurthuis">
+                            ${(state.ageCategory === 'jongere' || state.ageCategory === 'jongvolwassene') ? `
+                            <div style="margin-top:8px;">
+                                <p style="font-size:0.78rem;color:#6b7280;margin:0 0 6px;">🎒 School-snelkeuze:</p>
+                                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                    ${[
+                                        { label:'Mentor/leraar', type:'collective' },
+                                        { label:'Schoolcoach', type:'professional' },
+                                        { label:'Intern begeleider', type:'professional' },
+                                        { label:'Zorgcoördinator', type:'professional' },
+                                        { label:'Schoolmaatschappelijk werker', type:'professional' },
+                                        { label:'Klasgenoot/vriend', type:'informal' }
+                                    ].map(opt => `
+                                        <button type="button" onclick="vulRelatieSnel('${opt.label}','${opt.type}')"
+                                            style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:4px 10px;font-size:0.78rem;cursor:pointer;color:#0369a1;white-space:nowrap;">
+                                            ${opt.label}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <p style="font-size:0.75rem;color:#9ca3af;margin:6px 0 0;">💡 Mentor/leraar = collectief · Schoolcoach/maatschappelijk werker = formeel</p>
+                            </div>
+                            ` : ''}
                         </div>
                         
                         <div class="form-group">
@@ -9000,6 +9021,27 @@ Antwoord in dit exacte JSON formaat:
                 saveState();
                 renderSignaalPanel();
                 showToast(`🎯 Regiehouder vastgelegd: ${name}`, 'success');
+            }
+        }
+
+        function vulRelatieSnel(label, type) {
+            const relEl = document.getElementById('supporterRelation');
+            const typeEl = document.getElementById('supporterType');
+            if (relEl) relEl.value = label;
+            if (typeEl) {
+                typeEl.value = type;
+                // Visueel type-chip updaten
+                document.querySelectorAll('#supporterModal .chip').forEach(c => c.classList.remove('selected'));
+                document.querySelectorAll('#supporterModal .chip').forEach(c => {
+                    if (c.getAttribute('onclick') && c.getAttribute('onclick').includes(`'${type}'`)) {
+                        c.classList.add('selected');
+                    }
+                });
+                // Draagkracht/consent sectie tonen/verbergen
+                const draagEl = document.getElementById('draagkrachtGroup');
+                const consentEl = document.getElementById('consentGroup');
+                if (draagEl) draagEl.style.display = type === 'informal' ? 'block' : 'none';
+                if (consentEl) consentEl.style.display = (type === 'professional' || type === 'collective' || type === 'woonpartner') ? 'block' : 'none';
             }
         }
 
