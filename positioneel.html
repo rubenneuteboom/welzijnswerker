@@ -4007,45 +4007,31 @@
             <!-- Screen 3: TRIAGE - Selecteer relevante domeinen (Prioriteit 1) -->
             <div class="screen" id="screen-triage">
                 <div class="card">
-                    <h2 style="font-size: 1.8rem; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-                        🎯 Waar ligt de focus?
-                        <span style="position: relative;">
-                            <span class="tooltip-trigger">
-                                ?
-                                <span class="tooltip-content">Selecteer 3-5 domeinen waar het NU speelt. Je hoeft niet álles in te vullen - focus op wat belangrijk is.</span>
-                            </span>
-                        </span>
-                    </h2>
-                    <!-- Uitnodiging aan cliënt -->
-                    <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:14px 18px;margin-bottom:20px;border-radius:8px;">
-                        <p style="margin:0;font-size:1rem;color:#166534;font-weight:600;">💬 Vraag aan de cliënt:</p>
-                        <p style="margin:6px 0 0;font-size:0.95rem;color:#15803d;font-style:italic;">"Welke van deze gebieden wil jij vandaag bespreken? Wat speelt er op dit moment?"</p>
+                    <h2 style="font-size:1.6rem;margin-bottom:8px;">🚦 Hoe gaat het?</h2>
+
+                    <!-- Uitnodiging -->
+                    <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
+                        <p style="margin:0;font-size:0.95rem;color:#166534;font-weight:600;">💬 Loop samen door de lijst.</p>
+                        <p style="margin:4px 0 0;font-size:0.88rem;color:#15803d;font-style:italic;">"Hoe gaat het op dit gebied — goed, beetje lastig, of echt een probleem?"</p>
                     </div>
 
-                    <!-- Uitleg achter ? knopje -->
-                    <details style="margin-bottom:16px;">
-                        <summary style="font-size:0.82rem;color:#9ca3af;cursor:pointer;list-style:none;">❓ Waarom alleen een paar gebieden?</summary>
-                        <p style="font-size:0.83rem;color:#6b7280;margin:8px 0 0;padding-left:4px;line-height:1.5;">We focussen op wat <em>nu</em> relevant is. Andere gebieden worden automatisch als "gaat goed" gemarkeerd en kun je altijd aanpassen.</p>
-                    </details>
-                    
-                    <!-- Domein selectie grid -->
-                    <div style="margin-bottom:20px;">
-                        <div id="triageDomainGrid" style="display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;">
-                            <!-- Wordt gevuld door renderTriageDomainGrid() -->
-                        </div>
+                    <!-- Stoplicht grid -->
+                    <div id="stoplichtGrid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+                        <!-- Gevuld door renderStoplichtGrid() -->
                     </div>
-                    
+
                     <!-- Teller -->
-                    <div id="triageCounter" style="text-align:center;padding:12px;background:#f0fdf4;border-radius:8px;margin-bottom:16px;">
-                        <span style="font-size:1rem;font-weight:600;color:#166534;">
-                            <span id="triageCount">0</span> focusgebieden geselecteerd
-                        </span>
+                    <div id="triageCounter" style="padding:10px 16px;background:#f9fafb;border-radius:8px;margin-bottom:16px;font-size:0.88rem;color:#374151;text-align:center;">
+                        <span id="triageCount">0</span> van 11 ingevuld &nbsp;·&nbsp;
+                        <span style="color:#dc2626;">🔴 <span id="countProbleem">0</span></span> &nbsp;
+                        <span style="color:#ca8a04;">🟡 <span id="countAandacht">0</span></span> &nbsp;
+                        <span style="color:#16a34a;">🟢 <span id="countGoed">0</span></span>
                     </div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreenById('start')">← Terug</button>
                         <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
-                            Volgende → <span id="triageCountBtn"></span>
+                            Volgende →
                         </button>
                     </div>
                 </div>
@@ -6475,7 +6461,7 @@ Antwoord in dit exacte JSON formaat:
             // Load content for each screen (LEAN workflow + Prioriteit 1)
             const screenId = screenConfig ? screenConfig.id : '';
             if (screenId === 'hulpvraag') loadHulpvraagData();
-            if (screenId === 'triage') renderTriageDomainGrid();
+            if (screenId === 'triage') renderStoplichtGrid();
             if (screenId === 'domains') renderDomains();
             if (screenId === 'network') { renderDashboard(); setTimeout(() => renderRPANetwerkkaartCompact2(), 100); }
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
@@ -13649,12 +13635,61 @@ END:VEVENT
         
         // === TRIAGE FUNCTIES (Prioriteit 1) ===
         
+        function renderStoplichtGrid() {
+            const container = document.getElementById('stoplichtGrid');
+            if (!container) return;
+            if (!state.domainStatus) state.domainStatus = {};
+            container.innerHTML = domains.map(d => {
+                const status = state.domainStatus[d.id] || null;
+                const btn = (val, emoji, label, color, bg) =>
+                    `<button onclick="setStoplicht('${d.id}','${val}')"
+                        style="border:2px solid ${status===val ? color : '#e5e7eb'};background:${status===val ? bg : 'white'};
+                               color:${status===val ? color : '#9ca3af'};border-radius:6px;padding:5px 10px;
+                               font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;">
+                        ${emoji} ${label}</button>`;
+                return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;
+                                    background:${status ? (status==='probleem'?'#fef2f2':status==='aandacht'?'#fefce8':'#f0fdf4') : '#f9fafb'};
+                                    border-radius:8px;border:1px solid ${status?'#e5e7eb':'#f3f4f6'};">
+                    <span style="font-size:1.5rem;width:32px;text-align:center;">${d.emoji}</span>
+                    <span style="flex:1;font-size:0.88rem;font-weight:600;color:#374151;">${d.name}</span>
+                    <div style="display:flex;gap:6px;">
+                        ${btn('goed','🟢','Goed','#16a34a','#dcfce7')}
+                        ${btn('aandacht','🟡','Aandacht','#ca8a04','#fef9c3')}
+                        ${btn('probleem','🔴','Probleem','#dc2626','#fee2e2')}
+                    </div>
+                </div>`;
+            }).join('');
+            updateStoplichtTeller();
+        }
+
+        function setStoplicht(domainId, status) {
+            if (!state.domainStatus) state.domainStatus = {};
+            state.domainStatus[domainId] = status;
+            renderStoplichtGrid();
+        }
+
+        function updateStoplichtTeller() {
+            const s = state.domainStatus || {};
+            const ingevuld = Object.keys(s).filter(k => s[k]).length;
+            const probleem = Object.values(s).filter(v => v==='probleem').length;
+            const aandacht = Object.values(s).filter(v => v==='aandacht').length;
+            const goed = Object.values(s).filter(v => v==='goed').length;
+            const el = id => document.getElementById(id);
+            if (el('triageCount')) el('triageCount').textContent = ingevuld;
+            if (el('countProbleem')) el('countProbleem').textContent = probleem;
+            if (el('countAandacht')) el('countAandacht').textContent = aandacht;
+            if (el('countGoed')) el('countGoed').textContent = goed;
+        }
+
         function renderTriageDomainGrid() {
+            // Legacy — vervangen door renderStoplichtGrid()
+            renderStoplichtGrid();
+        }
+
+        function _unused_renderTriageDomainGrid() {
             const container = document.getElementById('triageDomainGrid');
             if (!container) return;
-            
             const selectedDomains = state.selectedDomains || [];
-            
             const isOdd = domains.length % 2 !== 0;
             const html = domains.map((domain, idx) => {
                 const isSelected = selectedDomains.includes(domain.id);
@@ -13716,32 +13751,54 @@ END:VEVENT
         }
         
         function saveTriageAndContinue() {
-            // Als niets geselecteerd, selecteer dan alles
-            if (!state.selectedDomains || state.selectedDomains.length === 0) {
+            const s = state.domainStatus || {};
+            const ingevuld = Object.keys(s).filter(k => s[k]).length;
+
+            // Als niets ingevuld: alles als focusgebied
+            if (ingevuld === 0) {
                 state.selectedDomains = domains.map(d => d.id);
-                showToast('Alle domeinen geselecteerd', 'info');
+                showToast('Geen stoplichten ingevuld — alle domeinen als focus', 'info');
             } else {
-                showToast(`${state.selectedDomains.length} domeinen als focusgebied geselecteerd`, 'success');
+                // Focusdomeinen = rood + geel; groen = auto-goed
+                state.selectedDomains = domains
+                    .filter(d => s[d.id] === 'probleem' || s[d.id] === 'aandacht')
+                    .map(d => d.id);
+
+                if (state.selectedDomains.length === 0) {
+                    // Alles groen — minimaal 1 focusgebied
+                    state.selectedDomains = [];
+                    showToast('Alles gaat goed! Geen focusdomeinen gevonden — je kunt toch doorgaan.', 'success');
+                } else {
+                    showToast(`${state.selectedDomains.length} aandachtsgebied${state.selectedDomains.length !== 1 ? 'en' : ''} geselecteerd`, 'success');
+                }
             }
 
-            // Auto-invullen niet-geselecteerde domeinen als "Gaat goed — geen aandacht nodig"
+            // Auto-invullen domeinen op basis van stoplicht
             domains.forEach(d => {
-                if (!state.selectedDomains.includes(d.id)) {
-                    if (!state.domainDetails[d.id]) state.domainDetails[d.id] = {};
-                    const det = state.domainDetails[d.id];
-                    // Alleen auto-invullen als nog niet eerder ingevuld
-                    if (!det.hoeGaatHet || det.hoeGaatHet === 'nog-open' || det.autoIngevuld) {
+                if (!state.domainDetails[d.id]) state.domainDetails[d.id] = {};
+                const det = state.domainDetails[d.id];
+                const status = s[d.id];
+
+                if (status === 'goed') {
+                    if (!det.hoeGaatHet || det.autoIngevuld) {
                         det.hoeGaatHet = 'gaat-goed';
                         det.actieNodig = 'geen';
                         det.steunNiveau = 'geen';
                         det.autoIngevuld = true;
                         det.autoLabel = 'Gaat goed — geen aandacht nodig';
                     }
-                } else {
-                    // Focusdomein: verwijder auto-label als het er was
-                    if (state.domainDetails[d.id] && state.domainDetails[d.id].autoIngevuld) {
-                        delete state.domainDetails[d.id].autoIngevuld;
-                        delete state.domainDetails[d.id].autoLabel;
+                } else if (status === 'aandacht' || status === 'probleem') {
+                    // Focusdomein — verwijder auto-label
+                    delete det.autoIngevuld;
+                    delete det.autoLabel;
+                } else if (!status) {
+                    // Niet ingevuld — ook auto-goed als niet in focus
+                    if (!state.selectedDomains.includes(d.id) && (!det.hoeGaatHet || det.autoIngevuld)) {
+                        det.hoeGaatHet = 'gaat-goed';
+                        det.actieNodig = 'geen';
+                        det.steunNiveau = 'geen';
+                        det.autoIngevuld = true;
+                        det.autoLabel = 'Niet besproken — geen signalen';
                     }
                 }
             });
