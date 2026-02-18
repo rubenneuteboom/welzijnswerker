@@ -8661,7 +8661,7 @@ Antwoord in dit exacte JSON formaat:
             const allSupporters = [];
             domains.forEach(d => {
                 const supporters = (state.domainDetails[d.id] || {}).supporters || [];
-                supporters.forEach(s => allSupporters.push({ ...s, domainId: d.id, domainLabel: d.label }));
+                supporters.forEach(s => allSupporters.push({ ...s, domainId: d.id, domainLabel: d.name }));
             });
 
             const professionals = allSupporters.filter(s => s.type === 'professional');
@@ -8677,7 +8677,7 @@ Antwoord in dit exacte JSON formaat:
                 if (isAcuut && !hasSupporters) {
                     red.push({
                         id: `acuut-${d.id}`,
-                        tekst: `<strong>${d.emoji} ${d.label}</strong> vraagt direct actie maar heeft geen zichtbare ondersteuning.`,
+                        tekst: `<strong>${d.emoji} ${d.name}</strong> vraagt direct actie maar heeft geen zichtbare ondersteuning.`,
                         acties: [
                             { label: '👨‍👩‍👧 Plan overleg', fn: `openOverlegSelector('informeel-netwerk')` },
                             { label: '🤝 Plan overleg', fn: `openOverlegSelector('afstemmingsgesprek')` }
@@ -8700,7 +8700,7 @@ Antwoord in dit exacte JSON formaat:
                     const namen = profs.map(p => p.name).join(' & ');
                     red.push({
                         id: `dubbel-${domainId}`,
-                        tekst: `<strong>${d ? d.emoji + ' ' + d.label : domainId}:</strong> ${namen} zijn beide als professional actief zonder dat er een regiehouder is vastgelegd.`,
+                        tekst: `<strong>${d ? d.emoji + ' ' + d.name : domainId}:</strong> ${namen} zijn beide als professional actief zonder dat er een regiehouder is vastgelegd.`,
                         acties: [
                             { label: '🎯 Leg regiehouder vast', fn: `openRegiehouderSelector()` },
                             { label: '🤝 Plan overleg', fn: `openOverlegSelector('afstemmingsgesprek')` }
@@ -8756,7 +8756,7 @@ Antwoord in dit exacte JSON formaat:
                 if (isKwetsbaar && heeftFormeel && !heeftInformeelOfCollectief && supporters.length > 0) {
                     yellow.push({
                         id: `alleen-formeel-${d.id}`,
-                        tekst: `<strong>${d.emoji} ${d.label}:</strong> Alleen formele ondersteuning, geen informeel of collectief netwerk actief.`,
+                        tekst: `<strong>${d.emoji} ${d.name}:</strong> Alleen formele ondersteuning, geen informeel of collectief netwerk actief.`,
                         acties: [
                             { label: '👨‍👩‍👧 Plan overleg', fn: `openOverlegSelector('informeel-netwerk')` }
                         ],
