@@ -6705,7 +6705,7 @@ Antwoord in dit exacte JSON formaat:
 
             return `
                 <!-- Stoplicht-status uit scan -->
-                <div style="background:${stoplichtColor};border-radius:8px;padding:10px 14px;margin-bottom:16px;
+                <div style="background:${stoplichtColor};border-radius:8px;padding:10px 14px;margin-bottom:${stoplichtStatus && stoplichtStatus !== 'goed' ? '8px' : '16px'};
                             display:flex;align-items:center;justify-content:space-between;">
                     <span style="font-size:0.88rem;font-weight:600;color:#374151;">${stoplichtLabel}</span>
                     <button onclick="goToScreenById('triage')"
@@ -6713,6 +6713,35 @@ Antwoord in dit exacte JSON formaat:
                         aanpassen
                     </button>
                 </div>
+
+                ${stoplichtStatus && stoplichtStatus !== 'goed' ? (() => {
+                    const zelf = details.zelfstandig;
+                    const contextLabel = zelf === true
+                        ? (stoplichtStatus === 'steun-wenselijk'
+                            ? '<span style="color:#92400e;">⚠️ Zelfstandig maar kwetsbaar — netwerk activeren</span>'
+                            : '<span style="color:#991b1b;">⚠️ Doet het zelf maar het gaat niet goed — steun nodig</span>')
+                        : zelf === false
+                            ? (stoplichtStatus === 'steun-nodig'
+                                ? '<span style="color:#991b1b;">🚨 Witte vlek — geen steun aanwezig</span>'
+                                : '<span style="color:#92400e;">💡 Nog geen steun betrokken</span>')
+                            : '';
+                    return `<div style="background:#f9fafb;border-radius:8px;padding:10px 14px;margin-bottom:16px;">
+                        <p style="font-size:0.82rem;font-weight:600;color:#374151;margin:0 0 8px;">Regelt de cliënt dit nu zelf?</p>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <button onclick="updateDomainDetail('${domain.id}','zelfstandig',true);renderDomains();"
+                                style="border:2px solid ${zelf===true?'#16a34a':'#e5e7eb'};background:${zelf===true?'#dcfce7':'white'};
+                                       color:${zelf===true?'#166534':'#6b7280'};border-radius:6px;padding:6px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                ✅ Ja, zelfstandig
+                            </button>
+                            <button onclick="updateDomainDetail('${domain.id}','zelfstandig',false);renderDomains();"
+                                style="border:2px solid ${zelf===false?'#dc2626':'#e5e7eb'};background:${zelf===false?'#fee2e2':'white'};
+                                       color:${zelf===false?'#991b1b':'#6b7280'};border-radius:6px;padding:6px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                ❌ Nee, er is niemand
+                            </button>
+                            ${contextLabel ? `<span style="font-size:0.78rem;margin-left:4px;">${contextLabel}</span>` : ''}
+                        </div>
+                    </div>`;
+                })() : ''}
 
                 ${renderDoelgroepVragen(domain.id)}
 
