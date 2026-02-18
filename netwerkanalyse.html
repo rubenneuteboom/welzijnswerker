@@ -663,9 +663,12 @@
             },
 
             renderDomainScreens() {
+                const totalDomains = this.domains.length;
                 this.domains.forEach((domain, index) => {
                     const screenNum = index + 1;
                     const screen = document.getElementById(`screen${screenNum}`);
+                    const savedAnswer = this.answers[domain.id];
+                    const isLast = screenNum === totalDomains;
                     
                     screen.innerHTML = `
                         <div class="card">
@@ -676,15 +679,15 @@
                             <p style="text-align: center; margin-bottom: 25px;">Hoe gaat het met ${domain.title.toLowerCase()}?</p>
 
                             <div class="options">
-                                <div class="option" data-value="goed" onclick="app.selectOption('${domain.id}', 'goed', this)">
+                                <div class="option ${savedAnswer === 'goed' ? 'selected' : ''}" data-value="goed" onclick="app.selectOption('${domain.id}', 'goed', this)">
                                     <span class="option-emoji">🟢</span>
                                     <span>Gaat goed</span>
                                 </div>
-                                <div class="option" data-value="beter" onclick="app.selectOption('${domain.id}', 'beter', this)">
+                                <div class="option ${savedAnswer === 'beter' ? 'selected' : ''}" data-value="beter" onclick="app.selectOption('${domain.id}', 'beter', this)">
                                     <span class="option-emoji">🟡</span>
                                     <span>Kan beter</span>
                                 </div>
-                                <div class="option" data-value="actie" onclick="app.selectOption('${domain.id}', 'actie', this)">
+                                <div class="option ${savedAnswer === 'actie' ? 'selected' : ''}" data-value="actie" onclick="app.selectOption('${domain.id}', 'actie', this)">
                                     <span class="option-emoji">🔴</span>
                                     <span>Actie nodig</span>
                                 </div>
@@ -692,8 +695,8 @@
 
                             <div class="btn-group">
                                 <button class="btn-secondary" onclick="app.goToScreen(${screenNum - 1})">← Vorige</button>
-                                <button class="btn-primary" id="next${screenNum}" onclick="app.goToScreen(${screenNum + 1})" disabled>
-                                    ${screenNum === 7 ? 'Bekijk resultaat →' : 'Volgende →'}
+                                <button class="btn-primary" id="next${screenNum}" onclick="app.goToScreen(${screenNum + 1})" ${savedAnswer ? '' : 'disabled'}>
+                                    ${isLast ? 'Bekijk resultaat →' : 'Volgende →'}
                                 </button>
                             </div>
                         </div>
@@ -720,6 +723,19 @@
             },
 
             goToScreen(num) {
+                const resultsScreen = this.domains.length + 1;
+
+                // Valideer of alle domeinen beantwoord zijn vóór resultatenScherm
+                if (num === resultsScreen) {
+                    const unanswered = this.domains.filter(d => !this.answers[d.id]);
+                    if (unanswered.length > 0) {
+                        const first = unanswered[0];
+                        const firstScreenNum = this.domains.indexOf(first) + 1;
+                        alert(`Nog niet ingevuld: ${first.emoji} ${first.title}\n\nBeantwoord dit onderdeel eerst.`);
+                        num = firstScreenNum; // Stuur naar eerste onbeantwoorde domein
+                    }
+                }
+
                 // Hide all screens
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 
@@ -730,7 +746,7 @@
                 this.updateProgress();
                 
                 // If results screen, generate results
-                if (num === 8) {
+                if (num === resultsScreen) {
                     this.showResults();
                 }
                 
