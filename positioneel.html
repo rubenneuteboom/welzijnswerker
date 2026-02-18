@@ -4016,44 +4016,38 @@
                             </span>
                         </span>
                     </h2>
-                    <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text); margin-bottom: 30px;">
-                        We hebben 11 levensgebieden. <strong>Niet alles hoeft nu beoordeeld te worden.</strong><br>
-                        Selecteer de gebieden waar het <strong>op dit moment</strong> speelt of waar je aandacht aan wilt geven.
-                    </p>
-                    
-                    <!-- Uitleg waarom -->
-                    <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 18px 22px; margin-bottom: 30px; border-radius: 10px;">
-                        <p style="margin: 0; font-size: 0.95rem; color: #1e40af; line-height: 1.6;">
-                            💡 <strong>Waarom selecteren?</strong> Dit voorkomt dat je 33+ vragen moet doorlopen. 
-                            We focussen op wat <em>nu relevant is</em>. Andere gebieden kun je later altijd nog toevoegen.
-                        </p>
+                    <!-- Uitnodiging aan cliënt -->
+                    <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:14px 18px;margin-bottom:20px;border-radius:8px;">
+                        <p style="margin:0;font-size:1rem;color:#166534;font-weight:600;">💬 Vraag aan de cliënt:</p>
+                        <p style="margin:6px 0 0;font-size:0.95rem;color:#15803d;font-style:italic;">"Welke van deze gebieden wil jij vandaag bespreken? Wat speelt er op dit moment?"</p>
                     </div>
+
+                    <!-- Uitleg achter ? knopje -->
+                    <details style="margin-bottom:16px;">
+                        <summary style="font-size:0.82rem;color:#9ca3af;cursor:pointer;list-style:none;">❓ Waarom alleen een paar gebieden?</summary>
+                        <p style="font-size:0.83rem;color:#6b7280;margin:8px 0 0;padding-left:4px;line-height:1.5;">We focussen op wat <em>nu</em> relevant is. Andere gebieden worden automatisch als "gaat goed" gemarkeerd en kun je altijd aanpassen.</p>
+                    </details>
                     
                     <!-- Domein selectie grid -->
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Klik op de gebieden die relevant zijn:</h3>
-                        <div id="triageDomainGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+                    <div style="margin-bottom:20px;">
+                        <div id="triageDomainGrid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:12px;">
                             <!-- Wordt gevuld door renderTriageDomainGrid() -->
                         </div>
                     </div>
                     
-                    <!-- Geselecteerde teller -->
-                    <div id="triageCounter" style="text-align: center; padding: 15px; background: #f0fdf4; border-radius: 10px; margin-bottom: 25px;">
-                        <span style="font-size: 1.1rem; font-weight: 600; color: #166534;">
-                            <span id="triageCount">0</span> van 11 gebieden geselecteerd
+                    <!-- Teller -->
+                    <div id="triageCounter" style="text-align:center;padding:12px;background:#f0fdf4;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:1rem;font-weight:600;color:#166534;">
+                            <span id="triageCount">0</span> focusgebieden geselecteerd
                         </span>
                     </div>
-                    
+
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreenById('start')">← Terug</button>
                         <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
-                            Volgende → (<span id="triageCountBtn">0</span> gebieden)
+                            Volgende → <span id="triageCountBtn"></span>
                         </button>
                     </div>
-                    
-                    <p style="text-align: center; margin-top: 15px; font-size: 0.85rem; color: var(--text-light); font-style: italic;">
-                        💡 Je kunt later altijd nog domeinen toevoegen
-                    </p>
                 </div>
             </div>
 
@@ -13661,28 +13655,25 @@ END:VEVENT
             
             const selectedDomains = state.selectedDomains || [];
             
-            const html = domains.map(domain => {
+            const isOdd = domains.length % 2 !== 0;
+            const html = domains.map((domain, idx) => {
                 const isSelected = selectedDomains.includes(domain.id);
+                const isLast = idx === domains.length - 1;
+                const gridSpan = (isLast && isOdd) ? 'grid-column: 1 / -1; max-width: 50%;' : '';
                 return `
-                    <div onclick="toggleDomainSelection('${domain.id}')" 
-                         style="padding: 20px; border: 3px solid ${isSelected ? 'var(--primary)' : '#e0e0e0'}; 
-                                background: ${isSelected ? 'var(--primary-light)' : 'white'}; 
-                                border-radius: 12px; cursor: pointer; transition: all 0.2s;
-                                display: flex; align-items: center; gap: 15px;"
-                         onmouseover="if(!${isSelected}) { this.style.borderColor='#10b981'; this.style.background='#f0fdf4'; }"
-                         onmouseout="if(!${isSelected}) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                        <div style="font-size: 2.5rem;">${domain.emoji}</div>
-                        <div style="flex: 1;">
-                            <div style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 4px;">
-                                ${domain.name}
-                            </div>
-                            <div style="font-size: 0.85rem; color: var(--text-light);">
-                                ${domain.desc}
-                            </div>
+                    <div onclick="toggleDomainSelection('${domain.id}')"
+                         style="padding:16px;border:3px solid ${isSelected ? 'var(--primary)' : '#e0e0e0'};
+                                background:${isSelected ? 'var(--primary-light)' : 'white'};
+                                border-radius:12px;cursor:pointer;transition:all 0.2s;
+                                display:flex;align-items:center;gap:12px;${gridSpan}"
+                         onmouseover="if(!${isSelected}){this.style.borderColor='#10b981';this.style.background='#f0fdf4';}"
+                         onmouseout="if(!${isSelected}){this.style.borderColor='#e0e0e0';this.style.background='white';}">
+                        <div style="font-size:2rem;">${domain.emoji}</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:2px;">${domain.name}</div>
+                            <div style="font-size:0.78rem;color:var(--text-light);">${domain.desc}</div>
                         </div>
-                        <div style="font-size: 1.8rem;">
-                            ${isSelected ? '✅' : '⚪'}
-                        </div>
+                        <div style="font-size:1.5rem;">${isSelected ? '✅' : '⚪'}</div>
                     </div>
                 `;
             }).join('');
