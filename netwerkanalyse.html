@@ -378,10 +378,10 @@
                 <div style="margin: 24px 0;">
                     <p style="text-align: center; font-weight: 600; color: #4a5568; margin-bottom: 12px;">Kies je leeftijdscategorie <span style="font-weight: 400; color: #a0aec0;">(optioneel — voor tips op maat)</span></p>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;" id="ageCategoryGroup">
-                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)">🧒 t/m 17 jaar</div>
-                        <div class="age-chip" data-cat="jongvolwassene" onclick="app.selectAge('jongvolwassene', this)">👨 18 – 30 jaar</div>
-                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)">👩 31 – 64 jaar</div>
-                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)">👴 65+ jaar</div>
+                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)">🧒 Jongere (12–23)</div>
+                        <div class="age-chip" data-cat="jongvolwassene" onclick="app.selectAge('jongvolwassene', this)">👨 Jongvolwassene (18–35)</div>
+                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)">👩 Volwassene (30–64)</div>
+                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)">👴 Ouder (65+)</div>
                     </div>
                 </div>
 
@@ -451,10 +451,11 @@
                     ],
                     tips_leeftijd: {
                         jongere: [
-                            'Leer van je ouders over rekeningen en sparen',
-                            'Als je 18 wordt: vraag zorgtoeslag en studiefinanciering aan',
-                            'Gratis hulp bij geldzaken: Schuldhulpmaatje voor jongeren',
-                            'Bijzondere bijstand aanvragen bij gemeente als het krap is'
+                            'Als je 18 wordt: direct zorgtoeslag, huurtoeslag en eventueel studiefinanciering aanvragen',
+                            'Geen inkomen en ouders kunnen niet helpen? Bijzondere bijstand aanvragen bij gemeente',
+                            'Schuldhulpmaatje heeft ook begeleiding voor jongeren (gratis)',
+                            'Nibud.nl/jongeren heeft tools speciaal voor jouw situatie',
+                            'Je hebt recht op bijstand als je 18+ bent en geen inkomen hebt — gemeente is verplicht te helpen'
                         ],
                         jongvolwassene: [
                             'Check zorgtoeslag en huurtoeslag — veel mensen missen dit',
@@ -512,28 +513,32 @@
                     ],
                     tips_leeftijd: {
                         jongere: [
-                            'Vertel het aan een vertrouwde volwassene (juf, trainer, oom/tante)',
-                            'Kindertelefoon: 0800-0432 — gratis, anoniem, ook chatten',
-                            'Je school kan een counselor of psycholoog inschakelen',
-                            'Hulp vragen is sterk — je hoeft dit niet alleen te dragen'
+                            'Depressie bij jongeren is heel gewoon — en behandelbaar. Ga naar je huisarts',
+                            'Kindertelefoon: 0800-0432 — ook voor somberheid, angst en zelfpijn (gratis, anoniem)',
+                            'Jeugd-GGZ via huisarts of jeugdarts: specifiek voor jouw leeftijdsgroep',
+                            'Je hoeft het niet te begrijpen om hulp te vragen — vertel gewoon hoe het voelt',
+                            'NiceDay app: dagboek + oefeningen voor jongeren (gratis versie beschikbaar)'
                         ],
                         jongvolwassene: [
-                            'Studenten kunnen gratis naar de studentenpsycholoog',
-                            'MIND YoungMinds: lotgenotencontact voor jongvolwassenen',
-                            'Online therapie (iPractice, NiceDay) heeft weinig wachttijd',
-                            'Vroeg hulp zoeken voorkomt dat het erger wordt'
+                            '1 op de 5 jongvolwassenen heeft last van depressie of angst — jij bent niet de enige',
+                            'Huisarts → POH-GGZ is de snelste route: vraag er expliciet om',
+                            'Online therapie (NiceDay, iPractice, Minddistrict) heeft korte wachttijden',
+                            'MIND Jong: lotgenotencontact voor 18-30 jaar (mind.nl)',
+                            'Vroeg hulp zoeken voorkomt dat het erger wordt — stel het niet uit'
                         ],
                         volwassene: [
                             'POH-GGZ via huisarts is de snelste en laagdrempeligste route',
-                            'Stress door werk? Arbo-arts of bedrijfsmaatschappelijk werk',
-                            'Mantelzorgondersteuning als zorg voor anderen je uitput',
-                            'Online therapie (eMental Health) zonder wachtlijst'
+                            'Stress door werk? Arbo-arts of bedrijfsmaatschappelijk werk inschakelen',
+                            'Mantelzorgondersteuning als zorg voor anderen je uitput — vraag respijtzorg',
+                            'Online therapie (eMental Health) met weinig wachtlijst',
+                            'Burn-out en depressie overlappen vaak — laat het goed onderzoeken'
                         ],
                         ouder: [
-                            'Somberheid en eenzaamheid zijn behandelbaar — niet normaal bij oud worden',
-                            'Rouwverwerking na verlies partner: via huisarts of Rouwcentrum',
+                            'Somberheid en eenzaamheid zijn behandelbaar — dit is geen normaal onderdeel van oud worden',
+                            'Rouwverwerking na verlies partner of vriend: via huisarts of Rouwcentrum',
                             'Ouderenpsychiatrie is gespecialiseerd in jouw situatie',
-                            'Buurthuis activiteiten helpen aantoonbaar tegen somberheid'
+                            'Buurthuis en dagactiviteiten helpen aantoonbaar tegen somberheid',
+                            'Zeg het aan uw huisarts: "Ik voel me al een tijdje niet goed" — dat is genoeg'
                         ]
                     },
                     hulp: {
@@ -573,26 +578,30 @@
                     ],
                     tips_leeftijd: {
                         jongere: [
-                            'Is het thuis onveilig? Praat met een vertrouwd persoon of bel Veilig Thuis: 0800-2000',
-                            'Je mag altijd vragen om een andere slaapplek als het thuis niet goed gaat',
-                            'School of wijkteam kan helpen als wonen een probleem is'
+                            'Schrijf je nú al in bij woningcorporaties — wachttijd loopt op, ook als je nog thuis woont',
+                            'Woningmarkt is krap: kamerhuur, hospitawonen en tijdelijk wonen zijn realistische opties',
+                            'Jongerenhuisvesting aanvragen bij je gemeente (speciaal aanbod voor 18-23 jaar)',
+                            'Thuis niet meer veilig of mogelijk? Wijkteam of jongerenwerk helpt snel',
+                            'Veilig Thuis: 0800-2000 — als de thuissituatie niet langer kan'
                         ],
                         jongvolwassene: [
-                            'Inschrijven bij woningcorporatie kost niks en telt inschrijftijd op',
-                            'Anti-kraakwonen als tijdelijke oplossing (via Camelot, Ad Hoc)',
-                            'Huurtoeslag aanvragen via belastingdienst.nl — check of je recht hebt',
-                            'Urgentieverklaring aanvragen als thuissituatie niet langer gaat'
+                            'Inschrijven bij woningcorporaties kost niks en inschrijftijd telt — doe het vandaag',
+                            'Kamernet.nl, Pararius, Facebook Groepen voor kamers en starters',
+                            'Huurtoeslag aanvragen via belastingdienst.nl — veel jongeren missen dit',
+                            'Anti-kraakwonen als tijdelijke oplossing (Camelot, Ad Hoc)',
+                            'Bij urgentie (gezinscrisis, onveiligheid): urgentieverklaring aanvragen bij gemeente'
                         ],
                         volwassene: [
                             'Praat vroeg met woningcorporatie bij dreigende huurachterstand',
                             'Bij schuld: schuldhulp inschakelen vóór uitzetting dreigt',
-                            'WMO-aanpassing woning aanvragen voor gezin of mantelzorg'
+                            'WMO-woningaanpassing aanvragen voor gezin, kinderen of mantelzorgsituatie',
+                            'Scheiding en woning: gratis juridisch advies via het Juridisch Loket'
                         ],
                         ouder: [
                             'WMO-aanpassing aanvragen: drempels, handgrepen, traplift (gemeente vergoedt)',
-                            'Gelijkvloerse seniorenwoning zoeken via woningcorporatie',
-                            'Wmo-consulent gratis thuisbezoek aanvragen voor advies',
-                            'Valpreventie thuis: gemeente vergoedt soms eenvoudige aanpassingen'
+                            'Gelijkvloerse seniorenwoning zoeken via woningcorporatie — vaak kortere wachttijd',
+                            'Wmo-consulent gratis thuisbezoek aanvragen voor woningadvies',
+                            'Valpreventie: gemeente vergoedt soms eenvoudige aanpassingen'
                         ]
                     },
                     hulp: {
@@ -990,7 +999,7 @@
 
                 // Helper: kies leeftijdsspecifieke tips of val terug op generiek
                 const ageCat = this.ageCategory;
-                const ageLabelMap = { jongere: '🧒 t/m 17 jaar', jongvolwassene: '👨 18–30 jaar', volwassene: '👩 31–64 jaar', ouder: '👴 65+' };
+                const ageLabelMap = { jongere: '🧒 Jongere (12–23)', jongvolwassene: '👨 Jongvolwassene (18–35)', volwassene: '👩 Volwassene (30–64)', ouder: '👴 Ouder (65+)' };
                 const getTips = (domain) => {
                     if (ageCat && domain.tips_leeftijd && domain.tips_leeftijd[ageCat]) {
                         return domain.tips_leeftijd[ageCat];
