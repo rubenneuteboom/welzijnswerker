@@ -9144,6 +9144,13 @@ Antwoord in dit exacte JSON formaat:
                 const legacyCount = (det.steunInformeelPersonen||[]).length + (det.steunCollectiefOpties||[]).length + (det.steunFormeelOrganisaties||[]).length;
                 return supporters.length === 0 && legacyCount === 0 && det.actieNodig !== 'actie';
             });
+            // Auto-ingevulde domeinen (niet-focus) tonen in zelfstandig sectie
+            domains.forEach(d => {
+                const det = state.domainDetails[d.id] || {};
+                if (det.autoIngevuld && !zelfstandig.some(z => z.id === d.id)) {
+                    zelfstandig.push(d);
+                }
+            });
 
             const witteVlekken = ingevuld.filter(d => {
                 const det = state.domainDetails[d.id] || {};
@@ -9228,11 +9235,14 @@ Antwoord in dit exacte JSON formaat:
                 <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
                     <div style="font-size:0.9rem;font-weight:700;color:#166534;margin-bottom:8px;">✅ Regelt dit zelf</div>
                     <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                        ${zelfstandig.map(d => `
-                            <span onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${d.id}'), 100);"
-                                style="background:white;border:1px solid #16a34a;border-radius:6px;padding:5px 10px;font-size:0.82rem;font-weight:600;color:#166534;cursor:pointer;">
-                                ${d.emoji} ${d.name}
-                            </span>`).join('')}
+                        ${zelfstandig.map(d => {
+                        const isAuto = (state.domainDetails[d.id]||{}).autoIngevuld;
+                        return `<span onclick="goToScreenById('domains'); setTimeout(() => toggleDomainCard('${d.id}'), 100);"
+                            title="${isAuto ? 'Automatisch ingevuld — klik om aan te passen' : ''}"
+                            style="background:${isAuto?'#f9fafb':'white'};border:1px solid ${isAuto?'#d1d5db':'#16a34a'};border-radius:6px;padding:5px 10px;font-size:0.82rem;font-weight:600;color:${isAuto?'#6b7280':'#166534'};cursor:pointer;">
+                            ${d.emoji} ${d.name}${isAuto?' <span style="font-size:0.7rem;font-weight:400;">✓</span>':''}
+                        </span>`;
+                    }).join('')}
                     </div>
                 </div>` : ''}
 
@@ -13666,11 +13676,33 @@ END:VEVENT
                 state.selectedDomains = domains.map(d => d.id);
                 showToast('Alle domeinen geselecteerd', 'info');
             } else {
-                showToast(`${state.selectedDomains.length} domeinen geselecteerd`, 'success');
+                showToast(`${state.selectedDomains.length} domeinen als focusgebied geselecteerd`, 'success');
             }
-            
+
+            // Auto-invullen niet-geselecteerde domeinen als "Gaat goed — geen aandacht nodig"
+            domains.forEach(d => {
+                if (!state.selectedDomains.includes(d.id)) {
+                    if (!state.domainDetails[d.id]) state.domainDetails[d.id] = {};
+                    const det = state.domainDetails[d.id];
+                    // Alleen auto-invullen als nog niet eerder ingevuld
+                    if (!det.hoeGaatHet || det.hoeGaatHet === 'nog-open' || det.autoIngevuld) {
+                        det.hoeGaatHet = 'gaat-goed';
+                        det.actieNodig = 'geen';
+                        det.steunNiveau = 'geen';
+                        det.autoIngevuld = true;
+                        det.autoLabel = 'Gaat goed — geen aandacht nodig';
+                    }
+                } else {
+                    // Focusdomein: verwijder auto-label als het er was
+                    if (state.domainDetails[d.id] && state.domainDetails[d.id].autoIngevuld) {
+                        delete state.domainDetails[d.id].autoIngevuld;
+                        delete state.domainDetails[d.id].autoLabel;
+                    }
+                }
+            });
+
             saveState(true);
-            goToScreen(4); // Naar DOMEINSCAN
+            goToScreenById('domains');
         }
         
         // Render triage bij laden van scherm
