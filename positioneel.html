@@ -6755,15 +6755,24 @@ Antwoord in dit exacte JSON formaat:
                                 ${emoji} ${label}
                             </button>`;
                         };
+                        const addBtnHighlight = situatie === 'iemand'
+                            ? 'animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #93c5fd;'
+                            : '';
+                        const addBtnPrompt = situatie === 'iemand'
+                            ? `<p style="font-size:0.78rem;color:#1d4ed8;text-align:center;margin:6px 0 0;font-weight:600;">👇 Voeg diegene nu toe</p>`
+                            : '';
                         return `<div style="background:#f9fafb;border-radius:8px;padding:10px 14px;margin-bottom:12px;">
                             <p style="font-size:0.82rem;font-weight:600;color:#374151;margin:0 0 8px;">Huidige situatie:</p>
                             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                                 ${btn('zelfstandig','✅','Regelt het zelf','#16a34a','#dcfce7')}
                                 ${btn('iemand','👥','Er is iemand','#3b82f6','#dbeafe')}
-                                ${btn('niemand','🚫','Staat er alleen voor','#dc2626','#fee2e2')}
+                                ${btn('niemand','⭕','Staat er alleen voor','#6b7280','#f3f4f6')}
                             </div>
                             ${sitLabel ? `<div style="margin-top:8px;">${sitLabel}</div>` : ''}
-                        </div>`;
+                            <div id="addBtnPrompt-${domain.id}">${addBtnPrompt}</div>
+                        </div>
+                        <style>@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #93c5fd}50%{box-shadow:0 0 0 5px #bfdbfe}}</style>
+                        <span id="addBtnHighlight-${domain.id}" data-highlight="${addBtnHighlight}"></span>`;
                     }
                 })() : ''}
 
@@ -6794,7 +6803,8 @@ Antwoord in dit exacte JSON formaat:
                     return empty + cards;
                 })()}
 
-                <button class="btn btn-primary" onclick="addSupporter('${domain.id}')" style="width:100%;padding:12px;margin-bottom:16px;">
+                <button class="btn btn-primary" id="addSupporterBtn-${domain.id}" onclick="addSupporter('${domain.id}')"
+                    style="width:100%;padding:12px;margin-bottom:16px;${((details.situatie||'') === 'iemand') ? 'animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #93c5fd;' : ''}">
                     ➕ Steunfiguur toevoegen
                 </button>
 
@@ -8323,7 +8333,12 @@ Antwoord in dit exacte JSON formaat:
             } else {
                 state.domainDetails[domainId].supporters.push(supporter);
             }
-            
+
+            // Auto: situatie = 'iemand' zodra eerste supporter wordt toegevoegd
+            if (!state.domainDetails[domainId].situatie || state.domainDetails[domainId].situatie === 'niemand') {
+                state.domainDetails[domainId].situatie = 'iemand';
+            }
+
             saveState();
             closeSupporterModal();
             renderDomains();
