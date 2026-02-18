@@ -3921,8 +3921,14 @@
                     </details><!-- einde doelgroep+postcode -->
 
                     <div class="btn-group" style="margin-top:20px;">
-                        <button class="btn btn-primary" onclick="startAssessment()" style="font-size: 1.1rem; padding: 14px 28px;">
+                        <button class="btn btn-primary" onclick="startAssessment()" style="font-size:1.1rem;padding:14px 28px;">
                             ▶️ Start gesprek
+                        </button>
+                    </div>
+                    <div style="text-align:center;margin-top:12px;">
+                        <button onclick="if(confirm('Alle gegevens wissen en opnieuw beginnen?')){resetAllData();showToast('Gegevens gewist — klaar voor nieuw gesprek','success');}"
+                            style="background:none;border:none;font-size:0.8rem;color:#9ca3af;cursor:pointer;text-decoration:underline;">
+                            🔄 Nieuw gesprek starten (reset data)
                         </button>
                     </div>
 
@@ -4040,8 +4046,8 @@
             <!-- Screen 4: Domains (Domeinscan) -->
             <div class="screen" id="screen-domains">
                 <div class="card">
-                    <h2>📊 Domeinkaart - Zelfredzaamheid</h2>
-                    <p>Selecteer een domein en geef de mate van zelfredzaamheid aan</p>
+                    <h2>🤝 Wie helpt er — en hoe?</h2>
+                    <p style="color:var(--text-light);font-size:0.95rem;">Open een focusgebied en breng in kaart wie de cliënt steunt.</p>
                     
                     <!-- Wens reminder -->
                     <div id="wensReminder" style="display: none;"></div>
@@ -5902,10 +5908,8 @@
 
         // Reset all data
         function resetAllData() {
-            if (confirm('Weet je zeker dat je alle opgeslagen data wilt verwijderen? Dit kan niet ongedaan worden gemaakt.')) {
-                localStorage.removeItem('welzijnswerker_v2');
-                location.reload();
-            }
+            localStorage.removeItem('welzijnswerker_v2');
+            location.reload();
         }
 
         // AI Analysis Functions
