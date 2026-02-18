@@ -5780,7 +5780,10 @@
                 }
                 // Ensure coordination exists (migration from older versions)
                 if (!parsed.coordination) {
-                    parsed.coordination = { regiehouder: '', mdo_planned: false, familie_gesprek_planned: false, mdo_datum: '', familie_datum: '', notes: '' };
+                    parsed.coordination = { regiehouder: '', mdo_planned: false, familie_gesprek_planned: false, mdo_datum: '', familie_datum: '', notes: '', geplande_overleggen: [] };
+                }
+                if (!parsed.coordination.geplande_overleggen) {
+                    parsed.coordination.geplande_overleggen = [];
                 }
                 // Migrate scores from old 1-10 scale to current 1-3 scale
                 // 1-3 → 1 (🔴 Actie nodig), 4-7 → 2 (🟡 Kwetsbaar), 8-10 → 3 (🟢 Stabiel)
@@ -7996,6 +7999,19 @@ Antwoord in dit exacte JSON formaat:
                             </div>
                         </div>
                         
+                        ${supporter.type === 'informal' || supporter.type === 'collective' ? `
+                        <div class="form-group" id="draagkrachtGroup">
+                            <label>💪 Draagkracht van deze persoon</label>
+                            <div class="chip-group">
+                                <div class="chip ${supporter.draagkracht === 'voldoende' ? 'selected' : ''}" onclick="selectDraagkracht('voldoende', event)" style="background:${supporter.draagkracht==='voldoende'?'#dcfce7':''}; border-color:${supporter.draagkracht==='voldoende'?'#16a34a':''};">🟢 Voldoende</div>
+                                <div class="chip ${supporter.draagkracht === 'onder-druk' ? 'selected' : ''}" onclick="selectDraagkracht('onder-druk', event)" style="background:${supporter.draagkracht==='onder-druk'?'#fef3c7':''}; border-color:${supporter.draagkracht==='onder-druk'?'#d97706':''};">🟡 Onder druk</div>
+                                <div class="chip ${supporter.draagkracht === 'overbelast' ? 'selected' : ''}" onclick="selectDraagkracht('overbelast', event)" style="background:${supporter.draagkracht==='overbelast'?'#fee2e2':''}; border-color:${supporter.draagkracht==='overbelast'?'#dc2626':''};">🔴 Overbelast</div>
+                            </div>
+                            <input type="hidden" id="supporterDraagkracht" value="${supporter.draagkracht || ''}">
+                            <p style="font-size:0.8rem;color:#6b7280;margin-top:6px;">💡 Betrekken ≠ inzetten. Overbelasting van het netwerk is een signaal, geen tekortkoming.</p>
+                        </div>
+                        ` : '<input type="hidden" id="supporterDraagkracht" value="">'}
+
                         ${supporter.type === 'professional' || supporter.type === 'collective' ? `
                         <div class="form-group" id="consentGroup">
                             <label>🔒 Toestemming / Privacy</label>
@@ -8086,6 +8102,22 @@ Antwoord in dit exacte JSON formaat:
                 effect === 'Belemmerend' ? 'block' : 'none';
         }
         
+        function selectDraagkracht(value, event) {
+            document.getElementById('supporterDraagkracht').value = value;
+            const colors = { 'voldoende': { bg: '#dcfce7', border: '#16a34a' }, 'onder-druk': { bg: '#fef3c7', border: '#d97706' }, 'overbelast': { bg: '#fee2e2', border: '#dc2626' } };
+            if (event) event.target.parentElement.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('selected');
+                chip.style.background = '';
+                chip.style.borderColor = '';
+            });
+            if (event) {
+                event.target.classList.add('selected');
+                const c = colors[value] || {};
+                event.target.style.background = c.bg || '';
+                event.target.style.borderColor = c.border || '';
+            }
+        }
+
         function selectConsent(consent, event) {
             document.getElementById('supporterConsent').value = consent;
             const colors = { ja: { bg: '#dcfce7', border: '#16a34a' }, beperkt: { bg: '#fef3c7', border: '#d97706' }, onbekend: { bg: '#f3f4f6', border: '#d1d5db' } };
@@ -8121,6 +8153,7 @@ Antwoord in dit exacte JSON formaat:
             }
             
             const consentEl = document.getElementById('supporterConsent');
+            const draagkrachtEl = document.getElementById('supporterDraagkracht');
             const supporter = {
                 name: name,
                 type: document.getElementById('supporterType').value,
@@ -8130,7 +8163,8 @@ Antwoord in dit exacte JSON formaat:
                 effect: document.getElementById('supporterEffect').value,
                 note: document.getElementById('supporterNote').value.trim(),
                 hindranceNote: document.getElementById('supporterHindranceNote').value.trim(),
-                consent: consentEl ? consentEl.value : ''
+                consent: consentEl ? consentEl.value : '',
+                draagkracht: draagkrachtEl ? draagkrachtEl.value : ''
             };
             
             if (!state.domainDetails[domainId]) state.domainDetails[domainId] = {};
@@ -8527,8 +8561,8 @@ Antwoord in dit exacte JSON formaat:
                         id: `acuut-${d.id}`,
                         tekst: `<strong>${d.emoji} ${d.label}</strong> vraagt direct actie maar heeft geen zichtbare ondersteuning.`,
                         acties: [
-                            { label: '👨‍👩‍👧 Plan familiegesprek', fn: `planFamilieGesprek('${d.label}')` },
-                            { label: '🤝 Plan MDO', fn: `planMDO('${d.label}')` }
+                            { label: '👨‍👩‍👧 Plan overleg', fn: `openOverlegSelector('informeel-netwerk')` },
+                            { label: '🤝 Plan overleg', fn: `openOverlegSelector('afstemmingsgesprek')` }
                         ],
                         tip: null
                     });
@@ -8551,7 +8585,7 @@ Antwoord in dit exacte JSON formaat:
                         tekst: `<strong>${d ? d.emoji + ' ' + d.label : domainId}:</strong> ${namen} zijn beide als professional actief zonder dat er een regiehouder is vastgelegd.`,
                         acties: [
                             { label: '🎯 Leg regiehouder vast', fn: `openRegiehouderSelector()` },
-                            { label: '🤝 Plan MDO', fn: `planMDO('${d ? d.label : domainId}')` }
+                            { label: '🤝 Plan overleg', fn: `openOverlegSelector('afstemmingsgesprek')` }
                         ],
                         tip: 'Twee professionals op hetzelfde domein is geen probleem — als het bewust is en afgestemd.'
                     });
@@ -8571,6 +8605,27 @@ Antwoord in dit exacte JSON formaat:
                 });
             }
 
+            // 3b. Overbelast informeel netwerk
+            const overbelastPersonen = allSupporters.filter(s =>
+                (s.type === 'informal' || s.type === 'collective') && s.draagkracht === 'overbelast'
+            );
+            if (overbelastPersonen.length > 0) {
+                red.push({
+                    id: 'overbelast-netwerk',
+                    tekst: `<strong>🔴 Overbelast informeel netwerk:</strong> ${overbelastPersonen.map(p => p.name).join(', ')} ${overbelastPersonen.length === 1 ? 'heeft' : 'hebben'} onvoldoende draagkracht. Betrekken ≠ inzetten.`,
+                    acties: [
+                        { label: '🛡️ Plan netwerkontlasting', fn: `planOverleg('ontlasten', '')` },
+                        { label: '🤝 Plan afstemmingsgesprek', fn: `openOverlegSelector('')` }
+                    ],
+                    tip: 'Formele inzet verhogen om het informele netwerk te beschermen is een bewuste en valide keuze — geen tekortkoming.'
+                });
+            }
+
+            // 3c. Netwerk onder druk (geel)
+            const onderDrukPersonen = allSupporters.filter(s =>
+                (s.type === 'informal' || s.type === 'collective') && s.draagkracht === 'onder-druk'
+            );
+
             // ── GELE SIGNALEN ──────────────────────────────────────────
 
             // 4. Kwetsbaar domein met alleen formele steun (geen informeel/collectief)
@@ -8585,12 +8640,24 @@ Antwoord in dit exacte JSON formaat:
                         id: `alleen-formeel-${d.id}`,
                         tekst: `<strong>${d.emoji} ${d.label}:</strong> Alleen formele ondersteuning, geen informeel of collectief netwerk actief.`,
                         acties: [
-                            { label: '👨‍👩‍👧 Plan familiegesprek', fn: `planFamilieGesprek('${d.label}')` }
+                            { label: '👨‍👩‍👧 Plan overleg', fn: `openOverlegSelector('informeel-netwerk')` }
                         ],
                         tip: 'Informele steun vermindert de druk op formele zorg. Een familiegesprek kan helpen om mogelijkheden te verkennen.'
                     });
                 }
             });
+
+            // 5b. Netwerk onder druk
+            if (onderDrukPersonen.length > 0) {
+                yellow.push({
+                    id: 'netwerk-onder-druk',
+                    tekst: `<strong>⚠️ Netwerk staat onder druk:</strong> ${onderDrukPersonen.map(p => p.name).join(', ')} ${onderDrukPersonen.length === 1 ? 'heeft' : 'hebben'} beperkte draagkracht. Let op verdere belasting.`,
+                    acties: [
+                        { label: '💬 Plan informeel netwerkgesprek', fn: `openOverlegSelector('informeel-netwerk')` }
+                    ],
+                    tip: 'Bespreek wat deze persoon aankan — en wat ontlasting zou helpen.'
+                });
+            }
 
             // 5. Zorgmijding: lichamelijk domein kwetsbaar maar geen formele zorgondersteuning
             const lichamelijkDetails = state.domainDetails['lichamelijk'] || {};
@@ -8633,11 +8700,16 @@ Antwoord in dit exacte JSON formaat:
             if (state.coordination.regiehouder) {
                 green.push(`✅ Regiehouder vastgelegd: <strong>${state.coordination.regiehouder}</strong>`);
             }
-            if (state.coordination.mdo_planned) {
-                green.push(`✅ MDO gepland${state.coordination.mdo_datum ? ' op ' + state.coordination.mdo_datum : ''}`);
+            (state.coordination.geplande_overleggen || []).forEach(type => {
+                const o = (typeof overlegTypes !== 'undefined' && overlegTypes[type]) || { emoji: '✅', label: type };
+                green.push(`${o.emoji} ${o.label} gepland`);
+            });
+            // backward compat
+            if (state.coordination.mdo_planned && !(state.coordination.geplande_overleggen || []).includes('mdo')) {
+                green.push('🏥 MDO gepland');
             }
-            if (state.coordination.familie_gesprek_planned) {
-                green.push(`✅ Familiegesprek gepland${state.coordination.familie_datum ? ' op ' + state.coordination.familie_datum : ''}`);
+            if (state.coordination.familie_gesprek_planned && !(state.coordination.geplande_overleggen || []).includes('informeel-netwerk')) {
+                green.push('👨‍👩‍👧 Informeel netwerkgesprek gepland');
             }
             const hasInformeel = allSupporters.some(s => s.type === 'informal');
             const hasFormeel = allSupporters.some(s => s.type === 'professional');
@@ -8725,16 +8797,28 @@ Antwoord in dit exacte JSON formaat:
                             onchange="saveCoordination()"
                             style="flex: 1; min-width: 180px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem;">
                     </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px;">
+                        <button onclick="openOverlegSelector('')" style="background:#667eea;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:0.85rem;cursor:pointer;font-weight:600;">
+                            + Plan overleg
+                        </button>
+                        ${(state.coordination.geplande_overleggen || []).map(type => {
+                            const o = overlegTypes && overlegTypes[type] ? overlegTypes[type] : { emoji:'✅', label: type };
+                            return `<span style="background:#dcfce7;border:1px solid #16a34a;border-radius:6px;padding:6px 10px;font-size:0.8rem;color:#15803d;display:flex;align-items:center;gap:4px;">
+                                ${o.emoji} ${o.label}
+                                <button onclick="verwijderOverleg('${type}')" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:1rem;line-height:1;padding:0 0 0 4px;">×</button>
+                            </span>`;
+                        }).join('')}
+                    </div>
                     <div style="display: flex; gap: 16px; flex-wrap: wrap;">
                         <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
                             <input type="checkbox" id="mdoCheck" ${state.coordination.mdo_planned ? 'checked' : ''} onchange="saveCoordination()">
-                            🤝 MDO gepland
+                            🏥 MDO gepland
                         </label>
                         <input type="date" id="mdoDatum" value="${state.coordination.mdo_datum || ''}" onchange="saveCoordination()"
                             style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; ${!state.coordination.mdo_planned ? 'display:none' : ''}">
                         <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
                             <input type="checkbox" id="familieCheck" ${state.coordination.familie_gesprek_planned ? 'checked' : ''} onchange="saveCoordination()">
-                            👨‍👩‍👧 Familiegesprek gepland
+                            👨‍👩‍👧 Informeel netwerkgesprek gepland
                         </label>
                         <input type="date" id="familieDatum" value="${state.coordination.familie_datum || ''}" onchange="saveCoordination()"
                             style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; ${!state.coordination.familie_gesprek_planned ? 'display:none' : ''}">
@@ -8777,20 +8861,59 @@ Antwoord in dit exacte JSON formaat:
             renderSignaalPanel();
         }
 
-        function planFamilieGesprek(domainLabel) {
-            if (!state.coordination) state.coordination = {};
-            state.coordination.familie_gesprek_planned = true;
-            saveState();
-            renderSignaalPanel();
-            showToast(`👨‍👩‍👧 Familiegesprek gemarkeerd als gepland${domainLabel ? ' (aanleiding: ' + domainLabel + ')' : ''}. Stel een datum in bij de coördinatie-sectie.`, 'success');
+        const overlegTypes = {
+            'informeel-netwerk':  { emoji: '👨‍👩‍👧', label: 'Informeel netwerkgesprek',      desc: 'Cliënt + familie, vrienden, buren' },
+            'afstemmingsgesprek': { emoji: '🤝',      label: 'Afstemmingsgesprek',            desc: 'Professionals onderling' },
+            'netwerkoverleg':     { emoji: '🔄',      label: 'Gezamenlijk netwerkoverleg',    desc: 'Cliënt + informeel + formeel samen' },
+            'mdo':                { emoji: '🏥',      label: 'MDO',                           desc: 'Multidisciplinair overleg (GGZ/jeugd)' },
+            'ontlasten':          { emoji: '🛡️',     label: 'Overleg netwerkontlasting',     desc: 'Plan formele inzet ter bescherming van netwerk' }
+        };
+
+        function openOverlegSelector(voorkeursType) {
+            const bestaand = (state.coordination.geplande_overleggen || []);
+            const optiesHTML = Object.entries(overlegTypes).map(([key, o]) => {
+                const isVoorkeur = key === voorkeursType;
+                return `<div onclick="planOverleg('${key}', '')" style="
+                    padding: 12px 16px; border: 2px solid ${isVoorkeur ? '#667eea' : '#e2e8f0'};
+                    background: ${isVoorkeur ? '#eef2ff' : '#fff'}; border-radius: 8px; cursor: pointer;
+                    margin-bottom: 8px; transition: all 0.2s;"
+                    onmouseover="this.style.borderColor='#667eea';this.style.background='#eef2ff'"
+                    onmouseout="this.style.borderColor='${isVoorkeur ? '#667eea' : '#e2e8f0'}';this.style.background='${isVoorkeur ? '#eef2ff' : '#fff'}'">
+                    <strong>${o.emoji} ${o.label}</strong>
+                    <span style="display:block;font-size:0.8rem;color:#6b7280;">${o.desc}</span>
+                </div>`;
+            }).join('');
+
+            const modal = document.createElement('div');
+            modal.id = 'overlegSelectorModal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;';
+            modal.innerHTML = `
+                <div style="background:white;border-radius:16px;padding:24px;max-width:420px;width:90%;">
+                    <h3 style="margin:0 0 16px;font-size:1.1rem;color:#1e293b;">Welk overleg wil je plannen?</h3>
+                    ${optiesHTML}
+                    <button onclick="document.getElementById('overlegSelectorModal').remove()" style="width:100%;padding:10px;margin-top:4px;background:#f1f5f9;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;color:#64748b;">Annuleren</button>
+                </div>`;
+            modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+            document.body.appendChild(modal);
         }
 
-        function planMDO(domainLabel) {
+        function planOverleg(type, domainLabel) {
+            const modal = document.getElementById('overlegSelectorModal');
+            if (modal) modal.remove();
             if (!state.coordination) state.coordination = {};
-            state.coordination.mdo_planned = true;
+            if (!state.coordination.geplande_overleggen) state.coordination.geplande_overleggen = [];
+            const o = overlegTypes[type];
+            if (!o) return;
+            // Voeg toe als niet al aanwezig
+            if (!state.coordination.geplande_overleggen.includes(type)) {
+                state.coordination.geplande_overleggen.push(type);
+            }
+            // Backward compat
+            if (type === 'mdo') state.coordination.mdo_planned = true;
+            if (type === 'informeel-netwerk') state.coordination.familie_gesprek_planned = true;
             saveState();
             renderSignaalPanel();
-            showToast(`🤝 MDO gemarkeerd als gepland${domainLabel ? ' (aanleiding: ' + domainLabel + ')' : ''}. Stel een datum in bij de coördinatie-sectie.`, 'success');
+            showToast(`${o.emoji} ${o.label} gemarkeerd als gepland${domainLabel ? ' (aanleiding: ' + domainLabel + ')' : ''}. Datum instellen bij coördinatie-sectie.`, 'success');
         }
 
         function openRegiehouderSelector() {
@@ -8802,6 +8925,15 @@ Antwoord in dit exacte JSON formaat:
                 renderSignaalPanel();
                 showToast(`🎯 Regiehouder vastgelegd: ${name}`, 'success');
             }
+        }
+
+        function verwijderOverleg(type) {
+            if (!state.coordination.geplande_overleggen) return;
+            state.coordination.geplande_overleggen = state.coordination.geplande_overleggen.filter(t => t !== type);
+            if (type === 'mdo') state.coordination.mdo_planned = false;
+            if (type === 'informeel-netwerk') state.coordination.familie_gesprek_planned = false;
+            saveState();
+            renderSignaalPanel();
         }
 
         function openPrivacyToelichting() {
@@ -13226,6 +13358,7 @@ END:VEVENT
                                 <option value="vervangen" ${beweging === 'vervangen' ? 'selected' : ''}>Vervangen — ${tooltips.vervangen}</option>
                                 <option value="opschalen" ${beweging === 'opschalen' ? 'selected' : ''}>Opschalen — ${tooltips.opschalen}</option>
                                 <option value="afschalen" ${beweging === 'afschalen' ? 'selected' : ''}>Afschalen — ${tooltips.afschalen}</option>
+                                <option value="ontlasten" ${beweging === 'ontlasten' ? 'selected' : ''}>🛡️ Netwerk ontlasten — ${tooltips.ontlasten}</option>
                                 <option value="stoppen" ${beweging === 'stoppen' ? 'selected' : ''}>Stoppen — ${tooltips.stoppen}</option>
                             </select>
                         </div>
@@ -13630,6 +13763,7 @@ END:VEVENT
             'vervangen': 'Zelfde niveau van ondersteuning, maar door andere personen of organisaties.',
             'opschalen': 'Meer of intensievere ondersteuning. Kan tijdelijk zijn om daarna af te bouwen.',
             'afschalen': 'Minder of lichtere ondersteuning. Gericht op meer zelfredzaamheid.',
+            'ontlasten': 'Formele inzet neemt taken over om het informele netwerk te beschermen. Het netwerk blijft betrokken maar draagt minder.',
             'stoppen': 'Ondersteuning beëindigen. Bijvoorbeeld omdat het doel bereikt is of de behoefte er niet meer is.',
             'triage': 'Selecteer 3-5 domeinen waar het NU speelt. Je hoeft niet álles in te vullen - focus op wat belangrijk is.',
             'positionelekeuze': 'De bewuste keuze waar steun vandaan komt: informeel (persoonlijk), collectief (maatschappelijk) of formeel (professioneel). Dit bepaalt wie wat doet.',
