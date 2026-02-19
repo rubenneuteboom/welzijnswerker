@@ -3857,23 +3857,24 @@
                         <p style="font-size:0.92rem;font-weight:700;color:#374151;margin:0 0 4px;">Wat past bij deze situatie?</p>
                         <p style="font-size:0.82rem;color:#9ca3af;margin:0 0 12px;">Optioneel — geeft betere vragen en tips tijdens het gesprek</p>
                         <div style="display:flex;flex-wrap:wrap;gap:8px;" id="doelgroepChips">
-                            ${[
-                                {val:'ggz',              label:'🧠 GGZ'},
-                                {val:'jongeren',         label:'👤 Jongeren'},
-                                {val:'mantelzorgers',    label:'🤝 Mantelzorger'},
-                                {val:'ouderen',          label:'👴 Ouderen'},
-                                {val:'multiproblem',     label:'🔄 Meerdere problemen tegelijk'},
-                                {val:'sociaalmaatschappelijk', label:'🏘️ Sociaal / maatschappelijk'},
-                            ].map(opt => {
-                                const actief = (state.doelgroepen||[]).includes(opt.val);
-                                return `<button id="chip-${opt.val}" onclick="toggleDoelgroepChip('${opt.val}')"
-                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;
-                                        border:2px solid ${actief ? 'var(--primary)' : '#e5e7eb'};
-                                        background:${actief ? '#f0fdf4' : 'white'};
-                                        color:${actief ? 'var(--primary)' : '#6b7280'};">
-                                    ${opt.label}
-                                </button>`;
-                            }).join('')}
+                            <button id="chip-ggz" onclick="toggleDoelgroepChip('ggz')"
+                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                🧠 GGZ</button>
+                            <button id="chip-jongeren" onclick="toggleDoelgroepChip('jongeren')"
+                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                👤 Jongeren</button>
+                            <button id="chip-mantelzorgers" onclick="toggleDoelgroepChip('mantelzorgers')"
+                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                🤝 Mantelzorger</button>
+                            <button id="chip-ouderen" onclick="toggleDoelgroepChip('ouderen')"
+                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                👴 Ouderen</button>
+                            <button id="chip-multiproblem" onclick="toggleDoelgroepChip('multiproblem')"
+                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                🔄 Meerdere problemen tegelijk</button>
+                            <button id="chip-sociaalmaatschappelijk" onclick="toggleDoelgroepChip('sociaalmaatschappelijk')"
+                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                🏘️ Sociaal / maatschappelijk</button>
                         </div>
 
                         <!-- Postcode compact eronder -->
