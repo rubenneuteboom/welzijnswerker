@@ -3987,6 +3987,13 @@
                         <button class="btn btn-primary" onclick="startAssessment()" style="font-size:1.1rem;padding:14px 28px;">
                             ▶️ Start gesprek
                         </button>
+                        <button onclick="loadDemo()"
+                            style="padding:14px 22px;border-radius:10px;font-size:0.92rem;font-weight:600;cursor:pointer;
+                                   border:2px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;"
+                            onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)';"
+                            onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#6b7280';">
+                            🎬 Bekijk voorbeeld
+                        </button>
                     </div>
                     <div style="text-align:center;margin-top:12px;">
                         <button onclick="if(confirm('Nieuw gesprek starten? Huidige gegevens worden gewist.')){resetAllData();}"
@@ -6276,6 +6283,100 @@ Antwoord in dit exacte JSON formaat:
             state.mode = mode;
             saveState();
             console.log('Mode geselecteerd:', mode);
+        }
+
+        // ── DEMO MODUS ────────────────────────────────────────────────
+        function loadDemo() {
+            const drieWeken = new Date(); drieWeken.setDate(drieWeken.getDate() + 21);
+            const evaluatie = drieWeken.toISOString().split('T')[0];
+
+            const demoData = {
+                clientNaam: 'Demo (anoniem)',
+                doelgroepen: ['ggz'],
+                postcode: '1013AB',
+                gespreksModus: 'volledig',
+                toestemmingUitwisseling: 'ja',
+                domainStatus: {
+                    financien:    'steun-wenselijk',
+                    dagbesteding: 'steun-nodig',
+                    huisvesting:  'goed',
+                    huiselijk:    'steun-wenselijk',
+                    geestelijk:   'steun-wenselijk',
+                    lichamelijk:  'goed',
+                    verslaving:   'goed',
+                    adl:          'goed',
+                    sociaal:      'steun-nodig',
+                    participatie: 'steun-nodig',
+                    justitie:     'goed'
+                },
+                triageNotities: {
+                    dagbesteding: 'Al 8 maanden geen werk, structuur ontbreekt volledig',
+                    sociaal:      'Alleen dochter als steun — die is overbelast',
+                    participatie: 'Wil graag iets doen maar weet niet wat'
+                },
+                domainDetails: {
+                    dagbesteding: { supporters: [
+                        { id: 's1', naam: 'Dochter Lisa', type: 'informeel', rol: 'Helpt met motivatie en structuur' },
+                        { id: 's2', naam: 'Thuiszorg', type: 'formeel', rol: 'Wekelijkse check-in' }
+                    ]},
+                    sociaal: { supporters: [
+                        { id: 's3', naam: 'Dochter Lisa', type: 'informeel', rol: 'Enige sociale contactpersoon' }
+                    ]},
+                    geestelijk: { supporters: [
+                        { id: 's4', naam: 'GGZ Amsterdam', type: 'formeel', rol: 'Maandelijks gesprek psycholoog' }
+                    ]},
+                    financien: { supporters: [
+                        { id: 's5', naam: 'Schuldhulpverlening', type: 'formeel', rol: 'Lopend traject schuldsanering' }
+                    ]}
+                },
+                ondersteuningsstructuur: {
+                    dagbesteding:  { bewegingsrichting: 'formeel',   methoden: ['trajectbegeleiding'], draaglagen: ['formeel'] },
+                    sociaal:       { bewegingsrichting: 'informeel', methoden: ['netwerkberaad'],      draaglagen: ['informeel'] },
+                    participatie:  { bewegingsrichting: 'informeel', methoden: [],                     draaglagen: [] },
+                    geestelijk:    { bewegingsrichting: 'gemengd',   methoden: [],                     draaglagen: ['formeel'] },
+                    financien:     { bewegingsrichting: 'formeel',   methoden: [],                     draaglagen: ['formeel'] }
+                },
+                strategischeReflectie: {
+                    dagbesteding: {
+                        planKlopt: 'ja',
+                        concreetPlan: 'Jobcoach inzetten via wijkteam — 3 dagdelen per week begeleiding naar werk',
+                        verantwoordelijke: 'Wijkteam (Karin)',
+                        duur: '3 maanden',
+                        evaluatieDatum: evaluatie,
+                        toelichting: 'Start zodra schuldhulpverlening stabiel is. Werkgever ook informeren na 6 weken.'
+                    },
+                    sociaal: {
+                        planKlopt: 'ja',
+                        concreetPlan: 'Buurtactiviteit zoeken via Stichting Dock — dochter ontlasten',
+                        verantwoordelijke: 'Stichting Dock Amsterdam',
+                        duur: '2 maanden',
+                        evaluatieDatum: evaluatie,
+                        toelichting: 'Dochter is overbelast — verbreding netwerk is urgent'
+                    },
+                    participatie: {
+                        planKlopt: 'twijfel',
+                        concreetPlan: 'Oriëntatiegesprek bij vrijwilligerscentrale',
+                        verantwoordelijke: 'Cliënt zelf + Karin',
+                        duur: 'Eenmalig',
+                        evaluatieDatum: evaluatie
+                    },
+                    geestelijk: { planKlopt: 'ja' },
+                    financien:  { planKlopt: 'ja' }
+                },
+                geselecteerdeInterventies: [
+                    { id: 'demo1', naam: 'Stichting Dock Amsterdam — maatschappelijk werk', adres: 'De Wittenstraat 25, Amsterdam' },
+                    { id: 'demo2', naam: 'Vrijwilligerscentrale Amsterdam', adres: 'Plantage Middenlaan 14' }
+                ],
+                agenda: [],
+                notes: {},
+                selectedDomains: ['dagbesteding','sociaal','participatie','geestelijk','financien'],
+                vorigGesprek: { datum: '', notitie: '' }
+            };
+
+            // Merge in state
+            Object.assign(state, demoData);
+            saveState();
+            goToScreenById('samenvatting');
         }
 
         // Vorig gesprek opslaan
