@@ -506,7 +506,35 @@
 
         <!-- Analysis Screens (hidden until import) -->
         <div id="analysisContainer" class="hidden">
-            
+
+            <!-- EXECUTIVE SUMMARY — altijd zichtbaar bovenaan -->
+            <div id="executiveSummary" style="background:linear-gradient(135deg,#065f46,#059669);color:white;border-radius:16px;padding:24px 28px;margin-bottom:24px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+                    <div>
+                        <div style="font-size:0.82rem;opacity:0.8;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Strategische analyse</div>
+                        <div id="exTitle" style="font-size:1.5rem;font-weight:800;margin-bottom:8px;">—</div>
+                        <div id="exSubtitel" style="font-size:0.92rem;opacity:0.85;max-width:420px;line-height:1.5;"></div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.78rem;opacity:0.7;margin-bottom:2px;">Verwachte besparing/jaar</div>
+                        <div id="exBesparing" style="font-size:2.4rem;font-weight:800;">€ —</div>
+                        <div id="exN" style="font-size:0.78rem;opacity:0.7;margin-top:2px;"></div>
+                    </div>
+                </div>
+                <!-- Disclaimer bij n < 10 -->
+                <div id="exDisclaimer" style="display:none;margin-top:14px;background:rgba(255,255,255,0.15);border-radius:8px;padding:10px 14px;font-size:0.8rem;opacity:0.9;">
+                    ⚠️ <strong>Indicatief:</strong> Op basis van 1 casus. Trek hier geen populatieconclusies uit. Voeg meer casussen toe voor betrouwbare inzichten.
+                </div>
+                <!-- Casussen teller + toevoegen knop -->
+                <div style="display:flex;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap;">
+                    <span id="exCasussenLabel" style="font-size:0.82rem;opacity:0.8;"></span>
+                    <button onclick="app.voegCasusToe()" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:8px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">
+                        ➕ Voeg casus toe
+                    </button>
+                    <input type="file" id="extraCasusInput" accept=".json" style="display:none;" onchange="app.laadExtraCasus(event)">
+                </div>
+            </div>
+
             <!-- Screen 1: Overzicht -->
             <div class="screen active" id="screen1">
                 <h2>📊 Analyse overzicht</h2>
@@ -775,10 +803,14 @@
         const app = {
             data: null,
             currentScreen: 1,
+            casussen: [], // gestapelde casussen
             kosten: {
                 informeel: 0,
                 collectief: 150,
-                formeel: 800
+                thuiszorg: 400,
+                begeleiding: 900,
+                ggz: 2200,
+                formeel: 800  // gemiddeld formeel
             },
 
             init() {
@@ -820,6 +852,80 @@
                 }
             },
 
+            vulExecutiveSummary() {
+                const n = this.casussen.length;
+                const doelgroepen = this.data.metadata.doelgroepen || [];
+                const bewegingen = (this.data.domeinen||[]).filter(d => d.bewegingsrichting);
+                const besparingMaand = this.berekenBesparingMaand();
+                const besparingJaar = besparingMaand * 12;
+
+                // Titel
+                const netwerkLabel = this.data.netwerkpositie ? this.data.netwerkpositie.label : '—';
+                document.getElementById('exTitle').textContent = netwerkLabel;
+
+                // Subtitel
+                const richting = bewegingen.length > 0
+                    ? `${bewegingen.length} domein${bewegingen.length > 1 ? 'en' : ''} in beweging`
+                    : 'Geen bewegingen geregistreerd';
+                const dg = doelgroepen.length > 0 ? ` · ${doelgroepen.join(', ')}` : '';
+                document.getElementById('exSubtitel').textContent = richting + dg;
+
+                // Besparing
+                const el = document.getElementById('exBesparing');
+                if (besparingJaar > 0) {
+                    el.textContent = `€ ${besparingJaar.toLocaleString('nl-NL')}`;
+                    el.style.color = 'white';
+                } else if (besparingJaar < 0) {
+                    el.textContent = `+ € ${Math.abs(besparingJaar).toLocaleString('nl-NL')}`;
+                    el.style.opacity = '0.7';
+                } else {
+                    el.textContent = 'n.v.t.';
+                }
+
+                // N casussen
+                document.getElementById('exN').textContent = n > 1 ? `Op basis van ${n} casussen` : 'Op basis van 1 casus';
+                document.getElementById('exCasussenLabel').textContent = `${n} casus${n > 1 ? 'sen' : ''} geladen`;
+
+                // Disclaimer
+                const disc = document.getElementById('exDisclaimer');
+                if (disc) disc.style.display = n < 10 ? 'block' : 'none';
+            },
+
+            berekenBesparingMaand() {
+                if (!this.data || !this.data.domeinen) return 0;
+                let huidig = 0, nieuw = 0;
+                this.data.domeinen.forEach(d => {
+                    const hl = d.huidigeDraaglagen || [];
+                    const nl = d.gewensteDraaglagen || hl;
+                    const kostenVoor = hl.includes('formeel') ? this.kosten.formeel : hl.includes('collectief') ? this.kosten.collectief : 0;
+                    const kostenNa = nl.includes('formeel') ? this.kosten.formeel : nl.includes('collectief') ? this.kosten.collectief : 0;
+                    huidig += kostenVoor;
+                    nieuw += kostenNa;
+                });
+                return huidig - nieuw;
+            },
+
+            voegCasusToe() {
+                document.getElementById('extraCasusInput').click();
+            },
+
+            laadExtraCasus(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (!data.metadata || !data.domeinen) { alert('Ongeldig bestand'); return; }
+                        this.casussen.push(data);
+                        this.vulExecutiveSummary();
+                        alert(`✅ Casus toegevoegd. Totaal: ${this.casussen.length} casussen.`);
+                    } catch(err) { alert('Fout: ' + err.message); }
+                };
+                reader.readAsText(file);
+                event.target.value = '';
+            },
+
             laadVanuitNiveau2() {
                 const raw = localStorage.getItem('rpa_niveau3_import');
                 if (!raw) return;
@@ -855,17 +961,23 @@
             },
 
             loadData(data) {
-                // Validatie
                 if (!data.metadata || !data.domeinen) {
                     alert('❌ Ongeldig bestand. Dit lijkt geen RPA export te zijn.');
                     return;
                 }
 
                 this.data = data;
-                
+                // Voeg toe aan casussen-stapel als nog niet aanwezig
+                if (!this.casussen.some(c => c.metadata && c.metadata.exportDatum === data.metadata.exportDatum)) {
+                    this.casussen.push(data);
+                }
+
                 // Toon analyse container
                 document.getElementById('importSection').classList.add('hidden');
                 document.getElementById('analysisContainer').classList.remove('hidden');
+
+                // Vul executive summary
+                this.vulExecutiveSummary();
 
                 // Vul overzicht
                 this.vulOverzicht();
@@ -1303,8 +1415,36 @@
             },
 
             downloadPDF() {
-                alert('📄 PDF download functionaliteit komt binnenkort.\n\nVoor nu: gebruik Ctrl/Cmd + P om de rapportage te printen.');
-                window.print();
+                const inhoud = document.getElementById('rapportageInhoud');
+                if (!inhoud || !inhoud.innerHTML.trim()) {
+                    alert('Genereer eerst de rapportage (stap 5).');
+                    return;
+                }
+                const vandaag = new Date().toLocaleDateString('nl-NL',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+                const besparing = document.getElementById('exBesparing') ? document.getElementById('exBesparing').textContent : '—';
+                const w = window.open('','_blank');
+                w.document.write(`<!DOCTYPE html><html lang="nl"><head>
+                    <meta charset="UTF-8">
+                    <title>Strategische Analyse — RPA</title>
+                    <style>
+                        body { font-family: -apple-system,sans-serif; max-width:780px; margin:40px auto; padding:0 24px; color:#1f2937; }
+                        h1 { color:#065f46; } h2 { color:#374151; border-bottom:2px solid #e5e7eb; padding-bottom:6px; margin-top:28px; }
+                        .banner { background:linear-gradient(135deg,#065f46,#059669); color:white; border-radius:12px; padding:20px 24px; margin-bottom:28px; }
+                        .banner h2 { color:white; border:none; margin-top:0; }
+                        .no-print { background:#fef9c3; padding:10px 16px; border-radius:8px; margin-bottom:20px; font-size:0.88rem; }
+                        @media print { .no-print { display:none; } }
+                    </style>
+                </head><body>
+                    <div class="no-print">💡 Druk <strong>Ctrl+P</strong> om op te slaan als PDF.</div>
+                    <div class="banner">
+                        <h2>📊 Strategische Netwerkimpactanalyse</h2>
+                        <div>${vandaag} · Verwachte besparing/jaar: <strong>${besparing}</strong></div>
+                        <div style="font-size:0.8rem;opacity:0.75;margin-top:4px;">${this.casussen.length} casus${this.casussen.length>1?'sen':''} · RPA Positionele Analyse</div>
+                    </div>
+                    ${inhoud.innerHTML}
+                    <div style="margin-top:32px;font-size:0.75rem;color:#9ca3af;text-align:center;">Gegenereerd met RPA Strategische Analyse · SIJN methodiek</div>
+                </body></html>`);
+                w.document.close();
             },
 
             resetImport() {
