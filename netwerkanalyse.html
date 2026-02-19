@@ -178,9 +178,104 @@
             .card { padding: 22px 18px; }
             header h1 { font-size: 2rem; }
         }
+
+        /* Desktop layout */
+        @media (min-width: 768px) {
+            body {
+                background: #f3f4f6;
+                padding: 0;
+            }
+
+            .desktop-wrap {
+                display: flex;
+                min-height: 100vh;
+            }
+
+            /* Linker paneel: branding */
+            .desktop-left {
+                width: 340px;
+                flex-shrink: 0;
+                background: linear-gradient(160deg, #0ea472 0%, #047857 100%);
+                padding: 60px 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+
+            .desktop-left header {
+                text-align: left;
+                padding: 0;
+                margin: 0;
+            }
+
+            .desktop-left .logo { font-size: 3rem; margin-bottom: 14px; }
+            .desktop-left h1 { font-size: 2.6rem; }
+            .desktop-left .tagline { font-size: 1rem; opacity: 0.85; margin-top: 8px; }
+
+            .desktop-left .progress-wrap {
+                margin-top: 40px;
+            }
+
+            .desktop-left-bottom {
+                font-size: 0.78rem;
+                color: rgba(255,255,255,0.5);
+                line-height: 1.6;
+            }
+
+            /* Rechter paneel: inhoud */
+            .desktop-right {
+                flex: 1;
+                padding: 60px 48px;
+                overflow-y: auto;
+                max-width: 680px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            /* Header en progress verbergen in de main container op desktop */
+            .container > header,
+            .container > .progress-wrap {
+                display: none;
+            }
+
+            .card {
+                box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+                border: 1px solid #e5e7eb;
+                border-radius: 16px;
+                padding: 36px 40px;
+            }
+        }
     </style>
 </head>
 <body>
+<div class="desktop-wrap">
+
+    <!-- Linker branding paneel (alleen desktop) -->
+    <div class="desktop-left">
+        <div>
+            <header>
+                <div class="logo">💪</div>
+                <h1>KrachtCheck</h1>
+                <p class="tagline">Hoe sta jij ervoor?<br>Check het in 2 minuten.</p>
+            </header>
+            <div class="progress-wrap" style="margin-top:40px;">
+                <div class="progress-bar"><div class="progress-fill" id="progressBarDesktop" style="width:0%"></div></div>
+                <div class="progress-text" id="progressTextDesktop"></div>
+            </div>
+        </div>
+        <div class="desktop-left-bottom">
+            🔒 Jouw antwoorden blijven op dit apparaat.<br>
+            Een initiatief van SIJN.
+        </div>
+    </div>
+
+    <!-- Rechter inhoud paneel -->
+    <div class="desktop-right">
     <div class="container">
         <header>
             <div class="logo">💪</div>
@@ -1045,6 +1140,19 @@
         document.addEventListener('DOMContentLoaded', () => {
             app.init();
         });
+        // Sync desktop progress bar
+        const _go = app.goToScreen.bind(app);
+        app.goToScreen = function(n) {
+            _go(n);
+            const pct = (n / 8 * 100).toFixed(0);
+            const dpb = document.getElementById('progressBarDesktop');
+            const dpt = document.getElementById('progressTextDesktop');
+            if (dpb) dpb.style.width = pct + '%';
+            if (dpt) dpt.textContent = n > 0 && n < 8 ? 'Vraag ' + n + ' van 7' : '';
+        };
     </script>
+    </div><!-- .container -->
+    </div><!-- .desktop-right -->
+</div><!-- .desktop-wrap -->
 </body>
 </html>
