@@ -254,6 +254,15 @@
 </head>
 <body>
 <div class="desktop-wrap">
+    <!-- RPA Suite navigatiebalk -->
+    <div style="position:relative;z-index:10;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(255,255,255,0.2);">
+        <div style="font-weight:800;color:white;font-size:0.88rem;opacity:0.9;">📐 RPA Suite</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="padding:4px 10px;border-radius:8px;font-size:0.78rem;font-weight:700;background:white;color:#059669;">N1 KrachtCheck ●</span>
+            <a href="positioneel.html" style="padding:4px 10px;border-radius:8px;font-size:0.78rem;font-weight:600;background:rgba(255,255,255,0.2);color:white;text-decoration:none;border:1px solid rgba(255,255,255,0.3);">N2 Professionals 🔐</a>
+            <a href="strategisch.html" style="padding:4px 10px;border-radius:8px;font-size:0.78rem;font-weight:600;background:rgba(255,255,255,0.2);color:white;text-decoration:none;border:1px solid rgba(255,255,255,0.3);">N3 Beleid 🔐</a>
+        </div>
+    </div>
 
     <!-- Linker branding paneel (alleen desktop) -->
     <div class="desktop-left">
@@ -339,10 +348,12 @@
                 <div id="resultsSummary"></div>
 
                 <div class="cta-gesprek">
-                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee.</p>
-                    <button onclick="alert('Neem contact op met je wijkteam of welzijnsorganisatie in de buurt.')">
-                        💬 Vraag een gesprek aan
-                    </button>
+                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee — zonder wachtlijst.</p>
+                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank" 
+                        style="display:inline-block;background:#059669;color:white;border:none;border-radius:12px;padding:14px 28px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;margin-top:4px;">
+                        💬 Vraag een gesprek aan →
+                    </a>
+                    <p style="font-size:0.75rem;color:rgba(255,255,255,0.7);margin-top:10px;">Je kunt ook bellen of langsgaan bij je wijkteam.</p>
                 </div>
 
                 <!-- OPT-IN WIJKDATA -->
@@ -390,6 +401,7 @@
                     emoji: '💰',
                     title: 'Financiën',
                     description: 'Denk aan: inkomen, schulden, rondkomen, rekeningen betalen',
+                    context_note: 'Gaat goed = je kunt je vaste lasten betalen en maakt je niet veel zorgen over geld.',
                     tips_goed: [
                         'Check maandelijks je budget (Nibud.nl/budgetcheck)',
                         'Bouw een spaarbuffer op (3 maanden vaste lasten)',
@@ -452,6 +464,7 @@
                     emoji: '🧠',
                     title: 'Geestelijke gezondheid',
                     description: 'Denk aan: somberheid, angst, stress, slaapproblemen, zorgen',
+                    context_note: 'Gaat goed = je voelt je over het algemeen redelijk stabiel en kunt de dag aan.',
                     tips_goed: [
                         'Beweeg 30 min per dag (wandelen helpt!)',
                         'Spreek vrienden/familie regelmatig',
@@ -518,6 +531,7 @@
                     emoji: '🏠',
                     title: 'Wonen',
                     description: 'Denk aan: betaalbare woning, veilige buurt, thuisvoelen',
+                    context_note: 'Gaat goed = je voelt je veilig thuis en maakt je geen zorgen over je woning.',
                     tips_goed: [
                         'Ken je huurrechten (woonbond.nl)',
                         'Onderhoud je woning goed',
@@ -580,6 +594,7 @@
                     emoji: '👨‍👩‍👧',
                     title: 'Huiselijke relaties',
                     description: 'Denk aan: partner, kinderen, familie thuis, sfeer',
+                    context_note: 'Gaat goed = het is thuis over het algemeen rustig en fijn — ook al is het soms druk.',
                     tips_goed: [
                         'Praat met elkaar (echt luisteren)',
                         'Quality time samen (geen telefoons)',
@@ -641,6 +656,7 @@
                     emoji: '👥',
                     title: 'Sociaal netwerk',
                     description: 'Denk aan: vrienden, familie, contact, eenzaamheid',
+                    context_note: 'Gaat goed = je hebt mensen om je heen op wie je kunt terugvallen als het even tegenzit.',
                     tips_goed: [
                         'Blijf contact houden (ook als het druk is)',
                         'Af en toe nieuwe mensen ontmoeten',
@@ -703,6 +719,7 @@
                     emoji: '💼',
                     title: 'Dagbesteding & werk',
                     description: 'Denk aan: werk, opleiding, vrijwilligerswerk, nuttige tijdsbesteding',
+                    context_note: 'Gaat goed = je hebt overdag een invulling die je zinvol vindt, betaald of onbetaald.',
                     tips_goed: [
                         'Blijf jezelf ontwikkelen (cursussen, leren)',
                         'Onderhoud je netwerk (collega\'s, LinkedIn)',
@@ -766,6 +783,7 @@
                     emoji: '💪',
                     title: 'Lichamelijke gezondheid',
                     description: 'Denk aan: chronische ziektes, pijn, mobiliteit, medicijnen, doktersbezoek',
+                    context_note: 'Gaat goed = je lichamelijke klachten belemmeren je dagelijks leven niet of nauwelijks.',
                     context_note: 'Als je zorg nodig hebt — bijvoorbeeld de tandarts die je al een tijdje uitstelt, of fysio voor die rug — tel dat ook mee bij je antwoord.',
                     tips_goed: [
                         'Beweeg 30 min per dag (wandelen telt!)',
@@ -875,7 +893,7 @@
                                 </div>
                                 <div class="option ${savedAnswer === 'actie' ? 'selected' : ''}" data-value="actie" onclick="app.selectOption('${domain.id}', 'actie', this)">
                                     <span class="option-emoji">🔴</span>
-                                    <span>Actie nodig</span>
+                                    <span>Hier kan steun helpen</span>
                                 </div>
                             </div>
 
@@ -988,8 +1006,8 @@
                             <span style="color: #718096;">kan beter</span>
                         </div>
                         <div>
-                            <span style="color: #ef4444; font-weight: 700; font-size: 1.5rem;">🚨 ${actie.length}</span> 
-                            <span style="color: #718096;">actie nodig</span>
+                            <span style="color: #ef4444; font-weight: 700; font-size: 1.5rem;">🔴 ${actie.length}</span> 
+                            <span style="color: #718096;">steun kan helpen</span>
                         </div>
                     </div>
                 `;
@@ -1034,13 +1052,13 @@
                     });
                 }
                 
-                // Actie nodig (met hulp)
+                // Steun kan helpen
                 if (actie.length > 0) {
                     actie.forEach(domain => {
                         html += `<div class="result-item actie">
-                            <strong style="display: block; margin-bottom: 8px;">🔴 ${domain.emoji} ${domain.title}</strong>
+                            <strong style="display: block; margin-bottom: 8px;">🔴 ${domain.emoji} ${domain.title} — steun kan hier helpen</strong>
                             <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
-                                <strong>🆘 Waar kan je terecht? Klik hier ▼</strong>
+                                <strong>💙 Waar kan je terecht? Klik hier ▼</strong>
                             </div>
                             <div class="hulp-content">
                                 ${this.renderHulp(domain.hulp)}

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA Levensscan - Niveau 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Progress */
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            line-height: 1.7;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        /* Domain question */
+        .domain-emoji {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .domain-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .domain-description {
+            text-align: center;
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .option:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+
+        .option-emoji {
+            font-size: 1.8rem;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Results */
+        .result-summary {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .result-item.goed {
+            background: #dcfce7;
+            border-color: #22c55e;
+        }
+
+        .result-item.beter {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .result-item.actie {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        /* Trapje van hulp */
+        .hulp-toggle {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .hulp-toggle:hover {
+            background: #fde68a;
+        }
+
+        .hulp-content {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .hulp-content.open {
+            display: block;
+        }
+
+        .hulp-stap {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .hulp-stap strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .hulp-links {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hulp-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .hulp-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert box */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-info {
+            background: #e0f2fe;
+            color: #075985;
+            border-left: 4px solid #0284c7;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border-left: 4px solid #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="font-size: 3rem; margin-bottom: 10px;">🌟</div>
+            <h1>RPA Levensscan</h1>
+            <p class="subtitle">Krijg overzicht van je leven in 6 belangrijke gebieden</p>
+            <span class="level-badge">Niveau 1 - Voor iedereen</span>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">Stap 0 van 8</div>
+
+        <!-- Screen 0: Intro -->
+        <div class="screen active" id="screen0">
+            <div class="card">
+                <h2>Welkom! 👋</h2>
+                <p>In <strong>5-7 minuten</strong> krijg je een helder overzicht van 7 belangrijke levensgebieden:</p>
+                <ul style="line-height: 2; margin: 20px 0 20px 30px;">
+                    <li>💰 Financiën</li>
+                    <li>🧠 Geestelijke gezondheid</li>
+                    <li>🏠 Wonen</li>
+                    <li>👨‍👩‍👧 Huiselijke relaties</li>
+                    <li>👥 Sociaal netwerk</li>
+                    <li>💼 Dagbesteding & werk</li>
+                    <li>💪 Lichamelijke gezondheid</li>
+                </ul>
+
+                <div class="alert alert-info">
+                    <span style="font-size: 1.5rem;">💡</span>
+                    <div>
+                        <strong>Dit is geen test.</strong> Er zijn geen goede of foute antwoorden.
+                        Dit is om in kaart te brengen waar je nu staat.
+                    </div>
+                </div>
+
+                <p style="font-size: 0.9rem; color: #718096; margin-top: 20px;">
+                    🔒 <strong>Privacy:</strong> Jouw antwoorden blijven op dit apparaat. Niets wordt opgeslagen op een server.
+                </p>
+
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="app.goToScreen(1)">Start de scan →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screens 1-7: Domain questions -->
+        <div class="screen" id="screen1"></div>
+        <div class="screen" id="screen2"></div>
+        <div class="screen" id="screen3"></div>
+        <div class="screen" id="screen4"></div>
+        <div class="screen" id="screen5"></div>
+        <div class="screen" id="screen6"></div>
+        <div class="screen" id="screen7"></div>
+
+        <!-- Screen 8: Results -->
+        <div class="screen" id="screen8">
+            <div class="card">
+                <h2>📊 Jouw overzicht</h2>
+                <div id="resultsSummary"></div>
+                
+                <div class="alert alert-success" style="margin-top: 30px;">
+                    <span style="font-size: 1.5rem;">✨</span>
+                    <div>
+                        <strong>Goed gedaan!</strong> Je hebt nu overzicht van waar je staat.
+                    </div>
+                </div>
+
+                <p style="text-align: center; color: #718096; margin: 20px 0;">
+                    💡 Tip: Print deze scan als je hem wilt bewaren of delen.
+                </p>
+
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="app.reset()">🔄 Nieuwe scan</button>
+                    <button class="btn-secondary" onclick="window.print()">🖨️ Print resultaten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            currentScreen: 0,
+            domains: [
+                {
+                    id: 'financien',
+                    emoji: '💰',
+                    title: 'Financiën',
+                    description: 'Denk aan: inkomen, schulden, rondkomen, rekeningen betalen',
+                    tips_goed: [
+                        'Check maandelijks je budget (Nibud.nl/budgetcheck)',
+                        'Bouw een spaarbuffer op (3 maanden vaste lasten)',
+                        'Ken je rechten: toeslagen, zorgtoeslag (belastingdienst.nl)'
+                    ],
+                    tips_beter: [
+                        'Maak een budgetplan (Nibud.nl - gratis tool)',
+                        'Vraag budgetadvies (gratis via schuldhulpmaatje)',
+                        'Check of je alle toeslagen gebruikt',
+                        'Praat met je werkgever over loonstrook/voorschot'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: 'Nibud.nl', url: 'https://www.nibud.nl', desc: 'Budgetadvies en rekentools' },
+                            { name: 'Geldfit.nl', url: 'https://www.geldfit.nl', desc: 'Gratis online cursus geldzaken' }
+                        ],
+                        chat: [
+                            { name: 'Nibud chat', url: 'https://www.nibud.nl/contact' },
+                            { name: 'Schuldhulplijn', url: 'https://www.nvvk.nl/schuldhulplijn' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Wijkteam', desc: 'Laagdrempelig lokaal loket' },
+                            { name: 'Schuldhulpmaatje', desc: 'Vrijwilliger die je helpt' }
+                        ],
+                        bellen: [
+                            { name: 'Schuldhulplijn', tel: '0800-8000', desc: 'Gratis' }
+                        ],
+                        urgent: 'Bij dreigende uitzetting: direct gemeente schuldhulp bellen'
+                    }
+                },
+                {
+                    id: 'ggz',
+                    emoji: '🧠',
+                    title: 'Geestelijke gezondheid',
+                    description: 'Denk aan: somberheid, angst, stress, slaapproblemen, zorgen',
+                    tips_goed: [
+                        'Beweeg 30 min per dag (wandelen helpt!)',
+                        'Spreek vrienden/familie regelmatig',
+                        'Zorg voor voldoende slaap (7-8 uur)'
+                    ],
+                    tips_beter: [
+                        'Praat met iemand die je vertrouwt',
+                        '113.nl - gratis zelfhulp online',
+                        'Structuur in je dag (vaste tijden)',
+                        'Probeer te bewegen (helpt tegen somberheid)'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: '113.nl', url: 'https://www.113.nl', desc: 'Suïcidepreventie en zelfhulp' },
+                            { name: 'Mindkorrelatie.nl', url: 'https://www.mindkorrelatie.nl', desc: 'Ervaringsverhalen' }
+                        ],
+                        chat: [
+                            { name: '113 Online chat', url: 'https://www.113.nl/chat', desc: '24/7, anoniem' },
+                            { name: 'Korrelatie chat', url: 'https://www.korrelatie.nl' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Vertrouwde eerste stap' },
+                            { name: 'Wijkteam GGZ', desc: 'Laagdrempelig' }
+                        ],
+                        bellen: [
+                            { name: '113 Zelfmoordpreventie', tel: '0900-0113' },
+                            { name: 'Luisterlijn', tel: '088-0767000', desc: 'Luisterend oor' }
+                        ],
+                        urgent: 'Bij crisis: 112 of GGZ Crisisdienst (lokaal 24/7)'
+                    }
+                },
+                {
+                    id: 'wonen',
+                    emoji: '🏠',
+                    title: 'Wonen',
+                    description: 'Denk aan: betaalbare woning, veilige buurt, thuisvoelen',
+                    tips_goed: [
+                        'Ken je huurrechten (woonbond.nl)',
+                        'Onderhoud je woning goed',
+                        'Ken je buren (veilig gevoel + sociale steun)'
+                    ],
+                    tips_beter: [
+                        'Problemen met verhuurder? → Woonbond.nl (gratis advies)',
+                        'Te duur? → Check huurtoeslag (belastingdienst.nl)',
+                        'Wil je verhuizen? → Inschrijven op HuisjeHuisje.nl'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: 'Woonbond.nl', url: 'https://www.woonbond.nl', desc: 'Huurrechten en advies' },
+                            { name: 'HuisjeHuisje.nl', url: 'https://www.huisjehuisje.nl', desc: 'Sociale huur zoeken' }
+                        ],
+                        chat: [
+                            { name: 'Woonbond chat', url: 'https://www.woonbond.nl/contact' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Wijkteam wonen', desc: 'Lokaal' },
+                            { name: 'Woningcorporatie', desc: 'Urgentie aanvragen' }
+                        ],
+                        bellen: [
+                            { name: 'Woningcorporatie', desc: 'Lokaal nummer' },
+                            { name: 'Gemeente woonzorg', desc: 'Lokaal nummer' }
+                        ],
+                        urgent: 'Bij huisuitzetting/dakloosheid: Leger des Heils 088-584 5000'
+                    }
+                },
+                {
+                    id: 'huiselijk',
+                    emoji: '👨‍👩‍👧',
+                    title: 'Huiselijke relaties',
+                    description: 'Denk aan: partner, kinderen, familie thuis, sfeer',
+                    tips_goed: [
+                        'Praat met elkaar (echt luisteren)',
+                        'Quality time samen (geen telefoons)',
+                        'Waardeer elkaar (kleine dingen tellen)'
+                    ],
+                    tips_beter: [
+                        'Praat over wat lastig is (niet tijdens ruzie)',
+                        'Zoek samen iets leuks te doen',
+                        'Overweeg relatiecoach/cursus (vaak gratis via gemeente)',
+                        'Ikvertrouwjou.nl - ervaringen lezen kan helpen'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: 'Veiligthuis.nl/herken', url: 'https://www.veiligthuis.nl/herken', desc: '"Is dit normaal?" test (anoniem)' },
+                            { name: 'Ikvertrouwjou.nl', url: 'https://www.ikvertrouwjou.nl', desc: 'Ervaringsverhalen lezen' }
+                        ],
+                        chat: [
+                            { name: 'Veilig Thuis chat', url: 'https://www.veiligthuis.nl/chat', desc: 'Ook als partner thuis is' },
+                            { name: 'Korrelatie chat', url: 'https://www.korrelatie.nl', desc: 'Voor jongeren' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: '"Ik wil praten over mijn thuissituatie"' },
+                            { name: 'Wijkteam', desc: 'Vertrouwd gesprek' }
+                        ],
+                        bellen: [
+                            { name: 'Veilig Thuis', tel: '0800-2000', desc: 'Gratis, 24/7, anoniem mag' }
+                        ],
+                        urgent: 'Bij direct gevaar: 112 | Tijdelijk weg? Veilig Thuis regelt opvang: 0800-2000'
+                    }
+                },
+                {
+                    id: 'sociaal',
+                    emoji: '👥',
+                    title: 'Sociaal netwerk',
+                    description: 'Denk aan: vrienden, familie, contact, eenzaamheid',
+                    tips_goed: [
+                        'Blijf contact houden (ook als het druk is)',
+                        'Af en toe nieuwe mensen ontmoeten',
+                        'Vriendschappen zijn tweezijdig (geven en nemen)'
+                    ],
+                    tips_beter: [
+                        'Ga naar buurthuis activiteit (koffie-ochtend)',
+                        'Vrijwilligerswerk (vrijwilligerswerk.nl)',
+                        'Sportclub/hobby (nieuwe mensen ontmoeten)',
+                        'Buurtapp gebruiken (Nextdoor, Facebook buurtgroep)'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: 'SamenDoenSamenLeven.nl', url: 'https://www.samendoensamenleven.nl', desc: 'Activiteiten in je buurt' },
+                            { name: 'Vrijwilligerswerk.nl', url: 'https://www.vrijwilligerswerk.nl', desc: 'Meedoen' }
+                        ],
+                        chat: [
+                            { name: 'Facebook buurtgroepen', desc: 'Jouw wijk' },
+                            { name: 'Nextdoor app', desc: 'Lokaal buurtnetwerk' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Buurthuis', desc: 'Koffie-ochtend, sport' },
+                            { name: 'Maatjesproject', desc: 'Iemand die langskomt' }
+                        ],
+                        bellen: [
+                            { name: 'Luisterlijn', tel: '088-0767000' },
+                            { name: 'Buurthuis', desc: 'Lokaal nummer' }
+                        ],
+                        urgent: null
+                    }
+                },
+                {
+                    id: 'dagbesteding',
+                    emoji: '💼',
+                    title: 'Dagbesteding & werk',
+                    description: 'Denk aan: werk, opleiding, vrijwilligerswerk, nuttige tijdsbesteding',
+                    tips_goed: [
+                        'Blijf jezelf ontwikkelen (cursussen, leren)',
+                        'Onderhoud je netwerk (collega\'s, LinkedIn)',
+                        'Let op werk-privé balans'
+                    ],
+                    tips_beter: [
+                        'Vrijwilligerswerk (zinvol + netwerk opbouwen)',
+                        'Cursus/opleiding (vaak gratis via UWV)',
+                        'Denk na over je kwaliteiten (waar ben je goed in?)',
+                        'Praat met jobcoach (gratis via gemeente)'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: 'Werk.nl', url: 'https://www.werk.nl', desc: 'Vacatures, scholing' },
+                            { name: 'UWV.nl', url: 'https://www.uwv.nl', desc: 'Uitkeringen, re-integratie' },
+                            { name: 'Vrijwilligerswerk.nl', url: 'https://www.vrijwilligerswerk.nl', desc: 'Onbetaald meedoen' }
+                        ],
+                        chat: [
+                            { name: 'Werk.nl chat', url: 'https://www.werk.nl/contact' },
+                            { name: 'UWV chat', url: 'https://www.uwv.nl' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Wijkteam werk', desc: 'Lokaal' },
+                            { name: 'Jobcoach', desc: 'Gratis via gemeente' }
+                        ],
+                        bellen: [
+                            { name: 'UWV', tel: '0900-9294' },
+                            { name: 'Gemeente Participatie', desc: 'Lokaal nummer' }
+                        ],
+                        urgent: null
+                    }
+                },
+                {
+                    id: 'lichamelijk',
+                    emoji: '💪',
+                    title: 'Lichamelijke gezondheid',
+                    description: 'Denk aan: chronische ziektes, pijn, mobiliteit, medicijnen, doktersbezoek',
+                    tips_goed: [
+                        'Beweeg 30 min per dag (wandelen telt!)',
+                        'Eet gezond (groente en fruit)',
+                        'Voldoende drinken (1.5-2L water)',
+                        'Check-ups bij huisarts (vooral na 50)'
+                    ],
+                    tips_beter: [
+                        'Begin klein (10 min wandelen per dag)',
+                        'Fysiotherapeut bij pijnklachten (vaak vergoed)',
+                        'Thuisarts.nl - tips gezond leven',
+                        'Praat met je huisarts over je zorgen'
+                    ],
+                    hulp: {
+                        info: [
+                            { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare gezondheidsinformatie' },
+                            { name: 'Gezondheidsplein.nl', url: 'https://www.gezondheidsplein.nl', desc: 'Info over ziektes en behandelingen' },
+                            { name: 'Mijn Gezondheidsgids', url: 'https://www.mijngezondheidsgids.nl', desc: 'Persoonlijk gezondheidsplan' }
+                        ],
+                        chat: [
+                            { name: 'Huisartsenpost chat', desc: 'Via je eigen huisarts' },
+                            { name: 'Apotheek WhatsApp', desc: 'Vraag je apotheek' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Voor lichamelijke klachten' },
+                            { name: 'Fysiotherapeut', desc: 'Bij bewegingsklachten (soms gratis)' },
+                            { name: 'Wijkverpleegkundige', desc: 'Via huisarts' }
+                        ],
+                        bellen: [
+                            { name: 'Huisarts', desc: 'Lokaal nummer' },
+                            { name: 'Huisartsenpost', tel: '088-0030600', desc: 'Buiten kantooruren (niet spoed)' },
+                            { name: 'Zorgverzekering', desc: 'Voor vragen over vergoedingen' }
+                        ],
+                        urgent: 'Bij spoed: 112 | Bij twijfel spoed: Huisartsenpost 088-0030600'
+                    }
+                }
+            ],
+            answers: {},
+
+            init() {
+                this.loadFromStorage();
+                this.renderDomainScreens();
+                this.updateProgress();
+            },
+
+            renderDomainScreens() {
+                this.domains.forEach((domain, index) => {
+                    const screenNum = index + 1;
+                    const screen = document.getElementById(`screen${screenNum}`);
+                    
+                    screen.innerHTML = `
+                        <div class="card">
+                            <div class="domain-emoji">${domain.emoji}</div>
+                            <div class="domain-title">${domain.title}</div>
+                            <div class="domain-description">${domain.description}</div>
+
+                            <p style="text-align: center; margin-bottom: 25px;">Hoe gaat het met ${domain.title.toLowerCase()}?</p>
+
+                            <div class="options">
+                                <div class="option" data-value="goed" onclick="app.selectOption('${domain.id}', 'goed', this)">
+                                    <span class="option-emoji">🟢</span>
+                                    <span>Gaat goed</span>
+                                </div>
+                                <div class="option" data-value="beter" onclick="app.selectOption('${domain.id}', 'beter', this)">
+                                    <span class="option-emoji">🟡</span>
+                                    <span>Kan beter</span>
+                                </div>
+                                <div class="option" data-value="actie" onclick="app.selectOption('${domain.id}', 'actie', this)">
+                                    <span class="option-emoji">🔴</span>
+                                    <span>Actie nodig</span>
+                                </div>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn-secondary" onclick="app.goToScreen(${screenNum - 1})">← Vorige</button>
+                                <button class="btn-primary" id="next${screenNum}" onclick="app.goToScreen(${screenNum + 1})" disabled>
+                                    ${screenNum === 7 ? 'Bekijk resultaat →' : 'Volgende →'}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            },
+
+            selectOption(domainId, value, element) {
+                // Remove selected from siblings
+                element.parentElement.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected to clicked
+                element.classList.add('selected');
+                
+                // Save answer
+                this.answers[domainId] = value;
+                this.saveToStorage();
+                
+                // Enable next button
+                const screenNum = this.domains.findIndex(d => d.id === domainId) + 1;
+                document.getElementById(`next${screenNum}`).disabled = false;
+            },
+
+            goToScreen(num) {
+                // Hide all screens
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                
+                // Show target screen
+                document.getElementById(`screen${num}`).classList.add('active');
+                
+                this.currentScreen = num;
+                this.updateProgress();
+                
+                // If results screen, generate results
+                if (num === 8) {
+                    this.showResults();
+                }
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            updateProgress() {
+                const total = 8;
+                const percentage = (this.currentScreen / total) * 100;
+                
+                document.getElementById('progressBar').style.width = percentage + '%';
+                document.getElementById('progressText').textContent = `Stap ${this.currentScreen} van ${total}`;
+            },
+
+            showResults() {
+                const container = document.getElementById('resultsSummary');
+                
+                const goed = this.domains.filter(d => this.answers[d.id] === 'goed');
+                const beter = this.domains.filter(d => this.answers[d.id] === 'beter');
+                const actie = this.domains.filter(d => this.answers[d.id] === 'actie');
+                
+                let html = '<div class="result-summary">';
+                
+                // Summary counts
+                html += `
+                    <div style="text-align: center; margin-bottom: 25px; font-size: 1.1rem;">
+                        <div style="margin-bottom: 10px;">
+                            <span style="color: #22c55e; font-weight: 700; font-size: 1.5rem;">✓ ${goed.length}</span> 
+                            <span style="color: #718096;">gaat goed</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <span style="color: #f59e0b; font-weight: 700; font-size: 1.5rem;">⚠ ${beter.length}</span> 
+                            <span style="color: #718096;">kan beter</span>
+                        </div>
+                        <div>
+                            <span style="color: #ef4444; font-weight: 700; font-size: 1.5rem;">🚨 ${actie.length}</span> 
+                            <span style="color: #718096;">actie nodig</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Gaat goed
+                if (goed.length > 0) {
+                    html += `<div class="result-item goed">
+                        <strong style="display: block; margin-bottom: 8px;">🟢 Gaat goed (${goed.length})</strong>
+                        ${goed.map(d => `${d.emoji} ${d.title}`).join(', ')}
+                        
+                        <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="margin-top: 12px; background: #dcfce7; border-color: #22c55e;">
+                            <strong>💡 Blijf zo doorgaan - tips ▼</strong>
+                        </div>
+                        <div class="hulp-content">
+                            ${goed.map(d => `
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #22c55e;">${d.emoji} ${d.title}:</strong>
+                                    <ul style="margin: 8px 0 0 20px; line-height: 1.8;">
+                                        ${d.tips_goed.map(tip => `<li>${tip}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+                
+                // Kan beter
+                if (beter.length > 0) {
+                    beter.forEach(domain => {
+                        html += `<div class="result-item beter">
+                            <strong style="display: block; margin-bottom: 8px;">🟡 ${domain.emoji} ${domain.title}</strong>
+                            
+                            <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="background: #fef3c7; border-color: #f59e0b;">
+                                <strong>💪 Wat kan helpen? Klik hier ▼</strong>
+                            </div>
+                            <div class="hulp-content">
+                                <ul style="margin: 8px 0 0 20px; line-height: 1.8;">
+                                    ${domain.tips_beter.map(tip => `<li>${tip}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                    });
+                }
+                
+                // Actie nodig (met hulp)
+                if (actie.length > 0) {
+                    actie.forEach(domain => {
+                        html += `<div class="result-item actie">
+                            <strong style="display: block; margin-bottom: 8px;">🔴 ${domain.emoji} ${domain.title}</strong>
+                            <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+                                <strong>🆘 Waar kan je terecht? Klik hier ▼</strong>
+                            </div>
+                            <div class="hulp-content">
+                                ${this.renderHulp(domain.hulp)}
+                            </div>
+                        </div>`;
+                    });
+                }
+                
+                html += '</div>';
+                
+                container.innerHTML = html;
+            },
+
+            renderHulp(hulp) {
+                let html = '';
+                
+                if (hulp.info && hulp.info.length > 0) {
+                    html += `
+                        <div class="hulp-stap">
+                            <strong>📖 Informatie lezen (anoniem)</strong>
+                            <div class="hulp-links">
+                                ${hulp.info.map(item => 
+                                    `<a href="${item.url}" target="_blank">${item.name}</a> - ${item.desc || ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (hulp.chat && hulp.chat.length > 0) {
+                    html += `
+                        <div class="hulp-stap">
+                            <strong>💬 Online chatten (anoniem, geen bellen)</strong>
+                            <div class="hulp-links">
+                                ${hulp.chat.map(item => 
+                                    `<a href="${item.url || '#'}" target="_blank">${item.name}</a> ${item.desc ? '- ' + item.desc : ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (hulp.persoonlijk && hulp.persoonlijk.length > 0) {
+                    html += `
+                        <div class="hulp-stap">
+                            <strong>🤝 Persoonlijk gesprek</strong>
+                            <div class="hulp-links">
+                                ${hulp.persoonlijk.map(item => 
+                                    `<span>${item.name}</span> - ${item.desc || ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (hulp.bellen && hulp.bellen.length > 0) {
+                    html += `
+                        <div class="hulp-stap">
+                            <strong>📞 Bellen</strong>
+                            <div class="hulp-links">
+                                ${hulp.bellen.map(item => 
+                                    `<span><strong>${item.name}:</strong> ${item.tel || ''}</span> ${item.desc ? '- ' + item.desc : ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (hulp.urgent) {
+                    html += `
+                        <div class="hulp-stap" style="border-left-color: #ef4444; background: #fee2e2;">
+                            <strong style="color: #ef4444;">🚨 Urgent</strong>
+                            <span style="color: #991b1b;">${hulp.urgent}</span>
+                        </div>
+                    `;
+                }
+                
+                return html;
+            },
+
+            saveToStorage() {
+                localStorage.setItem('rpa_niveau1', JSON.stringify(this.answers));
+            },
+
+            loadFromStorage() {
+                const saved = localStorage.getItem('rpa_niveau1');
+                if (saved) {
+                    this.answers = JSON.parse(saved);
+                }
+            },
+
+            reset() {
+                if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Je antwoorden worden gewist.')) {
+                    this.answers = {};
+                    localStorage.removeItem('rpa_niveau1');
+                    this.goToScreen(0);
+                }
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>

@@ -458,10 +458,20 @@
 </head>
 <body>
     <div class="container">
+        <!-- RPA Suite navigatiebalk -->
+        <div style="background:white;border-radius:12px;padding:10px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-weight:800;color:#374151;font-size:0.95rem;">📐 RPA Suite</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <a href="netwerkanalyse.html" style="padding:5px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;background:#f0fdf4;color:#059669;text-decoration:none;border:1px solid #86efac;">N1 KrachtCheck</a>
+                <a href="positioneel.html" style="padding:5px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;background:#eff6ff;color:#2563eb;text-decoration:none;border:1px solid #93c5fd;">N2 Positionele Analyse</a>
+                <span style="padding:5px 12px;border-radius:8px;font-size:0.8rem;font-weight:700;background:#667eea;color:white;border:1px solid #667eea;">N3 Strategisch ●</span>
+            </div>
+        </div>
+
         <header>
             <h1>🎯 Strategische Netwerkimpactanalyse</h1>
-            <p class="subtitle">RPA Niveau 3 - Large</p>
-            <span class="level-badge">Voor beleidsmakers, zorgmanagers en strategisch adviseurs</span>
+            <p class="subtitle">RPA Niveau 3</p>
+            <span class="level-badge">Voor beleidsmakers, zorgmanagers en geautoriseerde professionals</span>
         </header>
 
         <!-- Import Sectie (default) -->
@@ -536,6 +546,9 @@
                     <span id="exCasussenLabel" style="font-size:0.82rem;opacity:0.8;"></span>
                     <button onclick="app.voegCasusToe()" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:8px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">
                         ➕ Voeg casus toe
+                    </button>
+                    <button onclick="app.exportWethouderA4()" style="background:white;color:#065f46;border:none;border-radius:8px;padding:6px 14px;font-size:0.82rem;font-weight:700;cursor:pointer;">
+                        📄 Wethouder A4
                     </button>
                     <input type="file" id="extraCasusInput" accept=".json" style="display:none;" onchange="app.laadExtraCasus(event)">
                 </div>
@@ -673,7 +686,19 @@
                 </div>
 
                 <div class="chart-container">
-                    <h3 style="color: var(--primary); margin-bottom: 20px;">Impact Radar</h3>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                        <h3 style="color: var(--primary);margin:0;">Impact Radar</h3>
+                        <button onclick="document.getElementById('radarUitleg').style.display=document.getElementById('radarUitleg').style.display==='none'?'block':'none'"
+                            style="background:none;border:1px solid #e5e7eb;border-radius:8px;padding:5px 12px;font-size:0.8rem;color:#6b7280;cursor:pointer;">ℹ️ Hoe werkt dit?</button>
+                    </div>
+                    <div id="radarUitleg" style="display:none;background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:0.85rem;color:#374151;line-height:1.6;">
+                        <strong>Berekeningsmethode:</strong> Elke dimensie krijgt een score (0–10) op basis van de positionele bewegingen in de analyse.<br>
+                        • <strong>Participatie & Netwerkversterking:</strong> stijgt bij beweging naar informeel/collectief<br>
+                        • <strong>Preventie & Duurzaamheid:</strong> stijgt bij beweging naar collectief en aanwezigheid concreet plan<br>
+                        • <strong>Zelfredzaamheid:</strong> stijgt bij afschaling van formele zorg + aanwezigheid verantwoordelijke<br>
+                        • <strong>Proportionaliteit:</strong> stijgt als het plan als 'klopt' is beoordeeld door de professional<br>
+                        <em style="color:#9ca3af;">Score is indicatief en gebaseerd op de geëxporteerde data van Niveau 2.</em>
+                    </div>
                     <canvas id="impactRadar" width="400" height="300"></canvas>
                 </div>
 
@@ -1102,6 +1127,63 @@
                 localStorage.removeItem('rpa_niveau3_datum');
                 document.getElementById('caseloadBlok').style.display = 'none';
                 document.getElementById('geenCaseloadBlok').style.display = 'block';
+            },
+
+            exportWethouderA4() {
+                if (!this.data) { alert('Laad eerst een caseload.'); return; }
+                const besparing = document.getElementById('exBesparing')?.textContent || '—';
+                const n = this.casussen.length;
+                const doelgroepen = [...new Set(this.casussen.flatMap(c => c.metadata.doelgroepen||[]))].join(', ') || 'Divers';
+                const totalBewegingen = this.casussen.reduce((s,c) => s+(c.domeinen||[]).filter(d=>d.bewegingsrichting).length, 0);
+                const vandaag = new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+
+                // Top 3 domeinen met meeste beweging
+                const domeinTeller = {};
+                this.casussen.forEach(c => (c.domeinen||[]).filter(d=>d.bewegingsrichting).forEach(d => { domeinTeller[d.naam]=(domeinTeller[d.naam]||0)+1; }));
+                const top3 = Object.entries(domeinTeller).sort((a,b)=>b[1]-a[1]).slice(0,3);
+
+                const w = window.open('','_blank');
+                w.document.write(`<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
+                    <title>Bestuurlijke notitie — RPA</title>
+                    <style>
+                        body { font-family: Georgia, serif; max-width:680px; margin:40px auto; padding:0 32px; color:#1f2937; font-size:14pt; line-height:1.7; }
+                        h1 { font-size:20pt; color:#065f46; margin-bottom:4px; }
+                        .meta { font-size:10pt; color:#6b7280; margin-bottom:24px; }
+                        .kader { background:#f0fdf4; border-left:4px solid #059669; padding:16px 20px; border-radius:0 8px 8px 0; margin:20px 0; }
+                        .kader .getal { font-size:28pt; font-weight:800; color:#065f46; line-height:1.1; }
+                        .kader .label { font-size:10pt; color:#6b7280; }
+                        h2 { font-size:13pt; color:#374151; margin-top:24px; border-bottom:1px solid #e5e7eb; padding-bottom:4px; }
+                        ul { margin-left:20px; }
+                        .disclaimer { font-size:9pt; color:#9ca3af; margin-top:32px; border-top:1px solid #e5e7eb; padding-top:12px; }
+                        .no-print { background:#fef9c3; padding:8px 12px; border-radius:6px; font-size:10pt; margin-bottom:20px; font-family:sans-serif; }
+                        @media print { .no-print { display:none; } }
+                    </style></head><body>
+                    <div class="no-print">💡 Druk <strong>Ctrl+P</strong> om op te slaan als PDF.</div>
+                    <h1>Bestuurlijke notitie — Positionele aanpak netwerken</h1>
+                    <div class="meta">${vandaag} · RPA Strategische Analyse · ${n} casus${n>1?'sen':''}</div>
+                    <div class="kader">
+                        <div class="label">Geschatte besparing op jaarbasis</div>
+                        <div class="getal">${besparing}</div>
+                        <div class="label">Op basis van ${n} geanalyseerde cliënten · doelgroepen: ${doelgroepen}</div>
+                    </div>
+                    <h2>Wat speelt er?</h2>
+                    <p>In de geanalyseerde caseload zijn <strong>${totalBewegingen} domeinen</strong> geïdentificeerd waar een positionele verschuiving mogelijk is. De drie meest voorkomende gebieden:</p>
+                    <ul>${top3.map(([naam,n])=>`<li><strong>${naam}</strong> — ${n} cliënten</li>`).join('')}</ul>
+                    <h2>Wat is de aanpak?</h2>
+                    <p>Door formele ondersteuning gedeeltelijk te verschuiven naar informele en collectieve draaglagen — zonder afbouw van kwaliteit — ontstaat een duurzamer en proportioneler ondersteuningsaanbod. De RPA Positionele Analyse begeleidt professionals bij deze bewuste keuze per cliënt.</p>
+                    <h2>Wat vraagt dit?</h2>
+                    <ul>
+                        <li>Structurele inzet van de positionele methodiek in wijkteams</li>
+                        <li>Investering in collectief aanbod als alternatief voor 1-op-1 begeleiding</li>
+                        <li>Monitoring via de KrachtCheck (Niveau 1) voor vroeg-signalering</li>
+                    </ul>
+                    <div class="disclaimer">
+                        ⚠️ Indicatieve berekening. Gebaseerd op ${n} casus${n>1?'sen':''}. 
+                        ${n<10?'Bij minder dan 10 casussen zijn populatieconclusies niet verantwoord.':''}
+                        Kostenberekening op basis van gemiddelde draaglaagkosten. Gegenereerd met RPA Suite · SIJN methodiek.
+                    </div>
+                </body></html>`);
+                w.document.close();
             },
 
             vulExecutiveSummary() {
@@ -1712,9 +1794,56 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            app.init();
-            app.checkNiveau2Import();
+            // TOEGANGSCODE CHECK (N3 — professionals + beleidsmakers)
+            (function checkToegangN3() {
+                const params = new URLSearchParams(window.location.search);
+                const urlCode = params.get('code');
+                if (urlCode) { sessionStorage.setItem('rpa_n3_toegang', urlCode.toUpperCase()); }
+                const stored = sessionStorage.getItem('rpa_n3_toegang');
+                if (stored === 'SIJN2026' || stored === 'BELEID2026') {
+                    app.init();
+                    app.checkNiveau2Import();
+                    return;
+                }
+                // Bouw overlay
+                const overlay = document.createElement('div');
+                overlay.id = 'toegangOverlay';
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(17,24,39,0.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+                overlay.innerHTML = `
+                    <div style="background:white;border-radius:20px;padding:36px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+                        <div style="font-size:2.5rem;margin-bottom:12px;">🔐</div>
+                        <h2 style="color:#1f2937;font-size:1.4rem;margin-bottom:6px;">Niveau 3 — Strategische analyse</h2>
+                        <p style="color:#6b7280;font-size:0.9rem;margin-bottom:24px;">Toegang voor beleidsmakers en geautoriseerde professionals.</p>
+                        <input id="toegangsInput" type="password" placeholder="Voer toegangscode in"
+                            style="width:100%;padding:12px 16px;border:2px solid #e5e7eb;border-radius:10px;font-size:1rem;margin-bottom:12px;text-align:center;letter-spacing:2px;"
+                            onkeydown="if(event.key==='Enter')submitToegangN3()">
+                        <div id="toegangFout" style="display:none;color:#dc2626;font-size:0.85rem;margin-bottom:10px;">❌ Onjuiste code. Vraag de code op bij je organisatie of beleidscoördinator.</div>
+                        <button onclick="submitToegangN3()"
+                            style="width:100%;background:#667eea;color:white;border:none;border-radius:10px;padding:13px;font-size:1rem;font-weight:700;cursor:pointer;">
+                            Toegang →
+                        </button>
+                        <p style="font-size:0.75rem;color:#9ca3af;margin-top:16px;">
+                            Professionals: gebruik code <strong>SIJN2026</strong><br>
+                            Beleidsmakers: gebruik code <strong>BELEID2026</strong>
+                        </p>
+                    </div>`;
+                document.body.appendChild(overlay);
+                setTimeout(() => document.getElementById('toegangsInput')?.focus(), 100);
+            })();
         });
+
+        function submitToegangN3() {
+            const code = document.getElementById('toegangsInput')?.value.trim().toUpperCase();
+            if (code === 'SIJN2026' || code === 'BELEID2026') {
+                sessionStorage.setItem('rpa_n3_toegang', code);
+                document.getElementById('toegangOverlay')?.remove();
+                app.init();
+                app.checkNiveau2Import();
+            } else {
+                document.getElementById('toegangFout').style.display = 'block';
+                document.getElementById('toegangsInput').style.borderColor = '#dc2626';
+            }
+        }
     </script>
 </body>
 </html>
