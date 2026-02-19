@@ -3,394 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPA Levensscan - Niveau 1</title>
+    <title>KrachtCheck — Hoe sta jij ervoor?</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(160deg, #0ea472 0%, #059669 50%, #047857 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px 16px 40px;
         }
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
+        .container { max-width: 560px; margin: 0 auto; }
 
+        /* Header */
         header {
             text-align: center;
             color: white;
-            margin-bottom: 30px;
-            padding: 30px 20px;
+            padding: 32px 0 20px;
         }
-
-        header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.95;
-            margin-bottom: 5px;
-        }
-
-        .level-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.25);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
+        header .logo { font-size: 2.8rem; margin-bottom: 8px; }
+        header h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+        header .tagline { font-size: 1.05rem; opacity: 0.9; font-weight: 400; }
 
         /* Progress */
-        .progress-bar {
-            background: rgba(255,255,255,0.3);
-            height: 8px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
+        .progress-wrap { margin: 16px 0 6px; }
+        .progress-bar { background: rgba(255,255,255,0.25); height: 6px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { background: white; height: 100%; border-radius: 10px; transition: width 0.4s ease; }
+        .progress-text { text-align: center; color: rgba(255,255,255,0.8); font-size: 0.82rem; margin-top: 6px; }
 
-        .progress-fill {
-            background: white;
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-            margin-top: 8px;
-        }
-
-        /* Cards */
+        /* Card */
         .card {
             background: white;
             border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
+            padding: 28px 24px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+            margin-bottom: 16px;
         }
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-        .screen {
-            display: none;
-        }
+        h2 { color: #065f46; font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; }
 
-        .screen.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            color: #667eea;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-
-        p {
-            line-height: 1.7;
-            color: #4a5568;
-            margin-bottom: 15px;
-        }
+        p { line-height: 1.7; color: #374151; margin-bottom: 12px; }
 
         /* Domain question */
-        .domain-emoji {
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 15px;
-        }
+        .domain-emoji { font-size: 3.5rem; text-align: center; margin-bottom: 10px; }
+        .domain-title { font-size: 1.5rem; font-weight: 800; color: #111827; text-align: center; margin-bottom: 6px; }
+        .domain-description { text-align: center; color: #6b7280; font-size: 0.92rem; margin-bottom: 20px; font-style: italic; }
 
-        .domain-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2d3748;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .domain-description {
-            text-align: center;
-            color: #718096;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-            font-style: italic;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 25px 0;
-        }
-
+        /* Options */
+        .options { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
         .option {
-            padding: 18px 20px;
-            border: 3px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 16px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.18s ease;
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-
-        .option:hover {
-            border-color: #cbd5e0;
-            background: #f7fafc;
-        }
-
-        .option.selected {
-            border-color: #667eea;
-            background: #eef2ff;
-        }
-
-        .option-emoji {
-            font-size: 1.8rem;
-        }
-
-        .age-chip {
-            padding: 10px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #4a5568;
-            background: #f7fafc;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-        .age-chip:hover {
-            border-color: #667eea;
-            background: #eef2ff;
-            color: #434190;
-        }
-        .age-chip.selected {
-            border-color: #667eea;
-            background: #667eea;
-            color: white;
-        }
-
-        /* Buttons */
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 25px;
-        }
-
-        button {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 10px;
+            gap: 14px;
             font-size: 1rem;
             font-weight: 600;
+            color: #374151;
+            background: white;
+        }
+        .option:hover { border-color: #059669; background: #f0fdf4; }
+        .option.selected { border-color: #059669; background: #d1fae5; color: #065f46; }
+        .option-emoji { font-size: 1.6rem; }
+
+        /* Age chips */
+        .age-chip {
+            padding: 9px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 999px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6b7280;
+            background: white;
+            transition: all 0.18s;
+            user-select: none;
+        }
+        .age-chip:hover { border-color: #059669; color: #065f46; }
+        .age-chip.selected { border-color: #059669; background: #059669; color: white; }
+
+        /* Buttons */
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        button {
+            padding: 13px 22px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s;
             font-family: inherit;
         }
-
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #059669;
             color: white;
             flex: 1;
+            min-width: 140px;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
+        .btn-primary:hover { background: #047857; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(5,150,105,0.35); }
         .btn-secondary {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #059669;
+            border: 2px solid #059669;
         }
+        .btn-secondary:hover { background: #f0fdf4; }
+        button:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
 
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Results */
-        .result-summary {
-            background: #f7fafc;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
-        }
-
+        /* Result items */
         .result-item {
-            padding: 15px;
-            margin-bottom: 12px;
-            border-radius: 10px;
-            border-left: 4px solid;
-        }
-
-        .result-item.goed {
-            background: #dcfce7;
-            border-color: #22c55e;
-        }
-
-        .result-item.beter {
-            background: #fef3c7;
-            border-color: #f59e0b;
-        }
-
-        .result-item.actie {
-            background: #fee2e2;
-            border-color: #ef4444;
-        }
-
-        /* Trapje van hulp */
-        .hulp-toggle {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-
-        .hulp-toggle:hover {
-            background: #fde68a;
-        }
-
-        .hulp-content {
-            display: none;
-            margin-top: 15px;
-        }
-
-        .hulp-content.open {
-            display: block;
-        }
-
-        .hulp-stap {
-            background: white;
-            padding: 15px;
+            padding: 14px 16px;
             margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 3px solid #667eea;
-        }
-
-        .hulp-stap strong {
-            color: #667eea;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .hulp-links {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .hulp-links a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.95rem;
-        }
-
-        .hulp-links a:hover {
-            text-decoration: underline;
-        }
-
-        /* Alert box */
-        .alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin: 15px 0;
+            border-radius: 12px;
+            border-left: 4px solid;
             display: flex;
             align-items: center;
             gap: 12px;
         }
+        .result-item.goed   { background: #d1fae5; border-color: #059669; }
+        .result-item.beter  { background: #fef3c7; border-color: #f59e0b; }
+        .result-item.actie  { background: #fee2e2; border-color: #ef4444; }
+        .result-bar { flex:1; }
+        .result-bar-track { background: rgba(0,0,0,0.08); border-radius: 6px; height: 8px; margin-top: 4px; }
+        .result-bar-fill   { height: 8px; border-radius: 6px; transition: width 0.6s ease; }
 
-        .alert-info {
-            background: #e0f2fe;
-            color: #075985;
-            border-left: 4px solid #0284c7;
+        /* Hulp toggle */
+        .hulp-toggle {
+            background: #fef3c7; border: 2px solid #f59e0b;
+            padding: 13px 16px; border-radius: 10px; margin-top: 12px; cursor: pointer;
         }
+        .hulp-toggle:hover { background: #fde68a; }
+        .hulp-content { display: none; margin-top: 12px; }
+        .hulp-content.open { display: block; }
+        .hulp-stap {
+            background: white; padding: 13px; margin-bottom: 8px;
+            border-radius: 8px; border-left: 3px solid #059669;
+        }
+        .hulp-stap strong { color: #047857; display: block; margin-bottom: 6px; }
+        .hulp-links { display: flex; flex-direction: column; gap: 5px; }
+        .hulp-links a { color: #059669; text-decoration: none; font-size: 0.9rem; }
+        .hulp-links a:hover { text-decoration: underline; }
 
-        .alert-success {
-            background: #dcfce7;
-            color: #166534;
-            border-left: 4px solid #22c55e;
+        /* Alert */
+        .alert { padding: 13px 16px; border-radius: 10px; margin: 12px 0; display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; }
+        .alert-info    { background: #e0f2fe; color: #075985; border-left: 4px solid #0284c7; }
+        .alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid #059669; }
+
+        /* Gesprek aanvragen CTA */
+        .cta-gesprek {
+            background: linear-gradient(135deg, #065f46, #059669);
+            color: white;
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .cta-gesprek p { color: rgba(255,255,255,0.9); margin-bottom: 12px; font-size: 0.92rem; }
+        .cta-gesprek button {
+            background: white;
+            color: #065f46;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+        .cta-gesprek button:hover { background: #d1fae5; }
+
+        @media (max-width: 480px) {
+            .card { padding: 22px 18px; }
+            header h1 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div style="font-size: 3rem; margin-bottom: 10px;">🌟</div>
-            <h1>RPA Levensscan</h1>
-            <p class="subtitle">Krijg overzicht van je leven in 6 belangrijke gebieden</p>
-            <span class="level-badge">Niveau 1 - Voor iedereen</span>
+            <div class="logo">💪</div>
+            <h1>KrachtCheck</h1>
+            <p class="tagline">Hoe sta jij ervoor? Check het in 2 minuten.</p>
         </header>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar"></div>
+        <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
+            <div class="progress-text" id="progressText"></div>
         </div>
-        <div class="progress-text" id="progressText">Stap 0 van 8</div>
 
         <!-- Screen 0: Intro -->
         <div class="screen active" id="screen0">
             <div class="card">
-                <h2>Welkom! 👋</h2>
-                <p>In <strong>5-7 minuten</strong> krijg je een helder overzicht van 7 belangrijke levensgebieden:</p>
-                <ul style="line-height: 2; margin: 20px 0 20px 30px;">
-                    <li>💰 Financiën</li>
-                    <li>🧠 Geestelijke gezondheid</li>
-                    <li>🏠 Wonen</li>
-                    <li>👨‍👩‍👧 Huiselijke relaties</li>
-                    <li>👥 Sociaal netwerk</li>
-                    <li>💼 Dagbesteding & werk</li>
-                    <li>💪 Lichamelijke gezondheid</li>
-                </ul>
+                <h2>Hoe gaat het écht? 👋</h2>
+                <p style="font-size:1.05rem;">Beantwoord 7 korte vragen over verschillende delen van je leven. Je ziet meteen waar je sterk bent — en waar je misschien extra steun kunt gebruiken.</p>
 
-                <div class="alert alert-info">
-                    <span style="font-size: 1.5rem;">💡</span>
-                    <div>
-                        <strong>Dit is geen test.</strong> Er zijn geen goede of foute antwoorden.
-                        Dit is om in kaart te brengen waar je nu staat.
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0;">
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">💰 Financiën</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">🧠 Mentale gezondheid</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">🏠 Wonen</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">👨‍👩‍👧 Thuis & relaties</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">👥 Sociaal netwerk</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">💼 Dagbesteding</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;grid-column:span 2;text-align:center;">💪 Lichamelijke gezondheid</div>
+                </div>
+
+                <div style="margin:16px 0;">
+                    <p style="font-size:0.85rem;font-weight:600;color:#374151;margin-bottom:10px;">Tip op maat? Kies je leeftijd <span style="font-weight:400;color:#9ca3af;">(optioneel)</span></p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="ageCategoryGroup">
+                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)">🧒 12–23</div>
+                        <div class="age-chip" data-cat="jongvolwassene" onclick="app.selectAge('jongvolwassene', this)">👨 18–35</div>
+                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)">👩 30–64</div>
+                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)">👴 65+</div>
                     </div>
                 </div>
 
-                <div style="margin: 24px 0;">
-                    <p style="text-align: center; font-weight: 600; color: #4a5568; margin-bottom: 12px;">Kies je leeftijdscategorie <span style="font-weight: 400; color: #a0aec0;">(optioneel — voor tips op maat)</span></p>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;" id="ageCategoryGroup">
-                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)">🧒 Jongere (12–23)</div>
-                        <div class="age-chip" data-cat="jongvolwassene" onclick="app.selectAge('jongvolwassene', this)">👨 Jongvolwassene (18–35)</div>
-                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)">👩 Volwassene (30–64)</div>
-                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)">👴 Ouder (65+)</div>
-                    </div>
-                </div>
-
-                <p style="font-size: 0.9rem; color: #718096; margin-top: 20px;">
-                    🔒 <strong>Privacy:</strong> Jouw antwoorden blijven op dit apparaat. Niets wordt opgeslagen op een server.
-                </p>
+                <p style="font-size:0.78rem;color:#9ca3af;margin-top:16px;">🔒 Jouw antwoorden blijven op dit apparaat — niets wordt opgeslagen.</p>
 
                 <div class="btn-group">
-                    <button class="btn-primary" onclick="app.goToScreen(1)">Start de scan →</button>
+                    <button class="btn-primary" onclick="app.goToScreen(1)" style="font-size:1.05rem;padding:15px;">Start de check →</button>
                 </div>
             </div>
         </div>
@@ -407,24 +239,23 @@
         <!-- Screen 8: Results -->
         <div class="screen" id="screen8">
             <div class="card">
-                <h2>📊 Jouw overzicht</h2>
+                <h2>Zo sta jij ervoor 💪</h2>
+                <p style="color:#6b7280;font-size:0.9rem;margin-bottom:16px;">Hieronder zie je per gebied hoe het gaat. Groen = gaat goed, geel = aandacht, rood = extra steun handig.</p>
                 <div id="resultsSummary"></div>
-                
-                <div class="alert alert-success" style="margin-top: 30px;">
-                    <span style="font-size: 1.5rem;">✨</span>
-                    <div>
-                        <strong>Goed gedaan!</strong> Je hebt nu overzicht van waar je staat.
-                    </div>
+
+                <div class="cta-gesprek">
+                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee.</p>
+                    <button onclick="alert('Neem contact op met je wijkteam of welzijnsorganisatie in de buurt.')">
+                        💬 Vraag een gesprek aan
+                    </button>
                 </div>
 
-                <p style="text-align: center; color: #718096; margin: 20px 0;">
-                    💡 Tip: Print deze scan als je hem wilt bewaren of delen.
-                </p>
-
-                <div class="btn-group">
-                    <button class="btn-secondary" onclick="app.reset()">🔄 Nieuwe scan</button>
-                    <button class="btn-secondary" onclick="window.print()">🖨️ Print resultaten</button>
+                <div class="btn-group" style="margin-top:16px;">
+                    <button class="btn-secondary" onclick="app.reset()">🔄 Opnieuw</button>
+                    <button class="btn-secondary" onclick="window.print()">🖨️ Bewaren</button>
                 </div>
+
+                <p style="font-size:0.75rem;color:#9ca3af;text-align:center;margin-top:16px;">KrachtCheck — een initiatief van SIJN</p>
             </div>
         </div>
     </div>
@@ -1018,7 +849,7 @@
                 // Leeftijdsbadge tonen als gekozen
                 if (ageCat) {
                     html += `<div style="text-align:center; margin-bottom: 16px;">
-                        <span style="background:#667eea; color:white; padding:6px 16px; border-radius:999px; font-size:0.85rem; font-weight:600;">
+                        <span style="background:#059669; color:white; padding:6px 16px; border-radius:999px; font-size:0.85rem; font-weight:600;">
                             Tips op maat voor: ${ageLabelMap[ageCat]}
                         </span>
                     </div>`;
