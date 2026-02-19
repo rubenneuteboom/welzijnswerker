@@ -1,0 +1,14 @@
+{
+  "metadata": { "version": "3.0", "exportDatum": "2026-02-14T14:00:00Z", "bron": "RPA Positionele Analyse - Niveau 2", "doelgroepen": ["mantelzorgers"], "omschrijving": "Fatima, 34 jaar — zorgt voor moeder met dementie, eigen gezin + werk lijden eronder" },
+  "domeinen": [
+    { "id": "dagbesteding", "naam": "Dagbesteding", "emoji":"💼","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["informeel"],  "aantalSupporters": 1, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-05-01" },
+    { "id": "huiselijk",    "naam": "Huiselijke relaties","emoji":"👨‍👩‍👧","stoplicht": "steun-wenselijk","huidigeDraaglagen": ["informeel"],"aantalSupporters": 2,"gewensteDraaglagen": ["informeel"], "bewegingsrichting": "informeel", "methoden": ["familiegesprek"],  "planKlopt": "twijfel","heeftConcreetPlan": true,  "duur": "eenmalig",  "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-03-10" },
+    { "id": "geestelijk",   "naam": "Geestelijke gezondheid","emoji":"🧠","stoplicht": "steun-wenselijk","huidigeDraaglagen": [],          "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "2 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-15" },
+    { "id": "sociaal",      "naam": "Sociaal netwerk","emoji":"👥","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["informeel"],  "aantalSupporters": 2, "gewensteDraaglagen": ["informeel"],  "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": false, "evaluatieDatum": "2026-06-01" },
+    { "id": "lichamelijk",  "naam": "Lichamelijke gezondheid","emoji":"💪","stoplicht": "steun-wenselijk","huidigeDraaglagen": [],         "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "eenmalig",  "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-03-20" }
+  ],
+  "interventies": [{ "titel": "Mantelzorgsteunpunt — lotgenotengroep", "type": "collectief", "categorie": "collectief" }, { "titel": "Respijtzorg 1 dag/week voor moeder", "type": "thuiszorg", "categorie": "formeel" }],
+  "netwerkpositie": { "positie": "informeel", "label": "Informeel netwerk (overbelast)", "beschrijving": "Fatima draagt de zorg voor haar moeder vrijwel alleen. Eigen draagkracht staat onder druk." },
+  "creatiefOplossing": { "aanwezig": true, "initiatief": "client", "status": "idee" },
+  "coordinatie": { "regiehouder_aanwezig": false, "geplande_overleggen": [] }
+}

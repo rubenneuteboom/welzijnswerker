@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "exportDatum": "2026-02-10T09:15:00Z",
+    "bron": "RPA Positionele Analyse - Niveau 2",
+    "doelgroepen": ["ggz"],
+    "omschrijving": "Maria, 52 jaar — GGZ herstel, re-integratie naar werk"
+  },
+  "domeinen": [
+    { "id": "financien",    "naam": "Financiën",           "emoji": "💰", "stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["formeel"],   "aantalSupporters": 1, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [], "planKlopt": "ja", "heeftConcreetPlan": true,  "duur": "6 maanden", "heeftVerantwoordelijke": true, "evaluatieDatum": "2026-05-01" },
+    { "id": "dagbesteding", "naam": "Dagbesteding",        "emoji": "💼", "stoplicht": "steun-nodig",     "huidigeDraaglagen": ["formeel"],   "aantalSupporters": 2, "gewensteDraaglagen": ["formeel"],   "bewegingsrichting": "formeel",   "methoden": ["trajectbegeleiding"], "planKlopt": "ja", "heeftConcreetPlan": true, "duur": "3 maanden", "heeftVerantwoordelijke": true, "evaluatieDatum": "2026-04-15" },
+    { "id": "huisvesting",  "naam": "Huisvesting",         "emoji": "🏠", "stoplicht": "goed",            "huidigeDraaglagen": [],            "aantalSupporters": 0, "gewensteDraaglagen": [],             "bewegingsrichting": null,        "methoden": [], "planKlopt": null, "heeftConcreetPlan": false, "duur": null, "heeftVerantwoordelijke": false, "evaluatieDatum": null },
+    { "id": "geestelijk",   "naam": "Geestelijke gezondheid","emoji": "🧠","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["formeel"],   "aantalSupporters": 2, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [], "planKlopt": "ja", "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true, "evaluatieDatum": "2026-06-01" },
+    { "id": "sociaal",      "naam": "Sociaal netwerk",     "emoji": "👥", "stoplicht": "steun-nodig",     "huidigeDraaglagen": ["informeel"], "aantalSupporters": 1, "gewensteDraaglagen": ["informeel"], "bewegingsrichting": "informeel", "methoden": ["netwerkberaad"],   "planKlopt": "twijfel", "heeftConcreetPlan": true, "duur": "2 maanden", "heeftVerantwoordelijke": true, "evaluatieDatum": "2026-04-01" },
+    { "id": "participatie", "naam": "Maatschappelijke participatie","emoji": "🤝","stoplicht": "steun-nodig", "huidigeDraaglagen": [],       "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [], "planKlopt": "ja", "heeftConcreetPlan": true,  "duur": "eenmalig",  "heeftVerantwoordelijke": true, "evaluatieDatum": "2026-03-15" }
+  ],
+  "interventies": [
+    { "titel": "Jobcoach via wijkteam", "type": "begeleiding", "categorie": "formeel" },
+    { "titel": "GGZ Amsterdam — onderhoudsgesprekken", "type": "ggz", "categorie": "formeel" }
+  ],
+  "netwerkpositie": { "positie": "formeel", "label": "Overwegend formeel netwerk", "beschrijving": "Steun is nu vooral via professionals georganiseerd. Informeel netwerk is klein maar aanwezig." },
+  "creatiefOplossing": { "aanwezig": false },
+  "coordinatie": { "regiehouder_aanwezig": true, "geplande_overleggen": [] }
+}

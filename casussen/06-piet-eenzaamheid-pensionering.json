@@ -1,0 +1,14 @@
+{
+  "metadata": { "version": "3.0", "exportDatum": "2026-02-15T10:30:00Z", "bron": "RPA Positionele Analyse - Niveau 2", "doelgroepen": ["sociaalmaatschappelijk","ouderen"], "omschrijving": "Piet, 62 jaar — vervroegd gepensioneerd, structuur en sociale contacten kwijt, eenzaamheid" },
+  "domeinen": [
+    { "id": "dagbesteding", "naam": "Dagbesteding", "emoji":"💼","stoplicht": "steun-nodig",     "huidigeDraaglagen": [],           "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "2 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-01" },
+    { "id": "sociaal",      "naam": "Sociaal netwerk","emoji":"👥","stoplicht": "steun-nodig",   "huidigeDraaglagen": ["informeel"],"aantalSupporters": 1, "gewensteDraaglagen": ["informeel"],  "bewegingsrichting": "informeel", "methoden": ["netwerkberaad"],  "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-05-01" },
+    { "id": "participatie", "naam": "Maatschappelijke participatie","emoji":"🤝","stoplicht": "steun-nodig","huidigeDraaglagen": [], "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "3 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-05-15" },
+    { "id": "geestelijk",   "naam": "Geestelijke gezondheid","emoji":"🧠","stoplicht": "steun-wenselijk","huidigeDraaglagen": [],   "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "twijfel","heeftConcreetPlan": false, "duur": null,        "heeftVerantwoordelijke": false, "evaluatieDatum": null },
+    { "id": "financien",    "naam": "Financiën",    "emoji":"💰","stoplicht": "goed",            "huidigeDraaglagen": [],           "aantalSupporters": 0, "gewensteDraaglagen": [],             "bewegingsrichting": null,        "methoden": [],                 "planKlopt": null,     "heeftConcreetPlan": false, "duur": null,        "heeftVerantwoordelijke": false, "evaluatieDatum": null }
+  ],
+  "interventies": [{ "titel": "Buurtmoes / volkstuinvereniging", "type": "collectief", "categorie": "collectief" }, { "titel": "Vrijwilligerswerk via welzijnsorganisatie", "type": "collectief", "categorie": "collectief" }],
+  "netwerkpositie": { "positie": "1-persoons", "label": "1-persoonsnetwerk", "beschrijving": "Piet heeft één vaste steunpersoon (buurman). Sociaal netwerk is na pensionering sterk geslonken." },
+  "creatiefOplossing": { "aanwezig": false },
+  "coordinatie": { "regiehouder_aanwezig": false, "geplande_overleggen": [] }
+}

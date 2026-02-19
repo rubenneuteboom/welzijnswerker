@@ -1,0 +1,14 @@
+{
+  "metadata": { "version": "3.0", "exportDatum": "2026-02-16T11:00:00Z", "bron": "RPA Positionele Analyse - Niveau 2", "doelgroepen": ["ggz","jongeren"], "omschrijving": "Nadia, 28 jaar — PTSS, vluchteling achtergrond, beperkt netwerk in NL, wil werken" },
+  "domeinen": [
+    { "id": "geestelijk",   "naam": "Geestelijke gezondheid","emoji":"🧠","stoplicht": "steun-nodig", "huidigeDraaglagen": ["formeel"],  "aantalSupporters": 2, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-07-01" },
+    { "id": "sociaal",      "naam": "Sociaal netwerk","emoji":"👥","stoplicht": "steun-nodig",   "huidigeDraaglagen": ["formeel"],  "aantalSupporters": 1, "gewensteDraaglagen": ["informeel"], "bewegingsrichting": "informeel", "methoden": ["netwerkberaad"],  "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "3 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-05-01" },
+    { "id": "dagbesteding", "naam": "Dagbesteding", "emoji":"💼","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["formeel"],  "aantalSupporters": 1, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": ["trajectbegeleiding"],"planKlopt":"ja",    "heeftConcreetPlan": true,  "duur": "6 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-06-01" },
+    { "id": "financien",    "naam": "Financiën",    "emoji":"💰","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["formeel"],  "aantalSupporters": 1, "gewensteDraaglagen": ["formeel"],   "bewegingsrichting": "formeel",   "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-01" },
+    { "id": "participatie", "naam": "Maatschappelijke participatie","emoji":"🤝","stoplicht": "steun-wenselijk","huidigeDraaglagen": [],"aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "2 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-15" }
+  ],
+  "interventies": [{ "titel": "Vluchtelingenwerk taalmaatje + sociale activiteiten", "type": "collectief", "categorie": "collectief" }, { "titel": "GGZ trauma-behandeling lopend", "type": "ggz", "categorie": "formeel" }],
+  "netwerkpositie": { "positie": "formeel", "label": "Overwegend formeel netwerk", "beschrijving": "Nadia is afhankelijk van professionele ondersteuning. Informeel netwerk in Nederland is minimaal." },
+  "creatiefOplossing": { "aanwezig": true, "initiatief": "client", "status": "haalbaar" },
+  "coordinatie": { "regiehouder_aanwezig": true, "geplande_overleggen": [] }
+}

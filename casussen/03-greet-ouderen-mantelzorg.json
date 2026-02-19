@@ -1,0 +1,14 @@
+{
+  "metadata": { "version": "3.0", "exportDatum": "2026-02-12T11:30:00Z", "bron": "RPA Positionele Analyse - Niveau 2", "doelgroepen": ["ouderen","mantelzorgers"], "omschrijving": "Greet, 78 jaar — dementie beginfase, man (Cor) is overbelaste mantelzorger" },
+  "domeinen": [
+    { "id": "lichamelijk",  "naam": "Lichamelijke gezondheid","emoji":"💪","stoplicht": "steun-wenselijk","huidigeDraaglagen": ["informeel"],"aantalSupporters": 1, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-01" },
+    { "id": "geestelijk",   "naam": "Geestelijke gezondheid","emoji":"🧠","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["informeel"],"aantalSupporters": 1, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "3 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-05-01" },
+    { "id": "adl",          "naam": "ADL-vaardigheden",     "emoji":"🛁","stoplicht": "steun-nodig",     "huidigeDraaglagen": ["informeel"],"aantalSupporters": 1, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-15" },
+    { "id": "dagbesteding", "naam": "Dagbesteding",         "emoji":"💼","stoplicht": "steun-nodig",     "huidigeDraaglagen": [],           "aantalSupporters": 0, "gewensteDraaglagen": ["collectief"], "bewegingsrichting": "informeel", "methoden": [],                 "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "2 dagdelen/week","heeftVerantwoordelijke": true,"evaluatieDatum": "2026-03-15" },
+    { "id": "sociaal",      "naam": "Sociaal netwerk",      "emoji":"👥","stoplicht": "steun-wenselijk", "huidigeDraaglagen": ["informeel"],"aantalSupporters": 2, "gewensteDraaglagen": ["gemengd"],   "bewegingsrichting": "gemengd",   "methoden": ["netwerkberaad"],  "planKlopt": "twijfel","heeftConcreetPlan": true,  "duur": "eenmalig",  "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-03-20" }
+  ],
+  "interventies": [{ "titel": "Dagbesteding dementie — Alzheimer café", "type": "collectief", "categorie": "collectief" }, { "titel": "Respijtzorg via thuiszorg", "type": "thuiszorg", "categorie": "formeel" }, { "titel": "Mantelzorgondersteuning Steunpunt", "type": "begeleiding", "categorie": "collectief" }],
+  "netwerkpositie": { "positie": "1-persoons", "label": "1-persoonsnetwerk (overbelast)", "beschrijving": "Cor draagt vrijwel alles alleen. Verbreding is urgent om overbelasting en opname te voorkomen." },
+  "creatiefOplossing": { "aanwezig": false },
+  "coordinatie": { "regiehouder_aanwezig": true, "geplande_overleggen": ["MDO gepland"] }
+}

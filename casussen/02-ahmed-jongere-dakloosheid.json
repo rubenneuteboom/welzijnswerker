@@ -1,0 +1,14 @@
+{
+  "metadata": { "version": "3.0", "exportDatum": "2026-02-11T10:00:00Z", "bron": "RPA Positionele Analyse - Niveau 2", "doelgroepen": ["jongeren","multiproblem"], "omschrijving": "Ahmed, 19 jaar — uit huis gezet, dakloosheid dreigt, schulden" },
+  "domeinen": [
+    { "id": "financien",    "naam": "Financiën",    "emoji": "💰", "stoplicht": "steun-nodig",     "huidigeDraaglagen": [],          "aantalSupporters": 0, "gewensteDraaglagen": ["formeel"],   "bewegingsrichting": "formeel",   "methoden": ["trajectbegeleiding"], "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "6 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-05-01" },
+    { "id": "huisvesting",  "naam": "Huisvesting",  "emoji": "🏠", "stoplicht": "steun-nodig",     "huidigeDraaglagen": ["formeel"], "aantalSupporters": 1, "gewensteDraaglagen": ["formeel"],   "bewegingsrichting": "formeel",   "methoden": [],                     "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "3 maanden", "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-04-01" },
+    { "id": "huiselijk",    "naam": "Huiselijke relaties","emoji": "👨‍👩‍👧","stoplicht": "steun-nodig","huidigeDraaglagen": [],       "aantalSupporters": 0, "gewensteDraaglagen": ["informeel"], "bewegingsrichting": "informeel", "methoden": ["familiegesprek"],     "planKlopt": "twijfel","heeftConcreetPlan": true,  "duur": "eenmalig",  "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-03-20" },
+    { "id": "dagbesteding", "naam": "Dagbesteding", "emoji": "💼", "stoplicht": "steun-nodig",     "huidigeDraaglagen": [],          "aantalSupporters": 0, "gewensteDraaglagen": ["formeel"],   "bewegingsrichting": "formeel",   "methoden": [],                     "planKlopt": "ja",     "heeftConcreetPlan": true,  "duur": "lopend",    "heeftVerantwoordelijke": true,  "evaluatieDatum": "2026-06-01" },
+    { "id": "geestelijk",   "naam": "Geestelijke gezondheid","emoji": "🧠","stoplicht": "steun-wenselijk","huidigeDraaglagen": [],  "aantalSupporters": 0, "gewensteDraaglagen": ["formeel"],   "bewegingsrichting": "formeel",   "methoden": [],                     "planKlopt": "ja",     "heeftConcreetPlan": false, "duur": null,        "heeftVerantwoordelijke": false, "evaluatieDatum": null }
+  ],
+  "interventies": [{ "titel": "Jongerenadviseur gemeente", "type": "begeleiding", "categorie": "formeel" }, { "titel": "Schuldhulpverlening spoedtraject", "type": "schuldhulp", "categorie": "formeel" }],
+  "netwerkpositie": { "positie": "geen", "label": "Geen of nauwelijks netwerk", "beschrijving": "Ahmed staat er vrijwel alleen voor. Acuut ingrijpen nodig om escalatie te voorkomen." },
+  "creatiefOplossing": { "aanwezig": true, "initiatief": "client", "status": "idee" },
+  "coordinatie": { "regiehouder_aanwezig": false, "geplande_overleggen": [] }
+}
