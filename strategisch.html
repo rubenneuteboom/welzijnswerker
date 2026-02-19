@@ -472,6 +472,9 @@
             <h1>🎯 Strategische Netwerkimpactanalyse</h1>
             <p class="subtitle">RPA Niveau 3</p>
             <span class="level-badge">Voor beleidsmakers, zorgmanagers en geautoriseerde professionals</span>
+            <p style="font-size:0.88rem;color:#6b7280;margin-top:10px;max-width:560px;line-height:1.6;">
+                Formele zorg lost niet alles op — en het is niet houdbaar om het zo te blijven organiseren. Dit instrument maakt zichtbaar wat het kost als we niet anders gaan werken, en wat het oplevert als we dat wel doen.
+            </p>
         </header>
 
         <!-- Import Sectie (default) -->
@@ -631,6 +634,29 @@
                                    onchange="app.berekenKosten()">
                             <small style="color: var(--text-light);">1-op-1 begeleiding, zorg</small>
                         </div>
+                    </div>
+
+                    <!-- Investeringskosten aanpak -->
+                    <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:10px;padding:14px 16px;margin-top:16px;">
+                        <div style="font-weight:700;color:#92400e;margin-bottom:8px;font-size:0.9rem;">💼 Investeringskosten aanpak</div>
+                        <p style="font-size:0.82rem;color:#374151;margin-bottom:10px;">Eerlijk rekenen betekent ook de kosten van de aanpak meenemen (David). Vul in wat van toepassing is.</p>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
+                            <div>
+                                <label style="display:block;margin-bottom:4px;font-size:0.82rem;font-weight:600;">EKC / Netwerkberaad (€)</label>
+                                <input type="number" id="investEkc" value="0" step="100"
+                                    style="width:100%;padding:8px;border:1.5px solid #fcd34d;border-radius:6px;"
+                                    onchange="app.berekenKosten()">
+                                <small style="color:#92400e;">Per casus, eenmalig</small>
+                            </div>
+                            <div>
+                                <label style="display:block;margin-bottom:4px;font-size:0.82rem;font-weight:600;">Professionele tijd (uren/mnd)</label>
+                                <input type="number" id="investTijd" value="0" step="1"
+                                    style="width:100%;padding:8px;border:1.5px solid #fcd34d;border-radius:6px;"
+                                    onchange="app.berekenKosten()">
+                                <small style="color:#92400e;">× €75/uur = maandkosten</small>
+                            </div>
+                        </div>
+                        <div id="investTotaal" style="margin-top:10px;font-size:0.85rem;font-weight:600;color:#92400e;"></div>
                     </div>
                 </div>
 
@@ -1465,6 +1491,22 @@
                     impactKleur.style.color = 'var(--text-light)';
                     verschilElement.parentElement.innerHTML = `€ 0 <span style="font-size: 0.8rem;">geen verschil</span>`;
                 }
+
+                // Investeringskosten
+                const ekc = parseFloat(document.getElementById('investEkc')?.value || 0);
+                const uren = parseFloat(document.getElementById('investTijd')?.value || 0);
+                const investMaand = (ekc / 12) + (uren * 75);
+                const investEl = document.getElementById('investTotaal');
+                if (investEl) {
+                    if (investMaand > 0) {
+                        investEl.textContent = `Totale investering: ≈ €${investMaand.toFixed(0)}/maand (€${(investMaand*12).toFixed(0)}/jaar)`;
+                    } else {
+                        investEl.textContent = 'Vul investeringskosten in voor een eerlijk totaalplaatje.';
+                    }
+                }
+                // Netto besparing (besparing min investering)
+                const nettoBesparing = Math.abs(verschil) - investMaand;
+                this.nettoBesparing = nettoBesparing;
 
                 // Sla op voor schaalscenario's
                 this.kostenVerschil = verschil;
