@@ -4278,7 +4278,7 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreenById('interventies')">← Terug</button>
-                        <button class="btn btn-primary" onclick="window.print()">🖨️ Afdrukken / bewaren</button>
+                        <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
                         <button class="btn" onclick="exportVoorStrategischeAnalyse()"
                             style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;font-size:0.82rem;">
                             📊 Export voor strategische analyse
@@ -7501,81 +7501,82 @@ Antwoord in dit exacte JSON formaat:
             }
         }
         
-        // Exporteer samenvatting (dossier-versie, klembord)
+        // Exporteer samenvatting — opent schone printpagina in nieuw tabblad
         function exportSamenvatting() {
             const vandaag = new Date().toLocaleDateString('nl-NL', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
             const netwerkInfo = getRPANetwerkPositie();
-            const doelgroepLabels = {ggz:'GGZ',jongeren:'Jongeren',mantelzorgers:'Mantelzorgers',ouderen:'Ouderen',multiproblem:'Multi-problematiek',sociaalmaatschappelijk:'Sociaal-maatschappelijk'};
-            const methodenLabels = {familiegesprek:'Familiegesprek',mdo:'MDO',ekc:'Eigen Kracht Conferentie',netwerkberaad:'Netwerkberaad',bemoeizorg:'Bemoeizorg',trajectbegeleiding:'Trajectbegeleiding'};
-            const bewegingLabels = {informeel:'→ Informeel netwerk',formeel:'→ Formeel netwerk',gemengd:'→ Gemengd netwerk',stoppen:'Stoppen'};
-            const stoplichtLabels = {'goed':'Zelfstandig','steun-wenselijk':'Steun wenselijk','steun-nodig':'Steun nodig'};
+            const stoplichtLabels = {'goed':'🟢 Zelfstandig','steun-wenselijk':'🟡 Steun wenselijk','steun-nodig':'🔴 Steun nodig'};
+            const bewegingLabels = {informeel:'→ Meer mensen om je heen',formeel:'→ Hulpverlener inzetten',gemengd:'→ Combineren',stoppen:'Stoppen'};
+            const methodenLabels = {familiegesprek:'👨‍👩‍👧 Familiegesprek',mdo:'🏥 MDO',ekc:'💪 EKC',netwerkberaad:'🤝 Netwerkberaad',bemoeizorg:'🚪 Bemoeizorg',trajectbegeleiding:'📋 Trajectbegeleiding'};
+            const planKloptKleur = {ja:'#16a34a',twijfel:'#f59e0b',nee:'#dc2626'};
 
-            let text = `POSITIONELE ANALYSE\n`;
-            text += `${'─'.repeat(40)}\n`;
-            text += `Datum: ${vandaag}\n`;
-            if (state.doelgroepen && state.doelgroepen.length > 0)
-                text += `Situatie: ${state.doelgroepen.map(d => doelgroepLabels[d]||d).join(', ')}\n`;
-            if (state.vorigGesprek && state.vorigGesprek.datum)
-                text += `Vorig gesprek: ${new Date(state.vorigGesprek.datum).toLocaleDateString('nl-NL')}${state.vorigGesprek.notitie ? ' — ' + state.vorigGesprek.notitie : ''}\n`;
-            text += `\n`;
-
-            // Domeinen met plan
             const ingevuld = domains.filter(d => {
                 const det = state.domainDetails[d.id] || {};
-                return (det.supporters||[]).length > 0 || det.situatie || (state.domainStatus||{})[d.id];
+                return (det.supporters||[]).length > 0 || (state.domainStatus||{})[d.id];
             });
 
-            if (ingevuld.length > 0) {
-                text += `DOMEINEN & AFSPRAKEN\n${'─'.repeat(40)}\n`;
-                ingevuld.forEach(d => {
-                    const status = (state.domainStatus||{})[d.id];
-                    const ond = state.ondersteuningsstructuur[d.id] || {};
-                    const ref = state.strategischeReflectie[d.id] || {};
-                    const supporters = (state.domainDetails[d.id]||{}).supporters || [];
+            const domeinHTML = ingevuld.map(d => {
+                const status = (state.domainStatus||{})[d.id];
+                const ond = state.ondersteuningsstructuur[d.id] || {};
+                const ref = state.strategischeReflectie[d.id] || {};
+                const kleur = planKlortKleur(ref.planKlopt);
+                return `
+                <div style="border:2px solid ${kleur};border-radius:10px;padding:14px 16px;margin-bottom:12px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <strong style="font-size:1rem;">${d.emoji} ${d.name}</strong>
+                        <span style="font-size:0.82rem;color:#6b7280;">${stoplichtLabels[status]||''}</span>
+                    </div>
+                    ${ref.concreetPlan ? `<div style="background:#f0fdf4;border-radius:6px;padding:8px 12px;margin-bottom:8px;font-weight:600;color:#166534;">📋 ${ref.concreetPlan}${ref.duur?` — ${ref.duur}`:''}</div>` : ''}
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem;color:#374151;">
+                        ${ref.verantwoordelijke ? `<span>🎯 <strong>Wie:</strong> ${ref.verantwoordelijke}</span>` : ''}
+                        ${ref.evaluatieDatum ? `<span>📅 <strong>Terugkijken:</strong> ${new Date(ref.evaluatieDatum).toLocaleDateString('nl-NL',{day:'numeric',month:'long'})}</span>` : ''}
+                        ${ond.bewegingsrichting ? `<span style="color:#6b7280;">${bewegingLabels[ond.bewegingsrichting]||ond.bewegingsrichting}</span>` : ''}
+                    </div>
+                    ${ond.methoden && ond.methoden.length > 0 ? `<div style="margin-top:6px;">${ond.methoden.map(m=>`<span style="font-size:0.75rem;padding:2px 8px;background:#f3f4f6;border-radius:10px;margin-right:4px;">${methodenLabels[m]||m}</span>`).join('')}</div>` : ''}
+                    ${ref.toelichting ? `<div style="font-size:0.8rem;color:#9ca3af;margin-top:6px;font-style:italic;">💬 ${ref.toelichting}</div>` : ''}
+                </div>`;
+            }).join('');
 
-                    text += `\n${d.emoji} ${d.name}`;
-                    if (status) text += ` [${stoplichtLabels[status]||status}]`;
-                    text += `\n`;
+            const interventieHTML = (state.geselecteerdeInterventies||[]).length > 0 ? `
+                <h3 style="font-size:1rem;margin:20px 0 8px;color:#1e40af;">🎯 Gekozen interventies</h3>
+                ${(state.geselecteerdeInterventies||[]).map(i=>`<div style="padding:6px 10px;background:#eff6ff;border-radius:6px;margin-bottom:6px;font-size:0.88rem;">${i.naam||i}${i.adres?`<span style="color:#6b7280;margin-left:8px;">📍 ${i.adres}</span>`:''}</div>`).join('')}` : '';
 
-                    if (supporters.length > 0)
-                        text += `  Betrokken: ${supporters.map(s => s.naam || s.type).join(', ')}\n`;
-                    if (ond.bewegingsrichting)
-                        text += `  Richting: ${bewegingLabels[ond.bewegingsrichting] || ond.bewegingsrichting}\n`;
-                    if (ond.methoden && ond.methoden.length > 0)
-                        text += `  Aanpak: ${ond.methoden.map(m => methodenLabels[m]||m).join(', ')}\n`;
-                    if (ref.concreetPlan)
-                        text += `  Plan: ${ref.concreetPlan}${ref.duur ? ` (${ref.duur})` : ''}\n`;
-                    if (ref.verantwoordelijke)
-                        text += `  Wie: ${ref.verantwoordelijke}\n`;
-                    if (ref.evaluatieDatum)
-                        text += `  Terugkijken: ${new Date(ref.evaluatieDatum).toLocaleDateString('nl-NL')}\n`;
-                    if (ref.uitkomst)
-                        text += `  Uitkomst (follow-up): ${ref.uitkomst}\n`;
-                    if (ref.toelichting)
-                        text += `  Toelichting: ${ref.toelichting}\n`;
-                });
-                text += `\n`;
-            }
+            const w = window.open('','_blank');
+            w.document.write(`<!DOCTYPE html><html lang="nl"><head>
+                <meta charset="UTF-8">
+                <title>Positionele Analyse — ${state.clientNaam||'Anoniem'}</title>
+                <style>
+                    body { font-family: -apple-system, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; color: #1f2937; }
+                    @media print { body { margin: 20px; } .no-print { display: none; } }
+                </style>
+            </head><body>
+                <div class="no-print" style="background:#fef9c3;padding:10px 16px;border-radius:8px;margin-bottom:20px;font-size:0.88rem;">
+                    💡 Druk op <strong>Ctrl+P</strong> (of Cmd+P) om op te slaan als PDF of af te drukken.
+                </div>
+                <div style="border-bottom:3px solid #16a34a;padding-bottom:12px;margin-bottom:20px;">
+                    <h1 style="font-size:1.6rem;margin:0 0 4px;color:#16a34a;">Positionele Analyse</h1>
+                    <div style="font-size:0.9rem;color:#6b7280;">${state.clientNaam ? `<strong>${state.clientNaam}</strong> · ` : ''}${vandaag}</div>
+                    ${state.doelgroepen && state.doelgroepen.length > 0 ? `<div style="font-size:0.82rem;color:#9ca3af;margin-top:4px;">${state.doelgroepen.join(' · ')}</div>` : ''}
+                </div>
+                <h3 style="font-size:1rem;margin:0 0 12px;color:#374151;">📋 Afspraken per domein</h3>
+                ${domeinHTML || '<p style="color:#9ca3af;">Nog geen domeinen ingevuld.</p>'}
+                ${interventieHTML}
+                <div style="margin-top:20px;padding:12px 16px;background:#f0fdf4;border-radius:8px;font-size:0.88rem;">
+                    <strong>🕸️ Netwerkpositie:</strong> ${netwerkInfo.label}<br>
+                    <span style="color:#6b7280;">${netwerkInfo.beschrijving}</span>
+                </div>
+                ${state.agenda && state.agenda.length > 0 ? `
+                <div style="margin-top:16px;padding:12px 16px;background:#fefce8;border-radius:8px;font-size:0.88rem;">
+                    <strong>📅 Volgende afspraak:</strong><br>
+                    ${state.agenda.map(a=>`${a.datum} ${a.tijd} — ${a.wat}${a.met?' · '+a.met:''}`).join('<br>')}
+                </div>` : ''}
+                <div style="margin-top:24px;font-size:0.75rem;color:#d1d5db;text-align:center;">Gegenereerd met RPA Positionele Analyse · rpa-instrument.nl</div>
+            </body></html>`);
+            w.document.close();
+        }
 
-            // Netwerkpositie
-            text += `NETWERKPOSITIE\n${'─'.repeat(40)}\n`;
-            text += `${netwerkInfo.label}\n${netwerkInfo.beschrijving}\n\n`;
-
-            // Volgende afspraak
-            if (state.agenda && state.agenda.length > 0) {
-                text += `VOLGENDE AFSPRAAK\n${'─'.repeat(40)}\n`;
-                state.agenda.forEach(a => {
-                    text += `${a.datum} ${a.tijd} — ${a.wat}${a.met ? ' · ' + a.met : ''}\n`;
-                });
-                text += `\n`;
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Samenvatting gekopieerd naar klembord!\n\nPlak dit in je dossier of cliëntvolgsysteem.');
-            }).catch(() => {
-                const w = window.open('','_blank');
-                w.document.write('<pre style="font-family:monospace;padding:20px;">'+text+'</pre>');
-            });
+        function planKlortKleur(planKlopt) {
+            return planKlopt === 'ja' ? '#16a34a' : planKlopt === 'nee' ? '#dc2626' : planKlopt === 'twijfel' ? '#f59e0b' : '#e5e7eb';
         }
         
         // STRATEGISCHE EXPORT VOOR NIVEAU 3
