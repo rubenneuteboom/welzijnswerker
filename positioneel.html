@@ -7581,21 +7581,7 @@ Antwoord in dit exacte JSON formaat:
         
         // STRATEGISCHE EXPORT VOOR NIVEAU 3
         function exportVoorStrategischeAnalyse() {
-            // Privacy consent check
-            const consent = confirm(
-                '📊 Exporteren voor strategische analyse (Niveau 3)\n\n' +
-                '✅ Deze data wordt gebruikt voor:\n' +
-                '- Kosten-impact analyse\n' +
-                '- Maatschappelijke effectmeting\n' +
-                '- Beleidsonderbouwing\n\n' +
-                '🔒 Privacy:\n' +
-                '- Persoonlijke gegevens worden NIET geëxporteerd\n' +
-                '- Alleen domeinscores en positionele keuzes\n' +
-                '- Data blijft anoniem\n\n' +
-                'Akkoord?'
-            );
-            
-            if (!consent) return;
+            // Privacy-safe export — geen popup
             
             // Bereid export data voor (privacy-safe)
             const exportData = {
@@ -7609,35 +7595,32 @@ Antwoord in dit exacte JSON formaat:
                 // Domein scores (anoniem)
                 domeinen: domains.map(d => {
                     const details = state.domainDetails[d.id] || {};
-                    const huidig = state.huidigeSteun[d.id] || {};
                     const ondersteuning = state.ondersteuningsstructuur[d.id] || {};
                     const reflectie = state.strategischeReflectie[d.id] || {};
+                    const stoplicht = (state.domainStatus||{})[d.id] || null;
+                    const supporters = (details.supporters||[]);
                     
                     return {
                         id: d.id,
                         naam: d.name,
                         emoji: d.emoji,
-                        
-                        // Huidige situatie
-                        huidigeDraaglagen: huidig.draaglagen || [],
-                        actieNodig: details.actieNodig === 'actie',
-                        
+                        stoplicht,
+
+                        // Huidige draaglagen (afgeleid van supporters)
+                        huidigeDraaglagen: [...new Set(supporters.map(s => s.type).filter(Boolean))],
+                        aantalSupporters: supporters.length,
+
                         // Positionele keuze
-                        gewensteDraaglagen: ondersteuning.draaglagen || huidig.draaglagen || [],
+                        gewensteDraaglagen: ondersteuning.draaglagen || [],
                         bewegingsrichting: ondersteuning.bewegingsrichting || null,
-                        
-                        // Strategische reflectie
-                        reflectie: {
-                            duurzaamheid: reflectie.duurzaamheid || null,
-                            proportionaliteit: reflectie.proportionaliteit || null,
-                            verantwoordelijke: reflectie.verantwoordelijke ? 'Ja' : 'Nee', // Privacy: niet naam
-                            evaluatieDatum: reflectie.evaluatieDatum || null,
-                            toelichting: reflectie.toelichting || null
-                        },
-                        
-                        // Details voor kostenberekening
-                        steunDoorWie: details.steunDoorWie || [],
-                        ondersteuningsfrequentie: details.steunFrequentie || null
+                        methoden: ondersteuning.methoden || [],
+
+                        // Plan (geanonimiseerd)
+                        planKlopt: reflectie.planKlopt || null,
+                        heeftConcreetPlan: !!reflectie.concreetPlan,
+                        duur: reflectie.duur || null,
+                        heeftVerantwoordelijke: !!reflectie.verantwoordelijke,
+                        evaluatieDatum: reflectie.evaluatieDatum || null,
                     };
                 }),
                 
@@ -7680,15 +7663,9 @@ Antwoord in dit exacte JSON formaat:
             link.download = `RPA-strategisch-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
-            alert(
-                '✅ Export geslaagd!\n\n' +
-                '📄 Bestand gedownload: RPA-strategisch-*.json\n\n' +
-                '🎯 Volgende stap:\n' +
-                '1. Open Niveau 3 (Strategische Netwerkimpactanalyse)\n' +
-                '2. Klik op "📥 Importeer positionele analyse"\n' +
-                '3. Selecteer dit bestand\n\n' +
-                '🔒 Privacy: Geen persoonlijke gegevens geëxporteerd'
-            );
+            // Toon korte bevestiging zonder popup
+            const btn = document.querySelector('[onclick="exportVoorStrategischeAnalyse()"]');
+            if (btn) { const orig = btn.textContent; btn.textContent = '✅ Gedownload!'; setTimeout(()=>btn.textContent=orig, 2500); }
         }
         
         // Render SOCIAAL NETWERK block (speciale vragen)
