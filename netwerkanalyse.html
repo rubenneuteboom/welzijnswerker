@@ -347,21 +347,12 @@
                 <p style="color:#6b7280;font-size:0.9rem;margin-bottom:16px;">Hieronder zie je per gebied hoe het gaat. Groen = gaat goed, geel = aandacht, rood = extra steun handig.</p>
                 <div id="resultsSummary"></div>
 
-                <div class="cta-gesprek">
-                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee — zonder wachtlijst.</p>
-                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank" 
-                        style="display:inline-block;background:#059669;color:white;border:none;border-radius:12px;padding:14px 28px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;margin-top:4px;">
-                        💬 Vraag een gesprek aan →
-                    </a>
-                    <p style="font-size:0.75rem;color:rgba(255,255,255,0.7);margin-top:10px;">Je kunt ook bellen of langsgaan bij je wijkteam.</p>
-                </div>
-
-                <!-- OPT-IN WIJKDATA -->
-                <div id="wijkOptIn" style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 18px;margin-top:16px;">
-                    <div style="font-weight:700;color:#166534;margin-bottom:6px;">🏘️ Bijdragen aan wijkdata?</div>
+                <!-- OPT-IN WIJKDATA — prominent, direct na de scores -->
+                <div id="wijkOptIn" style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 18px;margin:16px 0;">
+                    <div style="font-weight:700;color:#166534;margin-bottom:6px;">🏘️ Wil je helpen je buurt beter te maken?</div>
                     <p style="font-size:0.85rem;color:#374151;margin-bottom:12px;">
-                        Je kunt je anonieme score (alleen ✓/⚠/🚨 per gebied, geen naam) delen met je wijkteam. 
-                        Zo zien zij wat er speelt in de buurt en kunnen ze gericht hulp organiseren.
+                        Je kunt je anonieme score delen met het wijkteam — alleen ✓/⚠/🔴 per gebied, zonder naam of contact. 
+                        Zo zien zij wat er speelt en kunnen ze gericht hulp organiseren.
                     </p>
                     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
                         <input type="text" id="wijkNaam" placeholder="Jouw wijk of buurt (optioneel)" 
@@ -378,8 +369,17 @@
                         </button>
                     </div>
                     <div id="wijkOptInBevestiging" style="display:none;margin-top:10px;font-size:0.85rem;color:#166534;font-weight:600;">
-                        ✅ Bedankt! Je score is anoniem opgeslagen.
+                        ✅ Bedankt! Je helpt je buurt ermee.
                     </div>
+                </div>
+
+                <div class="cta-gesprek">
+                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee — zonder wachtlijst.</p>
+                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank" 
+                        style="display:inline-block;background:#059669;color:white;border:none;border-radius:12px;padding:14px 28px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;margin-top:4px;">
+                        💬 Vraag een gesprek aan →
+                    </a>
+                    <p style="font-size:0.75rem;color:rgba(255,255,255,0.7);margin-top:10px;">Je kunt ook bellen of langsgaan bij je wijkteam.</p>
                 </div>
 
                 <div class="btn-group" style="margin-top:16px;">
