@@ -466,42 +466,48 @@
 
         <!-- Import Sectie (default) -->
         <div id="importSection" class="import-section">
-            <h2>📥 Strategische analyse</h2>
-            <p>
-                Importeer een positionele analyse van Niveau 2 om de strategische impact te berekenen.
+            <h2>📊 Strategische caseload analyse</h2>
+            <p style="color:var(--text-light);margin-bottom:24px;">
+                Selecteer één of meerdere cliënten uit je caseload om te analyseren.
             </p>
 
-            <!-- Directe import vanuit Niveau 2 (via localStorage) -->
-            <div id="directImportBlok" style="display:none;background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
-                <div style="font-weight:700;color:#166534;margin-bottom:6px;">✅ Analyse beschikbaar vanuit Niveau 2</div>
-                <div id="directImportInfo" style="font-size:0.88rem;color:#374151;margin-bottom:12px;"></div>
-                <button onclick="app.laadVanuitNiveau2()"
-                    style="background:#16a34a;color:white;border:none;border-radius:8px;padding:10px 20px;font-size:0.95rem;font-weight:600;cursor:pointer;">
-                    ▶️ Laad analyse direct
+            <!-- CASELOAD LIJST (gevuld vanuit localStorage) -->
+            <div id="caseloadBlok" style="display:none;margin-bottom:28px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                    <div style="font-weight:700;color:#1f2937;font-size:1.05rem;">👥 Caseload</div>
+                    <div style="display:flex;gap:8px;">
+                        <button onclick="app.selecteerAlles()" style="background:#ede9fe;color:#5b21b6;border:none;border-radius:8px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">Selecteer alles</button>
+                        <button onclick="app.verwijderCaseload()" style="background:#fee2e2;color:#991b1b;border:none;border-radius:8px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">🗑 Verwijder caseload</button>
+                    </div>
+                </div>
+                <div id="caseloadLijst" style="display:flex;flex-direction:column;gap:10px;"></div>
+                <button id="analyseerBtn" onclick="app.analyseerGeselecteerd()" disabled
+                    style="margin-top:16px;width:100%;background:#667eea;color:white;border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;opacity:0.5;transition:all 0.2s;">
+                    Analyseer geselecteerde cliënten →
                 </button>
             </div>
 
-            <div class="file-upload" id="fileUpload" onclick="document.getElementById('fileInput').click()">
-                <div style="font-size: 3rem; margin-bottom: 15px;">📁</div>
-                <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">
-                    Of: sleep een JSON bestand hierheen
-                </p>
-                <p style="font-size: 0.9rem; color: var(--text-light);">
-                    Ondersteund: RPA-strategisch-*.json
-                </p>
-            </div>
-            <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="app.handleFile(event)">
-
-            <div class="alert alert-info" style="margin-top: 25px; text-align: left;">
-                <span style="font-size: 1.5rem;">ℹ️</span>
-                <div>
-                    <strong>Hoe kom ik aan een bestand?</strong><br>
-                    1. Open RPA Niveau 2 (Positionele Analyse)<br>
-                    2. Voltooi de analyse met een cliënt<br>
-                    3. Klik op "📊 Export voor strategische analyse"<br>
-                    4. Upload het gedownloade JSON bestand hier
+            <!-- Lege staat: geen caseload -->
+            <div id="geenCaseloadBlok">
+                <div style="background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:32px;text-align:center;margin-bottom:20px;">
+                    <div style="font-size:2.5rem;margin-bottom:12px;">📋</div>
+                    <div style="font-weight:600;color:#374151;margin-bottom:6px;">Nog geen caseload beschikbaar</div>
+                    <div style="font-size:0.88rem;color:#6b7280;">Voltooi eerst een positionele analyse in Niveau 2.<br>Klik daar op "📊 Naar strategische analyse" om cliënten toe te voegen.</div>
                 </div>
             </div>
+
+            <!-- Handmatig bestand uploaden (nooduitgang) -->
+            <details style="margin-top:8px;">
+                <summary style="cursor:pointer;font-size:0.85rem;color:var(--text-light);padding:8px 0;">📁 Bestand uploaden (handmatig)</summary>
+                <div style="margin-top:12px;">
+                    <div class="file-upload" id="fileUpload" onclick="document.getElementById('fileInput').click()" style="padding:20px;">
+                        <div style="font-size:2rem;margin-bottom:8px;">📁</div>
+                        <p style="font-size:0.95rem;font-weight:600;margin-bottom:4px;">Sleep een JSON bestand of klik</p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">RPA-strategisch-*.json</p>
+                    </div>
+                    <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="app.handleFile(event)">
+                </div>
+            </details>
         </div>
 
         <!-- Analysis Screens (hidden until import) -->
@@ -840,16 +846,147 @@
 
             // Check bij laden of er data vanuit Niveau 2 klaarstaat
             checkNiveau2Import() {
-                const raw = localStorage.getItem('rpa_niveau3_import');
-                const datum = localStorage.getItem('rpa_niveau3_datum');
-                if (!raw) return;
-                const blok = document.getElementById('directImportBlok');
-                const info = document.getElementById('directImportInfo');
-                if (blok) blok.style.display = 'block';
-                if (info && datum) {
-                    const d = new Date(datum).toLocaleDateString('nl-NL', {day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-                    info.textContent = `Opgeslagen op ${d}`;
+                // Laad caseload uit localStorage
+                const caseloadRaw = localStorage.getItem('rpa_caseload');
+                const caseload = caseloadRaw ? JSON.parse(caseloadRaw) : [];
+
+                const caseloadBlok = document.getElementById('caseloadBlok');
+                const geenBlok = document.getElementById('geenCaseloadBlok');
+
+                if (caseload.length > 0) {
+                    caseloadBlok.style.display = 'block';
+                    geenBlok.style.display = 'none';
+                    this.renderCaseloadLijst(caseload);
+                } else {
+                    // Fallback: check oude enkelvoudige import
+                    const raw = localStorage.getItem('rpa_niveau3_import');
+                    if (raw) {
+                        try {
+                            const data = JSON.parse(raw);
+                            const fakeLoad = [data];
+                            caseloadBlok.style.display = 'block';
+                            geenBlok.style.display = 'none';
+                            this.renderCaseloadLijst(fakeLoad);
+                        } catch(e) {}
+                    }
                 }
+            },
+
+            renderCaseloadLijst(caseload) {
+                const lijst = document.getElementById('caseloadLijst');
+                lijst.innerHTML = caseload.map((c, i) => {
+                    const datum = new Date(c.metadata.exportDatum).toLocaleDateString('nl-NL', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+                    const naam = c.metadata.displayNaam || `Cliënt ${i+1}`;
+                    const dg = (c.metadata.doelgroepen||[]).join(', ') || '—';
+                    const bewegingen = (c.domeinen||[]).filter(d => d.bewegingsrichting).length;
+                    const positie = c.netwerkpositie ? c.netwerkpositie.label : '—';
+                    return `<label style="display:flex;align-items:center;gap:12px;background:white;border:2px solid #e5e7eb;border-radius:10px;padding:12px 16px;cursor:pointer;transition:border-color 0.15s;" 
+                                onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'#667eea':'#e5e7eb'">
+                        <input type="checkbox" value="${i}" onchange="app.updateAnalyseerBtn()" 
+                            style="width:18px;height:18px;accent-color:#667eea;cursor:pointer;">
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-weight:700;color:#1f2937;">${naam}</div>
+                            <div style="font-size:0.8rem;color:#6b7280;">${positie} · ${bewegingen} domein${bewegingen!==1?'en':''} in beweging · ${dg}</div>
+                        </div>
+                        <div style="font-size:0.75rem;color:#9ca3af;white-space:nowrap;">${datum}</div>
+                    </label>`;
+                }).join('');
+                this._caseload = caseload;
+                this.updateAnalyseerBtn();
+            },
+
+            updateAnalyseerBtn() {
+                const checkboxes = document.querySelectorAll('#caseloadLijst input[type=checkbox]');
+                const aantalGeselecteerd = [...checkboxes].filter(c => c.checked).length;
+                const btn = document.getElementById('analyseerBtn');
+                if (btn) {
+                    btn.disabled = aantalGeselecteerd === 0;
+                    btn.style.opacity = aantalGeselecteerd > 0 ? '1' : '0.5';
+                    btn.style.cursor = aantalGeselecteerd > 0 ? 'pointer' : 'default';
+                    btn.textContent = aantalGeselecteerd > 0
+                        ? `Analyseer ${aantalGeselecteerd} geselecteerde cliënt${aantalGeselecteerd > 1 ? 'en' : ''} →`
+                        : 'Analyseer geselecteerde cliënten →';
+                    // Update labels borderkleuren
+                    document.querySelectorAll('#caseloadLijst label').forEach((lbl, i) => {
+                        const cb = lbl.querySelector('input');
+                        lbl.style.borderColor = cb && cb.checked ? '#667eea' : '#e5e7eb';
+                        lbl.style.background = cb && cb.checked ? '#f5f3ff' : 'white';
+                    });
+                }
+            },
+
+            selecteerAlles() {
+                document.querySelectorAll('#caseloadLijst input[type=checkbox]').forEach(cb => cb.checked = true);
+                this.updateAnalyseerBtn();
+            },
+
+            analyseerGeselecteerd() {
+                const checkboxes = [...document.querySelectorAll('#caseloadLijst input[type=checkbox]')];
+                const geselecteerd = checkboxes.filter(cb => cb.checked).map(cb => this._caseload[parseInt(cb.value)]);
+                if (geselecteerd.length === 0) return;
+
+                // Laad eerste als primaire data, voeg rest toe aan casussen-stapel
+                this.casussen = geselecteerd;
+                this.data = geselecteerd[0];
+
+                document.getElementById('importSection').classList.add('hidden');
+                document.getElementById('analysisContainer').classList.remove('hidden');
+
+                this.vulExecutiveSummaryMulti();
+                this.vulOverzicht();
+                this.berekenKosten();
+                this.berekenMaatschappelijkeImpact();
+            },
+
+            vulExecutiveSummaryMulti() {
+                const n = this.casussen.length;
+                // Som van alle besparing over alle casussen
+                let totalBesparing = 0;
+                this.casussen.forEach(c => {
+                    const orig = this.data;
+                    this.data = c;
+                    totalBesparing += this.berekenBesparingMaand() * 12;
+                    this.data = orig;
+                });
+
+                const positieTeller = {};
+                this.casussen.forEach(c => {
+                    const p = c.netwerkpositie ? c.netwerkpositie.positie : 'onbekend';
+                    positieTeller[p] = (positieTeller[p]||0) + 1;
+                });
+                const meestVoorkomend = Object.entries(positieTeller).sort((a,b)=>b[1]-a[1])[0];
+
+                document.getElementById('exTitle').textContent = n === 1
+                    ? (this.casussen[0].netwerkpositie ? this.casussen[0].netwerkpositie.label : '—')
+                    : `${n} cliënten geanalyseerd`;
+
+                const totalBewegingen = this.casussen.reduce((s, c) => s + (c.domeinen||[]).filter(d => d.bewegingsrichting).length, 0);
+                document.getElementById('exSubtitel').textContent = `${totalBewegingen} domeinen in beweging · meest voorkomend: ${meestVoorkomend ? meestVoorkomend[0] : '—'}`;
+
+                const el = document.getElementById('exBesparing');
+                if (totalBesparing > 0) {
+                    el.textContent = `€ ${totalBesparing.toLocaleString('nl-NL')}`;
+                } else if (totalBesparing < 0) {
+                    el.textContent = `+ € ${Math.abs(totalBesparing).toLocaleString('nl-NL')}`;
+                    el.style.opacity = '0.7';
+                } else {
+                    el.textContent = 'n.v.t.';
+                }
+
+                document.getElementById('exN').textContent = `Op basis van ${n} casus${n>1?'sen':''}`;
+                document.getElementById('exCasussenLabel').textContent = `${n} cliënt${n>1?'en':''} geselecteerd`;
+
+                const disc = document.getElementById('exDisclaimer');
+                if (disc) disc.style.display = n < 10 ? 'block' : 'none';
+            },
+
+            verwijderCaseload() {
+                if (!confirm(`Weet je zeker dat je de caseload wilt verwijderen?\n\nDe analyses worden uit de browser verwijderd.`)) return;
+                localStorage.removeItem('rpa_caseload');
+                localStorage.removeItem('rpa_niveau3_import');
+                localStorage.removeItem('rpa_niveau3_datum');
+                document.getElementById('caseloadBlok').style.display = 'none';
+                document.getElementById('geenCaseloadBlok').style.display = 'block';
             },
 
             vulExecutiveSummary() {

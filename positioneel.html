@@ -7661,9 +7661,23 @@ Antwoord in dit exacte JSON formaat:
             
             const dataStr = JSON.stringify(exportData, null, 2);
 
-            // Altijd opslaan in localStorage voor directe overdracht
+            // Altijd opslaan in localStorage voor directe overdracht (enkelvoudig)
             localStorage.setItem('rpa_niveau3_import', dataStr);
             localStorage.setItem('rpa_niveau3_datum', new Date().toISOString());
+
+            // OOK opslaan in caseload (meerdere cliënten stapelen)
+            try {
+                const caseloadRaw = localStorage.getItem('rpa_caseload');
+                const caseload = caseloadRaw ? JSON.parse(caseloadRaw) : [];
+                // Verwijder items ouder dan 90 dagen
+                const negentigDagenGeleden = Date.now() - (90 * 24 * 60 * 60 * 1000);
+                const gefilterd = caseload.filter(c => new Date(c.metadata.exportDatum).getTime() > negentigDagenGeleden);
+                // Voeg toe met display-naam (optioneel uit state)
+                exportData.metadata.displayNaam = state.clientNaam || null;
+                exportData.metadata.caseloadId = 'casus-' + Date.now();
+                gefilterd.push(exportData);
+                localStorage.setItem('rpa_caseload', JSON.stringify(gefilterd));
+            } catch(e) { console.warn('Caseload opslaan mislukt:', e); }
 
             if (openDirect) {
                 // Directe modus: open strategisch.html in nieuw tabblad
