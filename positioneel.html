@@ -7612,13 +7612,23 @@ Antwoord in dit exacte JSON formaat:
             const lijst = document.getElementById('caseloadLijstN2');
             if (!btn || !lijst) return;
 
+            btn.style.display = 'inline-block';
+
             if (caseload.length === 0) {
-                btn.style.display = 'none';
-                if (panel) panel.style.display = 'none';
+                btn.textContent = `📋 Caseload (leeg)`;
+                btn.style.opacity = '0.5';
+                lijst.innerHTML = `<div style="text-align:center;padding:16px;color:#9ca3af;font-size:0.85rem;">
+                    Nog geen cliënten opgeslagen.<br>
+                    Voltooi een gesprek en klik "📊 Naar strategische analyse" om te beginnen.<br><br>
+                    <button onclick="laadDemoCaseload()" style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;padding:7px 14px;font-size:0.82rem;cursor:pointer;color:#374151;">
+                        🎬 Laad demo casussen (voor test)
+                    </button>
+                </div>`;
+                if (panel) panel.style.display = 'block';
                 return;
             }
 
-            btn.style.display = 'inline-block';
+            btn.style.opacity = '1';
             btn.textContent = `📋 Caseload (${caseload.length})`;
 
             lijst.innerHTML = caseload.map((c, i) => {
@@ -7657,6 +7667,34 @@ Antwoord in dit exacte JSON formaat:
 
         function openNiveau3Caseload() {
             window.open('strategisch.html', '_blank');
+        }
+
+        async function laadDemoCaseload() {
+            const bestanden = [
+                'casussen/01-maria-ggz-reintegratie.json',
+                'casussen/02-ahmed-jongere-dakloosheid.json',
+                'casussen/03-greet-ouderen-mantelzorg.json',
+                'casussen/04-jan-multiproblem-mdo.json',
+                'casussen/05-fatima-mantelzorger-overbelast.json',
+                'casussen/06-piet-eenzaamheid-pensionering.json',
+                'casussen/07-nadia-ggz-vluchteling.json',
+                'casussen/08-henk-schulden-ontslag.json',
+                'casussen/09-els-verslaving-hersteld-ekc.json',
+                'casussen/10-mohammed-weduwnaar-ouderen.json'
+            ];
+            const casussen = [];
+            for (const bestand of bestanden) {
+                try {
+                    const resp = await fetch(bestand);
+                    if (resp.ok) casussen.push(await resp.json());
+                } catch(e) { console.warn('Kon niet laden:', bestand); }
+            }
+            if (casussen.length === 0) {
+                alert('Demo casussen niet gevonden. Zorg dat de dev server draait op poort 3458.');
+                return;
+            }
+            localStorage.setItem('rpa_caseload', JSON.stringify(casussen));
+            laadCaseloadN2();
         }
 
         function verwijderCaseloadN2() {
