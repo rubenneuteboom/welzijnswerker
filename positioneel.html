@@ -4279,9 +4279,9 @@
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToScreenById('interventies')">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
-                        <button class="btn" onclick="exportVoorStrategischeAnalyse()"
+                        <button class="btn" onclick="naarStrategischeAnalyse()"
                             style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;font-size:0.82rem;">
-                            📊 Export voor strategische analyse
+                            📊 Naar strategische analyse →
                         </button>
                     </div>
                 </div>
@@ -7579,8 +7579,13 @@ Antwoord in dit exacte JSON formaat:
             return planKlopt === 'ja' ? '#16a34a' : planKlopt === 'nee' ? '#dc2626' : planKlopt === 'twijfel' ? '#f59e0b' : '#e5e7eb';
         }
         
+        // STRATEGISCHE ANALYSE — één klik, geen bestand
+        function naarStrategischeAnalyse() {
+            exportVoorStrategischeAnalyse(true);
+        }
+
         // STRATEGISCHE EXPORT VOOR NIVEAU 3
-        function exportVoorStrategischeAnalyse() {
+        function exportVoorStrategischeAnalyse(openDirect = false) {
             // Privacy-safe export — geen popup
             
             // Bereid export data voor (privacy-safe)
@@ -7654,18 +7659,26 @@ Antwoord in dit exacte JSON formaat:
                 }
             };
             
-            // Download als JSON
             const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `RPA-strategisch-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            // Toon korte bevestiging zonder popup
-            const btn = document.querySelector('[onclick="exportVoorStrategischeAnalyse()"]');
-            if (btn) { const orig = btn.textContent; btn.textContent = '✅ Gedownload!'; setTimeout(()=>btn.textContent=orig, 2500); }
+
+            // Altijd opslaan in localStorage voor directe overdracht
+            localStorage.setItem('rpa_niveau3_import', dataStr);
+            localStorage.setItem('rpa_niveau3_datum', new Date().toISOString());
+
+            if (openDirect) {
+                // Directe modus: open strategisch.html in nieuw tabblad
+                window.open('strategisch.html', '_blank');
+            } else {
+                // Download modus: JSON bestand
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `RPA-strategisch-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                const btn = document.querySelector('[onclick*="exportVoorStrategischeAnalyse"]');
+                if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✅ Gedownload!'; setTimeout(()=>btn.innerHTML=orig, 2500); }
+            }
         }
         
         // Render SOCIAAL NETWERK block (speciale vragen)
