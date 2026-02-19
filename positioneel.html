@@ -6975,6 +6975,13 @@ Antwoord in dit exacte JSON formaat:
                         ${ref.verantwoordelijke ? `<span style="font-size:0.82rem;color:#374151;">🎯 <strong>Wie:</strong> ${ref.verantwoordelijke}</span>` : ''}
                         ${ref.evaluatieDatum ? `<span style="font-size:0.82rem;color:#374151;">📅 <strong>Terugkijken:</strong> ${new Date(ref.evaluatieDatum).toLocaleDateString('nl-NL',{day:'numeric',month:'long'})}</span>` : ''}
                     </div>
+                    ${(ond.methoden && ond.methoden.length > 0) ? `
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;">
+                        ${ond.methoden.map(m => {
+                            const labels = {familiegesprek:'👨‍👩‍👧 Familiegesprek',mdo:'🏥 MDO',ekc:'💪 EKC',netwerkberaad:'🤝 Netwerkberaad',bemoeizorg:'🚪 Bemoeizorg',trajectbegeleiding:'📋 Trajectbegeleiding'};
+                            return `<span style="font-size:0.75rem;padding:3px 8px;background:#f3f4f6;border-radius:10px;color:#6b7280;font-weight:600;">${labels[m]||m}</span>`;
+                        }).join('')}
+                    </div>` : ''}
                     ${ref.toelichting ? `<div style="font-size:0.8rem;color:#9ca3af;margin-top:6px;font-style:italic;">💬 ${ref.toelichting}</div>` : ''}
                 </div>`;
             }).join('');
@@ -9764,6 +9771,32 @@ Antwoord in dit exacte JSON formaat:
                         </div>
                     </div>
                     
+                    <!-- Methodische aanpak (voor professional) -->
+                    ${(() => {
+                        const methoden = [
+                            { val: 'familiegesprek',  label: '👨‍👩‍👧 Familiegesprek' },
+                            { val: 'mdo',             label: '🏥 MDO' },
+                            { val: 'ekc',             label: '💪 Eigen Kracht Conferentie' },
+                            { val: 'netwerkberaad',   label: '🤝 Netwerkberaad' },
+                            { val: 'bemoeizorg',      label: '🚪 Bemoeizorg' },
+                            { val: 'trajectbegeleiding', label: '📋 Trajectbegeleiding' },
+                        ];
+                        const gekozen = (state.ondersteuningsstructuur[domainId] && state.ondersteuningsstructuur[domainId].methoden) || [];
+                        return `
+                        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f3f4f6;">
+                            <p style="font-size:0.8rem;font-weight:600;color:#6b7280;margin:0 0 8px;">🛠️ Welke aanpak zet je in? <span style="font-weight:400;font-style:italic;">(optioneel)</span></p>
+                            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                                ${methoden.map(m => {
+                                    const actief = gekozen.includes(m.val);
+                                    return `<button onclick="toggleMethode('${domainId}','${m.val}')" id="methode-${domainId}-${m.val}"
+                                        style="padding:5px 11px;border-radius:16px;font-size:0.78rem;font-weight:600;cursor:pointer;border:2px solid ${actief ? '#6b7280' : '#e5e7eb'};background:${actief ? '#f3f4f6' : 'white'};color:${actief ? '#374151' : '#9ca3af'};transition:all 0.15s;">
+                                        ${m.label}
+                                    </button>`;
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    })()}
+
                     <div style="text-align: right; padding-top: 15px; border-top: 1px solid #e5e7eb;">
                         <button onclick="toggleOndersteuningsBlok('${domainId}')" class="btn btn-secondary">
                             Sluiten
@@ -9771,6 +9804,24 @@ Antwoord in dit exacte JSON formaat:
                     </div>
                 </div>
             `;
+        }
+
+        // Toggle methodische aanpak per domein
+        function toggleMethode(domainId, methode) {
+            if (!state.ondersteuningsstructuur[domainId]) state.ondersteuningsstructuur[domainId] = {};
+            if (!state.ondersteuningsstructuur[domainId].methoden) state.ondersteuningsstructuur[domainId].methoden = [];
+            const lijst = state.ondersteuningsstructuur[domainId].methoden;
+            const idx = lijst.indexOf(methode);
+            if (idx > -1) { lijst.splice(idx, 1); } else { lijst.push(methode); }
+            saveState();
+            // Update chip visueel
+            const btn = document.getElementById(`methode-${domainId}-${methode}`);
+            if (btn) {
+                const actief = lijst.includes(methode);
+                btn.style.border = `2px solid ${actief ? '#6b7280' : '#e5e7eb'}`;
+                btn.style.background = actief ? '#f3f4f6' : 'white';
+                btn.style.color = actief ? '#374151' : '#9ca3af';
+            }
         }
 
         // Toggle draaglaag
