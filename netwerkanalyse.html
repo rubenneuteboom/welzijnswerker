@@ -345,6 +345,32 @@
                     </button>
                 </div>
 
+                <!-- OPT-IN WIJKDATA -->
+                <div id="wijkOptIn" style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 18px;margin-top:16px;">
+                    <div style="font-weight:700;color:#166534;margin-bottom:6px;">🏘️ Bijdragen aan wijkdata?</div>
+                    <p style="font-size:0.85rem;color:#374151;margin-bottom:12px;">
+                        Je kunt je anonieme score (alleen ✓/⚠/🚨 per gebied, geen naam) delen met je wijkteam. 
+                        Zo zien zij wat er speelt in de buurt en kunnen ze gericht hulp organiseren.
+                    </p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+                        <input type="text" id="wijkNaam" placeholder="Jouw wijk of buurt (optioneel)" 
+                            style="flex:1;min-width:160px;padding:8px 12px;border:1.5px solid #86efac;border-radius:8px;font-size:0.88rem;">
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button onclick="app.bijdragenAanWijkdata()" 
+                            style="background:#059669;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+                            ✅ Ja, anoniem bijdragen
+                        </button>
+                        <button onclick="document.getElementById('wijkOptIn').style.display='none'"
+                            style="background:none;border:1px solid #d1d5db;border-radius:8px;padding:9px 18px;font-size:0.88rem;color:#6b7280;cursor:pointer;">
+                            Nee, liever niet
+                        </button>
+                    </div>
+                    <div id="wijkOptInBevestiging" style="display:none;margin-top:10px;font-size:0.85rem;color:#166534;font-weight:600;">
+                        ✅ Bedankt! Je score is anoniem opgeslagen.
+                    </div>
+                </div>
+
                 <div class="btn-group" style="margin-top:16px;">
                     <button class="btn-secondary" onclick="app.reset()">🔄 Opnieuw</button>
                     <button class="btn-secondary" onclick="window.print()">🖨️ Bewaren</button>
@@ -1123,6 +1149,40 @@
                         }
                     } catch(e) { /* ignore */ }
                 }
+            },
+
+            bijdragenAanWijkdata() {
+                const wijk = (document.getElementById('wijkNaam')?.value || '').trim() || 'onbekend';
+                const timestamp = new Date().toISOString();
+
+                // Bouw anoniem record: alleen scores per domein, geen persoonlijke info
+                const record = {
+                    tijdstip: timestamp,
+                    wijk: wijk,
+                    leeftijdscategorie: this.ageCategory || 'onbekend',
+                    scores: {}
+                };
+
+                this.domains.forEach(d => {
+                    record.scores[d.id] = this.answers[d.id] || null;
+                });
+
+                // Opslaan in locale wijkbatch
+                try {
+                    const raw = localStorage.getItem('rpa_wijkdata');
+                    const batch = raw ? JSON.parse(raw) : [];
+                    // Verwijder entries ouder dan 180 dagen
+                    const limiet = Date.now() - (180 * 24 * 60 * 60 * 1000);
+                    const gefilterd = batch.filter(r => new Date(r.tijdstip).getTime() > limiet);
+                    gefilterd.push(record);
+                    localStorage.setItem('rpa_wijkdata', JSON.stringify(gefilterd));
+                } catch(e) { console.warn('Wijkdata opslaan mislukt', e); }
+
+                // Bevestiging tonen
+                document.getElementById('wijkOptIn').querySelector('div:last-child').style.display = 'none';
+                document.querySelectorAll('#wijkOptIn button').forEach(b => b.style.display = 'none');
+                const bevestiging = document.getElementById('wijkOptInBevestiging');
+                if (bevestiging) bevestiging.style.display = 'block';
             },
 
             reset() {

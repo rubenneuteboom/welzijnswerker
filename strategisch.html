@@ -797,8 +797,21 @@
 
                 <div class="btn-group">
                     <button class="btn-secondary" onclick="app.showScreen(4)">← Vorige</button>
-                    <button class="btn-primary" onclick="app.downloadPDF()">📥 Download PDF</button>
+                    <button class="btn-primary" onclick="app.downloadPDF()">📥 Download rapportage</button>
                     <button class="btn-secondary" onclick="app.resetImport()">🔄 Nieuwe analyse</button>
+                    <button onclick="app.showScreen(6);app.renderWijkDashboard();" style="background:#059669;color:white;border:none;border-radius:8px;padding:10px 20px;font-weight:600;cursor:pointer;">🏘️ Wijkdashboard</button>
+                </div>
+            </div>
+
+            <!-- Screen 6: Wijkdashboard -->
+            <div class="screen" id="screen6">
+                <h2>🏘️ Wijkdashboard — KrachtCheck data</h2>
+                <p class="screen-intro">Anonieme scores van de KrachtCheck. Laat zien wat er in de wijk speelt — zonder persoonsgegevens.</p>
+                <div id="wijkDashboardInhoud"></div>
+                <div class="btn-group" style="margin-top:24px;flex-wrap:wrap;gap:10px;">
+                    <button class="btn-secondary" onclick="app.showScreen(5)">← Terug</button>
+                    <button class="btn-primary" onclick="app.downloadWijkdata()">📥 Download wijkdata (CSV)</button>
+                    <button onclick="app.verwijderWijkdata()" style="background:#fee2e2;color:#991b1b;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-size:0.9rem;font-weight:600;">🗑 Verwijder wijkdata</button>
                 </div>
             </div>
 
@@ -980,6 +993,106 @@
 
                 const disc = document.getElementById('exDisclaimer');
                 if (disc) disc.style.display = n < 10 ? 'block' : 'none';
+            },
+
+            renderWijkDashboard() {
+                const raw = localStorage.getItem('rpa_wijkdata');
+                const batch = raw ? JSON.parse(raw) : [];
+                const el = document.getElementById('wijkDashboardInhoud');
+                if (!el) return;
+
+                if (batch.length === 0) {
+                    el.innerHTML = `<div style="background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:32px;text-align:center;">
+                        <div style="font-size:2.5rem;margin-bottom:12px;">📊</div>
+                        <div style="font-weight:600;color:#374151;margin-bottom:6px;">Nog geen wijkdata beschikbaar</div>
+                        <div style="font-size:0.88rem;color:#6b7280;">Deel de KrachtCheck met inwoners. Aan het einde kunnen zij anoniem bijdragen aan de wijkdata.</div>
+                    </div>`;
+                    return;
+                }
+
+                // Domeinlijst
+                const domeinen = ['financien','dagbesteding','huisvesting','huiselijk','geestelijk','lichamelijk','verslaving','adl','sociaal','participatie','justitie'];
+                const domeinEmoji = {'financien':'💰','dagbesteding':'💼','huisvesting':'🏠','huiselijk':'👨‍👩‍👧','geestelijk':'🧠','lichamelijk':'💪','verslaving':'🚭','adl':'🛁','sociaal':'👥','participatie':'🤝','justitie':'⚖️'};
+                const domeinNaam = {'financien':'Financiën','dagbesteding':'Dagbesteding','huisvesting':'Huisvesting','huiselijk':'Huiselijke relaties','geestelijk':'Geestelijke gezondheid','lichamelijk':'Lichamelijke gezondheid','verslaving':'Verslaving','adl':'ADL','sociaal':'Sociaal netwerk','participatie':'Participatie','justitie':'Justitie'};
+
+                // Groepeer per wijk
+                const wijken = {};
+                batch.forEach(r => {
+                    const w = r.wijk || 'onbekend';
+                    if (!wijken[w]) wijken[w] = [];
+                    wijken[w].push(r);
+                });
+
+                // Disclaimer
+                const disclaimer = batch.length < 30
+                    ? `<div class="alert alert-warning" style="margin-bottom:20px;"><span>⚠️</span><div><strong>Indicatief (n=${batch.length}):</strong> Minder dan 30 ingevulde checks. Trek nog geen populatieconclusies.</div></div>`
+                    : `<div class="alert alert-info" style="margin-bottom:20px;"><span>📊</span><div><strong>${batch.length} ingevulde checks</strong> — betrouwbaar genoeg voor een eerste wijkdiagnose.</div></div>`;
+
+                let html = disclaimer;
+
+                // Per wijk: staafdiagram per domein
+                Object.entries(wijken).forEach(([wijk, records]) => {
+                    html += `<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:20px;margin-bottom:20px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+                            <h3 style="color:#1f2937;margin:0;">📍 ${wijk} <span style="font-size:0.82rem;font-weight:400;color:#6b7280;">(${records.length} ${records.length===1?'persoon':'personen'})</span></h3>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:10px;">`;
+
+                    domeinen.forEach(id => {
+                        const metScore = records.filter(r => r.scores[id]);
+                        if (metScore.length === 0) return;
+                        const goed = metScore.filter(r => r.scores[id]==='goed').length;
+                        const beter = metScore.filter(r => r.scores[id]==='beter').length;
+                        const actie = metScore.filter(r => r.scores[id]==='actie').length;
+                        const n = metScore.length;
+                        const pctGoed = Math.round(goed/n*100);
+                        const pctBeter = Math.round(beter/n*100);
+                        const pctActie = Math.round(actie/n*100);
+
+                        html += `<div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                                <span style="font-size:0.88rem;font-weight:600;">${domeinEmoji[id]} ${domeinNaam[id]}</span>
+                                <span style="font-size:0.75rem;color:#9ca3af;">${actie>0?`🔴 ${pctActie}% actie`:''}${beter>0?` 🟡 ${pctBeter}% aandacht`:''}${goed>0?` 🟢 ${pctGoed}% goed`:''}</span>
+                            </div>
+                            <div style="display:flex;border-radius:6px;overflow:hidden;height:18px;">
+                                ${actie>0?`<div style="flex:${actie};background:#ef4444;" title="${actie} actie nodig"></div>`:''}
+                                ${beter>0?`<div style="flex:${beter};background:#f59e0b;" title="${beter} kan beter"></div>`:''}
+                                ${goed>0?`<div style="flex:${goed};background:#22c55e;" title="${goed} gaat goed"></div>`:''}
+                            </div>
+                        </div>`;
+                    });
+
+                    html += `</div></div>`;
+                });
+
+                el.innerHTML = html;
+            },
+
+            downloadWijkdata() {
+                const raw = localStorage.getItem('rpa_wijkdata');
+                const batch = raw ? JSON.parse(raw) : [];
+                if (batch.length === 0) { alert('Geen wijkdata beschikbaar.'); return; }
+
+                const domeinen = ['financien','dagbesteding','huisvesting','huiselijk','geestelijk','lichamelijk','verslaving','adl','sociaal','participatie','justitie'];
+                const header = ['tijdstip','wijk','leeftijd',...domeinen].join(',');
+                const rows = batch.map(r => [
+                    r.tijdstip, r.wijk, r.leeftijdscategorie,
+                    ...domeinen.map(d => r.scores[d] || '')
+                ].join(','));
+                const csv = [header,...rows].join('\n');
+
+                const blob = new Blob([csv], {type:'text/csv'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `wijkdata-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+            },
+
+            verwijderWijkdata() {
+                if (!confirm('Wijkdata verwijderen? Dit verwijdert alle anonieme KrachtCheck scores.')) return;
+                localStorage.removeItem('rpa_wijkdata');
+                this.renderWijkDashboard();
             },
 
             verwijderCaseload() {
