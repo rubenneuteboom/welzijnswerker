@@ -3995,7 +3995,25 @@
                             🎬 Bekijk voorbeeld
                         </button>
                     </div>
+                    <!-- CASELOAD OVERZICHT -->
+                    <div id="caseloadPanel" style="margin-top:20px;display:none;">
+                        <div style="background:#f5f3ff;border:2px solid #c4b5fd;border-radius:14px;padding:16px 18px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                                <div style="font-weight:700;color:#5b21b6;font-size:0.97rem;">📋 Caseload</div>
+                                <div style="display:flex;gap:8px;">
+                                    <button onclick="openNiveau3Caseload()" style="background:#667eea;color:white;border:none;border-radius:8px;padding:5px 12px;font-size:0.8rem;font-weight:600;cursor:pointer;">📊 Open in Niveau 3</button>
+                                    <button onclick="verwijderCaseloadN2()" style="background:#fee2e2;color:#991b1b;border:none;border-radius:8px;padding:5px 12px;font-size:0.8rem;cursor:pointer;">🗑</button>
+                                </div>
+                            </div>
+                            <div id="caseloadLijstN2" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;"></div>
+                        </div>
+                    </div>
                     <div style="text-align:center;margin-top:12px;">
+                        <button id="caseloadToggleBtn" onclick="toggleCaseloadPanel()" style="background:none;border:1px solid #c4b5fd;border-radius:8px;padding:6px 14px;font-size:0.82rem;color:#7c3aed;cursor:pointer;font-weight:600;display:none;">
+                            📋 Caseload bekijken
+                        </button>
+                    </div>
+                    <div style="text-align:center;margin-top:8px;">
                         <button onclick="if(confirm('Nieuw gesprek starten? Huidige gegevens worden gewist.')){resetAllData();}"
                             style="background:none;border:none;font-size:0.8rem;color:#9ca3af;cursor:pointer;text-decoration:underline;">
                             🔄 Nieuw gesprek starten
@@ -6669,6 +6687,7 @@ Antwoord in dit exacte JSON formaat:
             const screenId = screenConfig ? screenConfig.id : '';
             if (screenId === 'start') {
                 renderToestemmingKnoppen();
+                laadCaseloadN2();
                 renderDoelgroepChips();
                 // Herstel modus knoppen
                 if (state.gespreksModus) setGespreksModus(state.gespreksModus);
@@ -7582,6 +7601,72 @@ Antwoord in dit exacte JSON formaat:
         // STRATEGISCHE ANALYSE — één klik, geen bestand
         function naarStrategischeAnalyse() {
             exportVoorStrategischeAnalyse(true);
+        }
+
+        // CASELOAD FUNCTIES NIVEAU 2
+        function laadCaseloadN2() {
+            const raw = localStorage.getItem('rpa_caseload');
+            const caseload = raw ? JSON.parse(raw) : [];
+            const btn = document.getElementById('caseloadToggleBtn');
+            const panel = document.getElementById('caseloadPanel');
+            const lijst = document.getElementById('caseloadLijstN2');
+            if (!btn || !lijst) return;
+
+            if (caseload.length === 0) {
+                btn.style.display = 'none';
+                if (panel) panel.style.display = 'none';
+                return;
+            }
+
+            btn.style.display = 'inline-block';
+            btn.textContent = `📋 Caseload (${caseload.length})`;
+
+            lijst.innerHTML = caseload.map((c, i) => {
+                const datum = new Date(c.metadata.exportDatum).toLocaleDateString('nl-NL', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+                const naam = c.metadata.displayNaam || `Cliënt ${i+1}`;
+                const dg = (c.metadata.doelgroepen||[]).join(', ') || '—';
+                const positie = c.netwerkpositie ? c.netwerkpositie.positie : '—';
+                const bewegingen = (c.domeinen||[]).filter(d => d.bewegingsrichting).length;
+                const positieIcoon = {
+                    'geen': '🔴', '1-persoons': '🟠', 'informeel': '🟡',
+                    'gemengd': '🟢', 'formeel': '🔵', 'collectief': '🟢'
+                }[positie] || '⚪';
+
+                return `<div style="background:white;border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;border:1px solid #e5e7eb;">
+                    <span style="font-size:1.1rem;">${positieIcoon}</span>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-weight:600;font-size:0.9rem;color:#1f2937;">${naam}</div>
+                        <div style="font-size:0.75rem;color:#6b7280;">${dg} · ${bewegingen} domein${bewegingen!==1?'en':''} · ${datum}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleCaseloadPanel() {
+            const panel = document.getElementById('caseloadPanel');
+            const btn = document.getElementById('caseloadToggleBtn');
+            if (!panel) return;
+            const open = panel.style.display !== 'none';
+            panel.style.display = open ? 'none' : 'block';
+            if (btn) btn.textContent = open
+                ? `📋 Caseload bekijken`
+                : `📋 Caseload verbergen`;
+            // Herlaad bij openen
+            if (!open) laadCaseloadN2();
+        }
+
+        function openNiveau3Caseload() {
+            window.open('strategisch.html', '_blank');
+        }
+
+        function verwijderCaseloadN2() {
+            if (!confirm('Caseload verwijderen? Dit verwijdert alle opgeslagen analyses uit de browser.')) return;
+            localStorage.removeItem('rpa_caseload');
+            localStorage.removeItem('rpa_niveau3_import');
+            localStorage.removeItem('rpa_niveau3_datum');
+            laadCaseloadN2();
+            const panel = document.getElementById('caseloadPanel');
+            if (panel) panel.style.display = 'none';
         }
 
         // STRATEGISCHE EXPORT VOOR NIVEAU 3
@@ -14867,6 +14952,7 @@ END:VEVENT
         loadState();
         renderWorkflowBolletjes();
         renderProgressSteps();
+        laadCaseloadN2();
         
         // Herstel doelgroep-checkboxes
         if (state.doelgroepen && state.doelgroepen.length > 0) {
