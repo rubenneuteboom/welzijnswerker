@@ -3886,8 +3886,29 @@
                         </div>
                     </div>
 
+                    <!-- Vorig gesprek (optioneel) -->
+                    <details style="margin-bottom:16px;border:1px solid #e5e7eb;border-radius:10px;">
+                        <summary style="padding:10px 14px;cursor:pointer;font-size:0.85rem;font-weight:600;color:#6b7280;list-style:none;">
+                            🔄 Vervolggesprek? Noteer het vorige gesprek
+                        </summary>
+                        <div style="padding:0 14px 14px;display:grid;gap:10px;">
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                                <label style="font-size:0.82rem;color:#374151;font-weight:600;">Datum vorig gesprek:</label>
+                                <input type="date" id="vorigGesprekDatum"
+                                    style="padding:6px 10px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;"
+                                    onchange="saveVorigGesprek()">
+                            </div>
+                            <div>
+                                <label style="font-size:0.82rem;color:#374151;font-weight:600;display:block;margin-bottom:4px;">Kort: hoe stond het er toen voor?</label>
+                                <input type="text" id="vorigGesprekNotitie" placeholder="Bijv: stabiel, werkte aan dagstructuur..."
+                                    style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;box-sizing:border-box;"
+                                    onchange="saveVorigGesprek()">
+                            </div>
+                        </div>
+                    </details>
+
                     <!-- Toestemming informatie-uitwisseling -->
-                    <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 20px;margin-top:20px;margin-bottom:4px;">
+                    <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 20px;margin-top:0;margin-bottom:4px;">
                         <p style="font-size:0.92rem;font-weight:700;color:#166534;margin:0 0 4px;">📋 Toestemming informatie-uitwisseling</p>
                         <p style="font-size:0.85rem;color:#374151;margin:0 0 12px;">Mag ik aantekeningen maken die gedeeld kunnen worden met betrokken hulpverleners?</p>
                         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;" id="toestemmingKnoppen">
@@ -3909,7 +3930,24 @@
                         </p>
                     </div>
 
-                    <div class="btn-group" style="margin-top:20px;">
+                    <!-- Gesprekstype -->
+                    <div style="margin-top:16px;margin-bottom:4px;">
+                        <p style="font-size:0.85rem;font-weight:600;color:#374151;margin:0 0 8px;">Welk gesprek is dit?</p>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button id="modus-volledig" onclick="setGespreksModus('volledig')"
+                                style="flex:1;min-width:140px;padding:10px 14px;border-radius:10px;font-size:0.88rem;font-weight:600;cursor:pointer;border:2px solid var(--primary);background:#f0fdf4;color:var(--primary);transition:all 0.2s;">
+                                🗂️ Volledig gesprek
+                                <div style="font-size:0.75rem;font-weight:400;color:#6b7280;margin-top:2px;">Alle stappen, 45–60 min</div>
+                            </button>
+                            <button id="modus-snel" onclick="setGespreksModus('snel')"
+                                style="flex:1;min-width:140px;padding:10px 14px;border-radius:10px;font-size:0.88rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">
+                                ⚡ Snelle check
+                                <div style="font-size:0.75rem;font-weight:400;color:#9ca3af;margin-top:2px;">Stoplicht + beweging + besluit, 20 min</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="btn-group" style="margin-top:16px;">
                         <button class="btn btn-primary" onclick="startAssessment()" style="font-size:1.1rem;padding:14px 28px;">
                             ▶️ Start gesprek
                         </button>
@@ -6203,6 +6241,44 @@ Antwoord in dit exacte JSON formaat:
             console.log('Mode geselecteerd:', mode);
         }
 
+        // Vorig gesprek opslaan
+        function saveVorigGesprek() {
+            const datum = document.getElementById('vorigGesprekDatum');
+            const notitie = document.getElementById('vorigGesprekNotitie');
+            if (!state.vorigGesprek) state.vorigGesprek = {};
+            if (datum) state.vorigGesprek.datum = datum.value;
+            if (notitie) state.vorigGesprek.notitie = notitie.value;
+            saveState();
+        }
+
+        // Gesprekstype (volledig / snel)
+        function setGespreksModus(modus) {
+            state.gespreksModus = modus;
+            saveState();
+            const volledig = document.getElementById('modus-volledig');
+            const snel = document.getElementById('modus-snel');
+            if (volledig && snel) {
+                const actief = modus === 'volledig' ? volledig : snel;
+                const inactief = modus === 'volledig' ? snel : volledig;
+                actief.style.border = '2px solid var(--primary)';
+                actief.style.background = '#f0fdf4';
+                actief.style.color = 'var(--primary)';
+                inactief.style.border = '2px solid #e5e7eb';
+                inactief.style.background = 'white';
+                inactief.style.color = '#6b7280';
+            }
+        }
+
+        // Override startAssessment zodat snelle modus Domeinscan overslaat
+        const _origStartAssessment = typeof startAssessment === 'function' ? startAssessment : null;
+        function startAssessmentMet() {
+            if (state.gespreksModus === 'snel') {
+                goToScreenById('triage');
+            } else {
+                goToScreenById('triage');
+            }
+        }
+
         // Toggle doelgroep (legacy checkboxes)
         function toggleDoelgroep(doelgroep, checked) {
             if (checked && !state.doelgroepen.includes(doelgroep)) {
@@ -6305,24 +6381,25 @@ Antwoord in dit exacte JSON formaat:
         }
 
         function startAssessment() {
-            console.log('startAssessment aangeroepen');
-            console.log('Huidige state.mode:', state.mode);
-            
-            // Check mode via radio button als state.mode niet gezet is
-            if (!state.mode) {
-                // Niveau 2 is altijd samen met professional
-                state.mode = 'professional';
-                console.log('Mode: professional (niveau 2)');
-            }
-            
-            // Sla postcode op (Prioriteit 1)
+            // Sla postcode op
             const postcodeInput = document.getElementById('postcodeStart');
             if (postcodeInput && postcodeInput.value) {
                 state.postcode = postcodeInput.value.toUpperCase();
             }
-            
+            // Sla vorig gesprek op
+            saveVorigGesprek();
+            // Standaard modus
+            if (!state.gespreksModus) state.gespreksModus = 'volledig';
+            if (!state.mode) state.mode = 'professional';
             saveState();
-            console.log('Ga naar triage');
+
+            // Snelle modus: sla Domeinscan over (triage → beweging → besluit)
+            if (state.gespreksModus === 'snel') {
+                state.snelleModusSchermen = ['triage', 'beweging', 'samenvatting'];
+            } else {
+                state.snelleModusSchermen = null;
+            }
+            saveState();
             goToScreenById('triage');
         }
 
@@ -6452,7 +6529,17 @@ Antwoord in dit exacte JSON formaat:
 
             // Load content for each screen (LEAN workflow + Prioriteit 1)
             const screenId = screenConfig ? screenConfig.id : '';
-            if (screenId === 'start') { renderToestemmingKnoppen(); renderDoelgroepChips(); }
+            if (screenId === 'start') {
+                renderToestemmingKnoppen();
+                renderDoelgroepChips();
+                // Herstel modus knoppen
+                if (state.gespreksModus) setGespreksModus(state.gespreksModus);
+                // Herstel vorig gesprek velden
+                const vd = document.getElementById('vorigGesprekDatum');
+                const vn = document.getElementById('vorigGesprekNotitie');
+                if (vd && state.vorigGesprek && state.vorigGesprek.datum) vd.value = state.vorigGesprek.datum;
+                if (vn && state.vorigGesprek && state.vorigGesprek.notitie) vn.value = state.vorigGesprek.notitie;
+            }
             if (screenId === 'hulpvraag') loadHulpvraagData();
             if (screenId === 'triage') renderStoplichtGrid();
             if (screenId === 'domains') renderDomains();
@@ -6982,7 +7069,8 @@ Antwoord in dit exacte JSON formaat:
                             return `<span style="font-size:0.75rem;padding:3px 8px;background:#f3f4f6;border-radius:10px;color:#6b7280;font-weight:600;">${labels[m]||m}</span>`;
                         }).join('')}
                     </div>` : ''}
-                    ${ref.toelichting ? `<div style="font-size:0.8rem;color:#9ca3af;margin-top:6px;font-style:italic;">💬 ${ref.toelichting}</div>` : ''}
+                    ${ref.uitkomst ? `<div style="font-size:0.82rem;color:#059669;margin-top:6px;font-weight:600;">📈 ${ref.uitkomst}</div>` : ''}
+                    ${ref.toelichting ? `<div style="font-size:0.8rem;color:#9ca3af;margin-top:4px;font-style:italic;">💬 ${ref.toelichting}</div>` : ''}
                 </div>`;
             }).join('');
 
@@ -7242,154 +7330,80 @@ Antwoord in dit exacte JSON formaat:
             }
         }
         
-        // Exporteer samenvatting
+        // Exporteer samenvatting (dossier-versie, klembord)
         function exportSamenvatting() {
-            const stabilisatieLabels = {
-                'stabiel': '🟢 Stabiel',
-                'kwetsbaar': '🟡 Kwetsbaar',
-                'direct-actie': '🔴 Direct actie nodig'
-            };
-            
+            const vandaag = new Date().toLocaleDateString('nl-NL', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
             const netwerkInfo = getRPANetwerkPositie();
-            
-            const actienodigDomeinen = domains.filter(d => {
-                const details = state.domainDetails[d.id] || {};
-                return details.actieNodig === 'actie';
+            const doelgroepLabels = {ggz:'GGZ',jongeren:'Jongeren',mantelzorgers:'Mantelzorgers',ouderen:'Ouderen',multiproblem:'Multi-problematiek',sociaalmaatschappelijk:'Sociaal-maatschappelijk'};
+            const methodenLabels = {familiegesprek:'Familiegesprek',mdo:'MDO',ekc:'Eigen Kracht Conferentie',netwerkberaad:'Netwerkberaad',bemoeizorg:'Bemoeizorg',trajectbegeleiding:'Trajectbegeleiding'};
+            const bewegingLabels = {informeel:'→ Informeel netwerk',formeel:'→ Formeel netwerk',gemengd:'→ Gemengd netwerk',stoppen:'Stoppen'};
+            const stoplichtLabels = {'goed':'Zelfstandig','steun-wenselijk':'Steun wenselijk','steun-nodig':'Steun nodig'};
+
+            let text = `POSITIONELE ANALYSE\n`;
+            text += `${'─'.repeat(40)}\n`;
+            text += `Datum: ${vandaag}\n`;
+            if (state.doelgroepen && state.doelgroepen.length > 0)
+                text += `Situatie: ${state.doelgroepen.map(d => doelgroepLabels[d]||d).join(', ')}\n`;
+            if (state.vorigGesprek && state.vorigGesprek.datum)
+                text += `Vorig gesprek: ${new Date(state.vorigGesprek.datum).toLocaleDateString('nl-NL')}${state.vorigGesprek.notitie ? ' — ' + state.vorigGesprek.notitie : ''}\n`;
+            text += `\n`;
+
+            // Domeinen met plan
+            const ingevuld = domains.filter(d => {
+                const det = state.domainDetails[d.id] || {};
+                return (det.supporters||[]).length > 0 || det.situatie || (state.domainStatus||{})[d.id];
             });
-            
-            let text = '=== RPA POSITIONELE ANALYSE ===\n\n';
-            text += `Datum: ${new Date().toLocaleDateString('nl-NL')}\n\n`;
-            
-            if (state.doelgroepen && state.doelgroepen.length > 0) {
-                const doelgroepLabels = {
-                    'ggz': '🧠 GGZ',
-                    'jongeren': '👤 Jongeren',
-                    'mantelzorgers': '🤝 Mantelzorgers',
-                    'ouderen': '👴 Ouderen',
-                    'multiproblem': '🔄 Multi-problematiek',
-                    'sociaalmaatschappelijk': '🏘️ Sociaal-maatschappelijk'
-                };
-                text += `DOELGROEP: ${state.doelgroepen.map(d => doelgroepLabels[d] || d).join(', ')}\n\n`;
-            }
-            
-            text += `NETWERKPOSITIE: ${netwerkInfo.label}\n`;
-            text += `${netwerkInfo.beschrijving}\n\n`;
-            
-            if (actienodigDomeinen.length > 0) {
-                text += 'ACTIE NODIG:\n';
-                actienodigDomeinen.forEach(d => {
-                    const details = state.domainDetails[d.id] || {};
-                    text += `- ${d.emoji} ${d.name}\n`;
-                    
-                    // Voeg "Door wie?" info toe
-                    if (details.steunDoorWie && details.steunDoorWie.length > 0) {
-                        text += `  Huidige steun: ${details.steunDoorWie.join(', ')}\n`;
-                        
-                        if (details.steunInformeelPersonen && details.steunInformeelPersonen.length > 0) {
-                            text += `    Informeel: ${details.steunInformeelPersonen.join(', ')}\n`;
-                        }
-                        
-                        if (details.steunCollectiefOpties && details.steunCollectiefOpties.length > 0) {
-                            text += `    Collectief: ${details.steunCollectiefOpties.join(', ')}\n`;
-                        }
-                        
-                        if (details.steunFormeelOpties && details.steunFormeelOpties.length > 0) {
-                            text += `    Formeel: ${details.steunFormeelOpties.join(', ')}\n`;
-                        }
-                    }
+
+            if (ingevuld.length > 0) {
+                text += `DOMEINEN & AFSPRAKEN\n${'─'.repeat(40)}\n`;
+                ingevuld.forEach(d => {
+                    const status = (state.domainStatus||{})[d.id];
+                    const ond = state.ondersteuningsstructuur[d.id] || {};
+                    const ref = state.strategischeReflectie[d.id] || {};
+                    const supporters = (state.domainDetails[d.id]||{}).supporters || [];
+
+                    text += `\n${d.emoji} ${d.name}`;
+                    if (status) text += ` [${stoplichtLabels[status]||status}]`;
+                    text += `\n`;
+
+                    if (supporters.length > 0)
+                        text += `  Betrokken: ${supporters.map(s => s.naam || s.type).join(', ')}\n`;
+                    if (ond.bewegingsrichting)
+                        text += `  Richting: ${bewegingLabels[ond.bewegingsrichting] || ond.bewegingsrichting}\n`;
+                    if (ond.methoden && ond.methoden.length > 0)
+                        text += `  Aanpak: ${ond.methoden.map(m => methodenLabels[m]||m).join(', ')}\n`;
+                    if (ref.concreetPlan)
+                        text += `  Plan: ${ref.concreetPlan}${ref.duur ? ` (${ref.duur})` : ''}\n`;
+                    if (ref.verantwoordelijke)
+                        text += `  Wie: ${ref.verantwoordelijke}\n`;
+                    if (ref.evaluatieDatum)
+                        text += `  Terugkijken: ${new Date(ref.evaluatieDatum).toLocaleDateString('nl-NL')}\n`;
+                    if (ref.uitkomst)
+                        text += `  Uitkomst (follow-up): ${ref.uitkomst}\n`;
+                    if (ref.toelichting)
+                        text += `  Toelichting: ${ref.toelichting}\n`;
                 });
-                text += '\n';
+                text += `\n`;
             }
-            
-            // Ondersteuningsstructuur per domein (voor Strategische Analyse)
-            const domeinenMetOndersteuning = domains.filter(d => {
-                const ondersteuning = state.ondersteuningsstructuur[d.id];
-                return ondersteuning && ondersteuning.draaglagen && ondersteuning.draaglagen.length > 0;
-            });
-            
-            if (domeinenMetOndersteuning.length > 0) {
-                text += 'ONDERSTEUNINGSSTRUCTUUR:\n';
-                domeinenMetOndersteuning.forEach(d => {
-                    const ondersteuning = state.ondersteuningsstructuur[d.id];
-                    text += `\n${d.emoji} ${d.name}:\n`;
-                    text += `  Dragende lagen: ${ondersteuning.draaglagen.join(', ')}\n`;
-                    
-                    if (ondersteuning.collectiefDetail && ondersteuning.collectiefDetail.length > 0) {
-                        text += `  Collectief: ${ondersteuning.collectiefDetail.join(', ')}\n`;
-                    }
-                    
-                    if (ondersteuning.formeelDetail && ondersteuning.formeelDetail.length > 0) {
-                        text += `  Formeel: ${ondersteuning.formeelDetail.join(', ')}\n`;
-                    }
-                    
-                    if (ondersteuning.bewegingsrichting) {
-                        const bewegingLabels = {
-                            'stabiliseren': 'Stabiliseren',
-                            'vervangen': 'Vervangen',
-                            'opschalen': 'Opschalen',
-                            'afschalen': 'Afschalen',
-                            'stoppen': 'Stoppen'
-                        };
-                        text += `  Beweging: ${bewegingLabels[ondersteuning.bewegingsrichting] || ondersteuning.bewegingsrichting}\n`;
-                    }
+
+            // Netwerkpositie
+            text += `NETWERKPOSITIE\n${'─'.repeat(40)}\n`;
+            text += `${netwerkInfo.label}\n${netwerkInfo.beschrijving}\n\n`;
+
+            // Volgende afspraak
+            if (state.agenda && state.agenda.length > 0) {
+                text += `VOLGENDE AFSPRAAK\n${'─'.repeat(40)}\n`;
+                state.agenda.forEach(a => {
+                    text += `${a.datum} ${a.tijd} — ${a.wat}${a.met ? ' · ' + a.met : ''}\n`;
                 });
-                text += '\n';
+                text += `\n`;
             }
-            
-            // POSITIONELE BESLISSINGEN (Prioriteit 1)
-            const domeinenMetBeslissing = domains.filter(d => {
-                return state.huidigeSteun && state.huidigeSteun[d.id] && 
-                       state.huidigeSteun[d.id].draaglagen && 
-                       state.huidigeSteun[d.id].draaglagen.length > 0;
-            });
-            
-            if (domeinenMetBeslissing.length > 0) {
-                text += '\n=== POSITIONELE BESLISSINGEN ===\n';
-                text += '(Niet méér zorg, maar anders gepositioneerd)\n\n';
-                
-                domeinenMetBeslissing.forEach(d => {
-                    const huidig = state.huidigeSteun[d.id] || { draaglagen: [] };
-                    const gewenst = state.ondersteuningsstructuur[d.id] || {};
-                    
-                    text += `${d.emoji} ${d.name}:\n`;
-                    text += `  Huidig: ${huidig.draaglagen.join(', ')}\n`;
-                    text += `  Gewenst: ${(gewenst.draaglagen || huidig.draaglagen).join(', ')}\n`;
-                    
-                    if (gewenst.bewegingsrichting) {
-                        const bewegingLabels = {
-                            'stabiliseren': 'Stabiliseren',
-                            'vervangen': 'Vervangen',
-                            'opschalen': 'Opschalen',
-                            'afschalen': 'Afschalen',
-                            'stoppen': 'Stoppen'
-                        };
-                        text += `  Beweging: ${bewegingLabels[gewenst.bewegingsrichting]}\n`;
-                    }
-                    
-                    if (gewenst.verantwoordelijke) {
-                        text += `  Verantwoordelijke: ${gewenst.verantwoordelijke}\n`;
-                    }
-                    
-                    if (gewenst.evaluatieDatum) {
-                        const datum = new Date(gewenst.evaluatieDatum);
-                        text += `  Evaluatiemoment: ${datum.toLocaleDateString('nl-NL')}\n`;
-                    }
-                    
-                    text += '\n';
-                });
-            }
-            
-            text += '\n=== Data voor Strategische Analyse ===\n';
-            text += 'Deze positionele analyse kan worden gebruikt voor:\n';
-            text += '- Kostenanalyse huidig vs. gewenst scenario\n';
-            text += '- Netwerkverschuiving impact berekening\n';
-            text += '- Beleidsmatige onderbouwing\n';
-            text += '- Evaluatie effectiviteit netwerkbewegingen\n';
-            
+
             navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Samenvatting gekopieerd naar klembord!\n\nInclusive ondersteuningsstructuur voor Strategische Analyse.');
+                alert('✅ Samenvatting gekopieerd naar klembord!\n\nPlak dit in je dossier of cliëntvolgsysteem.');
             }).catch(() => {
-                alert('❌ Kon niet kopiëren. Selecteer handmatig.');
+                const w = window.open('','_blank');
+                w.document.write('<pre style="font-family:monospace;padding:20px;">'+text+'</pre>');
             });
         }
         
@@ -14336,9 +14350,9 @@ END:VEVENT
                                 style="padding:7px 12px;border:2px solid #e5e7eb;border-radius:8px;font-size:0.88rem;flex:1;min-width:150px;">
                         </div>
 
-                        <!-- Plan invullen (standaard open) -->
-                        <details style="margin-top:12px;border-top:1px solid #f3f4f6;padding-top:10px;" open>
-                            <summary style="font-size:0.8rem;color:#9ca3af;cursor:pointer;list-style:none;">📋 Vul het plan in</summary>
+                        <!-- Plan invullen (dicht, openklapbaar per domein) -->
+                        <details style="margin-top:12px;border-top:1px solid #f3f4f6;padding-top:10px;" ${(reflectie.concreetPlan || reflectie.verantwoordelijke || reflectie.duur) ? 'open' : ''}>
+                            <summary style="font-size:0.8rem;color:#6b7280;cursor:pointer;list-style:none;font-weight:600;">📋 Plan invullen ${(reflectie.concreetPlan || reflectie.verantwoordelijke || reflectie.duur) ? '✓' : '▸'}</summary>
                             <div style="padding-top:12px;display:grid;gap:12px;">
                                 <div>
                                     <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">🌱 Is dit haalbaar?</label>
@@ -14387,6 +14401,14 @@ END:VEVENT
                                         onchange="setReflectie('${domain.id}','toelichting',this.value)"
                                         style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;resize:vertical;">${reflectie.toelichting || ''}</textarea>
                                 </div>
+                                ${state.vorigGesprek && state.vorigGesprek.datum ? `
+                                <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 12px;">
+                                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#92400e;margin-bottom:5px;">📈 Uitkomst t.o.v. vorig gesprek (${new Date(state.vorigGesprek.datum).toLocaleDateString('nl-NL')})</label>
+                                    <input type="text" placeholder="Bijv: plan is gelukt, dagstructuur beter, jobcoach is gestart..."
+                                        value="${reflectie.uitkomst || ''}"
+                                        onchange="setReflectie('${domain.id}','uitkomst',this.value)"
+                                        style="width:100%;padding:8px;border:1px solid #fcd34d;border-radius:6px;font-size:0.85rem;">
+                                </div>` : ''}
                             </div>
                             </details>
                         </div>
