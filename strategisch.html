@@ -1309,10 +1309,12 @@
                         scores.proportionaliteit += 2;
                     }
 
-                    // Reflectie scores
-                    if (d.reflectie.duurzaamheid === 'haalbaar') scores.duurzaamheid += 1;
-                    if (d.reflectie.proportionaliteit === 'proportioneel') scores.proportionaliteit += 2;
-                    if (d.reflectie.proportionaliteit === 'te-zwaar') scores.proportionaliteit += 3;
+                    // Plan/reflectie scores (nieuw datamodel)
+                    if (d.duur && d.duur !== 'n.v.t.') scores.duurzaamheid += 1;
+                    if (d.heeftConcreetPlan) scores.duurzaamheid += 1;
+                    if (d.planKlopt === 'ja') scores.proportionaliteit += 2;
+                    if (d.planKlopt === 'nee') scores.proportionaliteit += 3;
+                    if (d.heeftVerantwoordelijke) scores.zelfredzaamheid += 1;
                 });
 
                 // Normaliseer naar 0-10
