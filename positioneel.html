@@ -3852,77 +3852,39 @@
                     </div>
                     </div><!-- einde toelichtingPanel -->
                     
-                    <!-- Doelgroep + postcode uitklapbaar -->
-                    <details style="border:1px solid #e5e7eb;border-radius:10px;margin-bottom:16px;">
-                        <summary style="padding:12px 16px;cursor:pointer;font-weight:600;color:#374151;list-style:none;display:flex;align-items:center;gap:8px;">
-                            ⚙️ Doelgroep &amp; postcode <span style="font-size:0.78rem;color:#9ca3af;font-weight:400;">(optioneel — geeft betere tips en lokale interventies)</span>
-                        </summary>
-                        <div style="padding:0 16px 16px;">
-
-                    <!-- Doelgroep -->
-                    <div style="margin-bottom: 20px;">
-                        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px;">🎯 Doelgroep(en)</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">Welke doelgroep(en) zijn relevant? (Je krijgt specifieke vragen per doelgroep)</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-ggz" value="ggz" onchange="toggleDoelgroep('ggz', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🧠 GGZ</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-jongeren" value="jongeren" onchange="toggleDoelgroep('jongeren', this.checked)" style="width: 18px; height: 18px;">
-                                <span>👤 Jongeren</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-mantelzorgers" value="mantelzorgers" onchange="toggleDoelgroep('mantelzorgers', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🤝 Mantelzorgers</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-ouderen" value="ouderen" onchange="toggleDoelgroep('ouderen', this.checked)" style="width: 18px; height: 18px;">
-                                <span>👴 Ouderen</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-multiproblem" value="multiproblem" onchange="toggleDoelgroep('multiproblem', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🔄 Multi-problematiek</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;"
-                                   onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="checkbox" id="doelgroep-sociaalmaatschappelijk" value="sociaalmaatschappelijk" onchange="toggleDoelgroep('sociaalmaatschappelijk', this.checked)" style="width: 18px; height: 18px;">
-                                <span>🏘️ Sociaal-maatschappelijk</span>
-                            </label>
+                    <!-- Wat past bij deze situatie? (direct zichtbaar, chips) -->
+                    <div style="margin-bottom:16px;">
+                        <p style="font-size:0.92rem;font-weight:700;color:#374151;margin:0 0 4px;">Wat past bij deze situatie?</p>
+                        <p style="font-size:0.82rem;color:#9ca3af;margin:0 0 12px;">Optioneel — geeft betere vragen en tips tijdens het gesprek</p>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;" id="doelgroepChips">
+                            ${[
+                                {val:'ggz',              label:'🧠 GGZ'},
+                                {val:'jongeren',         label:'👤 Jongeren'},
+                                {val:'mantelzorgers',    label:'🤝 Mantelzorger'},
+                                {val:'ouderen',          label:'👴 Ouderen'},
+                                {val:'multiproblem',     label:'🔄 Meerdere problemen tegelijk'},
+                                {val:'sociaalmaatschappelijk', label:'🏘️ Sociaal / maatschappelijk'},
+                            ].map(opt => {
+                                const actief = (state.doelgroepen||[]).includes(opt.val);
+                                return `<button id="chip-${opt.val}" onclick="toggleDoelgroepChip('${opt.val}')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;
+                                        border:2px solid ${actief ? 'var(--primary)' : '#e5e7eb'};
+                                        background:${actief ? '#f0fdf4' : 'white'};
+                                        color:${actief ? 'var(--primary)' : '#6b7280'};">
+                                    ${opt.label}
+                                </button>`;
+                            }).join('')}
                         </div>
-                        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 12px; font-style: italic;">💡 Per doelgroep krijg je relevante hulpvragen bij elk domein.</p>
-                    </div>
-                    
-                    <!-- Postcode -->
-                    <div style="margin-bottom: 8px;">
-                        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 10px;">📍 Postcode</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">
-                            Met je postcode kunnen we direct concrete voorzieningen in jouw buurt tonen.
-                        </p>
-                        <input type="text" 
-                               id="postcodeStart" 
-                               placeholder="Bijv. 1012AB"
-                               maxlength="6"
-                               style="width: 200px; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; text-transform: uppercase;"
-                               oninput="this.value = this.value.toUpperCase()">
-                        <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 8px; font-style: italic;">
-                            💡 Optioneel - maar helpt om relevante voorzieningen te vinden
-                        </p>
-                    </div>
 
-                        </div><!-- einde details inner -->
-                    </details><!-- einde doelgroep+postcode -->
+                        <!-- Postcode compact eronder -->
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+                            <span style="font-size:0.85rem;color:#6b7280;">📍 Postcode:</span>
+                            <input type="text" id="postcodeStart" placeholder="Bijv. 1012AB" maxlength="6"
+                                style="width:120px;padding:7px 10px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.88rem;text-transform:uppercase;"
+                                oninput="this.value=this.value.toUpperCase()">
+                            <span style="font-size:0.78rem;color:#9ca3af;">voor lokale tips</span>
+                        </div>
+                    </div>
 
                     <!-- Toestemming informatie-uitwisseling -->
                     <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 20px;margin-top:20px;margin-bottom:4px;">
@@ -6242,7 +6204,7 @@ Antwoord in dit exacte JSON formaat:
             console.log('Mode geselecteerd:', mode);
         }
 
-        // Toggle doelgroep
+        // Toggle doelgroep (legacy checkboxes)
         function toggleDoelgroep(doelgroep, checked) {
             if (checked && !state.doelgroepen.includes(doelgroep)) {
                 state.doelgroepen.push(doelgroep);
@@ -6250,7 +6212,38 @@ Antwoord in dit exacte JSON formaat:
                 state.doelgroepen = state.doelgroepen.filter(d => d !== doelgroep);
             }
             saveState();
-            console.log('Geselecteerde doelgroepen:', state.doelgroepen);
+        }
+
+        // Toggle doelgroep via chip-knop (nieuw)
+        function toggleDoelgroepChip(doelgroep) {
+            if (!state.doelgroepen) state.doelgroepen = [];
+            const actief = state.doelgroepen.includes(doelgroep);
+            if (actief) {
+                state.doelgroepen = state.doelgroepen.filter(d => d !== doelgroep);
+            } else {
+                state.doelgroepen.push(doelgroep);
+            }
+            saveState();
+            // Update chip visueel
+            const btn = document.getElementById('chip-' + doelgroep);
+            if (btn) {
+                const nu = state.doelgroepen.includes(doelgroep);
+                btn.style.border = `2px solid ${nu ? 'var(--primary)' : '#e5e7eb'}`;
+                btn.style.background = nu ? '#f0fdf4' : 'white';
+                btn.style.color = nu ? 'var(--primary)' : '#6b7280';
+            }
+        }
+
+        // Herstel chip-stijlen bij terugkeren naar Start
+        function renderDoelgroepChips() {
+            (state.doelgroepen || []).forEach(d => {
+                const btn = document.getElementById('chip-' + d);
+                if (btn) {
+                    btn.style.border = '2px solid var(--primary)';
+                    btn.style.background = '#f0fdf4';
+                    btn.style.color = 'var(--primary)';
+                }
+            });
         }
 
         // Test interventies (direct springen met dummy data)
@@ -6460,7 +6453,7 @@ Antwoord in dit exacte JSON formaat:
 
             // Load content for each screen (LEAN workflow + Prioriteit 1)
             const screenId = screenConfig ? screenConfig.id : '';
-            if (screenId === 'start') renderToestemmingKnoppen();
+            if (screenId === 'start') { renderToestemmingKnoppen(); renderDoelgroepChips(); }
             if (screenId === 'hulpvraag') loadHulpvraagData();
             if (screenId === 'triage') renderStoplichtGrid();
             if (screenId === 'domains') renderDomains();
@@ -6975,6 +6968,10 @@ Antwoord in dit exacte JSON formaat:
                           planKlopt === 'twijfel' ? '<span style="font-size:0.75rem;background:#fefce8;color:#d97706;border-radius:4px;padding:1px 7px;margin-left:auto;">⚠️ twijfel</span>' : ''}
                     </div>
                     ${beweging ? `<div style="font-size:0.85rem;color:#6b7280;margin-bottom:6px;">${bewegingLabels[beweging] || beweging}</div>` : ''}
+                    ${ref.concreetPlan ? `
+                    <div style="background:#f0fdf4;border-radius:6px;padding:8px 12px;margin-bottom:8px;font-size:0.88rem;color:#166534;font-weight:600;">
+                        📋 ${ref.concreetPlan}${ref.duur ? ` — ${ref.duur}` : ''}
+                    </div>` : ''}
                     <div style="display:flex;flex-wrap:wrap;gap:12px;">
                         ${ref.verantwoordelijke ? `<span style="font-size:0.82rem;color:#374151;">🎯 <strong>Wie:</strong> ${ref.verantwoordelijke}</span>` : ''}
                         ${ref.evaluatieDatum ? `<span style="font-size:0.82rem;color:#374151;">📅 <strong>Terugkijken:</strong> ${new Date(ref.evaluatieDatum).toLocaleDateString('nl-NL',{day:'numeric',month:'long'})}</span>` : ''}
@@ -14288,9 +14285,9 @@ END:VEVENT
                                 style="padding:7px 12px;border:2px solid #e5e7eb;border-radius:8px;font-size:0.88rem;flex:1;min-width:150px;">
                         </div>
 
-                        <!-- Meer invullen (voor professional) -->
-                        <details style="margin-top:12px;border-top:1px solid #f3f4f6;padding-top:10px;">
-                            <summary style="font-size:0.8rem;color:#9ca3af;cursor:pointer;list-style:none;">＋ Meer invullen (voor professional)</summary>
+                        <!-- Plan invullen (standaard open) -->
+                        <details style="margin-top:12px;border-top:1px solid #f3f4f6;padding-top:10px;" open>
+                            <summary style="font-size:0.8rem;color:#9ca3af;cursor:pointer;list-style:none;">📋 Vul het plan in</summary>
                             <div style="padding-top:12px;display:grid;gap:12px;">
                                 <div>
                                     <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">🌱 Is dit haalbaar?</label>
@@ -14313,6 +14310,13 @@ END:VEVENT
                                     </select>
                                 </div>
                                 <div>
+                                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">📋 Wat gaat er concreet gebeuren?</label>
+                                    <input type="text" placeholder="Bijv: jobcoach inzetten voor begeleiding naar werk"
+                                        value="${reflectie.concreetPlan || ''}"
+                                        onchange="setReflectie('${domain.id}','concreetPlan',this.value)"
+                                        style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                </div>
+                                <div>
                                     <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">🎯 Wie pakt dit op?</label>
                                     <input type="text" placeholder="Professional, organisatie of cliënt zelf..."
                                         value="${reflectie.verantwoordelijke || ''}"
@@ -14320,8 +14324,15 @@ END:VEVENT
                                         style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
                                 </div>
                                 <div>
-                                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">💬 Aantekening</label>
-                                    <textarea rows="2" placeholder="Bijv: eerst stabiliseren, dan afbouwen..."
+                                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">⏱️ Hoe lang / hoe vaak?</label>
+                                    <input type="text" placeholder="Bijv: 3 maanden, wekelijks, eenmalig..."
+                                        value="${reflectie.duur || ''}"
+                                        onchange="setReflectie('${domain.id}','duur',this.value)"
+                                        style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                </div>
+                                <div>
+                                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:5px;">💬 Extra toelichting</label>
+                                    <textarea rows="2" placeholder="Aanvullende context of aandachtspunten..."
                                         onchange="setReflectie('${domain.id}','toelichting',this.value)"
                                         style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;resize:vertical;">${reflectie.toelichting || ''}</textarea>
                                 </div>
