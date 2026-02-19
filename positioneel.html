@@ -3014,6 +3014,15 @@
         }
 
         /* Print styles */
+        .chip-info {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            cursor: help;
+            user-select: none;
+            transition: color 0.15s;
+        }
+        .chip-info:hover { color: var(--primary); }
+
         @media print {
             body {
                 background: white;
@@ -3865,24 +3874,42 @@
                         <p style="font-size:0.92rem;font-weight:700;color:#374151;margin:0 0 4px;">Wat past bij deze situatie?</p>
                         <p style="font-size:0.82rem;color:#9ca3af;margin:0 0 12px;">Optioneel — geeft betere vragen en tips tijdens het gesprek</p>
                         <div style="display:flex;flex-wrap:wrap;gap:8px;" id="doelgroepChips">
-                            <button id="chip-ggz" onclick="toggleDoelgroepChip('ggz')"
-                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
-                                🧠 GGZ</button>
-                            <button id="chip-jongeren" onclick="toggleDoelgroepChip('jongeren')"
-                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
-                                👤 Jongeren</button>
-                            <button id="chip-mantelzorgers" onclick="toggleDoelgroepChip('mantelzorgers')"
-                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
-                                🤝 Mantelzorger</button>
-                            <button id="chip-ouderen" onclick="toggleDoelgroepChip('ouderen')"
-                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
-                                👴 Ouderen</button>
-                            <button id="chip-multiproblem" onclick="toggleDoelgroepChip('multiproblem')"
-                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
-                                🔄 Meerdere problemen tegelijk</button>
-                            <button id="chip-sociaalmaatschappelijk" onclick="toggleDoelgroepChip('sociaalmaatschappelijk')"
-                                style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
-                                🏘️ Sociaal / maatschappelijk</button>
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <button id="chip-ggz" onclick="toggleDoelgroepChip('ggz')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                    🧠 GGZ</button>
+                                <span class="chip-info" title="Mensen met psychiatrische of psychologische problematiek. Denk aan: angst, depressie, psychose, persoonlijkheidsproblematiek.">ⓘ</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <button id="chip-jongeren" onclick="toggleDoelgroepChip('jongeren')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                    👤 Jongeren</button>
+                                <span class="chip-info" title="0–23 jaar. Jeugdhulp domein, school, thuissituatie, identiteitsontwikkeling, jeugdproblematiek.">ⓘ</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <button id="chip-mantelzorgers" onclick="toggleDoelgroepChip('mantelzorgers')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                    🤝 Mantelzorger</button>
+                                <span class="chip-info" title="Iemand die een naaste verzorgt (partner, ouder, kind). Let op overbelasting, eigen gezondheid en grenzen stellen.">ⓘ</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <button id="chip-ouderen" onclick="toggleDoelgroepChip('ouderen')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                    👴 Ouderen</button>
+                                <span class="chip-info" title="65+. Dementie, mobiliteit, eenzaamheid, rouw, afhankelijkheid van zorg. Eigen regie staat vaak onder druk.">ⓘ</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <button id="chip-multiproblem" onclick="toggleDoelgroepChip('multiproblem')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                    🔄 Meerdere problemen tegelijk</button>
+                                <span class="chip-info" title="Problemen op meerdere levensgebieden tegelijk: schulden + dakloosheid + verslaving + GGZ. Vraagt integrale aanpak.">ⓘ</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;">
+                                <button id="chip-sociaalmaatschappelijk" onclick="toggleDoelgroepChip('sociaalmaatschappelijk')"
+                                    style="padding:8px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:white;color:#6b7280;">
+                                    🏘️ Eenzaamheid / participatie</button>
+                                <span class="chip-info" title="Vastlopen in het leven zonder specifieke diagnose. Eenzaamheid, schulden, geen werk, geen netwerk, integratieproblemen.">ⓘ</span>
+                            </div>
                         </div>
 
                         <!-- Postcode compact eronder -->
