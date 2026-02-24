@@ -14354,17 +14354,17 @@ END:VEVENT
                             <div style="margin-bottom:8px;font-weight:600;color:#92400e;">Type steun:</div>
                             <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
                                 <label style="flex:1;min-width:90px;padding:6px 8px;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;text-align:center;font-size:0.8rem;background:white;transition:all 0.15s;"
-                                       onclick="this.style.borderColor='#3b82f6';this.style.background='#dbeafe';document.querySelectorAll('[data-type-group=\'${d.id}\']').forEach(l=>l.style.borderColor='#e5e7eb');this.querySelector('input').checked=true;toggleSteunDropdown('${d.id}','formeel');">
+                                       onclick="selectTypeFormeel('${d.id}', this)">
                                     <input type="radio" name="type-${d.id}" value="formeel" style="margin-right:4px;pointer-events:none;" data-type-group="${d.id}">
                                     🔵 Professioneel
                                 </label>
                                 <label style="flex:1;min-width:90px;padding:6px 8px;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;text-align:center;font-size:0.8rem;background:white;transition:all 0.15s;"
-                                       onclick="this.style.borderColor='#a855f7';this.style.background='#f3e8ff';document.querySelectorAll('[data-type-group=\'${d.id}\']').forEach(l=>l.style.borderColor='#e5e7eb');this.querySelector('input').checked=true;toggleSteunDropdown('${d.id}','collectief');">
+                                       onclick="selectTypeCollectief('${d.id}', this)">
                                     <input type="radio" name="type-${d.id}" value="collectief" style="margin-right:4px;pointer-events:none;" data-type-group="${d.id}">
                                     🟣 Collectief
                                 </label>
                                 <label style="flex:1;min-width:90px;padding:6px 8px;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;text-align:center;font-size:0.8rem;background:white;transition:all 0.15s;"
-                                       onclick="this.style.borderColor='#10b981';this.style.background='#d1fae5';document.querySelectorAll('[data-type-group=\'${d.id}\']').forEach(l=>l.style.borderColor='#e5e7eb');this.querySelector('input').checked=true;toggleSteunDropdown('${d.id}','informeel');">
+                                       onclick="selectTypeInformeel('${d.id}', this)">
                                     <input type="radio" name="type-${d.id}" value="informeel" style="margin-right:4px;pointer-events:none;" data-type-group="${d.id}">
                                     🟢 Informeel
                                 </label>
@@ -14407,10 +14407,46 @@ END:VEVENT
                                 </select>
                                 
                                 <div style="margin-top:8px;">
-                                    <div style="margin-bottom:6px;font-weight:600;color:#92400e;">Wat doet deze persoon/organisatie?</div>
-                                    <input type="text" id="wat-${d.id}" placeholder="Bijv: helpt met administratie..."
-                                        onchange="if(!state.steunDetails)state.steunDetails={};if(!state.steunDetails['${d.id}'])state.steunDetails['${d.id}']={};state.steunDetails['${d.id}'].wat=this.value;saveState();"
-                                        style="width:100%;max-width:400px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;">
+                                    <div style="margin-bottom:6px;font-weight:600;color:#92400e;">Welke rol?</div>
+                                    <select id="rol-${d.id}" 
+                                        onchange="if(!state.steunDetails)state.steunDetails={};if(!state.steunDetails['${d.id}'])state.steunDetails['${d.id}']={};state.steunDetails['${d.id}'].rol=this.value;saveState();"
+                                        style="width:100%;max-width:400px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;">
+                                        <option value="">-- Selecteer rol --</option>
+                                        <optgroup label="Praktische hulp">
+                                            <option value="administratie">Helpt met administratie</option>
+                                            <option value="boodschappen">Doet boodschappen</option>
+                                            <option value="vervoer">Verzorgt vervoer</option>
+                                            <option value="huishouden">Helpt met huishouden</option>
+                                            <option value="koken">Helpt met koken</option>
+                                        </optgroup>
+                                        <optgroup label="Sociale steun">
+                                            <option value="gezelschap">Biedt gezelschap</option>
+                                            <option value="luisterend-oor">Luisterend oor</option>
+                                            <option value="activiteiten">Doet samen activiteiten</option>
+                                            <option value="uitje">Gaat samen op uitje</option>
+                                        </optgroup>
+                                        <optgroup label="Begeleiding">
+                                            <option value="afspraken">Begeleidt naar afspraken</option>
+                                            <option value="budgetbeheer">Helpt met budgetbeheer</option>
+                                            <option value="formulieren">Helpt met formulieren</option>
+                                            <option value="contact-instanties">Contact met instanties</option>
+                                        </optgroup>
+                                        <optgroup label="Behandeling/begeleiding">
+                                            <option value="gesprekken">Voert gesprekken</option>
+                                            <option value="medicatie">Begeleidt medicatie</option>
+                                            <option value="dagstructuur">Helpt met dagstructuur</option>
+                                            <option value="vaardigheden">Traint vaardigheden</option>
+                                        </optgroup>
+                                        <optgroup label="Anders">
+                                            <option value="anders">Anders (zie notitie)</option>
+                                        </optgroup>
+                                    </select>
+                                    
+                                    <div id="rol-anders-${d.id}" style="display:none;">
+                                        <input type="text" placeholder="Beschrijf de rol..."
+                                            onchange="if(!state.steunDetails)state.steunDetails={};if(!state.steunDetails['${d.id}'])state.steunDetails['${d.id}']={};state.steunDetails['${d.id}'].rolAnders=this.value;saveState();"
+                                            style="width:100%;max-width:400px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -15503,6 +15539,58 @@ END:VEVENT
             state.steunDetails[domeinId].type = type;
             state.steunDetails[domeinId].wie = wie;
             saveState();
+        }
+
+    
+
+        
+        // Toon/verberg "Anders" tekstveld bij rol
+        document.addEventListener('change', function(e) {
+            if (e.target.id && e.target.id.startsWith('rol-')) {
+                const domeinId = e.target.id.replace('rol-', '');
+                const andersDiv = document.getElementById('rol-anders-' + domeinId);
+                if (andersDiv) {
+                    andersDiv.style.display = (e.target.value === 'anders') ? 'block' : 'none';
+                }
+            }
+        });
+
+    
+
+        
+        // Simpele type selectie functies
+        function selectTypeFormeel(domeinId, label) {
+            resetTypeButtons(domeinId);
+            label.style.borderColor = '#3b82f6';
+            label.style.background = '#dbeafe';
+            label.querySelector('input').checked = true;
+            toggleSteunDropdown(domeinId, 'formeel');
+        }
+        
+        function selectTypeCollectief(domeinId, label) {
+            resetTypeButtons(domeinId);
+            label.style.borderColor = '#a855f7';
+            label.style.background = '#f3e8ff';
+            label.querySelector('input').checked = true;
+            toggleSteunDropdown(domeinId, 'collectief');
+        }
+        
+        function selectTypeInformeel(domeinId, label) {
+            resetTypeButtons(domeinId);
+            label.style.borderColor = '#10b981';
+            label.style.background = '#d1fae5';
+            label.querySelector('input').checked = true;
+            toggleSteunDropdown(domeinId, 'informeel');
+        }
+        
+        function resetTypeButtons(domeinId) {
+            // Reset alle type labels van dit domein
+            const labels = document.querySelectorAll('label input[name="type-' + domeinId + '"]');
+            labels.forEach(input => {
+                const label = input.parentElement;
+                label.style.borderColor = '#e5e7eb';
+                label.style.background = 'white';
+            });
         }
 
     </script>
