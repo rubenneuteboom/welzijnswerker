@@ -4360,8 +4360,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById(getPreviousScreenId())">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreenById(getNextScreenId())">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToNext()">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4445,7 +4445,7 @@
                     <div id="creatiefBlok"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById(getPreviousScreenId())">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
                         <button class="btn" onclick="naarStrategischeAnalyse()"
                             style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;font-size:0.82rem;">
@@ -6889,16 +6889,33 @@ Antwoord in dit exacte JSON formaat:
         // Helper: get previous/next screen dynamically (werkt voor snelle + volledige modus)
         function getPreviousScreenId() {
             const config = getScreenConfig();
-            const currentIndex = config.findIndex(s => s.id === config[state.currentScreen - 1]?.id);
-            if (currentIndex > 0) return config[currentIndex - 1].id;
+            const prevIndex = state.currentScreen - 2; // currentScreen is 1-indexed, array is 0-indexed
+            if (prevIndex >= 0 && config[prevIndex]) {
+                return config[prevIndex].id;
+            }
             return 'start';
         }
 
         function getNextScreenId() {
             const config = getScreenConfig();
-            const currentIndex = config.findIndex(s => s.id === config[state.currentScreen - 1]?.id);
-            if (currentIndex < config.length - 1) return config[currentIndex + 1].id;
+            const nextIndex = state.currentScreen; // currentScreen is 1-indexed, next is +1, so just currentScreen
+            if (nextIndex < config.length && config[nextIndex]) {
+                return config[nextIndex].id;
+            }
             return null;
+        }
+
+        // Wrapper functies voor navigatie knoppen
+        function goToPrevious() {
+            const prevId = getPreviousScreenId();
+            console.log('🔙 goToPrevious:', prevId);
+            goToScreenById(prevId);
+        }
+
+        function goToNext() {
+            const nextId = getNextScreenId();
+            console.log('➡️ goToNext:', nextId);
+            if (nextId) goToScreenById(nextId);
         }
         
         // Update workflow bolletjes
