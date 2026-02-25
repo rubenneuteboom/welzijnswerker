@@ -7756,6 +7756,40 @@ Antwoord in dit exacte JSON formaat:
                 meta.innerHTML = `${naam}${vandaag}`;
             }
 
+            // NIEUW: Mantelzorg context alert
+            let mantelzorgAlertHTML = '';
+            if (state.mantelzorgContext && state.mantelzorgContext.isMantelzorger) {
+                const ctx = state.mantelzorgContext;
+                const typeLabel = {
+                    'partner': 'partner',
+                    'ouder': 'ouder(s)',
+                    'kind': 'kind(eren)',
+                    'anders': 'naaste'
+                }[ctx.type] || 'naaste';
+
+                mantelzorgAlertHTML = `
+                    <div style="background:#fef3c7;border:3px solid #f59e0b;border-radius:12px;padding:18px;margin-bottom:20px;">
+                        <div style="display:flex;align-items:start;gap:12px;">
+                            <span style="font-size:2rem;">🫂</span>
+                            <div style="flex:1;">
+                                <h4 style="font-size:1.1rem;font-weight:800;color:#92400e;margin:0 0 8px;">
+                                    Cliënt is overbelaste mantelzorger
+                                </h4>
+                                <div style="font-size:0.9rem;color:#78350f;line-height:1.5;margin-bottom:10px;">
+                                    Zorgt voor: <strong>${typeLabel}</strong>
+                                    ${ctx.uren ? ` · Uren per week: <strong>${ctx.uren}</strong>` : ''}
+                                </div>
+                                <div style="background:#fffbeb;border-radius:8px;padding:10px 12px;font-size:0.85rem;color:#92400e;">
+                                    <strong>💡 Let op:</strong> Meerdere domeinen worden beïnvloed door de zorglast. 
+                                    Overweeg mantelzorgondersteuning, werk-zorg balans en het betrekken van het netwerk 
+                                    om de zorgtaken te verdelen.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
             const bewegingLabels = {
                 'stabiliseren': '🧱 Blijft zoals het is',
                 'vervangen':    '🔁 Andere persoon of plek',
@@ -7895,6 +7929,7 @@ Antwoord in dit exacte JSON formaat:
                 </div>` : '';
 
             container.innerHTML = `
+                ${mantelzorgAlertHTML}
                 ${ingevuld.length > 0 ? domeinKaartjes : '<p style="color:var(--text-light);font-style:italic;">Nog geen domeinen ingevuld.</p>'}
                 ${interventiesHTML}
                 ${afsprakenHTML}
@@ -10176,7 +10211,10 @@ Antwoord in dit exacte JSON formaat:
                 .filter(p => p.domeinen.length >= 3)
                 .sort((a, b) => b.domeinen.length - a.domeinen.length);
 
-            if (overbelast.length === 0) return;
+            // Check of cliënt zelf mantelzorger is
+            const isClientMantelzorger = state.mantelzorgContext && state.mantelzorgContext.isMantelzorger;
+
+            if (overbelast.length === 0 && !isClientMantelzorger) return;
 
             // Toon mantelzorg dashboard
             const typeLabel = {
@@ -10194,6 +10232,25 @@ Antwoord in dit exacte JSON formaat:
                             <p style="font-size:0.85rem;color:#7f1d1d;margin:4px 0 0;">Personen die op meerdere domeinen ondersteunen lopen risico op overbelasting</p>
                         </div>
                     </div>
+
+                    ${isClientMantelzorger ? `
+                        <div style="background:#fefce8;border:2px solid #f59e0b;border-radius:10px;padding:14px 16px;margin-bottom:16px;">
+                            <div style="display:flex;align-items:start;gap:10px;">
+                                <span style="font-size:1.5rem;">🫂</span>
+                                <div>
+                                    <div style="font-weight:700;color:#92400e;margin-bottom:4px;font-size:0.95rem;">
+                                        Cliënt zelf is overbelaste mantelzorger
+                                    </div>
+                                    <p style="font-size:0.82rem;color:#78350f;margin:0 0 8px;line-height:1.5;">
+                                        De cliënt combineert mantelzorg met eigen problemen. Dit maakt extra kwetsbaar voor uitval.
+                                    </p>
+                                    <div style="font-size:0.8rem;color:#92400e;font-weight:600;">
+                                        💡 Aanbeveling: Mantelzorgondersteuning, werk-zorg balans, respijtzorg en netwerk inzetten om zorgtaken te verdelen.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
             `;
 
             overbelast.forEach(persoon => {
