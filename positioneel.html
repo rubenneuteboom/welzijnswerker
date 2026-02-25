@@ -4305,7 +4305,14 @@
             <div class="screen" id="screen-network">
                 <div class="card">
                     <h2>📊 Wat zien we samen?</h2>
-                    <p id="overzichtSubtitel" style="color:var(--text-light);font-size:0.95rem;">Een beeld van hoe het gaat op de besproken domeinen.</p>
+                    <p id="overzichtSubtitel" style="color:var(--text-light);font-size:0.95rem;margin-bottom:10px;">
+                        Je hebt het netwerk in kaart gebracht. Nu het totaalbeeld: <strong>hoe staat het netwerk ervoor?</strong>
+                    </p>
+                    <div style="background:#dcfce7;border-left:3px solid #16a34a;border-radius:8px;padding:10px 14px;margin-bottom:20px;">
+                        <p style="font-size:0.82rem;color:#166534;margin:0;">
+                            💡 Let op <strong>mantelzorg overbelasting</strong> (rood alarm) en de <strong>balans tussen netwerktypes</strong> (groen dashboard).
+                        </p>
+                    </div>
 
                     <!-- Signaalscherm: automatische detectie van overlap, witte vlekken & afstemmingssignalen -->
                     <div id="signaalPanel"></div>
@@ -4359,7 +4366,14 @@
             <div class="screen" id="screen-beweging">
                 <div class="card">
                     <h2>🔄 Wat wordt de volgende stap?</h2>
-                    <p style="color: var(--text-light); margin-bottom: 15px; font-size: 0.95rem;">Bespreek samen welke ondersteuning er straks bij komt, wegvalt of verandert.</p>
+                    <p style="color: var(--text-light); margin-bottom: 12px; font-size: 0.95rem;">
+                        Nu het belangrijkste gesprek: <strong>welke stap gaan jullie samen zetten?</strong>
+                    </p>
+                    <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:10px 14px;margin-bottom:16px;">
+                        <p style="font-size:0.82rem;color:#92400e;margin:0;line-height:1.5;">
+                            💡 <strong>Positionele keuze:</strong> Het gaat niet om "meer zorg", maar om de <strong>juiste beweging</strong> in het netwerk (formeel ↔ informeel ↔ collectief).
+                        </p>
+                    </div>
 
                     <!-- Compact overzicht triage (alleen in snelle modus) -->
                     <div id="triageRecapBeweging" style="display:none;margin-bottom:20px;"></div>
@@ -4380,7 +4394,17 @@
             <div class="screen" id="screen-reflectie">
                 <div class="card">
                     <h2>💭 Even terugkijken</h2>
-                    <p style="color: var(--text-light); margin-bottom: 20px; font-size: 0.95rem;">Klopt het plan dat jullie samen hebben gemaakt?</p>
+                    <p style="color: var(--text-light); margin-bottom: 12px; font-size: 0.95rem;">
+                        Je hebt samen afspraken gemaakt. Voordat we verder gaan: <strong>klopt dit plan?</strong>
+                    </p>
+                    <div style="background:#dbeafe;border-left:3px solid #3b82f6;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
+                        <p style="font-size:0.82rem;color:#1e40af;margin:0;line-height:1.5;">
+                            💡 <strong>Check per domein:</strong><br>
+                            • Is dit haalbaar? (rekening met draagkracht netwerk)<br>
+                            • Is dit veilig? (geen risico's over het hoofd gezien)<br>
+                            • Wanneer kijken we terug of het werkt?
+                        </p>
+                    </div>
 
                     <div id="reflectieVragen" style="margin-bottom: 30px;">
                         <!-- Wordt gevuld door renderReflectieVragen() -->
@@ -4396,8 +4420,15 @@
             <!-- Screen 10: Interventies (LEAN) -->
             <div class="screen" id="screen-interventies">
                 <div class="card">
-                    <h2>🎯 Wat helpt nu?</h2>
-                    <p style="color: var(--text-light); margin-bottom: 20px; font-size:0.95rem;">Concrete acties die passen bij de stap die jullie samen hebben gekozen.</p>
+                    <h2>🎯 Concrete vervolgstappen</h2>
+                    <p style="color: var(--text-light); margin-bottom: 12px; font-size:0.95rem;">
+                        Passend bij de afspraken die je net maakte: <strong>wat zijn concrete mogelijkheden?</strong>
+                    </p>
+                    <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
+                        <p style="font-size:0.82rem;color:#92400e;margin:0;line-height:1.5;">
+                            💡 <strong>Let op:</strong> Dit zijn suggesties, geen verplichtingen. Kies alleen wat past bij de cliënt en het netwerk.
+                        </p>
+                    </div>
 
                     <!-- Postcode filter — compact -->
                     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -4431,8 +4462,17 @@
             <!-- Screen 8: SAMENVATTING (LEAN workflow) -->
             <div class="screen" id="screen-samenvatting">
                 <div class="card">
-                    <h2 style="font-size: 1.8rem; margin-bottom: 6px;">Wat spreken we af?</h2>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 6px;">📄 Wat spreken we af?</h2>
                     <div id="besluitMeta" style="font-size:0.85rem;color:#6b7280;margin-bottom:12px;"></div>
+
+                    <!-- Uitleg twee lagen -->
+                    <div style="background:#f0f9ff;border-left:3px solid #3b82f6;border-radius:8px;padding:12px 14px;margin-bottom:16px;">
+                        <p style="font-size:0.82rem;color:#1e40af;margin:0;line-height:1.5;">
+                            💡 Je kunt twee versies van deze samenvatting bekijken:<br>
+                            <strong>👤 Overzicht cliënt:</strong> Begrijpelijk, zonder jargon - om te delen met de cliënt<br>
+                            <strong>📋 Professionele details:</strong> Technisch, voor overdracht aan collega's en dossier
+                        </p>
+                    </div>
 
                     <!-- Twee-lagen toggle -->
                     <div style="display:flex;background:#f3f4f6;border-radius:10px;padding:4px;gap:4px;margin-bottom:16px;width:fit-content;">
