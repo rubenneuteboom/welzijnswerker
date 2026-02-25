@@ -5894,6 +5894,10 @@
 
         // Get current screen config based on mode
         function getScreenConfig() {
+            // Snelle modus: retourneer alleen triage, beweging, samenvatting
+            if (state.snelleModusSchermen && state.snelleModusSchermen.length > 0) {
+                return screenConfigBase.filter(s => state.snelleModusSchermen.includes(s.id));
+            }
             return screenConfigBase;
         }
 
