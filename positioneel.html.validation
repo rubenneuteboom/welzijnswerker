@@ -6243,36 +6243,8 @@
           }
         }
 
-        // === VALIDATIE FUNCTIES ===
-        function validateTriage() {
-            const hasScores = Object.keys(state.scores).length > 0;
-            if (!hasScores) {
-                alert('⚠️ Selecteer minimaal 1 domein voordat je verder gaat.');
-                return false;
-            }
-            return true;
-        }
-
-        function validatePostcode(postcode) {
-            if (!postcode) return true; // Optioneel
-            const cleaned = postcode.replace(/\s/g, '');
-            if (!/^\d{4}/.test(cleaned)) {
-                alert('⚠️ Postcode moet beginnen met 4 cijfers (bijv. 1012)');
-                return false;
-            }
-            return true;
-        }
-
-        function cleanEmptyFields() {
-            // Ruim lege strings op in state
-            if (state.clientNaam === '') delete state.clientNaam;
-            if (state.hulpvraag === '') delete state.hulpvraag;
-            if (state.wens === '') delete state.wens;
-            if (state.postcode === '') delete state.postcode;
-        }
         // Save to localStorage
         function saveState() {
-            cleanEmptyFields(); // Ruim lege velden op
             state.updatedAt = new Date().toISOString();
             localStorage.setItem('welzijnswerker_v2', JSON.stringify(state));
         }

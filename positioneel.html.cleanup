@@ -6272,7 +6272,6 @@
         }
         // Save to localStorage
         function saveState() {
-            cleanEmptyFields(); // Ruim lege velden op
             state.updatedAt = new Date().toISOString();
             localStorage.setItem('welzijnswerker_v2', JSON.stringify(state));
         }
