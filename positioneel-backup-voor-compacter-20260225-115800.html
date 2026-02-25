@@ -4314,23 +4314,23 @@
                         </p>
                     </div>
 
-                    <!-- 1. URGENT: Mantelzorg alarm (alleen als aanwezig) -->
+                    <!-- Signaalscherm: automatische detectie van overlap, witte vlekken & afstemmingssignalen -->
                     <div id="signaalPanel"></div>
 
-                    <!-- 2. VISUEEL: Spider diagram PROMINENT -->
-                    <div id="netwerkpositieInNetwork" style="background:#f0fdf4;border:2px solid #16a34a;border-radius:14px;padding:20px;margin-bottom:24px;">
-                        <h3 style="font-size:1.15rem;color:#166534;margin:0 0 6px;font-weight:800;">🕸️ Netwerkpositie</h3>
-                        <p style="font-size:0.88rem;color:#166534;margin:0 0 12px;">Het groene vlak toont hoe zelfstandig het gaat. Hoe groter, hoe meer eigen kracht.</p>
-                        <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.78rem;color:#166534;margin-bottom:16px;">
-                            <span>🟢 <strong>Groot vlak</strong> = sterk</span>
-                            <span>🟡 <strong>Kleiner</strong> = aandacht nodig</span>
+                    <!-- Overzichtstabel -->
+                    <div id="domainOverviewTable"></div>
+
+                    <!-- Netwerkpositie (samengevoegd) -->
+                    <div id="netwerkpositieInNetwork" style="margin-top:24px;padding-top:20px;border-top:2px solid #f0fdf4;">
+                        <h3 style="font-size:1.05rem;color:#374151;margin:0 0 4px;font-weight:700;">🕸️ Netwerkpositie</h3>
+                        <p style="font-size:0.82rem;color:#6b7280;margin:0 0 8px;">Het groene vlak laat zien hoe zelfstandig het gaat per domein. Hoe groter het vlak, hoe meer eigen kracht.</p>
+                        <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.78rem;color:#6b7280;margin-bottom:12px;">
+                            <span>🟢 <strong>Groot vlak</strong> = sterk, weinig steun nodig</span>
+                            <span>🟡 <strong>Kleiner vlak</strong> = aandacht of steun wenselijk</span>
                             <span>🔴 <strong>Ingetrokken</strong> = steun nodig</span>
                         </div>
                         <div id="sijnNetwerkkaartCompact2"></div>
                     </div>
-
-                    <!-- 3. DATA: Aggregatie + tabellen -->
-                    <div id="domainOverviewTable"></div>
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
@@ -7290,7 +7290,32 @@ Antwoord in dit exacte JSON formaat:
 
                 ${renderDoelgroepVragen(domain.id)}
 
-                <!-- Supporters (altijd zichtbaar) -->
+                <!-- CLIËNTREACTIE — stem van de cliënt -->
+                <div style="background:#faf5ff;border:1.5px solid #d8b4fe;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+                    <div style="font-size:0.82rem;font-weight:700;color:#6d28d9;margin-bottom:8px;">💬 Hoe ervaart u dit zelf?</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+                        ${['klopt','klopt-deels','klopt-niet'].map(v => {
+                            const labels = {
+                                'klopt': ['✅','Dit klopt voor mij','#16a34a','#dcfce7'],
+                                'klopt-deels': ['🤔','Gedeeltelijk','#d97706','#fef3c7'],
+                                'klopt-niet': ['❌','Dit klopt niet voor mij','#dc2626','#fee2e2']
+                            }[v];
+                            const active = (state.clientReactie||{})[domain.id] === v;
+                            return `<button onclick="setClientReactie('${domain.id}','${v}')"
+                                style="padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;
+                                border:2px solid ${active ? labels[2] : '#e5e7eb'};
+                                background:${active ? labels[3] : 'white'};color:${active ? labels[2] : '#6b7280'};">
+                                ${labels[0]} ${labels[1]}
+                            </button>`;
+                        }).join('')}
+                    </div>
+                    <input type="text" placeholder="Toelichting cliënt (optioneel)..."
+                        value="${((state.clientReactie||{})[domain.id+'_toelichting'])||''}"
+                        onchange="setClientReactie('${domain.id}','toelichting',this.value)"
+                        style="width:100%;padding:7px 10px;border:1px solid #ddd8fe;border-radius:7px;font-size:0.82rem;box-sizing:border-box;background:white;">
+                </div>
+
+                <!-- Supporters -->
                 <div style="background:#f0f9ff;border-left:3px solid #3b82f6;border-radius:6px;padding:10px 12px;margin-bottom:12px;">
                     <p style="font-size:0.82rem;font-weight:600;color:#1e3a8a;margin:0 0 4px;">👥 Wie helpt er bij ${domain.name}?</p>
                     <p style="font-size:0.75rem;color:#1e40af;margin:0;">
@@ -7323,128 +7348,101 @@ Antwoord in dit exacte JSON formaat:
                     ➕ ${(details.supporters || []).length > 0 ? 'Nog iemand toevoegen' : 'Eerste persoon toevoegen'}
                 </button>
 
-                <!-- Meer opties (inklapbaar) -->
-                <details style="margin-top:16px;border-top:1px solid #e5e7eb;padding-top:12px;">
-                    <summary style="cursor:pointer;font-size:0.85rem;font-weight:600;color:#6b7280;list-style:none;display:flex;align-items:center;gap:6px;">
-                        <span>⋯ Meer opties</span>
-                        <span style="font-size:0.75rem;color:#9ca3af;">(cliëntreactie, netwerkpositie, notitie)</span>
-                    </summary>
-                    
-                    <div style="margin-top:12px;">
-                        <!-- CLIËNTREACTIE -->
-                        <div style="background:#faf5ff;border:1.5px solid #d8b4fe;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
-                            <div style="font-size:0.82rem;font-weight:700;color:#6d28d9;margin-bottom:8px;">💬 Hoe ervaart u dit zelf?</div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-                                ${['klopt','klopt-deels','klopt-niet'].map(v => {
-                                    const labels = {
-                                        'klopt': ['✅','Dit klopt','#16a34a','#dcfce7'],
-                                        'klopt-deels': ['🤔','Gedeeltelijk','#d97706','#fef3c7'],
-                                        'klopt-niet': ['❌','Klopt niet','#dc2626','#fee2e2']
-                                    }[v];
-                                    const active = (state.clientReactie||{})[domain.id] === v;
-                                    return `<button onclick="setClientReactie('${domain.id}','${v}')"
-                                        style="padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;
-                                        border:2px solid ${active ? labels[2] : '#e5e7eb'};
-                                        background:${active ? labels[3] : 'white'};color:${active ? labels[2] : '#6b7280'};">
-                                        ${labels[0]} ${labels[1]}
-                                    </button>`;
-                                }).join('')}
-                            </div>
-                            <input type="text" placeholder="Toelichting (optioneel)..."
-                                value="${((state.clientReactie||{})[domain.id+'_toelichting'])||''}"
-                                onchange="setClientReactie('${domain.id}','toelichting',this.value)"
-                                style="width:100%;padding:7px 10px;border:1px solid #ddd8fe;border-radius:7px;font-size:0.82rem;box-sizing:border-box;background:white;">
-                        </div>
+                ${(function() {
+                    const sups = details.supporters || [];
+                    if (sups.length === 0) return '';
 
-                        <!-- NETWERKPOSITIE -->
-                        ${(function() {
-                            const sups = details.supporters || [];
-                            if (sups.length === 0) return '';
+                    // Tel supporters per type
+                    const informal = sups.filter(s => s.type === 'informal').length;
+                    const collective = sups.filter(s => s.type === 'collective').length;
+                    const professional = sups.filter(s => s.type === 'professional').length;
+                    const total = informal + collective + professional;
 
-                            const informal = sups.filter(s => s.type === 'informal').length;
-                            const collective = sups.filter(s => s.type === 'collective').length;
-                            const professional = sups.filter(s => s.type === 'professional').length;
-                            const total = informal + collective + professional;
+                    if (total === 0) return '';
 
-                            if (total === 0) return '';
+                    const informalPct = Math.round((informal / total) * 100);
+                    const collectivePct = Math.round((collective / total) * 100);
+                    const professionalPct = Math.round((professional / total) * 100);
 
-                            const informalPct = Math.round((informal / total) * 100);
-                            const collectivePct = Math.round((collective / total) * 100);
-                            const professionalPct = Math.round((professional / total) * 100);
+                    // Bepaal hoofdtype
+                    let positieLabel = '';
+                    let positieKleur = '';
+                    if (informal > 0 && collective === 0 && professional === 0) {
+                        positieLabel = '🟢 Informeel netwerk';
+                        positieKleur = '#10b981';
+                    } else if (professional > 0 && collective === 0 && informal === 0) {
+                        positieLabel = '🔵 Formele zorg';
+                        positieKleur = '#3b82f6';
+                    } else if (collective > 0 && professional === 0 && informal === 0) {
+                        positieLabel = '🟣 Collectieve voorzieningen';
+                        positieKleur = '#8b5cf6';
+                    } else {
+                        positieLabel = '🌈 Gemengd netwerk';
+                        positieKleur = '#6b7280';
+                    }
 
-                            let positieLabel = '';
-                            let positieKleur = '';
-                            if (informal > 0 && collective === 0 && professional === 0) {
-                                positieLabel = '🟢 Informeel';
-                                positieKleur = '#10b981';
-                            } else if (professional > 0 && collective === 0 && informal === 0) {
-                                positieLabel = '🔵 Formeel';
-                                positieKleur = '#3b82f6';
-                            } else if (collective > 0 && professional === 0 && informal === 0) {
-                                positieLabel = '🟣 Collectief';
-                                positieKleur = '#8b5cf6';
-                            } else {
-                                positieLabel = '🌈 Gemengd';
-                                positieKleur = '#6b7280';
-                            }
-
-                            return `
-                                <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
-                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                                        <div style="font-size:0.82rem;font-weight:700;color:#374151;">🕸️ Netwerkpositie</div>
-                                        <div style="font-size:0.72rem;font-weight:600;color:${positieKleur};background:white;padding:2px 6px;border-radius:4px;border:1px solid ${positieKleur};">
-                                            ${positieLabel}
-                                        </div>
-                                    </div>
-                                    
-                                    ${informal > 0 ? `
-                                        <div style="margin-bottom:4px;">
-                                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-                                                <span style="font-size:0.75rem;color:#6b7280;">🟢 Informeel</span>
-                                                <span style="font-size:0.72rem;font-weight:600;color:#374151;">${informal} · ${informalPct}%</span>
-                                            </div>
-                                            <div style="background:#e5e7eb;height:4px;border-radius:2px;overflow:hidden;">
-                                                <div style="background:#10b981;height:100%;width:${informalPct}%;"></div>
-                                            </div>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${collective > 0 ? `
-                                        <div style="margin-bottom:4px;">
-                                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-                                                <span style="font-size:0.75rem;color:#6b7280;">🟣 Collectief</span>
-                                                <span style="font-size:0.72rem;font-weight:600;color:#374151;">${collective} · ${collectivePct}%</span>
-                                            </div>
-                                            <div style="background:#e5e7eb;height:4px;border-radius:2px;overflow:hidden;">
-                                                <div style="background:#8b5cf6;height:100%;width:${collectivePct}%;"></div>
-                                            </div>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${professional > 0 ? `
-                                        <div style="margin-bottom:4px;">
-                                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-                                                <span style="font-size:0.75rem;color:#6b7280;">🔵 Formeel</span>
-                                                <span style="font-size:0.72rem;font-weight:600;color:#374151;">${professional} · ${professionalPct}%</span>
-                                            </div>
-                                            <div style="background:#e5e7eb;height:4px;border-radius:2px;overflow:hidden;">
-                                                <div style="background:#3b82f6;height:100%;width:${professionalPct}%;"></div>
-                                            </div>
-                                        </div>
-                                    ` : ''}
+                    return `
+                        <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                                <div style="font-size:0.85rem;font-weight:700;color:#374151;">🕸️ Netwerkpositie ${domain.emoji} ${domain.name}</div>
+                                <div style="font-size:0.75rem;font-weight:600;color:${positieKleur};background:white;padding:3px 8px;border-radius:6px;border:1px solid ${positieKleur};">
+                                    ${positieLabel}
                                 </div>
-                            `;
-                        })()}
+                            </div>
+                            
+                            ${informal > 0 ? `
+                                <div style="margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                                        <span style="font-size:0.78rem;color:#6b7280;">🟢 Informeel</span>
+                                        <span style="font-size:0.75rem;font-weight:600;color:#374151;">${informal} ${informal === 1 ? 'persoon' : 'personen'} · ${informalPct}%</span>
+                                    </div>
+                                    <div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;">
+                                        <div style="background:#10b981;height:100%;width:${informalPct}%;transition:width 0.4s ease;"></div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${collective > 0 ? `
+                                <div style="margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                                        <span style="font-size:0.78rem;color:#6b7280;">🟣 Collectief</span>
+                                        <span style="font-size:0.75rem;font-weight:600;color:#374151;">${collective} ${collective === 1 ? 'voorziening' : 'voorzieningen'} · ${collectivePct}%</span>
+                                    </div>
+                                    <div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;">
+                                        <div style="background:#8b5cf6;height:100%;width:${collectivePct}%;transition:width 0.4s ease;"></div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${professional > 0 ? `
+                                <div style="margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                                        <span style="font-size:0.78rem;color:#6b7280;">🔵 Formeel</span>
+                                        <span style="font-size:0.75rem;font-weight:600;color:#374151;">${professional} ${professional === 1 ? 'professional' : 'professionals'} · ${professionalPct}%</span>
+                                    </div>
+                                    <div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;">
+                                        <div style="background:#3b82f6;height:100%;width:${professionalPct}%;transition:width 0.4s ease;"></div>
+                                    </div>
+                                </div>
+                            ` : ''}
 
-                        <!-- NOTITIE -->
-                        <div>
-                            <label style="font-size:0.82rem;font-weight:600;color:#6b7280;display:block;margin-bottom:6px;">📝 Notitie</label>
-                            <textarea style="width:100%;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.85rem;min-height:60px;box-sizing:border-box;"
-                                      placeholder="Iets wat je wil onthouden..."
-                                      onchange="updateNote('${domain.id}', this.value)">${esc(state.notes[domain.id])}</textarea>
+                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:8px;font-style:italic;">
+                                ${informal > collective + professional ? '💡 Sterk informeel netwerk — let op draagkracht' : ''}
+                                ${professional > informal + collective ? '💡 Hoofdzakelijk formele zorg — kan verschuiving naar informeel/collectief?' : ''}
+                                ${informal === 0 && professional === 0 && collective > 0 ? '💡 Volledig collectief — check of dit voldoende is' : ''}
+                                ${informal > 0 && professional > 0 && collective === 0 ? '💡 Gemengd informeel-formeel — mogelijk collectieve opties verkennen?' : ''}
+                            </div>
                         </div>
-                    </div>
-                </details>
+                    `;
+                })()}
+
+                <!-- Notitie -->
+                <div>
+                    <label style="font-size:0.82rem;font-weight:600;color:var(--text-light);display:block;margin-bottom:6px;">📝 Notitie (optioneel)</label>
+                    <textarea style="width:100%;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.9rem;min-height:60px;box-sizing:border-box;"
+                              placeholder="Iets wat je wil onthouden over dit domein..."
+                              onchange="updateNote('${domain.id}', this.value)">${esc(state.notes[domain.id])}</textarea>
+                </div>
             `;
         }
         
@@ -10213,21 +10211,8 @@ Antwoord in dit exacte JSON formaat:
             const aggregatie = renderNetwerkAggregatie();
             container.innerHTML = aggregatie;
             
-            // Details container voor tabellen (inklapbaar)
-            const detailsDiv = document.createElement('details');
-            detailsDiv.style.marginTop = '16px';
-            detailsDiv.innerHTML = `
-                <summary style="cursor:pointer;font-size:0.95rem;font-weight:700;color:#374151;list-style:none;padding:12px 16px;background:#f9fafb;border-radius:10px;display:flex;align-items:center;justify-content:space-between;">
-                    <span>📋 Toon details per netwerktype</span>
-                    <span style="font-size:0.8rem;color:#6b7280;">▼</span>
-                </summary>
-                <div id="netwerkBlokkenContainer" style="margin-top:12px;"></div>
-            `;
-            container.appendChild(detailsDiv);
-            
-            // Render tabellen in de details
-            const blokkenContainer = detailsDiv.querySelector('#netwerkBlokkenContainer');
-            renderNetworkBlocks(blokkenContainer);
+            // Render rest van overzicht
+            renderNetworkBlocks(container);
         }
 
         function renderNetworkBlocks(container) {
