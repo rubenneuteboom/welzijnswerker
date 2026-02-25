@@ -4258,7 +4258,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('start')">← Annuleren</button>
+                        <button class="btn btn-secondary" onclick="goBackToStart()">← Annuleren</button>
                         <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
                             Volgende →
                         </button>
@@ -6916,6 +6916,20 @@ Antwoord in dit exacte JSON formaat:
             const nextId = getNextScreenId();
             console.log('➡️ goToNext:', nextId);
             if (nextId) goToScreenById(nextId);
+        }
+
+        function goBackToStart() {
+            console.log('🏠 Terug naar startscherm');
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Show start screen
+            const startScreen = document.getElementById('screen-start');
+            if (startScreen) {
+                startScreen.classList.add('active');
+                state.currentScreen = 0;
+                saveState();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
         
         // Update workflow bolletjes
