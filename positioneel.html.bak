@@ -6639,6 +6639,7 @@ Antwoord in dit exacte JSON formaat:
         function selectMode(mode) {
             state.mode = mode;
             saveState();
+            console.log('Mode geselecteerd:', mode);
         }
 
         // ── DEMO MODUS ────────────────────────────────────────────────
@@ -6959,13 +6960,16 @@ Antwoord in dit exacte JSON formaat:
         function goToScreen(screenNum) {
             // Accept string IDs too
             if (typeof screenNum === 'string') { goToScreenById(screenNum); return; }
+            console.log('🔹 goToScreen aangeroepen:', screenNum);
             const config = getScreenConfig();
+            console.log('📋 Config length:', config.length, 'First item:', config[0]);
             
             state.currentScreen = screenNum;
             saveState();
             
             // Get screen id from config
             const screenConfig = config[screenNum - 1];
+            console.log('🔍 screenConfig voor screenNum', screenNum, ':', screenConfig);
             
             if (!screenConfig) {
                 console.error('❌ Geen screenConfig gevonden voor screenNum:', screenNum, 'Config:', config);
@@ -6975,6 +6979,7 @@ Antwoord in dit exacte JSON formaat:
             
             const targetScreenId = `screen-${screenConfig.id}`;
             const targetScreen = document.getElementById(targetScreenId);
+            console.log('🎯 Zoek naar:', targetScreenId, 'Gevonden:', targetScreen);
             
             if (!targetScreen) {
                 console.error('❌ Screen element niet gevonden:', targetScreenId);
@@ -6983,16 +6988,22 @@ Antwoord in dit exacte JSON formaat:
             }
             
             // Hide ALL screens first
+            console.log('👁️ Verberg alle screens...');
             const allScreens = document.querySelectorAll('.screen');
+            console.log('Aantal screens gevonden:', allScreens.length);
             allScreens.forEach(s => {
                 s.classList.remove('active');
+                console.log('  - Verborgen:', s.id);
             });
             
             // Show target screen
+            console.log('✨ Activeer target screen:', targetScreenId);
             targetScreen.classList.add('active');
+            console.log('✅ Classes na activatie:', targetScreen.className);
             
             // Check if it's actually visible
             const computedStyle = window.getComputedStyle(targetScreen);
+            console.log('📊 Display style:', computedStyle.display);
             
             if (computedStyle.display === 'none') {
                 console.error('⚠️ WARNING: Screen has active class but display is still none!');
@@ -7079,15 +7090,18 @@ Antwoord in dit exacte JSON formaat:
         // Wrapper functies voor navigatie knoppen
         function goToPrevious() {
             const prevId = getPreviousScreenId();
+            console.log('🔙 goToPrevious:', prevId);
             goToScreenById(prevId);
         }
 
         function goToNext() {
             const nextId = getNextScreenId();
+            console.log('➡️ goToNext:', nextId);
             if (nextId) goToScreenById(nextId);
         }
 
         function goBackToStart() {
+            console.log('🏠 Terug naar startscherm');
             // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             // Show start screen
@@ -13420,6 +13434,7 @@ Antwoord in dit exacte JSON formaat:
             // Herlaad interventies met lokale opties
             renderInterventiesVoorBeweging();
             
+            console.log('Postcode gefilterd:', postcode, 'Regio:', regio, 'Lokale interventies:', lokaal);
             
             // Render concrete voorzieningen op basis van ondersteuningsstructuur
             renderConcreteVoorzieningen();
@@ -13666,6 +13681,7 @@ Antwoord in dit exacte JSON formaat:
             }
             state.interventieContacts[index] = contact;
             saveState();
+            console.log('Contactpersoon opgeslagen voor interventie', index, ':', contact);
         }
         
         // Render results
@@ -16685,6 +16701,7 @@ END:VEVENT
             state.huidigeSteun.status = keuze;
             saveState();
             
+            console.log('Huidige steun geselecteerd:', keuze);
         }
         
         function saveHuidigeSteunType() {
@@ -16695,6 +16712,7 @@ END:VEVENT
             state.huidigeSteun.type = select.value;
             saveState();
             
+            console.log('Steun type opgeslagen:', select.value);
         }
 
     
