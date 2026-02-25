@@ -4107,7 +4107,7 @@
                         <div style="display:flex;align-items:start;gap:12px;">
                             <input type="checkbox" id="isMantelzorgerOverbelast" 
                                 style="width:20px;height:20px;margin-top:2px;cursor:pointer;"
-                                id="mantelzorgCheckbox">
+                                onchange="handleMantelzorgContext(this.checked)">
                             <div style="flex:1;">
                                 <label for="isMantelzorgerOverbelast" style="font-size:0.95rem;font-weight:700;color:#92400e;cursor:pointer;display:block;margin-bottom:4px;">
                                     🫂 Cliënt is overbelaste mantelzorger
@@ -4120,7 +4120,8 @@
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
                                         <div>
                                             <label style="font-size:0.8rem;font-weight:600;color:#92400e;display:block;margin-bottom:4px;">Zorgt voor:</label>
-                                            <select id="mantelzorgType">
+                                            <select id="mantelzorgType" style="width:100%;padding:6px 10px;border:1px solid #d97706;border-radius:6px;font-size:0.85rem;"
+                                                onchange="state.mantelzorgContext.type=this.value;saveState();">
                                                 <option value="">Selecteer...</option>
                                                 <option value="partner">Partner</option>
                                                 <option value="ouder">Ouder(s)</option>
@@ -4130,7 +4131,8 @@
                                         </div>
                                         <div>
                                             <label style="font-size:0.8rem;font-weight:600;color:#92400e;display:block;margin-bottom:4px;">Uren per week:</label>
-                                            <select id="mantelzorgUren">
+                                            <select id="mantelzorgUren" style="width:100%;padding:6px 10px;border:1px solid #d97706;border-radius:6px;font-size:0.85rem;"
+                                                onchange="state.mantelzorgContext.uren=this.value;saveState();">
                                                 <option value="">Selecteer...</option>
                                                 <option value="<10">Minder dan 10 uur</option>
                                                 <option value="10-20">10-20 uur</option>
@@ -13023,8 +13025,8 @@ Antwoord in dit exacte JSON formaat:
 
                                 return `
                                     <label style="display:flex;align-items:start;gap:10px;padding:12px;border:2px solid #e5e7eb;background:#fafafa;border-radius:8px;cursor:pointer;transition:all 0.2s;"
-                                        
-                                        >
+                                        onmouseover="this.style.borderColor='#16a34a';this.style.background='#f0fdf4'"
+                                        onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#fafafa'">
                                         <input type="checkbox" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;">
                                         <div style="flex:1;">
                                             <div style="font-weight:700;color:#374151;margin-bottom:4px;font-size:0.95rem;">
@@ -16625,35 +16627,6 @@ END:VEVENT
             }
         }
         // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
-        
-
-        // Event listeners voor mantelzorg context (na DOM ready)
-        setTimeout(() => {
-            const checkbox = document.getElementById('mantelzorgCheckbox');
-            if (checkbox) {
-                checkbox.addEventListener('change', function() {
-                    handleMantelzorgContext(this.checked);
-                });
-            }
-            
-            const typeSelect = document.getElementById('mantelzorgType');
-            if (typeSelect) {
-                typeSelect.addEventListener('change', function() {
-                    if (!state.mantelzorgContext) state.mantelzorgContext = {};
-                    state.mantelzorgContext.type = this.value;
-                    saveState();
-                });
-            }
-            
-            const urenSelect = document.getElementById('mantelzorgUren');
-            if (urenSelect) {
-                urenSelect.addEventListener('change', function() {
-                    if (!state.mantelzorgContext) state.mantelzorgContext = {};
-                    state.mantelzorgContext.uren = this.value;
-                    saveState();
-                });
-            }
-        }, 100);
         
     </script>
 
