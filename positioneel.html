@@ -14981,36 +14981,139 @@ END:VEVENT
                                 <select id="wie-formeel-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','formeel',this.value)">
                                     <option value="">-- Selecteer --</option>
-                                    <option value="ambulante-ggz">Ambulante GGZ</option>
-                                    <option value="wijkverpleging">Wijkverpleging</option>
-                                    <option value="thuiszorg">Thuiszorg</option>
-                                    <option value="maatschappelijk-werk">Maatschappelijk werk</option>
-                                    <option value="budgetcoach">Budgetcoach</option>
-                                    <option value="budgetbeheer">Budgetbeheer</option>
-                                    <option value="bewindvoering">Bewindvoering</option>
-                                    <option value="schuldhulp">Schuldhulpverlening</option>
-                                    <option value="werkcoach">Werkcoach</option>
+                                    ${(() => {
+                                        const opties = {
+                                            'financien': [
+                                                {v:'budgetcoach',l:'Budgetcoach'},
+                                                {v:'budgetbeheer',l:'Budgetbeheer'},
+                                                {v:'bewindvoering',l:'Bewindvoering'},
+                                                {v:'schuldhulp',l:'Schuldhulpverlening'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'dagbesteding': [
+                                                {v:'werkcoach',l:'Werkcoach'},
+                                                {v:'jobcoach',l:'Jobcoach'},
+                                                {v:'re-integratie',l:'Re-integratie begeleiding'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'huisvesting': [
+                                                {v:'woningcorporatie',l:'Woningcorporatie'},
+                                                {v:'woonbegeleiding',l:'Woonbegeleiding'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'huiselijke-relaties': [
+                                                {v:'gezinscoach',l:'Gezinscoach'},
+                                                {v:'relatietherapie',l:'Relatietherapie'},
+                                                {v:'veilig-thuis',l:'Veilig Thuis'},
+                                                {v:'jeugdzorg',l:'Jeugdzorg'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'geestelijk': [
+                                                {v:'ambulante-ggz',l:'Ambulante GGZ'},
+                                                {v:'psycholoog',l:'Psycholoog'},
+                                                {v:'psychiater',l:'Psychiater'},
+                                                {v:'casemanager-ggz',l:'Casemanager GGZ'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'lichamelijk': [
+                                                {v:'wijkverpleging',l:'Wijkverpleging'},
+                                                {v:'thuiszorg',l:'Thuiszorg'},
+                                                {v:'fysiotherapeut',l:'Fysiotherapeut'},
+                                                {v:'ergotherapeut',l:'Ergotherapeut'},
+                                                {v:'huisarts',l:'Huisarts'}
+                                            ],
+                                            'verslaving': [
+                                                {v:'verslavingszorg',l:'Verslavingszorg'},
+                                                {v:'ambulante-ggz',l:'Ambulante GGZ'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'adl': [
+                                                {v:'wijkverpleging',l:'Wijkverpleging'},
+                                                {v:'thuiszorg',l:'Thuiszorg'},
+                                                {v:'ergotherapeut',l:'Ergotherapeut'},
+                                                {v:'wmo-begeleiding',l:'Wmo-begeleiding'}
+                                            ],
+                                            'sociaal-netwerk': [
+                                                {v:'sociaal-werker',l:'Sociaal werker'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'},
+                                                {v:'ggz-begeleiding',l:'GGZ begeleiding'}
+                                            ],
+                                            'participatie': [
+                                                {v:'participatie-coach',l:'Participatiecoach'},
+                                                {v:'werkcoach',l:'Werkcoach'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ],
+                                            'justitie': [
+                                                {v:'reclassering',l:'Reclassering'},
+                                                {v:'jeugdreclassering',l:'Jeugdreclassering'},
+                                                {v:'forensische-zorg',l:'Forensische zorg'},
+                                                {v:'maatschappelijk-werk',l:'Maatschappelijk werk'}
+                                            ]
+                                        };
+                                        const lijst = opties[d.id] || opties['financien'];
+                                        return lijst.map(o => '<option value="'+o.v+'">'+o.l+'</option>').join('');
+                                    })()}
                                 </select>
                                 
                                 <select id="wie-collectief-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','collectief',this.value)">
                                     <option value="">-- Selecteer --</option>
-                                    <option value="vrijwilligers">Vrijwilligersorganisatie</option>
-                                    <option value="buurtcentrum">Buurtcentrum</option>
-                                    <option value="welzijn">Welzijnsorganisatie</option>
-                                    <option value="kerk">Kerk/Moskee</option>
-                                    <option value="sportclub">Sportvereniging</option>
+                                    ${(() => {
+                                        const opties = {
+                                            'financien': [
+                                                {v:'schuldhulpmaatje',l:'Schuldhulpmaatje'},
+                                                {v:'voedselbank',l:'Voedselbank'},
+                                                {v:'kledingbank',l:'Kledingbank'}
+                                            ],
+                                            'dagbesteding': [
+                                                {v:'dagbesteding-centrum',l:'Dagbestedingscentrum'},
+                                                {v:'activiteitencentrum',l:'Activiteitencentrum'},
+                                                {v:'werkplaats',l:'Sociale werkplaats'}
+                                            ],
+                                            'sociaal-netwerk': [
+                                                {v:'buurtcentrum',l:'Buurtcentrum'},
+                                                {v:'welzijn',l:'Welzijnsorganisatie'},
+                                                {v:'kerk',l:'Kerk/Moskee'},
+                                                {v:'vrijwilligers',l:'Vrijwilligersorganisatie'}
+                                            ],
+                                            'participatie': [
+                                                {v:'buurtcentrum',l:'Buurtcentrum'},
+                                                {v:'sportclub',l:'Sportvereniging'},
+                                                {v:'hobbyclub',l:'Hobbyclub'},
+                                                {v:'vrijwilligers',l:'Vrijwilligersorganisatie'}
+                                            ],
+                                            'default': [
+                                                {v:'buurtcentrum',l:'Buurtcentrum'},
+                                                {v:'welzijn',l:'Welzijnsorganisatie'},
+                                                {v:'kerk',l:'Kerk/Moskee'},
+                                                {v:'vrijwilligers',l:'Vrijwilligersorganisatie'}
+                                            ]
+                                        };
+                                        const lijst = opties[d.id] || opties['default'];
+                                        return lijst.map(o => '<option value="'+o.v+'">'+o.l+'</option>').join('');
+                                    })()}
                                 </select>
                                 
                                 <select id="wie-informeel-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','informeel',this.value)">
                                     <option value="">-- Selecteer --</option>
-                                    <option value="partner">Partner</option>
-                                    <option value="kind">Kind/kinderen</option>
-                                    <option value="ouder">Ouder(s)</option>
-                                    <option value="familie">Andere familie</option>
-                                    <option value="vriend">Vriend(in)</option>
-                                    <option value="buur">Buur</option>
+                                    ${(() => {
+                                        const basis = [
+                                            {v:'partner',l:'Partner'},
+                                            {v:'kind',l:'Kind/kinderen'},
+                                            {v:'ouder',l:'Ouder(s)'},
+                                            {v:'familie',l:'Andere familie'},
+                                            {v:'vriend',l:'Vriend(in)'},
+                                            {v:'buur',l:'Buur'}
+                                        ];
+                                        // Informeel is meestal hetzelfde per domein, maar kan uitgebreid
+                                        const extra = {
+                                            'huiselijke-relaties': [{v:'ex-partner',l:'Ex-partner'},{v:'schoonouders',l:'Schoonouders'}],
+                                            'adl': [{v:'mantelzorger',l:'Mantelzorger'}]
+                                        };
+                                        const lijst = extra[d.id] ? [...basis, ...extra[d.id]] : basis;
+                                        return lijst.map(o => '<option value="'+o.v+'">'+o.l+'</option>').join('');
+                                    })()}
                                 </select>
                                 
                                 <div style="margin-top:8px;">
