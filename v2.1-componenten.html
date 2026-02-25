@@ -1,0 +1,594 @@
+<!-- ============================================
+     RPA v2.1 - NIEUWE COMPONENTEN
+     Te integreren in positioneel.html
+     ============================================ -->
+
+<!-- ============================================
+     CSS TOEVOEGINGEN (voeg toe aan <style> sectie)
+     ============================================ -->
+
+<style>
+/* ====== EVIDENCE BADGE SYSTEEM ====== */
+.evidence-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.evidence-badge.evidence-based {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.evidence-badge.clinical {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.evidence-badge.ethical {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+/* ====== INFO TOOLTIPS ====== */
+.info-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: #6b7280;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 6px;
+    position: relative;
+}
+
+.info-icon:hover .tooltip-content {
+    display: block;
+}
+
+.tooltip-content {
+    display: none;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    width: 280px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    line-height: 1.5;
+    font-weight: normal;
+}
+
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1f2937;
+}
+
+/* ====== MANTELZORG ALERT ====== */
+.mantelzorg-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mantelzorg-alert h4 {
+    color: #92400e;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.mantelzorg-alert p {
+    color: #78350f;
+    line-height: 1.7;
+    margin: 8px 0;
+}
+
+.mantelzorg-alert details {
+    background: white;
+    border: 2px dashed #f59e0b;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+.mantelzorg-alert summary {
+    font-weight: 700;
+    color: #92400e;
+    cursor: pointer;
+    list-style: none;
+}
+
+.mantelzorg-alert summary::-webkit-details-marker {
+    display: none;
+}
+
+.mantelzorg-alert ul {
+    margin: 10px 0 10px 20px;
+    line-height: 1.8;
+}
+
+/* ====== FINANCIËN RODE VLAG ====== */
+.financien-alert {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 3px solid #dc2626;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+}
+
+.financien-alert h3 {
+    color: #991b1b;
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+}
+
+.doorverwijzing-box {
+    background: #dc2626;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 700;
+    margin: 16px 0;
+    font-size: 1.05rem;
+}
+
+/* ====== PRIVACY SCHERM ====== */
+.privacy-screen {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3px solid #0ea5e9;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.privacy-icon {
+    font-size: 3.5rem;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.privacy-guarantee {
+    background: white;
+    border-left: 5px solid #10b981;
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.privacy-guarantee h3 {
+    color: #065f46;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.privacy-guarantee ul {
+    line-height: 2;
+    color: #374151;
+    margin-left: 20px;
+}
+
+.regie-badge {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    display: inline-block;
+    margin: 16px auto;
+    font-size: 1.05rem;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.client-choice {
+    background: #fef3c7;
+    border-left: 6px solid #eab308;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 10px 10px 0;
+}
+
+.client-voice-icon::before {
+    content: "👤 ";
+    font-size: 1.3rem;
+    margin-right: 6px;
+}
+
+/* ====== ONDERZOEKSMODUS TOGGLE ====== */
+.research-toggle {
+    background: #f3f4f6;
+    border: 2px dashed #9ca3af;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 20px 0;
+}
+
+.research-toggle label {
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.research-toggle input[type="checkbox"] {
+    margin-top: 3px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* ====== VERSION BADGE IN HEADER ====== */
+.version-badge-v21 {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-left: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+</style>
+
+<!-- ============================================
+     HTML COMPONENT 1: PRIVACY & REGIE SCHERM
+     Invoegen als nieuw screen na screen-start
+     ============================================ -->
+
+<div class="screen" id="screen-privacy" style="display:none;">
+    <div class="card">
+        <div class="privacy-screen">
+            <div class="privacy-icon">🔒</div>
+            <h2 style="text-align: center; color: #0369a1; margin-bottom: 20px; font-size: 1.6rem;">
+                Voordat we beginnen: Jouw Privacy & Regie
+            </h2>
+            
+            <div class="privacy-guarantee">
+                <h3>✅ Wat gebeurt er met jouw informatie?</h3>
+                <ul>
+                    <li><strong>Niets wordt automatisch opgeslagen</strong> - dit gesprek blijft op dit scherm</li>
+                    <li><strong>Geen verzending naar servers</strong> - alle informatie blijft lokaal</li>
+                    <li><strong>Jij bepaalt wat er in het dossier komt</strong> - aan het einde kies jij of je de samenvatting deelt</li>
+                    <li><strong>Je kunt op elk moment stoppen</strong> - zonder verklaring</li>
+                </ul>
+            </div>
+            
+            <div class="client-choice">
+                <p class="client-voice-icon" style="font-weight: 700; color: #92400e; margin-bottom: 8px; font-size: 1.05rem;">
+                    Dit is JOUW gesprek
+                </p>
+                <p style="color: #78350f; line-height: 1.8; margin: 0;">
+                    De professional is er om <strong>jou te helpen nadenken</strong>, niet om jou te beoordelen. 
+                    <strong>Jij beslist</strong> welke onderwerpen we bespreken en hoe diep we ingaan. 
+                    Dit instrument is een hulpmiddel voor <strong>jouw regie</strong>, geen intake-formulier.
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 24px 0;">
+                <div class="regie-badge">
+                    👑 Jij hebt de regie - altijd
+                </div>
+            </div>
+            
+            <!-- OPTIONELE ONDERZOEKSMODUS -->
+            <div class="research-toggle">
+                <label>
+                    <input type="checkbox" id="researchConsent" onchange="state.researchConsent=this.checked;saveState();">
+                    <span style="color: #374151;">
+                        <strong>Optioneel:</strong> Sta geanonimiseerde data-donatie toe voor onderzoek
+                        <div class="info-icon" style="display:inline-block;">
+                            i
+                            <div class="tooltip-content">
+                                Helpt ons dit instrument te verbeteren voor toekomstige gebruikers. 
+                                Volledig vrijwillig. Geen persoonlijke gegevens. 
+                                Data blijft lokaal op jouw apparaat tot export.
+                            </div>
+                        </div>
+                        <br>
+                        <span style="font-size: 0.85rem; color: #6b7280;">
+                            → Helpt ons het instrument te verbeteren • Volledig vrijwillig • Geen persoonlijke gegevens
+                        </span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 24px;">
+            <button class="btn btn-primary" onclick="goToScreenById('screen-financien-check')" style="font-size: 1.1rem; padding: 14px 32px;">
+                Ik begrijp het, ga verder →
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     HTML COMPONENT 2: FINANCIËN RODE VLAG CHECK
+     Invoegen als nieuw screen na privacy
+     ============================================ -->
+
+<div class="screen" id="screen-financien-check" style="display:none;">
+    <div class="card">
+        <h2 style="color: #991b1b; text-align: center; margin-bottom: 8px; font-size: 1.6rem;">
+            🚨 Financiën = Fundament
+            <span class="evidence-badge clinical">👨‍⚕️ Klinische praktijk</span>
+        </h2>
+        
+        <p style="text-align: center; color: #6b7280; margin-bottom: 24px; font-size: 0.9rem;">
+            Gebaseerd op: Schillemans & Van der Laan (2021) + expert consensus
+            <div class="info-icon" style="display:inline-block;">
+                i
+                <div class="tooltip-content">
+                    Dit is een pre-screening op basis van klinische ervaring, geen gevalideerd diagnostisch instrument. 
+                    Bij signalen van acute financiële problematiek verwijzen we eerst door naar gespecialiseerde hulp.
+                </div>
+            </div>
+        </p>
+        
+        <div class="financien-alert">
+            <p style="color: #7f1d1d; line-height: 1.8; text-align: center; margin-bottom: 20px; font-size: 1.05rem;">
+                Als er <strong>schuldenproblematiek</strong> of <strong>acuut geldgebrek</strong> is, 
+                kunnen andere verbeteringen vaak niet werken.
+            </p>
+            
+            <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                <p style="font-weight: 700; color: #991b1b; margin-bottom: 16px; font-size: 1rem;">
+                    Vink aan wat van toepassing is:
+                </p>
+                
+                <div style="display: grid; gap: 12px;">
+                    <label style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #fef2f2; border-radius: 8px; cursor: pointer; border: 2px solid transparent;" 
+                           onchange="checkFinancienRood()">
+                        <input type="checkbox" id="fin-schuld" style="margin-top: 3px; width: 20px; height: 20px;">
+                        <span style="color: #374151; line-height: 1.6;">
+                            Ik heb <strong>schulden >€5000</strong> waar ik niets mee doe
+                        </span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #fef2f2; border-radius: 8px; cursor: pointer; border: 2px solid transparent;"
+                           onchange="checkFinancienRood()">
+                        <input type="checkbox" id="fin-acuut" style="margin-top: 3px; width: 20px; height: 20px;">
+                        <span style="color: #374151; line-height: 1.6;">
+                            Ik kan <strong>eten, huur, of energie</strong> niet betalen deze maand
+                        </span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #fef2f2; border-radius: 8px; cursor: pointer; border: 2px solid transparent;"
+                           onchange="checkFinancienRood()">
+                        <input type="checkbox" id="fin-deurwaarder" style="margin-top: 3px; width: 20px; height: 20px;">
+                        <span style="color: #374151; line-height: 1.6;">
+                            Ik ben <strong>bang voor deurwaarders</strong> of beslaglegging
+                        </span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #fef2f2; border-radius: 8px; cursor: pointer; border: 2px solid transparent;"
+                           onchange="checkFinancienRood()">
+                        <input type="checkbox" id="fin-kinderen" style="margin-top: 3px; width: 20px; height: 20px;">
+                        <span style="color: #374151; line-height: 1.6;">
+                            Er zijn <strong>kinderen in huis</strong> die hierdoor lijden
+                        </span>
+                    </label>
+                </div>
+            </div>
+            
+            <div id="financien-rood-result" style="display:none;">
+                <div class="doorverwijzing-box">
+                    💳 Directe doorverwijzing naar schuldhulpverlening aanbevolen
+                </div>
+                
+                <p style="color: #7f1d1d; line-height: 1.7; text-align: center; font-size: 0.95rem; margin: 16px 0;">
+                    We kunnen terugkomen bij dit gesprek zodra de financiële basis stabieler is. 
+                    <br><br>
+                    <em>"Je kunt geen netwerk activeren als je geen geld hebt voor de buskaart."</em> 
+                    <br><span style="font-size: 0.85rem;">— Jamal, schuldhulpverlener</span>
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 24px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn" onclick="goToScreenById('screen-privacy')" style="padding: 12px 24px;">
+                ← Terug
+            </button>
+            <button class="btn btn-primary" id="btn-financien-door" onclick="handleFinancienCheck()" style="padding: 12px 32px; font-size: 1.05rem;">
+                Verder met gesprek →
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     HTML COMPONENT 3: MANTELZORG CHECK TEMPLATE
+     Dit wordt dynamisch getoond bij informele antwoorden
+     ============================================ -->
+
+<div class="mantelzorg-alert" id="mantelzorg-template" style="display:none;">
+    <h4>🫂 Let op: Duurzaamheid mantelzorg</h4>
+    <p id="mantelzorg-text">Je noemde dat <strong>[NAAM]</strong> helpt met <strong>[DOMEIN]</strong>.</p>
+    
+    <details style="margin-top: 12px;">
+        <summary style="padding: 8px 0;">
+            ⚠️ Check: Is dit duurzaam? (klik om te bekijken)
+        </summary>
+        <div style="padding-top: 12px;">
+            <ul style="margin: 8px 0 8px 20px; line-height: 1.9;">
+                <li>Helpt deze persoon al <strong>>6 maanden intensief</strong> (>8 uur/week)?</li>
+                <li>Combineert deze persoon dit met <strong>werk, eigen gezin, of eigen gezondheidsproblemen</strong>?</li>
+                <li>Geeft deze persoon signalen van <strong>vermoeidheid of "niet meer kunnen"</strong>?</li>
+                <li>Is deze persoon gestopt met <strong>hobby's of sociale contacten</strong>?</li>
+                <li>Voelt deze persoon zich <strong>schuldig als ze even niet helpen</strong>?</li>
+            </ul>
+            
+            <div style="background: white; border-radius: 8px; padding: 14px; margin-top: 12px;">
+                <p style="color: #065f46; font-weight: 700; margin: 0 0 8px;">
+                    💡 Bij 2+ signalen van overbelasting:
+                </p>
+                <p style="color: #374151; line-height: 1.7; margin: 0; font-size: 0.95rem;">
+                    Bespreek <strong>mantelzorgondersteuning</strong> of <strong>tijdelijke verlichting</strong>. 
+                    Mantelzorg is geen gratis formele zorg — het doel is hun hulp <strong>duurzaam</strong> te maken.
+                </p>
+            </div>
+        </div>
+    </details>
+</div>
+
+<!-- ============================================
+     JAVASCRIPT FUNCTIES (voeg toe aan <script> sectie)
+     ============================================ -->
+
+<script>
+// FINANCIËN CHECK
+function checkFinancienRood() {
+    const checks = [
+        document.getElementById('fin-schuld'),
+        document.getElementById('fin-acuut'),
+        document.getElementById('fin-deurwaarder'),
+        document.getElementById('fin-kinderen')
+    ];
+    
+    const anyChecked = checks.some(cb => cb && cb.checked);
+    const result = document.getElementById('financien-rood-result');
+    
+    if (result) {
+        result.style.display = anyChecked ? 'block' : 'none';
+    }
+    
+    // Bewaar in state
+    state.financienRoodVlag = anyChecked;
+    saveState();
+}
+
+function handleFinancienCheck() {
+    if (state.financienRoodVlag) {
+        // Rode vlag: toon waarschuwing maar laat doorgaan (professional beslist)
+        if (confirm('Er zijn financiële signalen die prioriteit hebben.\n\nWil je toch doorgaan met dit gesprek, of eerst schuldhulpverlening inschakelen?')) {
+            goToScreenById('triage'); // of het volgende scherm in jouw flow
+        }
+    } else {
+        // Geen rode vlag: ga door
+        goToScreenById('triage'); // of het volgende scherm in jouw flow
+    }
+}
+
+// MANTELZORG ALERT (roep aan bij informele antwoorden)
+function showMantelzorgAlert(domeinNaam, persoonNaam, containerElement) {
+    const template = document.getElementById('mantelzorg-template');
+    if (!template) return;
+    
+    const clone = template.cloneNode(true);
+    clone.id = 'mantelzorg-alert-' + domeinNaam;
+    clone.style.display = 'block';
+    
+    const textEl = clone.querySelector('#mantelzorg-text');
+    if (textEl) {
+        textEl.innerHTML = `Je noemde dat <strong>${persoonNaam}</strong> helpt met <strong>${domeinNaam}</strong>.`;
+    }
+    
+    // Voeg toe aan container
+    if (containerElement) {
+        containerElement.appendChild(clone);
+    }
+}
+
+// HELPER: goToScreenById (als deze nog niet bestaat)
+function goToScreenById(screenId) {
+    const screens = document.querySelectorAll('.screen');
+    screens.forEach(s => s.classList.remove('active'));
+    
+    const target = document.getElementById(screenId);
+    if (target) {
+        target.classList.add('active');
+        target.style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+}
+</script>
+
+<!-- ============================================
+     LITERATUURLIJST (voeg toe aan footer of als apart scherm)
+     ============================================ -->
+
+<div class="card" id="literatuur" style="margin-top: 40px; background: #f9fafb; border: 2px solid #e5e7eb;">
+    <h3 style="color: #1f2937; margin-bottom: 16px;">
+        📚 Wetenschappelijke Onderbouwing
+        <span class="evidence-badge evidence-based">v2.1 Pilot</span>
+    </h3>
+    
+    <details>
+        <summary style="cursor: pointer; font-weight: 700; color: #374151; padding: 8px 0;">
+            Klik om literatuurlijst te bekijken
+        </summary>
+        
+        <div style="padding: 16px 0; line-height: 2; font-size: 0.9rem; color: #4b5563;">
+            <p style="font-weight: 600; margin-bottom: 12px;">Netwerkposities & Sociaal Netwerk Analyse:</p>
+            <ul style="margin-left: 20px;">
+                <li>Wasserman, S., & Faust, K. (1994). <em>Social Network Analysis: Methods and Applications.</em> Cambridge University Press.</li>
+                <li>Huber, M., et al. (2016). <em>How should we define health?</em> BMJ, 343.</li>
+            </ul>
+            
+            <p style="font-weight: 600; margin: 20px 0 12px;">Mantelzorg & Overbelasting:</p>
+            <ul style="margin-left: 20px;">
+                <li>Broese van Groenou, M., & De Boer, A. (2016). <em>Providing informal care in a changing society.</em> European Journal of Ageing.</li>
+                <li>Brouwer, W.B.F., et al. (2006). <em>The CarerQol instrument.</em> Quality of Life Research.</li>
+                <li>Mekken, J., et al. (2020). <em>Jonge mantelzorgers in Nederland.</em> Trimbos Instituut.</li>
+            </ul>
+            
+            <p style="font-weight: 600; margin: 20px 0 12px;">Schuldenproblematiek & Participatie:</p>
+            <ul style="margin-left: 20px;">
+                <li>Schillemans, L., & Van der Laan, J. (2021). <em>Schulden als barrière voor maatschappelijke participatie.</em> Verwey-Jonker Instituut.</li>
+                <li>SER (2021). <em>Werk aan uitvoering: Sociaal Domein.</em> Sociaal-Economische Raad.</li>
+            </ul>
+            
+            <p style="font-weight: 600; margin: 20px 0 12px;">Cliëntregie & Shared Decision Making:</p>
+            <ul style="margin-left: 20px;">
+                <li>Elwyn, G., et al. (2012). <em>Shared decision making.</em> The Lancet.</li>
+                <li>Zimmerman, M.A. (1995). <em>Psychological empowerment.</em> American Journal of Community Psychology.</li>
+            </ul>
+            
+            <p style="margin-top: 20px; padding: 12px; background: white; border-left: 4px solid #3b82f6; border-radius: 4px; font-size: 0.85rem;">
+                <strong>Validatie-status:</strong> Dit instrument (v2.1) is in pilot-fase. 
+                Evidence-based componenten zijn gebaseerd op bovenstaande literatuur. 
+                Klinische signalen (mantelzorg, financiën) zijn nog niet gevalideerd als screeningsinstrumenten.
+                <br><br>
+                <strong>Roadmap:</strong> 2024-2025 pilot → 2025-2026 data-collectie → 2026-2027 peer-review publicatie.
+            </p>
+        </div>
+    </details>
+</div>

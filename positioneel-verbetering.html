@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA Positionele Analyse v2.0 - Team Review Verbeteringen</title>
+    <style>
+        /* KRITIEKE VERBETERING 1: Privacy & Transparantie scherm (Lisa) */
+        .privacy-screen {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 3px solid #0ea5e9;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .privacy-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .privacy-guarantee {
+            background: white;
+            border-left: 4px solid #10b981;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 8px;
+        }
+        
+        .regie-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin: 8px 0;
+        }
+        
+        /* KRITIEKE VERBETERING 2: Mantelzorg overbelasting signalering (Marieke) */
+        .mantelzorg-alert {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .overbelasting-check {
+            background: white;
+            border: 2px dashed #f59e0b;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+        
+        /* KRITIEKE VERBETERING 3: Financiën rode vlag (Jamal) */
+        .financien-rood {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 3px solid #dc2626;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .doorverwijzing-urgent {
+            background: #dc2626;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            margin: 12px 0;
+        }
+        
+        /* KRITIEKE VERBETERING 4: Cliënt-regie indicators */
+        .client-choice {
+            background: #fef3c7;
+            border-left: 6px solid #eab308;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .client-voice-icon::before {
+            content: "👤 ";
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- DEMONSTRATIE NIEUWE SCHERMEN -->
+
+<div class="container" style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    
+    <h1 style="color: #2563eb; text-align: center; margin-bottom: 40px;">
+        🎯 RPA v2.0 - Team Review Verbeteringen
+    </h1>
+    
+    <!-- ========================================
+         VERBETERING 1: PRIVACY & REGIE SCHERM
+         Team feedback: Lisa (NON-NEGOTIABLE)
+         ======================================== -->
+    
+    <div class="privacy-screen">
+        <div class="privacy-icon">🔒</div>
+        <h2 style="text-align: center; color: #0369a1; margin-bottom: 16px;">
+            Voordat we beginnen: Jouw Privacy & Regie
+        </h2>
+        
+        <div class="privacy-guarantee">
+            <h3 style="color: #065f46; margin-bottom: 8px;">✅ Wat gebeurt er met jouw informatie?</h3>
+            <ul style="line-height: 1.8; color: #374151;">
+                <li><strong>Niets wordt automatisch opgeslagen</strong> - dit gesprek blijft op dit scherm</li>
+                <li><strong>Geen verzending naar servers</strong> - alle informatie blijft lokaal</li>
+                <li><strong>Jij bepaalt wat er in het dossier komt</strong> - aan het einde kies jij of je de samenvatting deelt</li>
+                <li><strong>Je kunt op elk moment stoppen</strong> - zonder verklaring</li>
+            </ul>
+        </div>
+        
+        <div class="client-choice">
+            <p class="client-voice-icon" style="font-weight: 700; color: #92400e; margin-bottom: 8px;">
+                Dit is JOUW gesprek
+            </p>
+            <p style="color: #78350f; line-height: 1.7; margin: 0;">
+                De professional is er om <strong>jou te helpen nadenken</strong>, niet om jou te beoordelen. 
+                <strong>Jij beslist</strong> welke onderwerpen we bespreken en hoe diep we ingaan. 
+                Dit instrument is een hulpmiddel voor <strong>jouw regie</strong>, geen intake-formulier.
+            </p>
+        </div>
+        
+        <div class="regie-badge" style="display: block; text-align: center; margin: 20px auto;">
+            👑 Jij hebt de regie - altijd
+        </div>
+    </div>
+    
+    <!-- ========================================
+         VERBETERING 2: MANTELZORG OVERBELASTING
+         Team feedback: Marieke (cruciaal)
+         ======================================== -->
+    
+    <div class="mantelzorg-alert">
+        <h3 style="color: #92400e; margin-bottom: 12px;">
+            🫂 Extra aandacht: Mantelzorg & Overbelasting
+        </h3>
+        
+        <p style="color: #78350f; line-height: 1.7; margin-bottom: 16px;">
+            Als er mensen in jouw netwerk zijn die je helpen (familie, vrienden, buren), 
+            is het belangrijk om te checken of zij dat <strong>duurzaam kunnen volhouden</strong>.
+        </p>
+        
+        <div class="overbelasting-check">
+            <p style="font-weight: 700; color: #92400e; margin-bottom: 8px;">
+                ⚠️ Signalen van overbelasting bij mantelzorgers:
+            </p>
+            <ul style="line-height: 1.8; color: #374151; margin: 0;">
+                <li>Helpen ze al langer dan 6 maanden intensief (>8 uur per week)?</li>
+                <li>Combineren ze dit met werk, eigen gezin, of eigen gezondheidsproblemen?</li>
+                <li>Geven ze aan "moe" of "niet meer kunnen" te zijn?</li>
+                <li>Zijn ze zelf gestopt met hobby's of sociale contacten?</li>
+                <li>Voelen ze zich schuldig als ze even niet helpen?</li>
+            </ul>
+        </div>
+        
+        <div style="background: white; border-radius: 8px; padding: 12px; margin-top: 12px;">
+            <p style="color: #065f46; font-weight: 700; margin: 0;">
+                💡 Mantelzorg is geen gratis formele zorg
+            </p>
+            <p style="color: #374151; line-height: 1.7; margin: 8px 0 0;">
+                Als iemand in jouw netwerk overbelast raakt, zoeken we samen naar 
+                <strong>mantelzorgondersteuning</strong> of <strong>tijdelijke verlichting</strong>. 
+                Het doel is niet "meer van hen vragen", maar "hun hulp duurzaam maken".
+            </p>
+        </div>
+    </div>
+    
+    <!-- ========================================
+         VERBETERING 3: FINANCIËN RODE VLAG
+         Team feedback: Jamal (fundament)
+         ======================================== -->
+    
+    <div class="financien-rood">
+        <h3 style="color: #991b1b; text-align: center; margin-bottom: 16px;">
+            🚨 Financiën = Fundament
+        </h3>
+        
+        <p style="color: #7f1d1d; line-height: 1.8; text-align: center; margin-bottom: 16px;">
+            Als er <strong>schuldenproblematiek</strong> of <strong>acuut geldgebrek</strong> is, 
+            kunnen andere verbeteringen vaak niet werken.
+        </p>
+        
+        <div style="background: white; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+            <p style="font-weight: 700; color: #991b1b; margin-bottom: 12px;">
+                Als je "ja" antwoordt op één van deze vragen, stoppen we dit gesprek en zoeken we eerst financiële hulp:
+            </p>
+            <ul style="line-height: 2; color: #374151; margin: 0;">
+                <li>Heb je <strong>schulden >€5000</strong> waar je niets mee doet?</li>
+                <li>Kun je <strong>eten, huur, of energie</strong> niet betalen deze maand?</li>
+                <li>Ben je <strong>bang voor deurwaarders</strong> of beslaglegging?</li>
+                <li>Zijn er <strong>kinderen in huis</strong> die hierdoor lijden?</li>
+            </ul>
+        </div>
+        
+        <div class="doorverwijzing-urgent">
+            💳 Directe doorverwijzing naar schuldhulpverlening
+        </div>
+        
+        <p style="color: #7f1d1d; line-height: 1.7; text-align: center; font-size: 0.9rem; margin: 12px 0 0;">
+            We komen terug bij dit gesprek zodra de financiële basis stabiel is. 
+            <strong>Je kunt geen netwerk activeren als je geen geld hebt voor de buskaart.</strong> (Jamal, schuldhulpverlener)
+        </p>
+    </div>
+    
+    <!-- ========================================
+         VERBETERING 4: EXPLICIETE CLIËNT-REGIE
+         Team feedback: Lisa (doorlopend)
+         ======================================== -->
+    
+    <div style="background: white; border: 3px solid #eab308; border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <h3 style="color: #92400e; margin-bottom: 12px;">
+            👑 Hoe werkt regie in dit gesprek?
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div class="client-choice">
+                <p style="font-weight: 700; color: #92400e; margin-bottom: 4px;">
+                    1. Jij kiest de onderwerpen
+                </p>
+                <p style="color: #78350f; font-size: 0.9rem; margin: 0;">
+                    We bespreken alleen de levensgebieden die JIJ belangrijk vindt.
+                </p>
+            </div>
+            
+            <div class="client-choice">
+                <p style="font-weight: 700; color: #92400e; margin-bottom: 4px;">
+                    2. Jij bepaalt de prioriteit
+                </p>
+                <p style="color: #78350f; font-size: 0.9rem; margin: 0;">
+                    We hoeven niet alles vandaag op te lossen.
+                </p>
+            </div>
+            
+            <div class="client-choice">
+                <p style="font-weight: 700; color: #92400e; margin-bottom: 4px;">
+                    3. Jij beslist over de stap
+                </p>
+                <p style="color: #78350f; font-size: 0.9rem; margin: 0;">
+                    De professional adviseert, jij kiest.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========================================
+         SAMENVATTING WIJZIGINGEN
+         ======================================== -->
+    
+    <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 20px; margin: 40px 0;">
+        <h3 style="color: #166534; margin-bottom: 16px;">
+            ✅ Wat is er veranderd in v2.0?
+        </h3>
+        
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <tr style="background: white;">
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;"><strong>Feedback van</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;"><strong>Verbetering</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;"><strong>Status</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">💬 Lisa</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">Privacy & Regie scherm + doorlopende cliëntregie indicators</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">✅ Geïmplementeerd</td>
+            </tr>
+            <tr style="background: #f0fdf4;">
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">🫂 Marieke</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">Mantelzorg overbelasting signalering bij elk "informeel" antwoord</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">✅ Geïmplementeerd</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">💳 Jamal</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">Financiën rode vlag systeem (stop gesprek bij acute financiële crisis)</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">✅ Geïmplementeerd</td>
+            </tr>
+            <tr style="background: #f0fdf4;">
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">👥 Karin</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">Sprint-mode: 3-5 domeinen kiezen (niet verplicht alle 11)</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">🔄 In ontwikkeling</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">📊 Bram</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">Methodologische transparantie: wat meten we en waarom?</td>
+                <td style="padding: 12px; border-bottom: 1px solid #d1fae5;">🔄 In ontwikkeling</td>
+            </tr>
+            <tr style="background: #f0fdf4;">
+                <td style="padding: 12px;">🌈 Marie</td>
+                <td style="padding: 12px;">Performance optimalisatie (788KB → <400KB streefwaarde)</td>
+                <td style="padding: 12px;">⏳ Volgende iteratie</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; border-radius: 16px;">
+        <p style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">
+            🌈 Marie + Team van 15 experts
+        </p>
+        <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">
+            RPA v2.0 - Gebouwd met kritische feedback van het volledige team
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

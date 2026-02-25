@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Force Reload</title>
+    <script>
+        // Force reload met timestamp
+        const timestamp = new Date().getTime();
+        window.location.href = 'positioneel.html?nocache=' + timestamp;
+    </script>
+</head>
+<body>
+    <p>Redirecting with cache bust...</p>
+    <p>Als dit niet werkt, <a href="positioneel.html?v=<?php echo time(); ?>">klik hier</a></p>
+</body>
+</html>

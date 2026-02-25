@@ -3651,7 +3651,6 @@
             <h1>
                 RPA Positionele Analyse
                 <span class="version-badge">v4.0 Clean</span>
-                <span id="modusBadge" style="display:none;background:rgba(255,255,255,0.25);padding:4px 12px;border-radius:20px;font-size:0.75rem;margin-left:6px;"></span>
             </h1>
             <p>Relationeel-Positioneel Analysemodel</p>
         </div>
@@ -4258,7 +4257,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goBackToStart()">← Annuleren</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('start')">← Terug</button>
                         <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
                             Volgende →
                         </button>
@@ -4285,7 +4284,7 @@
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('triage')">← Terug</button>
                         <button class="btn btn-primary" onclick="checkDomainsAndContinue()">Volgende →</button>
                     </div>
                 </div>
@@ -4316,8 +4315,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('domains')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('beweging')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4339,8 +4338,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('domains')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('beweging')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4351,17 +4350,14 @@
                     <h2>🔄 Wat wordt de volgende stap?</h2>
                     <p style="color: var(--text-light); margin-bottom: 15px; font-size: 0.95rem;">Bespreek samen welke ondersteuning er straks bij komt, wegvalt of verandert.</p>
 
-                    <!-- Compact overzicht triage (alleen in snelle modus) -->
-                    <div id="triageRecapBeweging" style="display:none;margin-bottom:20px;"></div>
-
                     <!-- Voor/Na diagram per domein (Prioriteit 1) -->
                     <div id="voorNaVisualisatie" style="margin-bottom: 30px;">
                         <!-- Wordt gevuld door renderVoorNaVisualisatie() -->
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToNext()">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('network')">← Terug</button>
+                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreenById('reflectie')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4377,8 +4373,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('beweging')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('interventies')">Naar interventies →</button>
                     </div>
                 </div>
             </div>
@@ -4412,8 +4408,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToNext()">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('reflectie')">← Terug</button>
+                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreenById('samenvatting')">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4445,7 +4441,7 @@
                     <div id="creatiefBlok"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('interventies')">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
                         <button class="btn" onclick="naarStrategischeAnalyse()"
                             style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;font-size:0.82rem;">
@@ -4464,7 +4460,7 @@
                     <div class="advice-box" id="adviceBox"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('reflectie')">← Terug</button>
                         <button class="btn btn-primary" onclick="goToNextFromAdvies()">Volgende →</button>
                     </div>
                 </div>
@@ -4479,8 +4475,8 @@
                     <div class="pro-advice-box" id="proAdviceBox"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('network')">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreen(getScreenNumber('organisaties'))">Bekijk Organisaties →</button>
                     </div>
                 </div>
             </div>
@@ -6861,10 +6857,7 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'domains') renderDomains();
             if (screenId === 'network') { renderDashboard(); setTimeout(() => renderRPANetwerkkaartCompact2(), 100); }
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
-            if (screenId === 'beweging') {
-                renderTriageRecapInBeweging();
-                renderVoorNaVisualisatie();
-            }
+            if (screenId === 'beweging') renderVoorNaVisualisatie();
             if (screenId === 'reflectie') renderReflectieVragen();
             if (screenId === 'interventies') { 
                 renderInterventiesVoorBeweging();
@@ -6872,64 +6865,7 @@ Antwoord in dit exacte JSON formaat:
             }
             if (screenId === 'samenvatting') renderSamenvatting();
 
-            // Update modus badge
-            const modusBadge = document.getElementById('modusBadge');
-            if (modusBadge && screenNum > 0) {
-                if (state.gespreksModus === 'snel') {
-                    modusBadge.textContent = '⚡ Snelle check';
-                    modusBadge.style.display = 'inline-block';
-                } else {
-                    modusBadge.style.display = 'none';
-                }
-            }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Helper: get previous/next screen dynamically (werkt voor snelle + volledige modus)
-        function getPreviousScreenId() {
-            const config = getScreenConfig();
-            const prevIndex = state.currentScreen - 2; // currentScreen is 1-indexed, array is 0-indexed
-            if (prevIndex >= 0 && config[prevIndex]) {
-                return config[prevIndex].id;
-            }
-            return 'start';
-        }
-
-        function getNextScreenId() {
-            const config = getScreenConfig();
-            const nextIndex = state.currentScreen; // currentScreen is 1-indexed, next is +1, so just currentScreen
-            if (nextIndex < config.length && config[nextIndex]) {
-                return config[nextIndex].id;
-            }
-            return null;
-        }
-
-        // Wrapper functies voor navigatie knoppen
-        function goToPrevious() {
-            const prevId = getPreviousScreenId();
-            console.log('🔙 goToPrevious:', prevId);
-            goToScreenById(prevId);
-        }
-
-        function goToNext() {
-            const nextId = getNextScreenId();
-            console.log('➡️ goToNext:', nextId);
-            if (nextId) goToScreenById(nextId);
-        }
-
-        function goBackToStart() {
-            console.log('🏠 Terug naar startscherm');
-            // Hide all screens
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Show start screen
-            const startScreen = document.getElementById('screen-start');
-            if (startScreen) {
-                startScreen.classList.add('active');
-                state.currentScreen = 0;
-                saveState();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
         }
         
         // Update workflow bolletjes
@@ -7285,94 +7221,6 @@ Antwoord in dit exacte JSON formaat:
                     style="width:100%;padding:12px;margin-bottom:16px;${((details.situatie||'') === 'iemand') ? 'animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #93c5fd;' : ''}">
                     ➕ Iemand toevoegen
                 </button>
-
-                ${(function() {
-                    const sups = details.supporters || [];
-                    if (sups.length === 0) return '';
-
-                    // Tel supporters per type
-                    const informal = sups.filter(s => s.type === 'informal').length;
-                    const collective = sups.filter(s => s.type === 'collective').length;
-                    const professional = sups.filter(s => s.type === 'professional').length;
-                    const total = informal + collective + professional;
-
-                    if (total === 0) return '';
-
-                    const informalPct = Math.round((informal / total) * 100);
-                    const collectivePct = Math.round((collective / total) * 100);
-                    const professionalPct = Math.round((professional / total) * 100);
-
-                    // Bepaal hoofdtype
-                    let positieLabel = '';
-                    let positieKleur = '';
-                    if (informal > 0 && collective === 0 && professional === 0) {
-                        positieLabel = '🟢 Informeel netwerk';
-                        positieKleur = '#10b981';
-                    } else if (professional > 0 && collective === 0 && informal === 0) {
-                        positieLabel = '🔵 Formele zorg';
-                        positieKleur = '#3b82f6';
-                    } else if (collective > 0 && professional === 0 && informal === 0) {
-                        positieLabel = '🟣 Collectieve voorzieningen';
-                        positieKleur = '#8b5cf6';
-                    } else {
-                        positieLabel = '🌈 Gemengd netwerk';
-                        positieKleur = '#6b7280';
-                    }
-
-                    return `
-                        <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:14px 16px;margin-bottom:16px;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                                <div style="font-size:0.85rem;font-weight:700;color:#374151;">🕸️ Netwerkpositie ${domain.emoji} ${domain.name}</div>
-                                <div style="font-size:0.75rem;font-weight:600;color:${positieKleur};background:white;padding:3px 8px;border-radius:6px;border:1px solid ${positieKleur};">
-                                    ${positieLabel}
-                                </div>
-                            </div>
-                            
-                            ${informal > 0 ? `
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-                                        <span style="font-size:0.78rem;color:#6b7280;">🟢 Informeel</span>
-                                        <span style="font-size:0.75rem;font-weight:600;color:#374151;">${informal} ${informal === 1 ? 'persoon' : 'personen'} · ${informalPct}%</span>
-                                    </div>
-                                    <div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;">
-                                        <div style="background:#10b981;height:100%;width:${informalPct}%;transition:width 0.4s ease;"></div>
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            ${collective > 0 ? `
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-                                        <span style="font-size:0.78rem;color:#6b7280;">🟣 Collectief</span>
-                                        <span style="font-size:0.75rem;font-weight:600;color:#374151;">${collective} ${collective === 1 ? 'voorziening' : 'voorzieningen'} · ${collectivePct}%</span>
-                                    </div>
-                                    <div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;">
-                                        <div style="background:#8b5cf6;height:100%;width:${collectivePct}%;transition:width 0.4s ease;"></div>
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            ${professional > 0 ? `
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-                                        <span style="font-size:0.78rem;color:#6b7280;">🔵 Formeel</span>
-                                        <span style="font-size:0.75rem;font-weight:600;color:#374151;">${professional} ${professional === 1 ? 'professional' : 'professionals'} · ${professionalPct}%</span>
-                                    </div>
-                                    <div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;">
-                                        <div style="background:#3b82f6;height:100%;width:${professionalPct}%;transition:width 0.4s ease;"></div>
-                                    </div>
-                                </div>
-                            ` : ''}
-
-                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:8px;font-style:italic;">
-                                ${informal > collective + professional ? '💡 Sterk informeel netwerk — let op draagkracht' : ''}
-                                ${professional > informal + collective ? '💡 Hoofdzakelijk formele zorg — kan verschuiving naar informeel/collectief?' : ''}
-                                ${informal === 0 && professional === 0 && collective > 0 ? '💡 Volledig collectief — check of dit voldoende is' : ''}
-                                ${informal > 0 && professional > 0 && collective === 0 ? '💡 Gemengd informeel-formeel — mogelijk collectieve opties verkennen?' : ''}
-                            </div>
-                        </div>
-                    `;
-                })()}
 
                 <!-- Notitie -->
                 <div>
@@ -9885,142 +9733,7 @@ Antwoord in dit exacte JSON formaat:
 
         function renderDashboard() {
             renderSignaalPanel();
-            renderMantelzorgSignalering();
             renderDomainOverviewTable();
-        }
-
-        // === MANTELZORG SIGNALERING ===
-        function renderMantelzorgSignalering() {
-            const container = document.getElementById('signaalPanel');
-            if (!container) return;
-
-            // Verzamel alle personen die helpen en tel op hoeveel domeinen
-            const personenMap = new Map(); // naam -> { domeinen: [], type: 'informal', effect: [] }
-
-            domains.forEach(domain => {
-                const details = state.domainDetails[domain.id] || {};
-                const supporters = details.supporters || [];
-                
-                supporters.forEach(supporter => {
-                    const naam = supporter.name;
-                    if (!naam) return;
-
-                    if (!personenMap.has(naam)) {
-                        personenMap.set(naam, {
-                            naam: naam,
-                            type: supporter.type || 'informal',
-                            domeinen: [],
-                            effecten: [],
-                            rollen: []
-                        });
-                    }
-
-                    const persoon = personenMap.get(naam);
-                    persoon.domeinen.push({ 
-                        id: domain.id, 
-                        emoji: domain.emoji, 
-                        naam: domain.name 
-                    });
-                    persoon.effecten.push(supporter.effect || 'helpend');
-                    if (supporter.roles && supporter.roles.length > 0) {
-                        persoon.rollen.push(...supporter.roles);
-                    }
-                });
-            });
-
-            // Filter personen die op 3+ domeinen helpen
-            const overbelast = Array.from(personenMap.values())
-                .filter(p => p.domeinen.length >= 3)
-                .sort((a, b) => b.domeinen.length - a.domeinen.length);
-
-            if (overbelast.length === 0) return;
-
-            // Toon mantelzorg dashboard
-            const typeLabel = {
-                'informal': '🟢 Informeel',
-                'collective': '🟣 Collectief',
-                'professional': '🔵 Formeel'
-            };
-
-            let html = `
-                <div style="background:#fff5f5;border:2px solid #fca5a5;border-radius:14px;padding:18px 20px;margin-bottom:20px;">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                        <span style="font-size:1.8rem;">⚠️</span>
-                        <div>
-                            <h3 style="font-size:1.1rem;color:#991b1b;margin:0;font-weight:800;">Aandacht: Mogelijk overbelaste mantelzorgers</h3>
-                            <p style="font-size:0.85rem;color:#7f1d1d;margin:4px 0 0;">Personen die op meerdere domeinen ondersteunen lopen risico op overbelasting</p>
-                        </div>
-                    </div>
-            `;
-
-            overbelast.forEach(persoon => {
-                const helpendeCount = persoon.effecten.filter(e => e === 'Helpend').length;
-                const belemmerendCount = persoon.effecten.filter(e => e === 'Belemmerend').length;
-                const risicoNiveau = persoon.domeinen.length >= 5 ? 'hoog' : persoon.domeinen.length >= 4 ? 'verhoogd' : 'gemiddeld';
-                const risicoKleur = risicoNiveau === 'hoog' ? '#dc2626' : risicoNiveau === 'verhoogd' ? '#ea580c' : '#f59e0b';
-                const risicoLabel = risicoNiveau === 'hoog' ? 'Hoog risico' : risicoNiveau === 'verhoogd' ? 'Verhoogd risico' : 'Let op';
-
-                html += `
-                    <div style="background:white;border-left:4px solid ${risicoKleur};border-radius:10px;padding:14px 16px;margin-bottom:12px;">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-                            <div>
-                                <div style="font-size:1.05rem;font-weight:700;color:#111827;margin-bottom:4px;">
-                                    ${persoon.naam}
-                                </div>
-                                <div style="font-size:0.8rem;color:#6b7280;">
-                                    ${typeLabel[persoon.type] || persoon.type} 
-                                    ${persoon.rollen.length > 0 ? ' · ' + [...new Set(persoon.rollen)].slice(0,2).join(', ') : ''}
-                                </div>
-                            </div>
-                            <div style="background:${risicoKleur};color:white;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:700;">
-                                ${risicoLabel}
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom:10px;">
-                            <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:6px;">
-                                Steunt op ${persoon.domeinen.length} ${persoon.domeinen.length === 1 ? 'domein' : 'domeinen'}:
-                            </div>
-                            <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                                ${persoon.domeinen.map(d => `
-                                    <span style="background:#f3f4f6;border:1px solid #e5e7eb;padding:4px 8px;border-radius:6px;font-size:0.75rem;">
-                                        ${d.emoji} ${d.naam}
-                                    </span>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        ${helpendeCount > 0 ? `
-                            <div style="font-size:0.78rem;color:#059669;margin-bottom:4px;">
-                                ✓ ${helpendeCount}x helpend
-                            </div>
-                        ` : ''}
-                        
-                        ${belemmerendCount > 0 ? `
-                            <div style="font-size:0.78rem;color:#dc2626;margin-bottom:8px;">
-                                ⚠ ${belemmerendCount}x belemmerend
-                            </div>
-                        ` : ''}
-
-                        ${risicoNiveau === 'hoog' || risicoNiveau === 'verhoogd' ? `
-                            <div style="background:#fef3c7;border-left:3px solid #f59e0b;padding:10px 12px;border-radius:6px;margin-top:10px;">
-                                <div style="font-size:0.8rem;font-weight:600;color:#92400e;margin-bottom:4px;">💡 Aanbevolen actie:</div>
-                                <div style="font-size:0.78rem;color:#78350f;line-height:1.5;">
-                                    • Bespreek draagkracht en grenzen met ${persoon.naam}<br>
-                                    • Verken respijtzorg mogelijkheden<br>
-                                    • Kan ondersteuning verschuiven naar collectief/formeel?
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            });
-
-            html += `</div>`;
-
-            // Voeg toe BOVEN bestaande signalen
-            const bestaandeInhoud = container.innerHTML;
-            container.innerHTML = html + bestaandeInhoud;
         }
 
         function renderDomainOverviewTable() {
@@ -14989,52 +14702,6 @@ END:VEVENT
         function saveHuidigeSteun() {
             // Data is al opgeslagen via toggles, niets extra nodig
             saveState();
-        }
-
-        // === TRIAGE RECAP (alleen in snelle modus) ===
-        function renderTriageRecapInBeweging() {
-            const container = document.getElementById('triageRecapBeweging');
-            if (!container) return;
-
-            // Alleen tonen in snelle modus
-            if (state.gespreksModus !== 'snel') {
-                container.style.display = 'none';
-                return;
-            }
-
-            container.style.display = 'block';
-            let html = `
-                <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:16px;">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                        <h3 style="font-size:0.95rem;color:#374151;margin:0;font-weight:700;">📋 Ter herinnering</h3>
-                        <div style="font-size:0.75rem;color:#9ca3af;">Uit focusgebieden</div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;">
-            `;
-
-            domains.forEach(domain => {
-                const triage = state.triage?.[domain.id];
-                let kleur = '#94a3b8'; // grijs default
-                let label = '—';
-                let emoji = '⚪';
-                
-                if (triage === 'zelfstandig') { kleur = '#22c55e'; label = 'Zelfstandig'; emoji = '🟢'; }
-                else if (triage === 'steun-aanwezig') { kleur = '#f59e0b'; label = 'Steun aanwezig'; emoji = '🟡'; }
-                else if (triage === 'steun-nodig') { kleur = '#ef4444'; label = 'Steun nodig'; emoji = '🔴'; }
-
-                html += `
-                    <div style="background:white;border-left:4px solid ${kleur};border-radius:6px;padding:8px 10px;display:flex;align-items:center;gap:6px;">
-                        <span style="font-size:1.1rem;">${domain.emoji}</span>
-                        <div style="flex:1;">
-                            <div style="font-size:0.75rem;font-weight:600;color:#374151;line-height:1.2;">${domain.name}</div>
-                            <div style="font-size:0.68rem;color:#6b7280;">${emoji} ${label}</div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            html += `</div></div>`;
-            container.innerHTML = html;
         }
         
         // === VOOR/NA VISUALISATIE (Prioriteit 1) ===

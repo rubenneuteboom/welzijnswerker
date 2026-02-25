@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Snelle Check Navigatie</title>
+</head>
+<body>
+    <h1>Test: Snelle Check Navigatie Logica</h1>
+    <pre id="output"></pre>
+
+    <script>
+        // Simuleer de config structuur
+        const screenConfigBase = [
+            { id: 'start',       label: 'Start' },
+            { id: 'triage',      label: 'Focusgebieden' },
+            { id: 'domains',     label: 'Domeinscan' },
+            { id: 'network',     label: 'Overzicht' },
+            { id: 'beweging',    label: 'Beweging' },
+            { id: 'reflectie',   label: 'Reflectie' },
+            { id: 'interventies',label: 'Interventies' },
+            { id: 'samenvatting',label: 'Besluit' }
+        ];
+
+        const state = {
+            snelleModusSchermen: ['triage', 'beweging', 'samenvatting'],
+            currentScreen: 1
+        };
+
+        function getScreenConfig() {
+            if (state.snelleModusSchermen && state.snelleModusSchermen.length > 0) {
+                return screenConfigBase.filter(s => state.snelleModusSchermen.includes(s.id));
+            }
+            return screenConfigBase;
+        }
+
+        function getPreviousScreenId() {
+            const config = getScreenConfig();
+            const prevIndex = state.currentScreen - 2; // currentScreen is 1-indexed, array is 0-indexed
+            if (prevIndex >= 0 && config[prevIndex]) {
+                return config[prevIndex].id;
+            }
+            return 'start';
+        }
+
+        function getNextScreenId() {
+            const config = getScreenConfig();
+            const nextIndex = state.currentScreen; // currentScreen is 1-indexed, next is +1, so just currentScreen
+            if (nextIndex < config.length && config[nextIndex]) {
+                return config[nextIndex].id;
+            }
+            return null;
+        }
+
+        // Test
+        const output = document.getElementById('output');
+        let log = '';
+
+        log += 'SNELLE MODUS TEST\n';
+        log += '=================\n\n';
+
+        const snelConfig = getScreenConfig();
+        log += `Config (snelle modus): ${snelConfig.map(s => s.id).join(' → ')}\n\n`;
+
+        // Test navigatie voor elk scherm in snelle modus
+        [1, 2, 3].forEach(screenNum => {
+            state.currentScreen = screenNum;
+            const current = snelConfig[screenNum - 1]?.id || 'onbekend';
+            const prev = getPreviousScreenId();
+            const next = getNextScreenId();
+            log += `Scherm ${screenNum} (${current}):\n`;
+            log += `  Vorige: ${prev}\n`;
+            log += `  Volgende: ${next || 'einde'}\n\n`;
+        });
+
+        log += '\nVOLLEDIG GESPREK TEST\n';
+        log += '=====================\n\n';
+
+        state.snelleModusSchermen = null;
+        const volledigConfig = getScreenConfig();
+        log += `Config (volledig): ${volledigConfig.map(s => s.id).join(' → ')}\n\n`;
+
+        // Test een paar schermen
+        [1, 5, 8].forEach(screenNum => {
+            state.currentScreen = screenNum;
+            const current = volledigConfig[screenNum - 1]?.id || 'onbekend';
+            const prev = getPreviousScreenId();
+            const next = getNextScreenId();
+            log += `Scherm ${screenNum} (${current}):\n`;
+            log += `  Vorige: ${prev}\n`;
+            log += `  Volgende: ${next || 'einde'}\n\n`;
+        });
+
+        output.textContent = log;
+    </script>
+</body>
+</html>
