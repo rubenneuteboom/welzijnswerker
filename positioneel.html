@@ -4258,7 +4258,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('start')">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById('start')">← Terug naar start</button>
                         <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
                             Volgende →
                         </button>
@@ -4285,7 +4285,7 @@
                     <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('triage')">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
                         <button class="btn btn-primary" onclick="checkDomainsAndContinue()">Volgende →</button>
                     </div>
                 </div>
@@ -4316,8 +4316,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('domains')">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreenById('beweging')">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4339,8 +4339,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('domains')">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreenById('beweging')">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4377,8 +4377,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('beweging')">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreenById('interventies')">Naar interventies →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4412,8 +4412,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('reflectie')">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToScreenById('samenvatting')">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToNext()">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4464,7 +4464,7 @@
                     <div class="advice-box" id="adviceBox"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('reflectie')">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
                         <button class="btn btn-primary" onclick="goToNextFromAdvies()">Volgende →</button>
                     </div>
                 </div>
@@ -4479,8 +4479,8 @@
                     <div class="pro-advice-box" id="proAdviceBox"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('network')">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToScreen(getScreenNumber('organisaties'))">Bekijk Organisaties →</button>
+                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
                     </div>
                 </div>
             </div>
