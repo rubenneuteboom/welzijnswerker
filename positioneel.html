@@ -3651,6 +3651,7 @@
             <h1>
                 RPA Positionele Analyse
                 <span class="version-badge">v4.0 Clean</span>
+                <span id="modusBadge" style="display:none;background:rgba(255,255,255,0.25);padding:4px 12px;border-radius:20px;font-size:0.75rem;margin-left:6px;"></span>
             </h1>
             <p>Relationeel-Positioneel Analysemodel</p>
         </div>
@@ -4350,14 +4351,17 @@
                     <h2>🔄 Wat wordt de volgende stap?</h2>
                     <p style="color: var(--text-light); margin-bottom: 15px; font-size: 0.95rem;">Bespreek samen welke ondersteuning er straks bij komt, wegvalt of verandert.</p>
 
+                    <!-- Compact overzicht triage (alleen in snelle modus) -->
+                    <div id="triageRecapBeweging" style="display:none;margin-bottom:20px;"></div>
+
                     <!-- Voor/Na diagram per domein (Prioriteit 1) -->
                     <div id="voorNaVisualisatie" style="margin-bottom: 30px;">
                         <!-- Wordt gevuld door renderVoorNaVisualisatie() -->
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('network')">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreenById('reflectie')">Volgende →</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById(getPreviousScreenId())">← Terug</button>
+                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToScreenById(getNextScreenId())">Volgende →</button>
                     </div>
                 </div>
             </div>
@@ -4441,7 +4445,7 @@
                     <div id="creatiefBlok"></div>
 
                     <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('interventies')">← Terug</button>
+                        <button class="btn btn-secondary" onclick="goToScreenById(getPreviousScreenId())">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
                         <button class="btn" onclick="naarStrategischeAnalyse()"
                             style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;font-size:0.82rem;">
@@ -6857,7 +6861,10 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'domains') renderDomains();
             if (screenId === 'network') { renderDashboard(); setTimeout(() => renderRPANetwerkkaartCompact2(), 100); }
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
-            if (screenId === 'beweging') renderVoorNaVisualisatie();
+            if (screenId === 'beweging') {
+                renderTriageRecapInBeweging();
+                renderVoorNaVisualisatie();
+            }
             if (screenId === 'reflectie') renderReflectieVragen();
             if (screenId === 'interventies') { 
                 renderInterventiesVoorBeweging();
@@ -6865,7 +6872,33 @@ Antwoord in dit exacte JSON formaat:
             }
             if (screenId === 'samenvatting') renderSamenvatting();
 
+            // Update modus badge
+            const modusBadge = document.getElementById('modusBadge');
+            if (modusBadge && screenNum > 0) {
+                if (state.gespreksModus === 'snel') {
+                    modusBadge.textContent = '⚡ Snelle check';
+                    modusBadge.style.display = 'inline-block';
+                } else {
+                    modusBadge.style.display = 'none';
+                }
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Helper: get previous/next screen dynamically (werkt voor snelle + volledige modus)
+        function getPreviousScreenId() {
+            const config = getScreenConfig();
+            const currentIndex = config.findIndex(s => s.id === config[state.currentScreen - 1]?.id);
+            if (currentIndex > 0) return config[currentIndex - 1].id;
+            return 'start';
+        }
+
+        function getNextScreenId() {
+            const config = getScreenConfig();
+            const currentIndex = config.findIndex(s => s.id === config[state.currentScreen - 1]?.id);
+            if (currentIndex < config.length - 1) return config[currentIndex + 1].id;
+            return null;
         }
         
         // Update workflow bolletjes
@@ -14702,6 +14735,52 @@ END:VEVENT
         function saveHuidigeSteun() {
             // Data is al opgeslagen via toggles, niets extra nodig
             saveState();
+        }
+
+        // === TRIAGE RECAP (alleen in snelle modus) ===
+        function renderTriageRecapInBeweging() {
+            const container = document.getElementById('triageRecapBeweging');
+            if (!container) return;
+
+            // Alleen tonen in snelle modus
+            if (state.gespreksModus !== 'snel') {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            let html = `
+                <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:16px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                        <h3 style="font-size:0.95rem;color:#374151;margin:0;font-weight:700;">📋 Ter herinnering</h3>
+                        <div style="font-size:0.75rem;color:#9ca3af;">Uit focusgebieden</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;">
+            `;
+
+            domains.forEach(domain => {
+                const triage = state.triage?.[domain.id];
+                let kleur = '#94a3b8'; // grijs default
+                let label = '—';
+                let emoji = '⚪';
+                
+                if (triage === 'zelfstandig') { kleur = '#22c55e'; label = 'Zelfstandig'; emoji = '🟢'; }
+                else if (triage === 'steun-aanwezig') { kleur = '#f59e0b'; label = 'Steun aanwezig'; emoji = '🟡'; }
+                else if (triage === 'steun-nodig') { kleur = '#ef4444'; label = 'Steun nodig'; emoji = '🔴'; }
+
+                html += `
+                    <div style="background:white;border-left:4px solid ${kleur};border-radius:6px;padding:8px 10px;display:flex;align-items:center;gap:6px;">
+                        <span style="font-size:1.1rem;">${domain.emoji}</span>
+                        <div style="flex:1;">
+                            <div style="font-size:0.75rem;font-weight:600;color:#374151;line-height:1.2;">${domain.name}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${emoji} ${label}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
         }
         
         // === VOOR/NA VISUALISATIE (Prioriteit 1) ===
