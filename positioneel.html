@@ -6872,7 +6872,7 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'network') { renderDashboard(); setTimeout(() => renderRPANetwerkkaartCompact2(), 100); }
             if (screenId === 'netwerkpositie') renderRPANetwerkkaartCompact();
             if (screenId === 'beweging') {
-                renderTriageRecapInBeweging();
+                renderCompactOverzichtInBeweging();
                 renderVoorNaVisualisatie();
             }
             if (screenId === 'reflectie') renderReflectieVragen();
@@ -10045,9 +10045,133 @@ Antwoord in dit exacte JSON formaat:
             container.innerHTML = html + bestaandeInhoud;
         }
 
+        // === NETWERKTYPEN AGGREGATIE ===
+        function renderNetwerkAggregatie() {
+            // Tel alle supporters per type over ALLE domeinen
+            let totaalInformeel = 0;
+            let totaalCollectief = 0;
+            let totaalFormeel = 0;
+            let domeinenMetInformeel = 0;
+            let domeinenMetCollectief = 0;
+            let domeinenMetFormeel = 0;
+
+            domains.forEach(domain => {
+                const details = state.domainDetails[domain.id] || {};
+                const supporters = details.supporters || [];
+                
+                const informal = supporters.filter(s => s.type === 'informal').length;
+                const collective = supporters.filter(s => s.type === 'collective').length;
+                const professional = supporters.filter(s => s.type === 'professional').length;
+
+                totaalInformeel += informal;
+                totaalCollectief += collective;
+                totaalFormeel += professional;
+
+                if (informal > 0) domeinenMetInformeel++;
+                if (collective > 0) domeinenMetCollectief++;
+                if (professional > 0) domeinenMetFormeel++;
+            });
+
+            const totaalSupporters = totaalInformeel + totaalCollectief + totaalFormeel;
+            if (totaalSupporters === 0) return '';
+
+            const informalPct = Math.round((totaalInformeel / totaalSupporters) * 100);
+            const collectivePct = Math.round((totaalCollectief / totaalSupporters) * 100);
+            const professionalPct = Math.round((totaalFormeel / totaalSupporters) * 100);
+
+            // Bepaal dominante type
+            let dominantType = '';
+            let dominantKleur = '';
+            let advies = '';
+            
+            if (totaalFormeel > totaalInformeel + totaalCollectief) {
+                dominantType = '🔵 Hoofdzakelijk formele zorg';
+                dominantKleur = '#3b82f6';
+                advies = 'Hoge systeemdruk. Kan ondersteuning verschuiven naar informeel of collectief?';
+            } else if (totaalInformeel > totaalFormeel + totaalCollectief) {
+                dominantType = '🟢 Hoofdzakelijk informeel netwerk';
+                dominantKleur = '#10b981';
+                advies = 'Sterk informeel netwerk. Let op draagkracht en overbelasting (zie mantelzorg signalen).';
+            } else if (totaalCollectief > totaalFormeel + totaalInformeel) {
+                dominantType = '🟣 Hoofdzakelijk collectieve voorzieningen';
+                dominantKleur = '#8b5cf6';
+                advies = 'Collectief netwerk. Check of dit voldoende is en of er aansluiting is bij sociale behoeften.';
+            } else {
+                dominantType = '🌈 Gemengd netwerk';
+                dominantKleur = '#6b7280';
+                advies = 'Goede balans tussen netwerktypes. Monitor of dit duurzaam blijft.';
+            }
+
+            return `
+                <div style="background:white;border:2px solid #e5e7eb;border-radius:14px;padding:20px;margin-bottom:24px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+                        <div>
+                            <h3 style="font-size:1.15rem;color:#111827;margin:0 0 4px;font-weight:800;">🕸️ Netwerkpositie overzicht</h3>
+                            <p style="font-size:0.85rem;color:#6b7280;margin:0;">Verdeling van steun over alle domeinen</p>
+                        </div>
+                        <div style="background:${dominantKleur};background:linear-gradient(135deg,${dominantKleur}dd,${dominantKleur});color:white;padding:6px 14px;border-radius:8px;font-size:0.85rem;font-weight:700;">
+                            ${dominantType}
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:16px;">
+                        ${totaalInformeel > 0 ? `
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <span style="font-size:0.85rem;font-weight:600;color:#374151;">🟢 Informeel</span>
+                                    <span style="font-size:0.8rem;font-weight:700;color:#10b981;">${totaalInformeel} ${totaalInformeel === 1 ? 'persoon' : 'personen'}</span>
+                                </div>
+                                <div style="background:#e5e7eb;height:8px;border-radius:4px;overflow:hidden;margin-bottom:4px;">
+                                    <div style="background:#10b981;height:100%;width:${informalPct}%;transition:width 0.5s ease;"></div>
+                                </div>
+                                <div style="font-size:0.75rem;color:#6b7280;">${informalPct}% · op ${domeinenMetInformeel} ${domeinenMetInformeel === 1 ? 'domein' : 'domeinen'}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${totaalCollectief > 0 ? `
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <span style="font-size:0.85rem;font-weight:600;color:#374151;">🟣 Collectief</span>
+                                    <span style="font-size:0.8rem;font-weight:700;color:#8b5cf6;">${totaalCollectief} ${totaalCollectief === 1 ? 'voorziening' : 'voorzieningen'}</span>
+                                </div>
+                                <div style="background:#e5e7eb;height:8px;border-radius:4px;overflow:hidden;margin-bottom:4px;">
+                                    <div style="background:#8b5cf6;height:100%;width:${collectivePct}%;transition:width 0.5s ease;"></div>
+                                </div>
+                                <div style="font-size:0.75rem;color:#6b7280;">${collectivePct}% · op ${domeinenMetCollectief} ${domeinenMetCollectief === 1 ? 'domein' : 'domeinen'}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${totaalFormeel > 0 ? `
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                    <span style="font-size:0.85rem;font-weight:600;color:#374151;">🔵 Formeel</span>
+                                    <span style="font-size:0.8rem;font-weight:700;color:#3b82f6;">${totaalFormeel} ${totaalFormeel === 1 ? 'professional' : 'professionals'}</span>
+                                </div>
+                                <div style="background:#e5e7eb;height:8px;border-radius:4px;overflow:hidden;margin-bottom:4px;">
+                                    <div style="background:#3b82f6;height:100%;width:${professionalPct}%;transition:width 0.5s ease;"></div>
+                                </div>
+                                <div style="font-size:0.75rem;color:#6b7280;">${professionalPct}% · op ${domeinenMetFormeel} ${domeinenMetFormeel === 1 ? 'domein' : 'domeinen'}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div style="background:#f9fafb;border-left:3px solid ${dominantKleur};border-radius:8px;padding:12px 14px;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:4px;">💡 Interpretatie</div>
+                        <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">${advies}</div>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderDomainOverviewTable() {
             const container = document.getElementById('domainOverviewTable');
             if (!container) return;
+            
+            // Voeg netwerktypen aggregatie toe
+            const aggregatie = renderNetwerkAggregatie();
+            container.innerHTML = aggregatie;
+            
+            // Render rest van overzicht
             renderNetworkBlocks(container);
         }
 
@@ -10165,7 +10289,7 @@ Antwoord in dit exacte JSON formaat:
             const indrukBg = actieCount >= 2 ? '#fef2f2' : actieCount === 1 ? '#fefce8' : '#f0fdf4';
             const indrukRand = actieCount >= 2 ? '#dc2626' : actieCount === 1 ? '#ca8a04' : '#16a34a';
 
-            container.innerHTML = `
+            container.innerHTML += `
                 <!-- Totaalindruk -->
                 <div style="background:${indrukBg};border:2px solid ${indrukRand};border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
                     <span style="font-size:1.2rem;font-weight:700;color:#374151;">${indruk}</span>
@@ -15013,16 +15137,95 @@ END:VEVENT
             saveState();
         }
 
+        // === COMPACT OVERZICHT IN BEWEGING SCHERM ===
+        function renderCompactOverzichtInBeweging() {
+            const container = document.getElementById('triageRecapBeweging');
+            if (!container) return;
+
+            // In snelle modus: alleen triage kleuren
+            // In volledig gesprek: wie helpt waar (meer context)
+            const isSnelleModus = state.gespreksModus === 'snel';
+
+            if (isSnelleModus) {
+                return renderTriageRecapInBeweging();
+            }
+
+            // Volledig gesprek: toon compact "wie helpt waar"
+            container.style.display = 'block';
+            
+            // Verzamel alle helpers
+            const helpersMap = new Map(); // naam -> domeinen[]
+            
+            domains.forEach(domain => {
+                const details = state.domainDetails[domain.id] || {};
+                const supporters = details.supporters || [];
+                
+                supporters.forEach(sup => {
+                    if (!helpersMap.has(sup.name)) {
+                        helpersMap.set(sup.name, {
+                            naam: sup.name,
+                            type: sup.type,
+                            domeinen: []
+                        });
+                    }
+                    helpersMap.get(sup.name).domeinen.push(domain);
+                });
+            });
+
+            if (helpersMap.size === 0) {
+                container.innerHTML = `
+                    <div style="background:#f9fafb;border:2px dashed #e5e7eb;border-radius:10px;padding:14px;margin-bottom:16px;text-align:center;">
+                        <p style="font-size:0.85rem;color:#9ca3af;margin:0;">Nog geen supporters toegevoegd. Ga terug naar Domeinscan om in te vullen wie waar helpt.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const typeLabel = {
+                'informal': '🟢',
+                'collective': '🟣',
+                'professional': '🔵'
+            };
+
+            let html = `
+                <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:20px;">
+                    <div style="font-size:0.9rem;font-weight:700;color:#374151;margin-bottom:10px;">📋 Wie helpt waar — ter herinnering</div>
+                    <div style="display:grid;gap:8px;">
+            `;
+
+            Array.from(helpersMap.values())
+                .sort((a, b) => b.domeinen.length - a.domeinen.length)
+                .forEach(helper => {
+                    html += `
+                        <div style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                                <span style="font-size:1rem;">${typeLabel[helper.type] || '👤'}</span>
+                                <span style="font-weight:600;color:#374151;font-size:0.88rem;">${helper.naam}</span>
+                                <span style="font-size:0.72rem;color:#9ca3af;">(${helper.domeinen.length} ${helper.domeinen.length === 1 ? 'domein' : 'domeinen'})</span>
+                            </div>
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;padding-left:28px;">
+                                ${helper.domeinen.map(d => `
+                                    <span style="font-size:0.72rem;background:#f3f4f6;padding:2px 6px;border-radius:4px;color:#6b7280;">
+                                        ${d.emoji} ${d.name}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
         // === TRIAGE RECAP (alleen in snelle modus) ===
         function renderTriageRecapInBeweging() {
             const container = document.getElementById('triageRecapBeweging');
             if (!container) return;
-
-            // Alleen tonen in snelle modus
-            if (state.gespreksModus !== 'snel') {
-                container.style.display = 'none';
-                return;
-            }
 
             container.style.display = 'block';
             let html = `
