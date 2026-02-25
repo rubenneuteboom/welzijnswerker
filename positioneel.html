@@ -4270,7 +4270,17 @@
             <div class="screen" id="screen-domains">
                 <div class="card">
                     <h2>🤝 Wie helpt er — en hoe?</h2>
-                    <p style="color:var(--text-light);font-size:0.95rem;">Open een domein en breng samen in kaart wie er betrokken is.</p>
+                    <p style="color:var(--text-light);font-size:0.95rem;margin-bottom:10px;">
+                        Je vulde al in bij het overzicht wie waar helpt. Laten we dat nu verder uitwerken: <strong>hoe</strong> helpt die persoon en <strong>werkt</strong> het?
+                    </p>
+                    <div style="background:#dbeafe;border-left:3px solid #3b82f6;border-radius:8px;padding:10px 14px;margin-bottom:20px;">
+                        <p style="font-size:0.82rem;color:#1e40af;margin:0;line-height:1.5;">
+                            💡 <strong>Focus op 3 vragen per domein:</strong><br>
+                            1️⃣ Wie helpt er? (naam + type: informeel/collectief/formeel)<br>
+                            2️⃣ Hoe helpt die persoon? (praktisch, emotioneel, financieel, etc.)<br>
+                            3️⃣ Werkt het? (helpend, neutraal, of belemmerend?)
+                        </p>
+                    </div>
                     
                     <!-- Wens reminder -->
                     <div id="wensReminder" style="display: none;"></div>
@@ -7045,9 +7055,46 @@ Antwoord in dit exacte JSON formaat:
         // Track active domain for tabs
         let activeDomainId = null;
         
+        // Import triage data naar supporters (als supporters nog leeg is)
+        function importTriageDataToSupporters() {
+            if (!state.steunDetails) return;
+
+            domains.forEach(domain => {
+                const details = state.domainDetails[domain.id] || {};
+                const supporters = details.supporters || [];
+                const triageData = state.steunDetails[domain.id];
+
+                // Als triage data bestaat EN supporters is nog leeg → import
+                if (triageData && triageData.wie && supporters.length === 0) {
+                    const typeMap = {
+                        'formeel': 'professional',
+                        'collectief': 'collective',
+                        'informeel': 'informal'
+                    };
+
+                    const newSupporter = {
+                        name: triageData.wie,
+                        type: typeMap[triageData.type] || 'informal',
+                        effect: 'Helpend',
+                        relation: '',
+                        roles: triageData.rol ? [triageData.rol] : []
+                    };
+
+                    if (!state.domainDetails[domain.id]) state.domainDetails[domain.id] = {};
+                    if (!state.domainDetails[domain.id].supporters) state.domainDetails[domain.id].supporters = [];
+                    state.domainDetails[domain.id].supporters.push(newSupporter);
+                    state.domainDetails[domain.id].importedFromTriage = true;
+                    saveState();
+                }
+            });
+        }
+
         function renderDomains() {
             const container = document.getElementById('domeinkaartAccordion');
             if (!container) return;
+            
+            // Import triage data als dat nog niet gebeurd is
+            importTriageDataToSupporters();
             
             // Show wens reminder if filled in
             showWensReminder();
@@ -7170,6 +7217,7 @@ Antwoord in dit exacte JSON formaat:
                 ${stoplichtStatus && stoplichtStatus !== 'goed' ? (() => {
                     const sups = details.supporters || [];
                     const heeftSteun = sups.length > 0;
+                    const importedFromTriage = details.importedFromTriage;
 
                     if (heeftSteun) {
                         // Automatisch label op basis van supporters + stoplicht
@@ -7178,54 +7226,25 @@ Antwoord in dit exacte JSON formaat:
                             ? '⚠️ Er is steun — maar die werkt belemmerend'
                             : stoplichtStatus === 'steun-nodig'
                                 ? '⚠️ Er is steun — maar het gaat nog niet goed'
-                                : '💡 Er is steun — maar mogelijk onvoldoende';
-                        const labelColor = (heeftBelemmerend || stoplichtStatus === 'steun-nodig') ? '#991b1b' : '#92400e';
-                        return `<div style="background:#fef9c3;border-radius:8px;padding:8px 14px;margin-bottom:12px;">
+                                : importedFromTriage
+                                    ? '💡 Uit het overzicht: ' + sups[0].name + ' helpt hier. Wil je dit verder uitwerken?'
+                                    : '💡 Er is steun aanwezig';
+                        const labelColor = (heeftBelemmerend || stoplichtStatus === 'steun-nodig') ? '#991b1b' : importedFromTriage ? '#1d4ed8' : '#92400e';
+                        const bgColor = importedFromTriage ? '#dbeafe' : '#fef9c3';
+                        return `<div style="background:${bgColor};border-radius:8px;padding:8px 14px;margin-bottom:12px;">
                             <span style="font-size:0.82rem;font-weight:600;color:${labelColor};">${label}</span>
                         </div>`;
                     } else {
-                        // Geen supporters: toggle tonen
-                        const zelf = details.zelfstandig;
-                        const contextLabel = zelf === true
-                            ? '<span style="font-size:0.78rem;color:#92400e;">⚠️ Zelfstandig maar kwetsbaar — netwerk activeren</span>'
-                            : zelf === false
-                                ? `<span style="font-size:0.78rem;color:#991b1b;">${stoplichtStatus === 'steun-nodig' ? '🚨 Witte vlek — geen steun aanwezig' : '💡 Nog geen steun betrokken'}</span>`
-                                : '';
-                        const situatie = details.situatie || null;
-                        const sitLabel = situatie === 'zelfstandig'
-                            ? '<span style="font-size:0.78rem;color:#92400e;">⚠️ Regelt het zelf maar kwetsbaar — netwerk activeren</span>'
-                            : situatie === 'iemand'
-                                ? '<span style="font-size:0.78rem;color:#1e40af;">👇 Voeg diegene toe in de lijst hieronder</span>'
-                                : situatie === 'niemand'
-                                    ? `<span style="font-size:0.78rem;color:#991b1b;">${stoplichtStatus === 'steun-nodig' ? '🚨 Witte vlek — geen steun aanwezig' : '💡 Nog geen steun betrokken'}</span>`
-                                    : '';
-                        const btn = (val, emoji, label, activeColor, activeBg) => {
-                            const active = situatie === val;
-                            return `<button onclick="updateDomainDetail('${domain.id}','situatie','${val}');renderDomains();"
-                                style="border:2px solid ${active?activeColor:'#e5e7eb'};background:${active?activeBg:'white'};
-                                       color:${active?activeColor:'#6b7280'};border-radius:6px;padding:6px 12px;
-                                       font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;">
-                                ${emoji} ${label}
-                            </button>`;
-                        };
-                        const addBtnHighlight = situatie === 'iemand'
-                            ? 'animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #93c5fd;'
-                            : '';
-                        const addBtnPrompt = situatie === 'iemand'
-                            ? `<p style="font-size:0.78rem;color:#1d4ed8;text-align:center;margin:6px 0 0;font-weight:600;">👇 Voeg diegene nu toe</p>`
-                            : '';
-                        return `<div style="background:#f9fafb;border-radius:8px;padding:10px 14px;margin-bottom:12px;">
-                            <p style="font-size:0.82rem;font-weight:600;color:#374151;margin:0 0 8px;">Huidige situatie:</p>
-                            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                                ${btn('zelfstandig','✅','Regelt het zelf','#16a34a','#dcfce7')}
-                                ${btn('iemand','👥','Er is iemand','#3b82f6','#dbeafe')}
-                                ${btn('niemand','⭕','Staat er alleen voor','#6b7280','#f3f4f6')}
-                            </div>
-                            ${sitLabel ? `<div style="margin-top:8px;">${sitLabel}</div>` : ''}
-                            <div id="addBtnPrompt-${domain.id}">${addBtnPrompt}</div>
-                        </div>
-                        <style>@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #93c5fd}50%{box-shadow:0 0 0 5px #bfdbfe}}</style>
-                        <span id="addBtnHighlight-${domain.id}" data-highlight="${addBtnHighlight}"></span>`;
+                        // Geen supporters + geen triage steun = witte vlek
+                        const witteVlek = stoplichtStatus === 'steun-nodig';
+                        const label = witteVlek 
+                            ? '🚨 Witte vlek — Hier is nog niemand betrokken, terwijl het niet goed gaat'
+                            : '💡 Nog geen steun betrokken — Wie zou hier kunnen helpen?';
+                        const bgColor = witteVlek ? '#fee2e2' : '#f9fafb';
+                        const textColor = witteVlek ? '#991b1b' : '#6b7280';
+                        return `<div style="background:${bgColor};border:2px ${witteVlek ? 'solid #fca5a5' : 'dashed #e5e7eb'};border-radius:8px;padding:10px 14px;margin-bottom:12px;">
+                            <span style="font-size:0.82rem;font-weight:600;color:${textColor};">${label}</span>
+                        </div>`;
                     }
                 })() : ''}
 
@@ -7257,9 +7276,12 @@ Antwoord in dit exacte JSON formaat:
                 </div>
 
                 <!-- Supporters -->
-                <p style="font-size:0.78rem;color:#9ca3af;margin:0 0 10px;padding-left:2px;">
-                    Voeg iedereen toe die betrokken is — ook als de steun onvoldoende of belemmerend werkt.
-                </p>
+                <div style="background:#f0f9ff;border-left:3px solid #3b82f6;border-radius:6px;padding:10px 12px;margin-bottom:12px;">
+                    <p style="font-size:0.82rem;font-weight:600;color:#1e3a8a;margin:0 0 4px;">👥 Wie helpt er bij ${domain.name}?</p>
+                    <p style="font-size:0.75rem;color:#1e40af;margin:0;">
+                        Voeg iedereen toe die betrokken is. Ook als de steun niet (goed) werkt — dat is juist belangrijk om te weten.
+                    </p>
+                </div>
 
                 ${(function() {
                     const sups = details.supporters || [];
@@ -7282,8 +7304,8 @@ Antwoord in dit exacte JSON formaat:
                 })()}
 
                 <button class="btn btn-primary" id="addSupporterBtn-${domain.id}" onclick="addSupporter('${domain.id}')"
-                    style="width:100%;padding:12px;margin-bottom:16px;${((details.situatie||'') === 'iemand') ? 'animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #93c5fd;' : ''}">
-                    ➕ Iemand toevoegen
+                    style="width:100%;padding:12px;margin-bottom:16px;">
+                    ➕ ${(details.supporters || []).length > 0 ? 'Nog iemand toevoegen' : 'Eerste persoon toevoegen'}
                 </button>
 
                 ${(function() {
