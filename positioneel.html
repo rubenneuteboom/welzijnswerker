@@ -4102,6 +4102,50 @@
                             onchange="state.clientNaam=this.value;saveState();">
                     </div>
 
+                    <!-- NIEUW: Mantelzorg context -->
+                    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:16px;margin-bottom:16px;">
+                        <div style="display:flex;align-items:start;gap:12px;">
+                            <input type="checkbox" id="isMantelzorgerOverbelast" 
+                                style="width:20px;height:20px;margin-top:2px;cursor:pointer;"
+                                onchange="handleMantelzorgContext(this.checked)">
+                            <div style="flex:1;">
+                                <label for="isMantelzorgerOverbelast" style="font-size:0.95rem;font-weight:700;color:#92400e;cursor:pointer;display:block;margin-bottom:4px;">
+                                    🫂 Cliënt is overbelaste mantelzorger
+                                </label>
+                                <p style="font-size:0.82rem;color:#78350f;margin:0 0 12px;line-height:1.5;">
+                                    Zorgt voor een naaste en ervaart daar problemen door (overbelasting, werk-verlies, gezondheidsklachten, isolatie). 
+                                    Dit beïnvloedt meerdere levensdomeinen.
+                                </p>
+                                <div id="mantelzorgDetails" style="display:none;">
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+                                        <div>
+                                            <label style="font-size:0.8rem;font-weight:600;color:#92400e;display:block;margin-bottom:4px;">Zorgt voor:</label>
+                                            <select id="mantelzorgType" style="width:100%;padding:6px 10px;border:1px solid #d97706;border-radius:6px;font-size:0.85rem;"
+                                                onchange="state.mantelzorgContext.type=this.value;saveState();">
+                                                <option value="">Selecteer...</option>
+                                                <option value="partner">Partner</option>
+                                                <option value="ouder">Ouder(s)</option>
+                                                <option value="kind">Kind(eren)</option>
+                                                <option value="anders">Anders</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style="font-size:0.8rem;font-weight:600;color:#92400e;display:block;margin-bottom:4px;">Uren per week:</label>
+                                            <select id="mantelzorgUren" style="width:100%;padding:6px 10px;border:1px solid #d97706;border-radius:6px;font-size:0.85rem;"
+                                                onchange="state.mantelzorgContext.uren=this.value;saveState();">
+                                                <option value="">Selecteer...</option>
+                                                <option value="<10">Minder dan 10 uur</option>
+                                                <option value="10-20">10-20 uur</option>
+                                                <option value="20-40">20-40 uur</option>
+                                                <option value=">40">Meer dan 40 uur</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Wat past bij deze situatie? (ingeklapt) -->
                     <details style="margin-bottom:16px;border:1px solid #e5e7eb;border-radius:10px;">
                     <summary style="padding:10px 14px;cursor:pointer;font-size:0.85rem;font-weight:600;color:#6b7280;list-style:none;">⚙️ Doelgroep, toestemming & instellingen <span style="font-weight:400;">(optioneel)</span></summary>
@@ -6209,6 +6253,10 @@
                 if (!parsed.creatiefOplossing) {
                     parsed.creatiefOplossing = { beschrijving: '', initiatief: '', belemmering: '', status: '', toelichting_belemmering: '' };
                 }
+                // Ensure mantelzorgContext exists (migration)
+                if (!parsed.mantelzorgContext) {
+                    parsed.mantelzorgContext = { isMantelzorger: false, type: '', uren: '' };
+                }
                 // Migrate scores from old 1-10 scale to current 1-3 scale
                 // 1-3 → 1 (🔴 Actie nodig), 4-7 → 2 (🟡 Kwetsbaar), 8-10 → 3 (🟢 Stabiel)
                 if (parsed.scores) {
@@ -6249,6 +6297,22 @@
         function resetAllData() {
             localStorage.removeItem('welzijnswerker_v2');
             location.reload();
+        }
+
+        // Mantelzorg context handler
+        function handleMantelzorgContext(checked) {
+            if (!state.mantelzorgContext) {
+                state.mantelzorgContext = { isMantelzorger: false, type: '', uren: '' };
+            }
+            state.mantelzorgContext.isMantelzorger = checked;
+            
+            // Toon/verberg details
+            const details = document.getElementById('mantelzorgDetails');
+            if (details) {
+                details.style.display = checked ? 'block' : 'none';
+            }
+            
+            saveState();
         }
 
         // AI Analysis Functions
@@ -12719,14 +12783,21 @@ Antwoord in dit exacte JSON formaat:
                 { naam: 'Budgetcoaching', beschrijving: 'Leren omgaan met geld en budgetteren', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'nibud.nl' } },
                 { naam: 'Schuldhulpverlening', beschrijving: 'Professionele hulp bij schulden en herstructurering', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '0800-8000', website: 'nvvk.nl' } },
                 { naam: 'Budgetbeheer', beschrijving: 'Professioneel beheer van financiën', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'gemeente.amsterdam.nl' } },
-                { naam: 'Bewindvoering', beschrijving: 'Juridisch beschermingsmaatregel bij financiële onbekwaamheid', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { telefoon: '088-7971000', website: 'rechtspraak.nl' } }
+                { naam: 'Bewindvoering', beschrijving: 'Juridisch beschermingsmaatregel bij financiële onbekwaamheid', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { telefoon: '088-7971000', website: 'rechtspraak.nl' } },
+                // MANTELZORG-FINANCIEEL
+                { naam: 'Mantelzorgcompliment gemeente', beschrijving: 'Financiële waardering gemeente (€250-500/jaar)', evidence: 'practice', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'amsterdam.nl/mantelzorg' }, mantelzorg: true }
             ],
             'dagbesteding': [
                 { naam: 'Individual Placement & Support (IPS)', beschrijving: 'Snelle plaatsing werk met continue ondersteuning', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5901234', website: 'ipswerk.nl' } },
                 { naam: 'Participatiecoaching', beschrijving: 'Begeleiding richting werk of vrijwilligerswerk', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'gemeente.amsterdam.nl/participatiewet' } },
                 { naam: 'Jobcoaching', beschrijving: 'Ondersteuning op de werkplek', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'uwv.nl' } },
                 { naam: 'Vrijwilligerswerk begeleiding', beschrijving: 'Hulp bij vinden en starten vrijwilligerswerk', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5851350', website: 'vrijwilligerscentraal.nl' } },
-                { naam: 'Dagactiviteitencentra', beschrijving: 'Zinvolle dagbesteding voor wie niet kan werken', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { website: 'amsterdam.nl/zorg' } }
+                { naam: 'Dagactiviteitencentra', beschrijving: 'Zinvolle dagbesteding voor wie niet kan werken', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { website: 'amsterdam.nl/zorg' } },
+                // MANTELZORG-WERK interventies
+                { naam: 'Mantelzorgverlof aanvragen', beschrijving: 'Hulp bij aanvragen kortdurend/langdurend zorgverlof bij werkgever (wettelijk recht)', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'fnv.nl/mantelzorg', telefoon: '0800-0361' }, mantelzorg: true },
+                { naam: 'Werkgeversgesprek mantelzorg', beschrijving: 'Begeleiding gesprek met werkgever over flexibele werktijden, thuiswerken, verlof', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'mantelzorg.nl/werk' }, mantelzorg: true },
+                { naam: 'Arbeidstijdaanpassing', beschrijving: 'Parttime werken, aangepaste uren, thuiswerken regelen', evidence: 'promising', kosten: 'inkomenseffect', beschikbaarheid: 'direct', contact: { website: 'werk.nl', telefoon: '0800-9899' }, mantelzorg: true },
+                { naam: 'Re-integratie na zorgtijd', beschrijving: 'Terugkeer naar werk na periode mantelzorgverlof', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'uwv.nl' }, mantelzorg: true }
             ],
             'huisvesting': [
                 { naam: 'Housing First', beschrijving: 'Eerst woning, dan zorg - voor daklozen', evidence: 'evidence-based', kosten: 'huur', beschikbaarheid: 'wachtlijst', contact: { telefoon: '020-2515151', website: 'discus.nl' } },
@@ -16342,6 +16413,25 @@ END:VEVENT
             const doelRadio = document.querySelector(`input[name="doelVandaag"][value="${state.doelVandaag}"]`);
             if (doelRadio) {
                 doelRadio.checked = true;
+            }
+        }
+        
+        // Herstel mantelzorg context
+        if (state.mantelzorgContext && state.mantelzorgContext.isMantelzorger) {
+            const checkbox = document.getElementById('isMantelzorgerOverbelast');
+            if (checkbox) {
+                checkbox.checked = true;
+                handleMantelzorgContext(true);
+                
+                // Herstel type en uren
+                if (state.mantelzorgContext.type) {
+                    const typeSelect = document.getElementById('mantelzorgType');
+                    if (typeSelect) typeSelect.value = state.mantelzorgContext.type;
+                }
+                if (state.mantelzorgContext.uren) {
+                    const urenSelect = document.getElementById('mantelzorgUren');
+                    if (urenSelect) urenSelect.value = state.mantelzorgContext.uren;
+                }
             }
         }
         // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
