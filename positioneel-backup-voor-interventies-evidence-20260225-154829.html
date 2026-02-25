@@ -12712,107 +12712,88 @@ Antwoord in dit exacte JSON formaat:
             });
         }
 
-        // === EVIDENCE-BASED INTERVENTIES DATABASE (per domein) ===
-        const interventiesDatabasePerDomein = {
-            'financien': [
-                { naam: 'Eigen Kracht Conferentie - Financiën', beschrijving: 'Netwerk bedenkt samen financiële oplossingen', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Budgetcoaching', beschrijving: 'Leren omgaan met geld en budgetteren', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'nibud.nl' } },
-                { naam: 'Schuldhulpverlening', beschrijving: 'Professionele hulp bij schulden en herstructurering', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '0800-8000', website: 'nvvk.nl' } },
-                { naam: 'Budgetbeheer', beschrijving: 'Professioneel beheer van financiën', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'gemeente.amsterdam.nl' } },
-                { naam: 'Bewindvoering', beschrijving: 'Juridisch beschermingsmaatregel bij financiële onbekwaamheid', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { telefoon: '088-7971000', website: 'rechtspraak.nl' } }
-            ],
-            'dagbesteding': [
-                { naam: 'Individual Placement & Support (IPS)', beschrijving: 'Snelle plaatsing werk met continue ondersteuning', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5901234', website: 'ipswerk.nl' } },
-                { naam: 'Participatiecoaching', beschrijving: 'Begeleiding richting werk of vrijwilligerswerk', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'gemeente.amsterdam.nl/participatiewet' } },
-                { naam: 'Jobcoaching', beschrijving: 'Ondersteuning op de werkplek', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'uwv.nl' } },
-                { naam: 'Vrijwilligerswerk begeleiding', beschrijving: 'Hulp bij vinden en starten vrijwilligerswerk', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5851350', website: 'vrijwilligerscentraal.nl' } },
-                { naam: 'Dagactiviteitencentra', beschrijving: 'Zinvolle dagbesteding voor wie niet kan werken', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { website: 'amsterdam.nl/zorg' } }
-            ],
-            'huisvesting': [
-                { naam: 'Housing First', beschrijving: 'Eerst woning, dan zorg - voor daklozen', evidence: 'evidence-based', kosten: 'huur', beschikbaarheid: 'wachtlijst', contact: { telefoon: '020-2515151', website: 'discus.nl' } },
-                { naam: 'Bemiddeling sociale huurwoning', beschrijving: 'Hulp bij vinden betaalbare woonruimte', evidence: 'evidence-based', kosten: 'huur', beschikbaarheid: 'wachtlijst', contact: { website: 'woningnet.nl' } },
-                { naam: 'Woonbegeleiding', beschrijving: 'Ondersteuning om zelfstandig te wonen', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'amsterdam.nl/wmo' } },
-                { naam: 'Mantelzorg bij samenwonen', beschrijving: 'Inwonen bij familie met ondersteuning', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'mantelzorg.nl' } },
-                { naam: 'Eigen Kracht Conferentie - Wonen', beschrijving: 'Netwerk zoekt samen woonoplossing', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } }
-            ],
-            'huiselijke-relaties': [
-                { naam: 'Eigen Kracht Conferentie - Gezin', beschrijving: 'Familie bedenkt samen oplossing gezinsproblemen', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'STOP 4-7 (opvoedondersteuning)', beschrijving: 'Groepscursus opvoeden kinderen 4-7 jaar', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'ggd.amsterdam.nl' } },
-                { naam: 'Triple P (Positive Parenting)', beschrijving: 'Opvoedondersteuning op maat', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'triplep.nl' } },
-                { naam: 'Relatietherapie/systeemtherapie', beschrijving: 'Professionele hulp bij relatieproblematiek', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { website: 'ggz.nl' } },
-                { naam: 'Veilig Thuis', beschrijving: 'Gespecialiseerde hulp bij huiselijk geweld', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '0800-2000', website: 'veiligthuis.nl' } }
-            ],
-            'geestelijk': [
-                { naam: 'Netwerkberaad (SIJN/RPA)', beschrijving: 'Netwerk activeren bij psychische problematiek', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'sijn.nl' } },
-                { naam: 'Eigen Kracht Conferentie - GGZ', beschrijving: 'Informeel netwerk mobiliseren', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'FACT-teams', beschrijving: 'Intensieve ambulante behandeling', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'wachtlijst', contact: { telefoon: '0900-1450', website: 'ggzingeest.nl' } },
-                { naam: 'CGT (Cognitieve Gedragstherapie)', beschrijving: 'Behandeling angst en depressie', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'wachtlijst', contact: { website: 'ggz.nl' } },
-                { naam: 'Herstelacademie', beschrijving: 'Herstel in eigen regie met ervaringsdeskundigen', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'herstelacademie.nl' } }
-            ],
-            'lichamelijk': [
-                { naam: 'Mantelzorgondersteuning', beschrijving: 'Ondersteuning voor naasten die zorgen', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'mantelzorg.nl' } },
-                { naam: 'Leefstijlcoaching (GLI)', beschrijving: 'Gezondere leefstijl (bewegen, eten)', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'thuisarts.nl/gli' } },
-                { naam: 'Chronische zorgprogramma's', beschrijving: 'Zelfmanagement chronische aandoeningen', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'thuisarts.nl' } },
-                { naam: 'Fysiotherapie', beschrijving: 'Behandeling lichamelijke klachten', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'kngf.nl' } },
-                { naam: 'Wijkverpleging', beschrijving: 'Verpleegkundige zorg thuis', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { telefoon: '088-0100100', website: 'buurtzorg.nl' } }
-            ],
-            'verslaving': [
-                { naam: 'CRAFT (voor naasten)', beschrijving: 'Training voor naasten van verslaafden', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'jellinek.nl' } },
-                { naam: 'Community Reinforcement Approach', beschrijving: 'Gedragsverandering met netwerkbetrokkenheid', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'wachtlijst', contact: { website: 'verslavingszorg.nl' } },
-                { naam: 'Motiverende Gespreksvoering (MI)', beschrijving: 'Versterken eigen motivatie tot verandering', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'verslavingszorg.nl' } },
-                { naam: 'Substitutiebehandeling', beschrijving: 'Methadon/subutex bij opiaatverslaving', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'ggd.amsterdam.nl' } },
-                { naam: 'Beschermd wonen met verslavingszorg', beschrijving: 'Wonen + behandeling gecombineerd', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { website: 'amsterdam.nl/wmo' } }
-            ],
-            'adl': [
-                { naam: 'Mantelzorg training', beschrijving: 'Naasten leren veilig te helpen', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'mantelzorg.nl' } },
-                { naam: 'Ergotherapie', beschrijving: 'Hulp bij zelfstandigheid dagelijkse handelingen', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'ergotherapie.nl' } },
-                { naam: 'Hulpmiddelen (WMO)', beschrijving: 'Voorzieningen die beperkingen compenseren', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'amsterdam.nl/wmo' } },
-                { naam: 'Huishoudelijke hulp', beschrijving: 'Ondersteuning bij huishouden', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'wachtlijst', contact: { website: 'amsterdam.nl/wmo' } },
-                { naam: 'Persoonlijke verzorging', beschrijving: 'Hulp bij wassen, aankleden, etc.', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'buurtzorg.nl' } }
-            ],
-            'sociaal-netwerk': [
-                { naam: 'Eigen Kracht Conferentie', beschrijving: 'Netwerk mobiliseren en plan maken', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Netwerkberaad (SIJN/RPA)', beschrijving: 'Netwerk activeren en versterken', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'sijn.nl' } },
-                { naam: 'Maatjesprojecten', beschrijving: '1-op-1 contact tegen eenzaamheid', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'wachtlijst', contact: { telefoon: '020-5851350', website: 'humanitas.nl' } },
-                { naam: 'Buurtgerichte interventies', beschrijving: 'Participatie in de wijk', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'welzijnamsterdam.nl' } },
-                { naam: 'Participatieladder begeleiding', beschrijving: 'Van isolatie naar participatie', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'movisie.nl' } }
-            ],
-            'participatie': [
-                { naam: 'Vrijwilligerswerk begeleiding', beschrijving: 'Hulp bij vinden zinvolle vrijwilligersrol', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5851350', website: 'vrijwilligerscentraal.nl' } },
-                { naam: 'Statushoudersbegeleiding', beschrijving: 'Participatie nieuwkomers', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'vluchtelingenwerk.nl' } },
-                { naam: 'Taalcursussen + participatie', beschrijving: 'Nederlandse taal leren', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'roc.nl' } },
-                { naam: 'Buurtinitiatieven ondersteunen', beschrijving: 'Eigen kracht buurt activeren', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'welzijnamsterdam.nl' } },
-                { naam: 'Eigen Kracht Conferentie - Participatie', beschrijving: 'Netwerk helpt bij participatie', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } }
-            ],
-            'justitie': [
-                { naam: 'Eigen Kracht Conferentie - Jeugdstrafrecht', beschrijving: 'Herstelgerichte aanpak met netwerk', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Forensische zorg', beschrijving: 'Gespecialiseerde behandeling justitiabelen', evidence: 'evidence-based', kosten: 'via-justitie', beschikbaarheid: 'wachtlijst', contact: { website: 'dji.nl' } },
-                { naam: 'Reclassering', beschrijving: 'Toezicht en begeleiding na detentie', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'reclassering.nl' } },
-                { naam: 'Halt-programma', beschrijving: 'Voor jongeren met lichte delicten', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'halt.nl' } },
-                { naam: 'Justitieel Casemanagement', beschrijving: 'Combinatie zorg en justitie', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'wachtlijst', contact: { website: 'reclassering.nl' } }
-            ]
-        };
-
-        // Haal interventies op voor specifiek domein
-        function getInterventiesVoorDomein(domeinId) {
-            return interventiesDatabasePerDomein[domeinId] || [];
-        }
-
-        // === INTERVENTIE METADATA (backwards compatible) ===
+        // === INTERVENTIE METADATA ===
         function getInterventieMetadata(interventieNaam) {
             const naam = interventieNaam.toLowerCase();
             
-            // Zoek in nieuwe database (alle domeinen)
-            for (const interventies of Object.values(interventiesDatabasePerDomein)) {
-                const match = interventies.find(i => naam.includes(i.naam.toLowerCase()));
-                if (match) {
-                    return {
-                        beschrijving: match.beschrijving,
-                        evidence: match.evidence,
-                        kosten: match.kosten,
-                        beschikbaarheid: match.beschikbaarheid,
-                        contact: match.contact
-                    };
+            // Database met bekende interventies
+            const database = {
+                // Schuld & Financiën
+                'schuldhulp': {
+                    beschrijving: 'Professionele hulp bij schulden, contact met schuldeisers en herstructurering',
+                    evidence: 'evidence-based',
+                    kosten: 'gratis',
+                    beschikbaarheid: 'direct',
+                    contact: { telefoon: '0800-8000', website: 'nvvk.nl' }
+                },
+                'budgetcoach': {
+                    beschrijving: 'Vrijwilliger helpt met budgetteren, administratie en overzicht houden',
+                    evidence: 'promising',
+                    kosten: 'gratis',
+                    beschikbaarheid: 'wachtlijst',
+                    contact: { website: 'budgetcoach.nl' }
+                },
+                'bewindvoering': {
+                    beschrijving: 'Professioneel financieel beheer wanneer u zelf financiën niet meer kunt regelen',
+                    evidence: 'evidence-based',
+                    kosten: 'eigen-bijdrage',
+                    beschikbaarheid: 'direct',
+                    contact: { telefoon: '088-7971000', website: 'rechtspraak.nl' }
+                },
+                
+                // GGZ
+                'ambulante': {
+                    beschrijving: 'Professionele psychische ondersteuning bij u thuis of op locatie',
+                    evidence: 'evidence-based',
+                    kosten: 'eigen-bijdrage',
+                    beschikbaarheid: 'wachtlijst',
+                    contact: { telefoon: '0900-1450', website: 'ggzingeest.nl' }
+                },
+                
+                // Thuiszorg
+                'wijkverpleging': {
+                    beschrijving: 'Professionele verpleegkundige zorg bij u thuis',
+                    evidence: 'evidence-based',
+                    kosten: 'eigen-bijdrage',
+                    beschikbaarheid: 'direct',
+                    contact: { telefoon: '088-0100100', website: 'buurtzorg.nl' }
+                },
+                'thuiszorg': {
+                    beschrijving: 'Hulp bij persoonlijke verzorging, huishouden en dagelijkse taken',
+                    evidence: 'evidence-based',
+                    kosten: 'eigen-bijdrage',
+                    beschikbaarheid: 'wachtlijst',
+                    contact: { website: 'thuiszorg.nl' }
+                },
+                
+                // Collectief
+                'buurtcentrum': {
+                    beschrijving: 'Ontmoeting, activiteiten en sociale contacten in de buurt',
+                    evidence: 'practice',
+                    kosten: 'gratis',
+                    beschikbaarheid: 'direct',
+                    contact: { website: 'welzijnamsterdam.nl' }
+                },
+                'vrijwilliger': {
+                    beschrijving: 'Vrijwillige ondersteuning bij praktische zaken of gezelschap',
+                    evidence: 'promising',
+                    kosten: 'gratis',
+                    beschikbaarheid: 'wachtlijst',
+                    contact: { telefoon: '020-5851350', website: 'vrijwilligerscentral.nl' }
+                },
+                'maatje': {
+                    beschrijving: 'Vrijwilliger die regelmatig langskomt voor gezelschap en praktische hulp',
+                    evidence: 'promising',
+                    kosten: 'gratis',
+                    beschikbaarheid: 'wachtlijst',
+                    contact: { website: 'humanitas.nl' }
+                }
+            };
+            
+            // Zoek match in database
+            for (const [key, meta] of Object.entries(database)) {
+                if (naam.includes(key)) {
+                    return meta;
                 }
             }
             
