@@ -12582,101 +12582,6 @@ Antwoord in dit exacte JSON formaat:
             });
         }
 
-        // === INTERVENTIE METADATA ===
-        function getInterventieMetadata(interventieNaam) {
-            const naam = interventieNaam.toLowerCase();
-            
-            // Database met bekende interventies
-            const database = {
-                // Schuld & Financiën
-                'schuldhulp': {
-                    beschrijving: 'Professionele hulp bij schulden, contact met schuldeisers en herstructurering',
-                    evidence: 'evidence-based',
-                    kosten: 'gratis',
-                    beschikbaarheid: 'direct',
-                    contact: { telefoon: '0800-8000', website: 'nvvk.nl' }
-                },
-                'budgetcoach': {
-                    beschrijving: 'Vrijwilliger helpt met budgetteren, administratie en overzicht houden',
-                    evidence: 'promising',
-                    kosten: 'gratis',
-                    beschikbaarheid: 'wachtlijst',
-                    contact: { website: 'budgetcoach.nl' }
-                },
-                'bewindvoering': {
-                    beschrijving: 'Professioneel financieel beheer wanneer u zelf financiën niet meer kunt regelen',
-                    evidence: 'evidence-based',
-                    kosten: 'eigen-bijdrage',
-                    beschikbaarheid: 'direct',
-                    contact: { telefoon: '088-7971000', website: 'rechtspraak.nl' }
-                },
-                
-                // GGZ
-                'ambulante': {
-                    beschrijving: 'Professionele psychische ondersteuning bij u thuis of op locatie',
-                    evidence: 'evidence-based',
-                    kosten: 'eigen-bijdrage',
-                    beschikbaarheid: 'wachtlijst',
-                    contact: { telefoon: '0900-1450', website: 'ggzingeest.nl' }
-                },
-                
-                // Thuiszorg
-                'wijkverpleging': {
-                    beschrijving: 'Professionele verpleegkundige zorg bij u thuis',
-                    evidence: 'evidence-based',
-                    kosten: 'eigen-bijdrage',
-                    beschikbaarheid: 'direct',
-                    contact: { telefoon: '088-0100100', website: 'buurtzorg.nl' }
-                },
-                'thuiszorg': {
-                    beschrijving: 'Hulp bij persoonlijke verzorging, huishouden en dagelijkse taken',
-                    evidence: 'evidence-based',
-                    kosten: 'eigen-bijdrage',
-                    beschikbaarheid: 'wachtlijst',
-                    contact: { website: 'thuiszorg.nl' }
-                },
-                
-                // Collectief
-                'buurtcentrum': {
-                    beschrijving: 'Ontmoeting, activiteiten en sociale contacten in de buurt',
-                    evidence: 'practice',
-                    kosten: 'gratis',
-                    beschikbaarheid: 'direct',
-                    contact: { website: 'welzijnamsterdam.nl' }
-                },
-                'vrijwilliger': {
-                    beschrijving: 'Vrijwillige ondersteuning bij praktische zaken of gezelschap',
-                    evidence: 'promising',
-                    kosten: 'gratis',
-                    beschikbaarheid: 'wachtlijst',
-                    contact: { telefoon: '020-5851350', website: 'vrijwilligerscentral.nl' }
-                },
-                'maatje': {
-                    beschrijving: 'Vrijwilliger die regelmatig langskomt voor gezelschap en praktische hulp',
-                    evidence: 'promising',
-                    kosten: 'gratis',
-                    beschikbaarheid: 'wachtlijst',
-                    contact: { website: 'humanitas.nl' }
-                }
-            };
-            
-            // Zoek match in database
-            for (const [key, meta] of Object.entries(database)) {
-                if (naam.includes(key)) {
-                    return meta;
-                }
-            }
-            
-            // Default metadata als geen match
-            return {
-                beschrijving: '',
-                evidence: 'practice',
-                kosten: null,
-                beschikbaarheid: null,
-                contact: null
-            };
-        }
-
         function renderInterventiesVoorBeweging() {
             const container = document.getElementById('interventiesVoorBeweging');
             if (!container) return;
@@ -12781,13 +12686,6 @@ Antwoord in dit exacte JSON formaat:
                     </div>
                 </div>` : '';
 
-            // === NIEUW: VERRIJK INTERVENTIES MET METADATA ===
-            const verrijkteInterventies = interventies.slice(0, 5).map((interventie, index) => {
-                // Herken interventie type en voeg metadata toe
-                const meta = getInterventieMetadata(interventie);
-                return { ...meta, naam: interventie, index };
-            });
-
             let html = `
                 <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                     <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">Gekozen beweging:</div>
@@ -12796,61 +12694,35 @@ Antwoord in dit exacte JSON formaat:
 
                 ${methodischHTML}
                 
-                <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
-                    <p style="font-size:0.85rem;color:#92400e;margin:0;line-height:1.5;">
-                        💡 We tonen de <strong>5 meest relevante</strong> opties. Dit zijn suggesties - kies samen wat past.
-                    </p>
-                </div>
+                <p style="margin-bottom: 16px; color: var(--text-light); font-size:0.9rem;">
+                    📍 Lokale voorzieningen — selecteer maximaal 3 concrete acties samen.
+                </p>
                 
                 <div style="display: grid; gap: 15px;">
-                    ${verrijkteInterventies.map((item) => `
+                    ${interventies.map((interventie, index) => `
                         <label style="display: block; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; background: white; transition: all 0.2s;"
                                onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#f0f9ff';"
                                onmouseout="this.style.borderColor='#e0e0e0'; this.style.background='white';">
                             <div style="display: flex; align-items: start; gap: 12px;">
                                 <input type="checkbox" 
-                                       id="interventie_${item.index}"
+                                       id="interventie_${index}"
                                        style="width: 20px; height: 20px; margin-top: 2px;"
-                                       onchange="toggleInterventie(${item.index}, this.checked)">
+                                       onchange="toggleInterventie(${index}, this.checked)">
                                 <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: var(--text); margin-bottom: 6px; font-size: 1.05rem;">
-                                        ${item.naam}
+                                    <div style="font-weight: 600; color: var(--text); margin-bottom: 10px;">
+                                        ${interventie}
                                     </div>
-                                    
-                                    <!-- Meta badges -->
-                                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;">
-                                        ${item.evidence === 'evidence-based' ? '<span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">🟢 Evidence-based</span>' : ''}
-                                        ${item.evidence === 'promising' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">🟡 Veelbelovend</span>' : ''}
-                                        ${item.evidence === 'practice' ? '<span style="background:#f3f4f6;color:#6b7280;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">⚪ Praktijkervaring</span>' : ''}
-                                        
-                                        ${item.kosten === 'gratis' ? '<span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">💚 Gratis</span>' : ''}
-                                        ${item.kosten === 'eigen-bijdrage' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">💛 Eigen bijdrage</span>' : ''}
-                                        ${item.kosten === 'betaald' ? '<span style="background:#fee2e2;color:#991b1b;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">💰 Betaald</span>' : ''}
-                                        
-                                        ${item.beschikbaarheid === 'direct' ? '<span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">⏱️ Direct</span>' : ''}
-                                        ${item.beschikbaarheid === 'wachtlijst' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">⏳ Wachtlijst</span>' : ''}
-                                    </div>
-                                    
-                                    ${item.beschrijving ? `<div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 10px; line-height: 1.5;">${item.beschrijving}</div>` : ''}
-                                    
-                                    ${item.contact ? `
-                                        <div style="font-size: 0.8rem; color: #6b7280; padding: 8px; background: #f9fafb; border-radius: 6px;">
-                                            ${item.contact.telefoon ? `📞 ${item.contact.telefoon}` : ''}
-                                            ${item.contact.website ? ` | 🌐 <a href="https://${item.contact.website}" target="_blank" style="color:#3b82f6;">${item.contact.website}</a>` : ''}
-                                        </div>
-                                    ` : ''}
-                                    
-                                    <div id="focus_${item.index}" style="display: none; padding-top: 10px; border-top: 1px solid #e0e0e0;">
+                                    <div id="focus_${index}" style="display: none; padding-top: 10px; border-top: 1px solid #e0e0e0;">
                                         <!-- Bij wie / contactpersoon -->
                                         <div style="margin-bottom: 12px;">
                                             <label style="font-size: 0.85rem; color: var(--text-light); display: block; margin-bottom: 6px;">
                                                 👤 Bij wie / contactpersoon:
                                             </label>
                                             <input type="text" 
-                                                   id="contact_${item.index}"
+                                                   id="contact_${index}"
                                                    placeholder="Bijv. Jan de Vries, wijkverpleegkundige"
                                                    style="width: 100%; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem;"
-                                                   onchange="saveInterventieContact(${item.index}, this.value)">
+                                                   onchange="saveInterventieContact(${index}, this.value)">
                                             <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 4px; margin-bottom: 0; font-style: italic;">
                                                 💡 Optioneel: noteer de naam van de persoon binnen deze organisatie
                                             </p>
