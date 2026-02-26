@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA Positionele Analyse V3</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-light: #d1fae5;
+            --secondary: #6366f1;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --red: #dc2626;
+            --yellow: #f59e0b;
+            --green: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .workflow {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .workflow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            max-width: 120px;
+        }
+        
+        .workflow-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: #f3f4f6;
+            border: 3px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+        
+        .workflow-step.active .workflow-icon {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+        
+        .workflow-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .workflow-step.active .workflow-label {
+            color: var(--primary);
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            border: 2px solid #e5e7eb;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: var(--primary);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .version-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="version-badge">🌟 V3 Clean Build</div>
+    
+    <div class="container">
+        <!-- Workflow bolletjes -->
+        <div class="workflow" id="workflow">
+            <div class="workflow-step" data-screen="1">
+                <div class="workflow-icon">🏠</div>
+                <div class="workflow-label">Start</div>
+            </div>
+            <div class="workflow-step" data-screen="2">
+                <div class="workflow-icon">🎯</div>
+                <div class="workflow-label">Focus</div>
+            </div>
+            <div class="workflow-step" data-screen="3">
+                <div class="workflow-icon">📋</div>
+                <div class="workflow-label">Doelen</div>
+            </div>
+            <div class="workflow-step" data-screen="4">
+                <div class="workflow-icon">🔧</div>
+                <div class="workflow-label">Actie</div>
+            </div>
+            <div class="workflow-step" data-screen="5">
+                <div class="workflow-icon">✅</div>
+                <div class="workflow-label">Besluit</div>
+            </div>
+        </div>
+        
+        <!-- SCREEN 1: START -->
+        <div class="screen active" id="screen-start">
+            <div class="card">
+                <h1>🌈 RPA Positionele Analyse</h1>
+                <p class="subtitle">Versie 3.0 - Clean Architecture</p>
+                
+                <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                    <p style="margin: 0; color: #065f46; font-size: 0.95rem; line-height: 1.6;">
+                        <strong>✨ Nieuw in V3:</strong><br>
+                        • 4 schermen ipv 7 (sneller!)<br>
+                        • Doelen + Netwerk in één gesprek<br>
+                        • Automatische I/C/F labeling<br>
+                        • Evidence-based interventies per doel
+                    </p>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Naam cliënt:</label>
+                    <input type="text" id="clientNaam" placeholder="Voornaam is voldoende..." 
+                           style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Doelgroep (optioneel):</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <button onclick="toggleDoelgroep('mantelzorgers')" id="chip-mantelzorgers" 
+                                style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; background: white; cursor: pointer; transition: all 0.2s;">
+                            🫂 Mantelzorger
+                        </button>
+                        <button onclick="toggleDoelgroep('jongeren')" id="chip-jongeren"
+                                style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; background: white; cursor: pointer; transition: all 0.2s;">
+                            🎓 Jongeren
+                        </button>
+                        <button onclick="toggleDoelgroep('ouderen')" id="chip-ouderen"
+                                style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; background: white; cursor: pointer; transition: all 0.2s;">
+                            👴 Ouderen
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn" onclick="startGesprek()">▶️ Start gesprek</button>
+                    <button class="btn-secondary" onclick="loadDemo()">🎬 Demo laden</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SCREEN 2: TRIAGE (wordt gekopieerd uit V2) -->
+        <div class="screen" id="screen-triage">
+            <div class="card">
+                <h1>🎯 Focusgebieden</h1>
+                <p class="subtitle">Klik op de stoplichtbollen om aan te geven hoe het gaat</p>
+                
+                <div id="triageGrid">
+                    <!-- Wordt gevuld door renderTriage() -->
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="goToScreen(1)">← Terug</button>
+                    <button class="btn" onclick="goToScreen(3)">Volgende →</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SCREEN 3: DOELEN + NETWERK (NIEUW!) -->
+        <div class="screen" id="screen-doelen">
+            <div class="card">
+                <h1>📋 Doelen & Netwerk</h1>
+                <p class="subtitle">Wat wil je bereiken en wie helpt daarbij?</p>
+                
+                <div id="doelenContainer">
+                    <!-- Wordt gevuld door renderDoelen() -->
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="goToScreen(2)">← Terug</button>
+                    <button class="btn" onclick="goToScreen(4)">Volgende →</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SCREEN 4: INTERVENTIES -->
+        <div class="screen" id="screen-interventies">
+            <div class="card">
+                <h1>🔧 Concrete acties</h1>
+                <p class="subtitle">Evidence-based interventies passend bij jouw doelen</p>
+                
+                <div id="interventiesContainer">
+                    <!-- Wordt gevuld door renderInterventies() -->
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="goToScreen(3)">← Terug</button>
+                    <button class="btn" onclick="goToScreen(5)">Volgende →</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SCREEN 5: BESLUIT -->
+        <div class="screen" id="screen-besluit">
+            <div class="card">
+                <h1>✅ Samenvatting & Afspraken</h1>
+                <p class="subtitle">Dit gaan we doen</p>
+                
+                <div id="samenvattingContainer">
+                    <!-- Wordt gevuld door renderSamenvatting() -->
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="goToScreen(4)">← Terug</button>
+                    <button class="btn" onclick="exportN3()">📊 Exporteer naar N3</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🌟 RPA V3 Clean Build - Starting...');
+        
+        // ============================================
+        // STATE MANAGEMENT (Clean & Simple)
+        // ============================================
+        
+        let state = {
+            version: '3.0',
+            clientNaam: '',
+            doelgroepen: [],
+            currentScreen: 1,
+            
+            // Triage data
+            scores: {}, // { domainId: 1|2|3 }
+            
+            // Doelen + Netwerk data
+            doelen: {}, // { domainId: 'text' }
+            netwerk: {}, // { domainId: [{naam, type: 'informeel|collectief|formeel'}] }
+            
+            // Interventies
+            geselecteerdeInterventies: [], // [{ naam, type, kosten }]
+            
+            // Timestamps
+            createdAt: null,
+            updatedAt: null
+        };
+        
+        function saveState() {
+            state.updatedAt = new Date().toISOString();
+            localStorage.setItem('rpa_v3', JSON.stringify(state));
+            console.log('💾 State saved');
+        }
+        
+        function loadState() {
+            const saved = localStorage.getItem('rpa_v3');
+            if (saved) {
+                try {
+                    state = { ...state, ...JSON.parse(saved) };
+                    console.log('✅ State loaded');
+                } catch (e) {
+                    console.error('❌ Failed to load state:', e);
+                }
+            }
+        }
+        
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        
+        function goToScreen(screenNum) {
+            console.log(`📍 Navigate to screen ${screenNum}`);
+            
+            state.currentScreen = screenNum;
+            saveState();
+            
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            // Show target screen
+            const screens = ['start', 'triage', 'doelen', 'interventies', 'besluit'];
+            const targetId = `screen-${screens[screenNum - 1]}`;
+            const target = document.getElementById(targetId);
+            
+            if (target) {
+                target.classList.add('active');
+                
+                // Update workflow
+                document.querySelectorAll('.workflow-step').forEach((step, idx) => {
+                    if (idx + 1 === screenNum) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+                
+                // Render content
+                if (screenNum === 2) renderTriage();
+                if (screenNum === 3) renderDoelen();
+                if (screenNum === 4) renderInterventies();
+                if (screenNum === 5) renderSamenvatting();
+            }
+        }
+        
+        // ============================================
+        // START SCREEN
+        // ============================================
+        
+        function startGesprek() {
+            const naam = document.getElementById('clientNaam').value.trim();
+            if (!naam) {
+                alert('⚠️ Vul eerst de naam van de cliënt in');
+                return;
+            }
+            
+            state.clientNaam = naam;
+            state.createdAt = new Date().toISOString();
+            saveState();
+            
+            goToScreen(2);
+        }
+        
+        function toggleDoelgroep(groep) {
+            if (!state.doelgroepen) state.doelgroepen = [];
+            
+            const idx = state.doelgroepen.indexOf(groep);
+            if (idx > -1) {
+                state.doelgroepen.splice(idx, 1);
+            } else {
+                state.doelgroepen.push(groep);
+            }
+            
+            const btn = document.getElementById(`chip-${groep}`);
+            if (btn) {
+                const active = state.doelgroepen.includes(groep);
+                btn.style.borderColor = active ? 'var(--primary)' : '#e5e7eb';
+                btn.style.background = active ? 'var(--primary-light)' : 'white';
+                btn.style.color = active ? 'var(--primary)' : 'var(--text)';
+            }
+            
+            saveState();
+        }
+        
+        function loadDemo() {
+            alert('🎬 Demo functie komt binnenkort!');
+        }
+        
+        // ============================================
+        // PLACEHOLDER FUNCTIONS (to be implemented)
+        // ============================================
+        
+        function renderTriage() {
+            console.log('📊 Rendering triage... (TODO: copy from V2)');
+            document.getElementById('triageGrid').innerHTML = `
+                <div style="padding: 40px; text-align: center; background: #fef3c7; border-radius: 12px;">
+                    <p style="font-size: 1.2rem; color: #92400e; margin: 0;">
+                        🚧 Triage scherm wordt gekopieerd uit V2<br>
+                        <small style="font-size: 0.9rem; color: #78350f;">Komt straks!</small>
+                    </p>
+                </div>
+            `;
+        }
+        
+        function renderDoelen() {
+            console.log('📋 Rendering doelen... (NEW!)');
+            document.getElementById('doelenContainer').innerHTML = `
+                <div style="padding: 40px; text-align: center; background: #dbeafe; border-radius: 12px;">
+                    <p style="font-size: 1.2rem; color: #1e40af; margin: 0;">
+                        ✨ NIEUW: Doelen + Netwerk scherm<br>
+                        <small style="font-size: 0.9rem; color: #1e3a8a;">Wordt nu gebouwd!</small>
+                    </p>
+                </div>
+            `;
+        }
+        
+        function renderInterventies() {
+            console.log('🔧 Rendering interventies...');
+            document.getElementById('interventiesContainer').innerHTML = `
+                <div style="padding: 40px; text-align: center; background: #dcfce7; border-radius: 12px;">
+                    <p style="font-size: 1.2rem; color: #166534; margin: 0;">
+                        🔧 Interventies (copy evidence-based DB from V2)<br>
+                        <small style="font-size: 0.9rem; color: #14532d;">Komt straks!</small>
+                    </p>
+                </div>
+            `;
+        }
+        
+        function renderSamenvatting() {
+            console.log('✅ Rendering samenvatting...');
+            document.getElementById('samenvattingContainer').innerHTML = `
+                <div style="padding: 40px; text-align: center; background: #f3e8ff; border-radius: 12px;">
+                    <p style="font-size: 1.2rem; color: #7e22ce; margin: 0;">
+                        ✅ Samenvatting & N3 export<br>
+                        <small style="font-size: 0.9rem; color: #6b21a8;">Komt straks!</small>
+                    </p>
+                </div>
+            `;
+        }
+        
+        function exportN3() {
+            alert('📊 N3 export komt binnenkort!');
+        }
+        
+        // ============================================
+        // INIT
+        // ============================================
+        
+        loadState();
+        console.log('✅ V3 Clean Build loaded!');
+    </script>
+</body>
+</html>
