@@ -12815,17 +12815,44 @@ Antwoord in dit exacte JSON formaat:
         // Render evidence-based interventies per focusgebied
         function renderInterventiesPerDomein() {
             console.log('🎯 renderInterventiesPerDomein aangeroepen');
-            console.log('State scores:', state.scores);
+            console.log('📊 State scores:', JSON.stringify(state.scores));
+            console.log('📋 State domainStatus:', JSON.stringify(state.domainStatus));
+            
+            // FALLBACK: Sync state.scores met state.domainStatus als scores leeg is
+            if (state.domainStatus && Object.keys(state.domainStatus).length > 0) {
+                let synced = false;
+                Object.keys(state.domainStatus).forEach(domainId => {
+                    const status = state.domainStatus[domainId];
+                    let expectedScore = null;
+                    if (status === 'steun-nodig') expectedScore = 1;
+                    else if (status === 'steun-aanwezig') expectedScore = 2;
+                    else if (status === 'goed') expectedScore = 3;
+                    
+                    if (expectedScore && state.scores[domainId] !== expectedScore) {
+                        console.log(`🔄 SYNC: ${domainId} status=${status} → score=${expectedScore}`);
+                        state.scores[domainId] = expectedScore;
+                        synced = true;
+                    }
+                });
+                if (synced) {
+                    console.log('✅ State.scores gesynchroniseerd met domainStatus');
+                    saveState();
+                }
+            }
             
             const actieveDomeinen = domains.filter(d => {
                 const score = state.scores[d.id];
-                return score === 1 || score === 2; // Rood of geel
+                const hasScore = score === 1 || score === 2; // Rood of geel
+                if (hasScore) console.log(`  ✓ ${d.name} (${d.id}): score=${score}`);
+                return hasScore;
             });
 
-            console.log('Actieve domeinen:', actieveDomeinen.map(d => d.name));
+            console.log(`🎯 Gevonden ${actieveDomeinen.length} actieve domeinen:`, actieveDomeinen.map(d => d.name));
 
             if (actieveDomeinen.length === 0) {
-                console.log('⚠️ Geen actieve domeinen (geen 🔴 of 🟡 in triage)');
+                console.error('❌ GEEN actieve domeinen gevonden!');
+                console.log('   Mogelijke oorzaak: oude data in localStorage zonder scores');
+                console.log('   💡 TIP: Klik op "Reset alle data" in dev tools en probeer opnieuw');
                 return '';
             }
 
