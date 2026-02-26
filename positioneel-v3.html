@@ -314,6 +314,24 @@
         console.log('🌟 RPA V3 Clean Build - Starting...');
         
         // ============================================
+        // DOMAINS DEFINITIE (Gekopieerd uit V2)
+        // ============================================
+        
+        const domains = [
+            { id: 'financien', emoji: '💰', name: 'Financiën', desc: 'Financiële middelen voor basisbehoeften' },
+            { id: 'dagbesteding', emoji: '💼', name: 'Dagbesteding', desc: 'Werk, opleiding, vrijwilligerswerk' },
+            { id: 'huisvesting', emoji: '🏠', name: 'Huisvesting', desc: 'Wonen, veiligheid' },
+            { id: 'huiselijk', emoji: '👨‍👩‍👧', name: 'Huiselijke relaties', desc: 'Sfeer en relaties thuis' },
+            { id: 'geestelijk', emoji: '🧠', name: 'Geestelijke gezondheid', desc: 'Mentaal welzijn, stress' },
+            { id: 'lichamelijk', emoji: '💪', name: 'Lichamelijke gezondheid', desc: 'Fysieke conditie' },
+            { id: 'verslaving', emoji: '🚭', name: 'Verslaving', desc: 'Middelen, gokken, gaming' },
+            { id: 'adl', emoji: '🛁', name: 'ADL-vaardigheden', desc: 'Dagelijkse activiteiten' },
+            { id: 'sociaal', emoji: '👥', name: 'Sociaal netwerk', desc: 'Steun en contacten' },
+            { id: 'participatie', emoji: '🤝', name: 'Maatschappelijke participatie', desc: 'Meedoen in samenleving' },
+            { id: 'justitie', emoji: '⚖️', name: 'Justitie', desc: 'Juridische problemen' }
+        ];
+        
+        // ============================================
         // STATE MANAGEMENT (Clean & Simple)
         // ============================================
         
@@ -324,7 +342,9 @@
             currentScreen: 1,
             
             // Triage data
-            scores: {}, // { domainId: 1|2|3 }
+            domainStatus: {}, // { domainId: 'steun-nodig'|'steun-aanwezig'|'goed' }
+            scores: {}, // { domainId: 1|2|3 } - syncs with domainStatus
+            triageNotities: {}, // { domainId: 'notitie text' }
             
             // Doelen + Netwerk data
             doelen: {}, // { domainId: 'text' }
@@ -441,16 +461,93 @@
         // PLACEHOLDER FUNCTIONS (to be implemented)
         // ============================================
         
+        // ============================================
+        // TRIAGE RENDERING (Gekopieerd uit V2)
+        // ============================================
+        
         function renderTriage() {
-            console.log('📊 Rendering triage... (TODO: copy from V2)');
-            document.getElementById('triageGrid').innerHTML = `
-                <div style="padding: 40px; text-align: center; background: #fef3c7; border-radius: 12px;">
-                    <p style="font-size: 1.2rem; color: #92400e; margin: 0;">
-                        🚧 Triage scherm wordt gekopieerd uit V2<br>
-                        <small style="font-size: 0.9rem; color: #78350f;">Komt straks!</small>
-                    </p>
-                </div>
-            `;
+            console.log('📊 Rendering triage stoplicht grid');
+            const container = document.getElementById('triageGrid');
+            if (!container) return;
+            
+            if (!state.domainStatus) state.domainStatus = {};
+            
+            container.innerHTML = domains.map(d => {
+                const status = state.domainStatus[d.id] || null;
+                
+                const btn = (val, emoji, label, color, bg) =>
+                    `<button onclick="setStoplicht('${d.id}','${val}')"
+                        style="border:2px solid ${status===val ? color : '#e5e7eb'};
+                               background:${status===val ? bg : 'white'};
+                               color:${status===val ? color : '#9ca3af'};
+                               border-radius:6px;padding:8px 12px;
+                               font-size:0.85rem;font-weight:600;cursor:pointer;
+                               white-space:nowrap;transition:all 0.2s;">
+                        ${emoji} ${label}
+                    </button>`;
+                
+                const notitie = (state.triageNotities && state.triageNotities[d.id]) || '';
+                
+                return `
+                    <div style="border-radius:10px;border:2px solid ${status?'#e5e7eb':'#f3f4f6'};
+                                overflow:hidden;margin-bottom:12px;transition:all 0.2s;">
+                        <div style="display:flex;align-items:center;gap:12px;padding:12px;
+                                    background:${status ? (status==='steun-nodig'?'#fef2f2':status==='steun-aanwezig'?'#fefce8':'#f0fdf4') : '#f9fafb'};">
+                            <span style="font-size:2rem;width:40px;text-align:center;">${d.emoji}</span>
+                            <div style="flex:1;">
+                                <div style="font-size:0.95rem;font-weight:700;color:#374151;">${d.name}</div>
+                                <div style="font-size:0.8rem;color:#6b7280;">${d.desc}</div>
+                            </div>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                ${btn('goed','🟢','Goed','#16a34a','#dcfce7')}
+                                ${btn('steun-aanwezig','🟡','Aandacht','#ca8a04','#fef9c3')}
+                                ${btn('steun-nodig','🔴','Actie','#dc2626','#fee2e2')}
+                            </div>
+                        </div>
+                        ${status === 'steun-nodig' ? `
+                        <div style="background:#fff5f5;padding:8px 12px 10px 52px;border-top:1px solid #fecaca;">
+                            <input type="text" placeholder="Korte toelichting (optioneel)..."
+                                value="${notitie.replace(/"/g,'&quot;')}"
+                                onchange="if(!state.triageNotities)state.triageNotities={};
+                                         state.triageNotities['${d.id}']=this.value;saveState();"
+                                style="width:100%;max-width:500px;padding:8px 10px;
+                                       border:2px solid #fca5a5;border-radius:8px;
+                                       font-size:0.9rem;background:white;">
+                        </div>` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            updateTriageTeller();
+        }
+        
+        function setStoplicht(domainId, status) {
+            if (!state.domainStatus) state.domainStatus = {};
+            state.domainStatus[domainId] = status;
+            
+            // SYNC: Update state.scores voor later gebruik
+            if (status === 'steun-nodig') {
+                state.scores[domainId] = 1; // 🔴 Rood
+            } else if (status === 'steun-aanwezig') {
+                state.scores[domainId] = 2; // 🟡 Geel
+            } else if (status === 'goed') {
+                state.scores[domainId] = 3; // 🟢 Groen
+            } else {
+                state.scores[domainId] = 0;
+            }
+            
+            saveState();
+            renderTriage();
+        }
+        
+        function updateTriageTeller() {
+            const s = state.domainStatus || {};
+            const ingevuld = Object.keys(s).filter(k => s[k]).length;
+            const rood = Object.values(s).filter(v => v==='steun-nodig').length;
+            const geel = Object.values(s).filter(v => v==='steun-aanwezig').length;
+            const groen = Object.values(s).filter(v => v==='goed').length;
+            
+            console.log(`📊 Triage: ${ingevuld} ingevuld (🔴${rood} 🟡${geel} 🟢${groen})`);
         }
         
         function renderDoelen() {
