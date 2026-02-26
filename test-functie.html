@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test startAssessment</title>
+</head>
+<body>
+    <h1>Test of JavaScript werkt</h1>
+    
+    <button onclick="testFunctie()">Test simpele functie</button>
+    <button onclick="alert('Direct onclick werkt!')">Test direct onclick</button>
+    
+    <div id="output" style="margin-top:20px; padding:20px; background:#f0f0f0;"></div>
+    
+    <script>
+        function testFunctie() {
+            document.getElementById('output').innerHTML = '<p>✅ JavaScript functie werkt!</p>';
+            console.log('✅ testFunctie() aangeroepen');
+        }
+        
+        console.log('✅ Script geladen');
+        console.log('typeof testFunctie:', typeof testFunctie);
+    </script>
+    
+    <hr>
+    
+    <h2>Nu laden we positioneel.html script</h2>
+    <iframe src="positioneel.html" width="800" height="400" style="border:1px solid #ccc;"></iframe>
+    
+</body>
+</html>

@@ -12745,177 +12745,11 @@ Antwoord in dit exacte JSON formaat:
             });
         }
 
-        // === EVIDENCE-BASED INTERVENTIES DATABASE (per domein) ===
-        const interventiesDatabasePerDomein = {
-            'financien': [
-                { naam: 'Eigen Kracht Conferentie - Financiën', beschrijving: 'Netwerk bedenkt samen financiële oplossingen', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Budgetcoaching', beschrijving: 'Leren omgaan met geld en budgetteren', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'nibud.nl' } },
-                { naam: 'Schuldhulpverlening', beschrijving: 'Professionele hulp bij schulden en herstructurering', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '0800-8000', website: 'nvvk.nl' } },
-                { naam: 'Mantelzorgcompliment gemeente', beschrijving: 'Financiële waardering gemeente (€250-500/jaar)', evidence: 'practice', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'amsterdam.nl/mantelzorg' }, mantelzorg: true }
-            ],
-            'dagbesteding': [
-                { naam: 'Individual Placement & Support (IPS)', beschrijving: 'Snelle plaatsing werk met continue ondersteuning', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5901234', website: 'ipswerk.nl' } },
-                { naam: 'Participatiecoaching', beschrijving: 'Begeleiding richting werk of vrijwilligerswerk', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'gemeente.amsterdam.nl/participatiewet' } },
-                { naam: 'Mantelzorgverlof aanvragen', beschrijving: 'Hulp bij aanvragen kortdurend/langdurend zorgverlof bij werkgever (wettelijk recht)', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'fnv.nl/mantelzorg', telefoon: '0800-0361' }, mantelzorg: true }
-            ],
-            'geestelijk': [
-                { naam: 'Netwerkberaad (SIJN/RPA)', beschrijving: 'Netwerk activeren bij psychische problematiek', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'sijn.nl' } },
-                { naam: 'Eigen Kracht Conferentie - GGZ', beschrijving: 'Informeel netwerk mobiliseren', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'FACT-teams', beschrijving: 'Intensieve ambulante behandeling', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'wachtlijst', contact: { telefoon: '0900-1450', website: 'ggzingeest.nl' } },
-                { naam: 'CGT (Cognitieve Gedragstherapie)', beschrijving: 'Behandeling angst en depressie', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'wachtlijst', contact: { website: 'ggz.nl' } }
-            ],
-            'sociaal': [
-                { naam: 'Eigen Kracht Conferentie', beschrijving: 'Netwerk mobiliseren en plan maken', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Netwerkberaad (SIJN/RPA)', beschrijving: 'Netwerk activeren en versterken', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'sijn.nl' } },
-                { naam: 'Maatjesprojecten', beschrijving: '1-op-1 contact tegen eenzaamheid', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'wachtlijst', contact: { telefoon: '020-5851350', website: 'humanitas.nl' } }
-            ],
-            'huiselijk': [
-                { naam: 'Eigen Kracht Conferentie - Gezin', beschrijving: 'Familie bedenkt samen oplossing gezinsproblemen', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Triple P (Positive Parenting)', beschrijving: 'Opvoedondersteuning op maat', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'triplep.nl' } },
-                { naam: 'Veilig Thuis', beschrijving: 'Gespecialiseerde hulp bij huiselijk geweld', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '0800-2000', website: 'veiligthuis.nl' } }
-            ],
-            'huisvesting': [
-                { naam: 'Housing First', beschrijving: 'Eerst woning, dan zorg - voor daklozen', evidence: 'evidence-based', kosten: 'huur', beschikbaarheid: 'wachtlijst', contact: { telefoon: '020-2515151', website: 'discus.nl' } },
-                { naam: 'Woonbegeleiding', beschrijving: 'Ondersteuning om zelfstandig te wonen', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'amsterdam.nl/wmo' } },
-                { naam: 'Eigen Kracht Conferentie - Wonen', beschrijving: 'Netwerk zoekt samen woonoplossing', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } }
-            ],
-            'lichamelijk': [
-                { naam: 'Mantelzorgondersteuning', beschrijving: 'Ondersteuning voor naasten die zorgen', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'mantelzorg.nl' }, mantelzorg: true },
-                { naam: 'Leefstijlcoaching (GLI)', beschrijving: 'Gezondere leefstijl (bewegen, eten)', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'thuisarts.nl/gli' } },
-                { naam: 'Wijkverpleging', beschrijving: 'Verpleegkundige zorg thuis', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { telefoon: '088-0100100', website: 'buurtzorg.nl' } }
-            ],
-            'verslaving': [
-                { naam: 'CRAFT (voor naasten)', beschrijving: 'Training voor naasten van verslaafden', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'jellinek.nl' }, mantelzorg: true },
-                { naam: 'Motiverende Gespreksvoering (MI)', beschrijving: 'Versterken eigen motivatie tot verandering', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'verslavingszorg.nl' } },
-                { naam: 'Substitutiebehandeling', beschrijving: 'Methadon/subutex bij opiaatverslaving', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'ggd.amsterdam.nl' } }
-            ],
-            'participatie': [
-                { naam: 'Vrijwilligerswerk begeleiding', beschrijving: 'Hulp bij vinden zinvolle vrijwilligersrol', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '020-5851350', website: 'vrijwilligerscentraal.nl' } },
-                { naam: 'Eigen Kracht Conferentie - Participatie', beschrijving: 'Netwerk helpt bij participatie', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } }
-            ],
-            'justitie': [
-                { naam: 'Eigen Kracht Conferentie - Jeugdstrafrecht', beschrijving: 'Herstelgerichte aanpak met netwerk', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { telefoon: '030-2310883', website: 'eigenkracht.nl' } },
-                { naam: 'Reclassering', beschrijving: 'Toezicht en begeleiding na detentie', evidence: 'evidence-based', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'reclassering.nl' } }
-            ],
-            'adl': [
-                { naam: 'Ergotherapie', beschrijving: 'Hulp bij zelfstandigheid dagelijkse handelingen', evidence: 'evidence-based', kosten: 'vergoed', beschikbaarheid: 'direct', contact: { website: 'ergotherapie.nl' } },
-                { naam: 'Hulpmiddelen (WMO)', beschrijving: 'Voorzieningen die beperkingen compenseren', evidence: 'evidence-based', kosten: 'eigen-bijdrage', beschikbaarheid: 'direct', contact: { website: 'amsterdam.nl/wmo' } },
-                { naam: 'Mantelzorg training', beschrijving: 'Naasten leren veilig te helpen', evidence: 'promising', kosten: 'gratis', beschikbaarheid: 'direct', contact: { website: 'mantelzorg.nl' }, mantelzorg: true }
-            ]
-        };
-
-        // Haal interventies voor een domein op
-        function getInterventiesVoorDomein(domeinId) {
-            console.log('📦 getInterventiesVoorDomein:', domeinId);
-            const result = interventiesDatabasePerDomein[domeinId] || [];
-            console.log('   → gevonden:', result.length, 'interventies');
-            return result;
-        }
-
-        // Render evidence-based interventies per focusgebied
-        function renderInterventiesPerDomein() {
-            console.log('🎯 renderInterventiesPerDomein aangeroepen');
-            console.log('State scores:', state.scores);
-            
-            const actieveDomeinen = domains.filter(d => {
-                const score = state.scores[d.id];
-                return score === 1 || score === 2; // Rood of geel
-            });
-
-            console.log('Actieve domeinen:', actieveDomeinen.map(d => d.name));
-
-            if (actieveDomeinen.length === 0) {
-                console.log('⚠️ Geen actieve domeinen (geen 🔴 of 🟡 in triage)');
-                return '';
-            }
-
-            const isMantelzorger = state.doelgroepen && state.doelgroepen.includes('mantelzorgers');
-
-            let html = `
-                <div style="background:#f0fdf4;border:3px solid #16a34a;border-radius:14px;padding:20px;margin-bottom:24px;">
-                    <h3 style="font-size:1.3rem;color:#166534;margin:0 0 8px;font-weight:800;">
-                        🎯 Evidence-based interventies per focusgebied
-                    </h3>
-                    <p style="font-size:0.88rem;color:#15803d;margin:0 0 20px;">
-                        Geselecteerd op basis van jouw triage (🔴🟡) en doelgroep.
-                    </p>
-            `;
-
-            actieveDomeinen.forEach(domein => {
-                const interventies = getInterventiesVoorDomein(domein.id);
-                const statusColor = state.scores[domein.id] === 1 ? '#dc2626' : '#f59e0b';
-                const statusIcon = state.scores[domein.id] === 1 ? '🔴' : '🟡';
-
-                const algemeen = interventies.filter(i => !i.mantelzorg).slice(0, 3);
-                const mantelzorg = interventies.filter(i => i.mantelzorg);
-
-                html += `
-                    <div style="background:white;border:2px solid ${statusColor};border-radius:10px;padding:16px;margin-bottom:16px;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                            <span style="font-size:1.5rem;">${domein.emoji}</span>
-                            <div>
-                                <div style="font-weight:700;color:#374151;">${domein.name}</div>
-                                <div style="font-size:0.8rem;color:${statusColor};font-weight:600;">${statusIcon}</div>
-                            </div>
-                        </div>
-                        <div style="display:grid;gap:10px;">
-                            ${algemeen.map((int, idx) => `
-                                <div style="padding:12px;border:2px solid #e5e7eb;background:#fafafa;border-radius:8px;">
-                                    <div style="font-weight:700;color:#374151;margin-bottom:4px;">
-                                        ${idx + 1}. ${int.naam}
-                                    </div>
-                                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:8px;">
-                                        ${int.beschrijving}
-                                    </div>
-                                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                                        <span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;">🟢 Evidence-based</span>
-                                        ${int.kosten === 'gratis' ? '<span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:0.7rem;">💚 Gratis</span>' : ''}
-                                        ${int.beschikbaarheid === 'direct' ? '<span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:0.7rem;">⏱️ Direct</span>' : ''}
-                                    </div>
-                                    ${int.contact ? `<div style="font-size:0.75rem;color:#6b7280;margin-top:6px;">
-                                        ${int.contact.telefoon ? `📞 ${int.contact.telefoon}` : ''} ${int.contact.website ? `🌐 ${int.contact.website}` : ''}
-                                    </div>` : ''}
-                                </div>
-                            `).join('')}
-                            ${isMantelzorger && mantelzorg.length > 0 ? `
-                                <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:12px;margin-top:8px;">
-                                    <div style="font-weight:700;color:#92400e;margin-bottom:8px;">🫂 Extra voor mantelzorgers:</div>
-                                    ${mantelzorg.map(int => `
-                                        <div style="padding:10px;background:#fffbeb;border:1px solid #fbbf24;border-radius:6px;margin-bottom:6px;">
-                                            <div style="font-weight:600;color:#78350f;font-size:0.85rem;">${int.naam}</div>
-                                            <div style="font-size:0.75rem;color:#92400e;">${int.beschrijving}</div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-
-            html += `</div>`;
-            return html;
-        }
-
-        // === INTERVENTIE METADATA (backwards compatible) ===
+        // === INTERVENTIE METADATA ===
         function getInterventieMetadata(interventieNaam) {
             const naam = interventieNaam.toLowerCase();
             
-            // Zoek in nieuwe database eerst
-            for (const interventies of Object.values(interventiesDatabasePerDomein)) {
-                const match = interventies.find(i => naam.includes(i.naam.toLowerCase()));
-                if (match) {
-                    return {
-                        beschrijving: match.beschrijving,
-                        evidence: match.evidence,
-                        kosten: match.kosten,
-                        beschikbaarheid: match.beschikbaarheid,
-                        contact: match.contact
-                    };
-                }
-            }
-            
-            // Fallback: oude database
+            // Database met bekende interventies
             const database = {
                 // Schuld & Financiën
                 'schuldhulp': {
@@ -13010,20 +12844,12 @@ Antwoord in dit exacte JSON formaat:
             const container = document.getElementById('interventiesVoorBeweging');
             if (!container) return;
 
-            // NIEUW: Toon evidence-based interventies per domein BOVENAAN
-            const perDomeinHTML = renderInterventiesPerDomein();
-            if (perDomeinHTML) {
-                container.innerHTML = perDomeinHTML;
-            } else {
-                container.innerHTML = '';
-            }
-
-            // Postcode auto-invullen (maar niet automatisch filteren - dat overschrijft de evidence-based interventies)
+            // Postcode auto-invullen én direct filteren vanuit Start-scherm
             setTimeout(() => {
                 const postcodeInput = document.getElementById('postcodeFilter');
                 if (postcodeInput && state.postcode && !postcodeInput.value) {
                     postcodeInput.value = state.postcode;
-                    // NIET automatisch filteren - gebruiker moet zelf klikken
+                    filterInterventiesByPostcode();
                 }
             }, 100);
 
@@ -15506,21 +15332,7 @@ END:VEVENT
         function setStoplicht(domainId, status) {
             if (!state.domainStatus) state.domainStatus = {};
             state.domainStatus[domainId] = status;
-            
-            // SYNC: Update state.scores voor interventies filtering
-            if (status === 'steun-nodig') {
-                state.scores[domainId] = 1; // 🔴 Rood
-            } else if (status === 'steun-aanwezig') {
-                state.scores[domainId] = 2; // 🟡 Geel
-            } else if (status === 'goed') {
-                state.scores[domainId] = 3; // 🟢 Groen
-            } else {
-                state.scores[domainId] = 0; // Niet ingevuld
-            }
-            
-            saveState();
             renderStoplichtGrid();
-            updateStoplichtTeller();
         }
 
         function updateStoplichtTeller() {

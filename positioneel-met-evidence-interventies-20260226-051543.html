@@ -12806,28 +12806,17 @@ Antwoord in dit exacte JSON formaat:
 
         // Haal interventies voor een domein op
         function getInterventiesVoorDomein(domeinId) {
-            console.log('📦 getInterventiesVoorDomein:', domeinId);
-            const result = interventiesDatabasePerDomein[domeinId] || [];
-            console.log('   → gevonden:', result.length, 'interventies');
-            return result;
+            return interventiesDatabasePerDomein[domeinId] || [];
         }
 
         // Render evidence-based interventies per focusgebied
         function renderInterventiesPerDomein() {
-            console.log('🎯 renderInterventiesPerDomein aangeroepen');
-            console.log('State scores:', state.scores);
-            
             const actieveDomeinen = domains.filter(d => {
                 const score = state.scores[d.id];
                 return score === 1 || score === 2; // Rood of geel
             });
 
-            console.log('Actieve domeinen:', actieveDomeinen.map(d => d.name));
-
-            if (actieveDomeinen.length === 0) {
-                console.log('⚠️ Geen actieve domeinen (geen 🔴 of 🟡 in triage)');
-                return '';
-            }
+            if (actieveDomeinen.length === 0) return '';
 
             const isMantelzorger = state.doelgroepen && state.doelgroepen.includes('mantelzorgers');
 
@@ -13013,17 +13002,15 @@ Antwoord in dit exacte JSON formaat:
             // NIEUW: Toon evidence-based interventies per domein BOVENAAN
             const perDomeinHTML = renderInterventiesPerDomein();
             if (perDomeinHTML) {
-                container.innerHTML = perDomeinHTML;
-            } else {
-                container.innerHTML = '';
+                container.innerHTML = perDomeinHTML + '<hr style="margin:30px 0;border:none;border-top:2px dashed #e5e7eb;">';
             }
 
-            // Postcode auto-invullen (maar niet automatisch filteren - dat overschrijft de evidence-based interventies)
+            // Postcode auto-invullen én direct filteren vanuit Start-scherm
             setTimeout(() => {
                 const postcodeInput = document.getElementById('postcodeFilter');
                 if (postcodeInput && state.postcode && !postcodeInput.value) {
                     postcodeInput.value = state.postcode;
-                    // NIET automatisch filteren - gebruiker moet zelf klikken
+                    filterInterventiesByPostcode();
                 }
             }, 100);
 
@@ -15506,21 +15493,7 @@ END:VEVENT
         function setStoplicht(domainId, status) {
             if (!state.domainStatus) state.domainStatus = {};
             state.domainStatus[domainId] = status;
-            
-            // SYNC: Update state.scores voor interventies filtering
-            if (status === 'steun-nodig') {
-                state.scores[domainId] = 1; // 🔴 Rood
-            } else if (status === 'steun-aanwezig') {
-                state.scores[domainId] = 2; // 🟡 Geel
-            } else if (status === 'goed') {
-                state.scores[domainId] = 3; // 🟢 Groen
-            } else {
-                state.scores[domainId] = 0; // Niet ingevuld
-            }
-            
-            saveState();
             renderStoplichtGrid();
-            updateStoplichtTeller();
         }
 
         function updateStoplichtTeller() {
