@@ -7066,7 +7066,7 @@ Antwoord in dit exacte JSON formaat:
             if (screenId === 'reflectie') renderReflectieVragen();
             if (screenId === 'interventies') { 
                 renderInterventiesVoorBeweging();
-                renderConcreteVoorzieningen();
+                // renderConcreteVoorzieningen(); // DISABLED - vervangen door evidence-based interventies
             }
             if (screenId === 'samenvatting') renderSamenvatting();
 
@@ -13413,6 +13413,8 @@ Antwoord in dit exacte JSON formaat:
         
         // Render concrete voorzieningen op basis van ondersteuningsstructuur
         function renderConcreteVoorzieningen() {
+            // DISABLED - Oude postcode-based voorzieningen vervangen door evidence-based interventies per domein
+            return;
             const container = document.getElementById('lokaleVoorzieningenOverzicht');
             if (!container) return;
             
