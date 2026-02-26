@@ -332,6 +332,130 @@
         ];
         
         // ============================================
+        // DOELEN DATABASE (Voorgesorteerde suggesties)
+        // ============================================
+        
+        const doelenSuggesties = {
+            financien: {
+                algemeen: [
+                    'Beter overzicht over geld',
+                    'Schuldenvrij worden',
+                    'Minder stress over rekeningen'
+                ],
+                mantelzorgers: [
+                    'Financiële waardering krijgen',
+                    'Werkgever om flexibiliteit vragen',
+                    'Mantelzorgkosten vergoed krijgen'
+                ]
+            },
+            dagbesteding: {
+                algemeen: [
+                    'Weer aan het werk',
+                    'Zinvolle dagbesteding vinden',
+                    'Opleiding volgen'
+                ],
+                mantelzorgers: [
+                    'Werk en zorg combineren',
+                    'Deeltijd werken regelen',
+                    'Zorgverlof aanvragen'
+                ],
+                jongeren: [
+                    'Stage of werk vinden',
+                    'Studie afmaken',
+                    'Richting kiezen'
+                ]
+            },
+            huisvesting: {
+                algemeen: [
+                    'Stabiele woning behouden',
+                    'Betere woonplek vinden',
+                    'Huur betaalbaar houden'
+                ]
+            },
+            huiselijk: {
+                algemeen: [
+                    'Minder spanning thuis',
+                    'Betere communicatie',
+                    'Veilige thuissituatie'
+                ],
+                jongeren: [
+                    'Minder ruzie thuis',
+                    'Meer begrip van ouders',
+                    'Zelfstandig worden'
+                ]
+            },
+            geestelijk: {
+                algemeen: [
+                    'Minder somber voelen',
+                    'Angst onder controle',
+                    'Beter slapen'
+                ],
+                mantelzorgers: [
+                    'Niet overbelast raken',
+                    'Eigen grenzen bewaken',
+                    'Hulp durven vragen'
+                ]
+            },
+            lichamelijk: {
+                algemeen: [
+                    'Minder pijn',
+                    'Gezonder leven',
+                    'Beter in conditie'
+                ],
+                ouderen: [
+                    'Zelfstandig blijven wonen',
+                    'Vallen voorkomen',
+                    'Medicatie op orde'
+                ]
+            },
+            verslaving: {
+                algemeen: [
+                    'Stoppen met gebruik',
+                    'Minder gebruiken',
+                    'Grip op gedrag'
+                ]
+            },
+            adl: {
+                algemeen: [
+                    'Zelf meer kunnen',
+                    'Hulp bij huishouden',
+                    'Administratie op orde'
+                ],
+                ouderen: [
+                    'Blijven wonen waar ik woon',
+                    'Hulp bij dagelijkse dingen',
+                    'Veilig thuis blijven'
+                ]
+            },
+            sociaal: {
+                algemeen: [
+                    'Meer sociale contacten',
+                    'Minder eenzaam voelen',
+                    'Vaker iemand zien'
+                ]
+            },
+            participatie: {
+                algemeen: [
+                    'Vrijwilligerswerk doen',
+                    'Meedoen in de buurt',
+                    'Ergens bij horen'
+                ],
+                jongeren: [
+                    'Vrienden maken',
+                    'Hobby of sport vinden',
+                    'Clubs of vereniging'
+                ]
+            },
+            justitie: {
+                algemeen: [
+                    'Problemen oplossen',
+                    'Uit problemen blijven',
+                    'Schulden aan justitie aflossen'
+                ]
+            }
+        };
+        
+        // ============================================
         // STATE MANAGEMENT (Clean & Simple)
         // ============================================
         
@@ -550,16 +674,213 @@
             console.log(`📊 Triage: ${ingevuld} ingevuld (🔴${rood} 🟡${geel} 🟢${groen})`);
         }
         
+        // ============================================
+        // DOELEN + NETWERK RENDERING (NIEUW!)
+        // ============================================
+        
         function renderDoelen() {
-            console.log('📋 Rendering doelen... (NEW!)');
-            document.getElementById('doelenContainer').innerHTML = `
-                <div style="padding: 40px; text-align: center; background: #dbeafe; border-radius: 12px;">
-                    <p style="font-size: 1.2rem; color: #1e40af; margin: 0;">
-                        ✨ NIEUW: Doelen + Netwerk scherm<br>
-                        <small style="font-size: 0.9rem; color: #1e3a8a;">Wordt nu gebouwd!</small>
+            console.log('📋 Rendering Doelen+Netwerk scherm');
+            const container = document.getElementById('doelenContainer');
+            if (!container) return;
+            
+            // Filter: alleen 🔴🟡 domeinen (steun-nodig of steun-aanwezig)
+            const focusDomeinen = domains.filter(d => {
+                const status = state.domainStatus[d.id];
+                return status === 'steun-nodig' || status === 'steun-aanwezig';
+            });
+            
+            if (focusDomeinen.length === 0) {
+                container.innerHTML = `
+                    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:24px;text-align:center;">
+                        <p style="font-size:1.1rem;color:#92400e;margin:0 0 8px;font-weight:700;">
+                            🎯 Geen focusgebieden geselecteerd
+                        </p>
+                        <p style="color:#78350f;margin:0;">
+                            Ga terug naar <strong>Triage</strong> en klik op 🔴 of 🟡 bij domeinen die aandacht nodig hebben.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <div style="background:#e0f2fe;border-left:4px solid #0284c7;padding:16px;border-radius:8px;margin-bottom:24px;">
+                    <p style="margin:0;color:#075985;font-size:0.95rem;line-height:1.6;">
+                        <strong>💡 Tip:</strong> We gaan per focusgebied kijken wat ${state.clientNaam || 'je'} wil bereiken en wie daarbij kan helpen.
                     </p>
                 </div>
             `;
+            
+            focusDomeinen.forEach(domein => {
+                const status = state.domainStatus[domein.id];
+                const statusColor = status === 'steun-nodig' ? '#dc2626' : '#f59e0b';
+                const statusIcon = status === 'steun-nodig' ? '🔴' : '🟡';
+                
+                // Haal suggesties op basis van doelgroep
+                const doelgroep = (state.doelgroepen && state.doelgroepen[0]) || 'algemeen';
+                const suggesties = (doelenSuggesties[domein.id] && doelenSuggesties[domein.id][doelgroep]) 
+                    || doelenSuggesties[domein.id]?.algemeen 
+                    || [];
+                
+                const huidigDoel = state.doelen[domein.id] || '';
+                
+                html += `
+                    <div style="background:white;border:3px solid ${statusColor};border-radius:12px;padding:20px;margin-bottom:20px;">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                            <span style="font-size:2.5rem;">${domein.emoji}</span>
+                            <div style="flex:1;">
+                                <h3 style="margin:0 0 4px;font-size:1.3rem;color:#374151;">${domein.name}</h3>
+                                <div style="font-size:0.85rem;color:${statusColor};font-weight:600;">
+                                    ${statusIcon} ${status === 'steun-nodig' ? 'Actie nodig' : 'Aandacht'}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DOEL BEPALEN -->
+                        <div style="margin-bottom:24px;">
+                            <label style="display:block;font-weight:700;font-size:1rem;color:#374151;margin-bottom:12px;">
+                                Wat wil ${state.clientNaam || 'je'} hier bereiken?
+                            </label>
+                            
+                            ${suggesties.length > 0 ? `
+                                <div style="margin-bottom:12px;">
+                                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:8px;">💡 Vaak gekozen:</div>
+                                    <div style="display:flex;flex-direction:column;gap:8px;">
+                                        ${suggesties.map((sug, idx) => `
+                                            <button onclick="selectDoel('${domein.id}', '${sug.replace(/'/g, "\\'")}')"
+                                                    style="padding:12px 16px;border:2px solid ${huidigDoel === sug ? 'var(--primary)' : '#e5e7eb'};
+                                                           background:${huidigDoel === sug ? 'var(--primary-light)' : 'white'};
+                                                           border-radius:8px;text-align:left;cursor:pointer;
+                                                           font-size:0.95rem;color:#374151;font-weight:500;
+                                                           transition:all 0.2s;"
+                                                    onmouseover="if('${huidigDoel}' !== '${sug.replace(/'/g, "\\'")}') {
+                                                        this.style.borderColor='var(--primary)';
+                                                        this.style.background='#f0fdf4';
+                                                    }"
+                                                    onmouseout="if('${huidigDoel}' !== '${sug.replace(/'/g, "\\'")}') {
+                                                        this.style.borderColor='#e5e7eb';
+                                                        this.style.background='white';
+                                                    }">
+                                                ${huidigDoel === sug ? '✓ ' : ''}${sug}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div>
+                                <div style="font-size:0.85rem;color:#6b7280;margin-bottom:8px;">✍️ Of eigen woorden:</div>
+                                <input type="text" 
+                                       id="doel-${domein.id}"
+                                       value="${huidigDoel.replace(/"/g, '&quot;')}"
+                                       placeholder="Wat is het doel?"
+                                       onchange="setDoel('${domein.id}', this.value)"
+                                       style="width:100%;padding:12px 16px;border:2px solid #e5e7eb;
+                                              border-radius:8px;font-size:1rem;">
+                            </div>
+                        </div>
+                        
+                        <!-- NETWERK -->
+                        <div>
+                            <label style="display:block;font-weight:700;font-size:1rem;color:#374151;margin-bottom:12px;">
+                                Wie helpt nu bij ${domein.name.toLowerCase()}?
+                            </label>
+                            
+                            <div id="netwerk-${domein.id}">
+                                ${renderNetwerkVoorDomein(domein.id)}
+                            </div>
+                            
+                            <button onclick="voegNetwerkToe('${domein.id}')"
+                                    style="padding:8px 16px;border:2px dashed #d1d5db;background:white;
+                                           border-radius:8px;color:#6b7280;font-size:0.9rem;
+                                           cursor:pointer;margin-top:8px;font-weight:600;"
+                                    onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)';"
+                                    onmouseout="this.style.borderColor='#d1d5db';this.style.color='#6b7280';">
+                                + Voeg helper toe
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function renderNetwerkVoorDomein(domeinId) {
+            const netwerk = state.netwerk[domeinId] || [];
+            
+            if (netwerk.length === 0) {
+                return `<div style="color:#9ca3af;font-style:italic;font-size:0.9rem;">Nog niemand toegevoegd</div>`;
+            }
+            
+            return netwerk.map((helper, idx) => {
+                const typeColor = helper.type === 'informeel' ? '#10b981' : 
+                                 helper.type === 'collectief' ? '#8b5cf6' : '#3b82f6';
+                const typeLabel = helper.type === 'informeel' ? '🟢 Informeel' :
+                                 helper.type === 'collectief' ? '🟣 Collectief' : '🔵 Formeel';
+                
+                return `
+                    <div style="display:flex;align-items:center;gap:12px;padding:10px;
+                                background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;">
+                        <div style="flex:1;">
+                            <div style="font-weight:600;color:#374151;">${helper.naam}</div>
+                            <div style="font-size:0.8rem;color:${typeColor};font-weight:600;">${typeLabel}</div>
+                        </div>
+                        <button onclick="verwijderNetwerk('${domeinId}', ${idx})"
+                                style="padding:6px 10px;border:1px solid #fca5a5;background:#fee2e2;
+                                       color:#dc2626;border-radius:6px;font-size:0.8rem;cursor:pointer;">
+                            🗑️
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function selectDoel(domeinId, doel) {
+            if (!state.doelen) state.doelen = {};
+            state.doelen[domeinId] = doel;
+            
+            // Update ook het input veld
+            const input = document.getElementById(`doel-${domeinId}`);
+            if (input) input.value = doel;
+            
+            saveState();
+            renderDoelen();
+        }
+        
+        function setDoel(domeinId, doel) {
+            if (!state.doelen) state.doelen = {};
+            state.doelen[domeinId] = doel.trim();
+            saveState();
+        }
+        
+        function voegNetwerkToe(domeinId) {
+            const naam = prompt('Wie helpt? (bijv. Zus Maria, Budgetcoach Jan, etc.)');
+            if (!naam || !naam.trim()) return;
+            
+            const typeKeuze = prompt('Type steun:\n1 = Familie/Vriend (Informeel)\n2 = Buurt/Vereniging (Collectief)\n3 = Professional (Formeel)\n\nKies 1, 2 of 3:');
+            
+            let type = 'informeel';
+            if (typeKeuze === '2') type = 'collectief';
+            if (typeKeuze === '3') type = 'formeel';
+            
+            if (!state.netwerk) state.netwerk = {};
+            if (!state.netwerk[domeinId]) state.netwerk[domeinId] = [];
+            
+            state.netwerk[domeinId].push({
+                naam: naam.trim(),
+                type: type
+            });
+            
+            saveState();
+            renderDoelen();
+        }
+        
+        function verwijderNetwerk(domeinId, index) {
+            if (!state.netwerk[domeinId]) return;
+            state.netwerk[domeinId].splice(index, 1);
+            saveState();
+            renderDoelen();
         }
         
         function renderInterventies() {
