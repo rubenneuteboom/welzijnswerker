@@ -718,9 +718,23 @@
                 
                 // Haal suggesties op basis van doelgroep
                 const doelgroep = (state.doelgroepen && state.doelgroepen[0]) || 'algemeen';
-                const suggesties = (doelenSuggesties[domein.id] && doelenSuggesties[domein.id][doelgroep]) 
-                    || doelenSuggesties[domein.id]?.algemeen 
-                    || [];
+                console.log(`📋 ${domein.name}: doelgroep=${doelgroep}`);
+                
+                let suggesties = [];
+                if (doelenSuggesties[domein.id]) {
+                    // Probeer specifieke doelgroep
+                    if (doelenSuggesties[domein.id][doelgroep]) {
+                        suggesties = doelenSuggesties[domein.id][doelgroep];
+                        console.log(`   → ${suggesties.length} suggesties voor ${doelgroep}`);
+                    } 
+                    // Fallback naar algemeen
+                    else if (doelenSuggesties[domein.id].algemeen) {
+                        suggesties = doelenSuggesties[domein.id].algemeen;
+                        console.log(`   → ${suggesties.length} algemene suggesties (fallback)`);
+                    }
+                } else {
+                    console.warn(`   ⚠️ Geen suggesties gevonden voor ${domein.id}`);
+                }
                 
                 const huidigDoel = state.doelen[domein.id] || '';
                 
