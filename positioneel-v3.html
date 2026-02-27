@@ -355,7 +355,7 @@
     </style>
 </head>
 <body>
-    <div class="version-badge">🔐 V3.4.1 Security Edition</div>
+    <div class="version-badge">✨ V3.4.2 Usability Edition</div>
     
     <!-- Auto-save indicator -->
     <div id="saveIndicator" style="position:fixed;top:20px;right:20px;background:#10b981;color:white;
@@ -767,7 +767,7 @@
         // ============================================
         
         let state = {
-            version: '3.4.1', // V3.4.1: Security Edition (Encryptie + Auto-save + Data-controle)
+            version: '3.4.2', // V3.4.2: Usability Edition (Security + Tooltips + Pauze + Duidelijke labels)
             clientNaam: '',
             doelgroepen: [], // Legacy (backwards compatibility)
             leeftijdsgroep: null, // 'jongeren' | 'volwassenen' | 'ouderen' | null
@@ -3137,7 +3137,7 @@
                     regiediffusie: (state.betrokkenHulpverleners || []).length >= 5 && (!state.regieVoorGezin || state.regieVoorGezin === 'niemand')
                 } : null,
                 metadata: {
-                    professional: 'RPA V3.4.1 Security Edition (Gezins-ZIN + Encryptie)',
+                    professional: 'RPA V3.4.2 Usability Edition (Gezins-ZIN + Security + UX)',
                     sessieId: state.createdAt,
                     laatstGewijzigd: state.updatedAt
                 }
