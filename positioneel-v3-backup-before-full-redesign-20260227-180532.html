@@ -220,81 +220,21 @@
                            style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
                 </div>
                 
-                <!-- DOELGROEPEN: Clean & Overzichtelijk -->
                 <div style="margin-bottom: 24px;">
-                    <label style="display: block; font-weight: 700; margin-bottom: 12px; font-size: 1rem; color: #374151;">
-                        Leeftijd / levensfase (optioneel):
-                    </label>
-                    <div style="display: grid; gap: 8px; margin-bottom: 20px;">
-                        <label onclick="selectLeeftijd('jongeren')" id="leeftijd-jongeren"
-                               style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
-                                      border: 2px solid #e5e7eb; border-radius: 10px; background: white; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='var(--primary)'"
-                               onmouseout="if(!this.classList.contains('selected'))this.style.borderColor='#e5e7eb'">
-                            <span style="font-size: 1.5rem;">🎓</span>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; color: #374151;">Jongere (12-25 jaar)</div>
-                                <div style="font-size: 0.85rem; color: #6b7280;">School, identiteit, vriendschappen</div>
-                            </div>
-                        </label>
-                        <label onclick="selectLeeftijd('volwassenen')" id="leeftijd-volwassenen"
-                               style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
-                                      border: 2px solid #e5e7eb; border-radius: 10px; background: white; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='var(--primary)'"
-                               onmouseout="if(!this.classList.contains('selected'))this.style.borderColor='#e5e7eb'">
-                            <span style="font-size: 1.5rem;">💼</span>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; color: #374151;">Volwassene (25-65 jaar)</div>
-                                <div style="font-size: 0.85rem; color: #6b7280;">Werk, gezin, relaties</div>
-                            </div>
-                        </label>
-                        <label onclick="selectLeeftijd('ouderen')" id="leeftijd-ouderen"
-                               style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
-                                      border: 2px solid #e5e7eb; border-radius: 10px; background: white; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='var(--primary)'"
-                               onmouseout="if(!this.classList.contains('selected'))this.style.borderColor='#e5e7eb'">
-                            <span style="font-size: 1.5rem;">👴</span>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; color: #374151;">Oudere (65+ jaar)</div>
-                                <div style="font-size: 0.85rem; color: #6b7280;">Vergrijzing, gezondheid, eenzaamheid</div>
-                            </div>
-                        </label>
-                    </div>
-                    
-                    <!-- Visuele scheiding -->
-                    <div style="border-top: 2px dashed #e5e7eb; margin: 20px 0;"></div>
-                    
-                    <label style="display: block; font-weight: 700; margin-bottom: 12px; font-size: 1rem; color: #374151;">
-                        Extra aandacht voor:
-                    </label>
-                    <div style="display: grid; gap: 8px;">
-                        <label style="display: flex; align-items: start; gap: 10px; padding: 10px 12px; 
-                                      background: #fef3c7; border: 2px dashed #fbbf24; border-radius: 8px; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#f59e0b'"
-                               onmouseout="this.style.borderColor='#fbbf24'">
-                            <input type="checkbox" id="extra-mantelzorg" onchange="toggleExtra('mantelzorg')"
-                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
-                            <div>
-                                <div style="font-weight: 600; color: #92400e;">🫂 Ook mantelzorger</div>
-                                <div style="font-size: 0.85rem; color: #78350f;">Combinatie van eigen leven + zorgen voor ander</div>
-                            </div>
-                        </label>
-                        <label style="display: flex; align-items: start; gap: 10px; padding: 10px 12px; 
-                                      background: #fee2e2; border: 2px dashed #fca5a5; border-radius: 8px; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#f87171'"
-                               onmouseout="this.style.borderColor='#fca5a5'">
-                            <input type="checkbox" id="extra-gezin" onchange="toggleExtra('gezin')"
-                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
-                            <div>
-                                <div style="font-weight: 600; color: #991b1b;">👨‍👩‍👧‍👦 Gezin met multi-problematiek</div>
-                                <div style="font-size: 0.85rem; color: #7f1d1d;">Meerdere gezinsleden met problemen, veel hulpverleners</div>
-                            </div>
-                        </label>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Doelgroep (optioneel):</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <button onclick="toggleDoelgroep('mantelzorgers')" id="chip-mantelzorgers" 
+                                style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; background: white; cursor: pointer; transition: all 0.2s;">
+                            🫂 Mantelzorger
+                        </button>
+                        <button onclick="toggleDoelgroep('jongeren')" id="chip-jongeren"
+                                style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; background: white; cursor: pointer; transition: all 0.2s;">
+                            🎓 Jongeren
+                        </button>
+                        <button onclick="toggleDoelgroep('ouderen')" id="chip-ouderen"
+                                style="padding: 8px 16px; border: 2px solid #e5e7eb; border-radius: 20px; background: white; cursor: pointer; transition: all 0.2s;">
+                            👴 Ouderen
+                        </button>
                     </div>
                 </div>
                 
@@ -542,11 +482,9 @@
         // ============================================
         
         let state = {
-            version: '3.4', // V3.4: Doelgroepen herstructurering + Gezins-ZIN
+            version: '3.3', // Updated met afspraken-scherm
             clientNaam: '',
-            doelgroepen: [], // Legacy (backwards compatibility)
-            leeftijdsgroep: null, // 'jongeren' | 'volwassenen' | 'ouderen' | null
-            extraAandacht: [], // ['mantelzorg', 'gezin']
+            doelgroepen: [],
             currentScreen: 1,
             
             // Triage data
@@ -571,10 +509,6 @@
             // Afspraken & Evaluatie
             afspraken: [], // [{ wat: 'text', wie: 'client|professional|familie', wanneer: 'deze-week|2-weken|1-maand' }]
             evaluatieDatum: null, // '3-weken' | '6-weken' | '3-maanden' | null
-            
-            // Gezins-ZIN (alleen bij multi-problematiek)
-            betrokkenHulpverleners: [], // [{ naam: 'text', rol: 'text' }]
-            regieVoorGezin: null, // 'gezin-zelf' | hulpverlener naam | 'niemand'
             
             // Timestamps
             createdAt: null,
@@ -656,50 +590,25 @@
             goToScreen(2);
         }
         
-        // ============================================
-        // NIEUWE DOELGROEPEN LOGICA (Clean & Overzichtelijk)
-        // ============================================
-        
-        function selectLeeftijd(groep) {
-            // Deselect all
-            ['jongeren', 'volwassenen', 'ouderen'].forEach(g => {
-                const elem = document.getElementById(`leeftijd-${g}`);
-                if (elem) {
-                    elem.style.borderColor = '#e5e7eb';
-                    elem.style.background = 'white';
-                    elem.classList.remove('selected');
-                }
-            });
+        function toggleDoelgroep(groep) {
+            if (!state.doelgroepen) state.doelgroepen = [];
             
-            // Select clicked (or deselect if same)
-            if (state.leeftijdsgroep === groep) {
-                state.leeftijdsgroep = null; // Deselect
-            } else {
-                state.leeftijdsgroep = groep;
-                const elem = document.getElementById(`leeftijd-${groep}`);
-                if (elem) {
-                    elem.style.borderColor = 'var(--primary)';
-                    elem.style.background = 'var(--primary-light)';
-                    elem.classList.add('selected');
-                }
-            }
-            
-            saveState();
-            console.log('Leeftijdsgroep:', state.leeftijdsgroep);
-        }
-        
-        function toggleExtra(type) {
-            if (!state.extraAandacht) state.extraAandacht = [];
-            
-            const idx = state.extraAandacht.indexOf(type);
+            const idx = state.doelgroepen.indexOf(groep);
             if (idx > -1) {
-                state.extraAandacht.splice(idx, 1);
+                state.doelgroepen.splice(idx, 1);
             } else {
-                state.extraAandacht.push(type);
+                state.doelgroepen.push(groep);
+            }
+            
+            const btn = document.getElementById(`chip-${groep}`);
+            if (btn) {
+                const active = state.doelgroepen.includes(groep);
+                btn.style.borderColor = active ? 'var(--primary)' : '#e5e7eb';
+                btn.style.background = active ? 'var(--primary-light)' : 'white';
+                btn.style.color = active ? 'var(--primary)' : 'var(--text)';
             }
             
             saveState();
-            console.log('Extra aandacht:', state.extraAandacht);
         }
         
         function loadDemo() {
