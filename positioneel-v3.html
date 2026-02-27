@@ -482,7 +482,7 @@
         // ============================================
         
         let state = {
-            version: '3.2', // Updated met afspraken-scherm
+            version: '3.3', // Updated met afspraken-scherm
             clientNaam: '',
             doelgroepen: [],
             currentScreen: 1,
@@ -501,6 +501,7 @@
             betekenis: {}, // { domainId: 'text' } - Wat maakt dit zinvol?
             netwerk: {}, // { domeinId: [{naam, type: 'informeel|collectief|formeel'}] }
             addModeActief: null, // domeinId of form that is currently in add mode
+            familieNietBetrekken: {}, // { domeinId: { enabled: true/false, reden: text } } - Lisa autonomie
             
             // Interventies
             geselecteerdeInterventies: [], // [{ naam, type, kosten }]
@@ -2214,6 +2215,57 @@
 
         
         // ============================================
+        
+        // ============================================
+        // FEATURE 1: DRAAGKRACHT-ALARM
+        // ============================================
+        
+        function checkDraagkrachtOverbelasting() {
+            const focusDomeinen = domains.filter(d => state.scores[d.id] === 1 || state.scores[d.id] === 2);
+            if (focusDomeinen.length < 2) return null;
+            
+            const personenCount = {};
+            focusDomeinen.forEach(d => {
+                const helpers = state.netwerk[d.id] || [];
+                helpers.forEach(h => {
+                    personenCount[h.naam] = (personenCount[h.naam] || 0) + 1;
+                });
+            });
+            
+            for (const [naam, count] of Object.entries(personenCount)) {
+                const percentage = Math.round((count / focusDomeinen.length) * 100);
+                if (percentage >= 80) {
+                    return { naam, count, totaal: focusDomeinen.length, percentage };
+                }
+            }
+            return null;
+        }
+        
+        // ============================================
+        // FEATURE 2: FAMILIE NIET BETREKKEN
+        // ============================================
+        
+        function toggleFamilieExclusie(domeinId) {
+            if (!state.familieNietBetrekken) state.familieNietBetrekken = {};
+            if (!state.familieNietBetrekken[domeinId]) {
+                state.familieNietBetrekken[domeinId] = { enabled: false, reden: "" };
+            }
+            
+            const current = state.familieNietBetrekken[domeinId];
+            current.enabled = !current.enabled;
+            
+            saveState();
+            renderDoelen();
+        }
+        
+        function setFamilieExclusieReden(domeinId, reden) {
+            if (!state.familieNietBetrekken) state.familieNietBetrekken = {};
+            if (!state.familieNietBetrekken[domeinId]) {
+                state.familieNietBetrekken[domeinId] = { enabled: true, reden: "" };
+            }
+            state.familieNietBetrekken[domeinId].reden = reden.trim();
+            saveState();
+        }
         // INIT
         // ============================================
         
