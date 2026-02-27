@@ -473,6 +473,7 @@
             // Doelen + Netwerk data
             doelen: {}, // { domainId: 'text' }
             netwerk: {}, // { domainId: [{naam, type: 'informeel|collectief|formeel'}] }
+            addModeActief: null, // domeinId of form that is currently in add mode
             
             // Interventies
             geselecteerdeInterventies: [], // [{ naam, type, kosten }]
@@ -822,32 +823,103 @@
         
         function renderNetwerkVoorDomein(domeinId) {
             const netwerk = state.netwerk[domeinId] || [];
+            const addMode = state.addModeActief === domeinId; // Check if add mode is active for this domain
             
-            if (netwerk.length === 0) {
-                return `<div style="color:#9ca3af;font-style:italic;font-size:0.9rem;">Nog niemand toegevoegd</div>`;
+            let html = '';
+            
+            // Show existing network members
+            if (netwerk.length > 0) {
+                html += netwerk.map((helper, idx) => {
+                    const typeColor = helper.type === 'informeel' ? '#10b981' : 
+                                     helper.type === 'collectief' ? '#8b5cf6' : '#3b82f6';
+                    const typeLabel = helper.type === 'informeel' ? '🟢 Informeel' :
+                                     helper.type === 'collectief' ? '🟣 Collectief' : '🔵 Formeel';
+                    
+                    return `
+                        <div style="display:flex;align-items:center;gap:12px;padding:10px;
+                                    background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600;color:#374151;">${helper.naam}</div>
+                                <div style="font-size:0.8rem;color:${typeColor};font-weight:600;">${typeLabel}</div>
+                            </div>
+                            <button onclick="verwijderNetwerk('${domeinId}', ${idx})"
+                                    style="padding:6px 10px;border:1px solid #fca5a5;background:#fee2e2;
+                                           color:#dc2626;border-radius:6px;font-size:0.8rem;cursor:pointer;">
+                                🗑️
+                            </button>
+                        </div>
+                    `;
+                }).join('');
             }
             
-            return netwerk.map((helper, idx) => {
-                const typeColor = helper.type === 'informeel' ? '#10b981' : 
-                                 helper.type === 'collectief' ? '#8b5cf6' : '#3b82f6';
-                const typeLabel = helper.type === 'informeel' ? '🟢 Informeel' :
-                                 helper.type === 'collectief' ? '🟣 Collectief' : '🔵 Formeel';
-                
-                return `
-                    <div style="display:flex;align-items:center;gap:12px;padding:10px;
-                                background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;">
-                        <div style="flex:1;">
-                            <div style="font-weight:600;color:#374151;">${helper.naam}</div>
-                            <div style="font-size:0.8rem;color:${typeColor};font-weight:600;">${typeLabel}</div>
+            // Show add form if add mode is active
+            if (addMode) {
+                html += `
+                    <div id="add-form-${domeinId}" style="background:#f0fdf4;border:2px dashed #10b981;border-radius:8px;padding:16px;margin-top:8px;">
+                        <div style="margin-bottom:12px;">
+                            <label style="display:block;font-weight:600;margin-bottom:6px;font-size:0.9rem;color:#374151;">
+                                Wie helpt? (bijv. Zus Maria, Budgetcoach Jan, etc.)
+                            </label>
+                            <input type="text" id="naam-${domeinId}" 
+                                   placeholder="Naam..."
+                                   style="width:100%;padding:8px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
                         </div>
-                        <button onclick="verwijderNetwerk('${domeinId}', ${idx})"
-                                style="padding:6px 10px;border:1px solid #fca5a5;background:#fee2e2;
-                                       color:#dc2626;border-radius:6px;font-size:0.8rem;cursor:pointer;">
-                            🗑️
-                        </button>
+                        
+                        <div style="margin-bottom:12px;">
+                            <label style="display:block;font-weight:600;margin-bottom:8px;font-size:0.9rem;color:#374151;">
+                                Type steun:
+                            </label>
+                            <div style="display:grid;gap:8px;">
+                                <label style="display:flex;align-items:center;gap:8px;padding:8px;border:2px solid #d1d5db;border-radius:6px;cursor:pointer;background:white;"
+                                       onmouseover="this.style.borderColor='#10b981'" 
+                                       onmouseout="this.style.borderColor='#d1d5db'">
+                                    <input type="radio" name="type-${domeinId}" value="informeel" checked
+                                           style="width:16px;height:16px;">
+                                    <span style="font-weight:600;color:#10b981;">🟢 Informeel</span>
+                                    <span style="font-size:0.8rem;color:#6b7280;">(Familie, vrienden)</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:8px;padding:8px;border:2px solid #d1d5db;border-radius:6px;cursor:pointer;background:white;"
+                                       onmouseover="this.style.borderColor='#8b5cf6'" 
+                                       onmouseout="this.style.borderColor='#d1d5db'">
+                                    <input type="radio" name="type-${domeinId}" value="collectief"
+                                           style="width:16px;height:16px;">
+                                    <span style="font-weight:600;color:#8b5cf6;">🟣 Collectief</span>
+                                    <span style="font-size:0.8rem;color:#6b7280;">(Buurt, vereniging)</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:8px;padding:8px;border:2px solid #d1d5db;border-radius:6px;cursor:pointer;background:white;"
+                                       onmouseover="this.style.borderColor='#3b82f6'" 
+                                       onmouseout="this.style.borderColor='#d1d5db'">
+                                    <input type="radio" name="type-${domeinId}" value="formeel"
+                                           style="width:16px;height:16px;">
+                                    <span style="font-weight:600;color:#3b82f6;">🔵 Formeel</span>
+                                    <span style="font-size:0.8rem;color:#6b7280;">(Professional)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="display:flex;gap:8px;">
+                            <button onclick="opslaanNewNetwerkLid('${domeinId}')"
+                                    style="flex:1;padding:10px;border:none;background:#10b981;color:white;
+                                           border-radius:6px;font-weight:600;cursor:pointer;font-size:0.9rem;"
+                                    onmouseover="this.style.background='#059669'"
+                                    onmouseout="this.style.background='#10b981'">
+                                ✅ Opslaan
+                            </button>
+                            <button onclick="annuleerAddMode()"
+                                    style="padding:10px 16px;border:2px solid #d1d5db;background:white;color:#6b7280;
+                                           border-radius:6px;font-weight:600;cursor:pointer;font-size:0.9rem;"
+                                    onmouseover="this.style.borderColor='#9ca3af'"
+                                    onmouseout="this.style.borderColor='#d1d5db'">
+                                Annuleren
+                            </button>
+                        </div>
                     </div>
                 `;
-            }).join('');
+            } else if (netwerk.length === 0) {
+                html += `<div style="color:#9ca3af;font-style:italic;font-size:0.9rem;">Nog niemand toegevoegd</div>`;
+            }
+            
+            return html;
         }
         
         function selectDoel(domeinId, doel) {
@@ -869,24 +941,47 @@
         }
         
         function voegNetwerkToe(domeinId) {
-            const naam = prompt('Wie helpt? (bijv. Zus Maria, Budgetcoach Jan, etc.)');
-            if (!naam || !naam.trim()) return;
+            // Activeer add mode voor dit domein
+            state.addModeActief = domeinId;
+            renderDoelen();
             
-            const typeKeuze = prompt('Type steun:\n1 = Familie/Vriend (Informeel)\n2 = Buurt/Vereniging (Collectief)\n3 = Professional (Formeel)\n\nKies 1, 2 of 3:');
+            // Focus op het naam input veld
+            setTimeout(() => {
+                const input = document.getElementById(`naam-${domeinId}`);
+                if (input) input.focus();
+            }, 100);
+        }
+        
+        function opslaanNewNetwerkLid(domeinId) {
+            const naamInput = document.getElementById(`naam-${domeinId}`);
+            const naam = naamInput ? naamInput.value.trim() : '';
             
-            let type = 'informeel';
-            if (typeKeuze === '2') type = 'collectief';
-            if (typeKeuze === '3') type = 'formeel';
+            if (!naam) {
+                alert('⚠️ Vul een naam in');
+                return;
+            }
             
+            // Haal geselecteerde type op
+            const typeRadios = document.querySelectorAll(`input[name="type-${domeinId}"]:checked`);
+            const type = typeRadios.length > 0 ? typeRadios[0].value : 'informeel';
+            
+            // Voeg toe aan state
             if (!state.netwerk) state.netwerk = {};
             if (!state.netwerk[domeinId]) state.netwerk[domeinId] = [];
             
             state.netwerk[domeinId].push({
-                naam: naam.trim(),
+                naam: naam,
                 type: type
             });
             
+            // Reset add mode
+            state.addModeActief = null;
             saveState();
+            renderDoelen();
+        }
+        
+        function annuleerAddMode() {
+            state.addModeActief = null;
             renderDoelen();
         }
         
