@@ -189,12 +189,8 @@
                 <div class="workflow-label">Actie</div>
             </div>
             <div class="workflow-step" data-screen="5">
-                <div class="workflow-icon">📊</div>
-                <div class="workflow-label">Plan</div>
-            </div>
-            <div class="workflow-step" data-screen="6">
                 <div class="workflow-icon">✅</div>
-                <div class="workflow-label">Afspraken</div>
+                <div class="workflow-label">Besluit</div>
             </div>
         </div>
         
@@ -206,11 +202,11 @@
                 
                 <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
                     <p style="margin: 0; color: #065f46; font-size: 0.95rem; line-height: 1.6;">
-                        <strong>✨ Nieuw in V3.2:</strong><br>
-                        • T0 → T1 netwerkbeweging zichtbaar<br>
-                        • Concrete afspraken (wie doet wat, wanneer)<br>
-                        • Print-functie voor cliënt<br>
-                        • Privacy-first export (consent + anonimisatie)
+                        <strong>✨ Nieuw in V3:</strong><br>
+                        • 4 schermen ipv 7 (sneller!)<br>
+                        • Doelen + Netwerk in één gesprek<br>
+                        • Automatische I/C/F labeling<br>
+                        • Evidence-based interventies per doel
                     </p>
                 </div>
                 
@@ -296,11 +292,11 @@
             </div>
         </div>
         
-        <!-- SCREEN 5: PLAN (Samenvatting + T0/T1) -->
-        <div class="screen" id="screen-plan">
+        <!-- SCREEN 5: BESLUIT -->
+        <div class="screen" id="screen-besluit">
             <div class="card">
-                <h1>📊 Het Plan</h1>
-                <p class="subtitle">Netwerkbeweging & interventies</p>
+                <h1>✅ Samenvatting & Afspraken</h1>
+                <p class="subtitle">Dit gaan we doen</p>
                 
                 <div id="samenvattingContainer">
                     <!-- Wordt gevuld door renderSamenvatting() -->
@@ -308,24 +304,6 @@
                 
                 <div class="btn-group">
                     <button class="btn-secondary" onclick="goToScreen(4)">← Terug</button>
-                    <button class="btn" onclick="goToScreen(6)">Volgende →</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- SCREEN 6: AFSPRAKEN & EVALUATIE -->
-        <div class="screen" id="screen-afspraken">
-            <div class="card">
-                <h1>✅ Concrete Afspraken</h1>
-                <p class="subtitle">Wie doet wat, en wanneer evalueren we?</p>
-                
-                <div id="afsprakenContainer">
-                    <!-- Wordt gevuld door renderAfspraken() -->
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn-secondary" onclick="goToScreen(5)">← Terug</button>
-                    <button class="btn" onclick="printOverzicht()" style="margin-right:auto;">📄 Print overzicht</button>
                     <button class="btn" onclick="exportN3()">📊 Exporteer naar N3</button>
                 </div>
             </div>
@@ -482,7 +460,7 @@
         // ============================================
         
         let state = {
-            version: '3.2', // Updated met afspraken-scherm
+            version: '3.1', // Updated voor ZIN-alignment
             clientNaam: '',
             doelgroepen: [],
             currentScreen: 1,
@@ -494,20 +472,16 @@
             
             // ZIN-specifieke data (T0-baseline)
             regieHuidigePositie: {}, // { domainId: 'client'|'familie'|'professional'|'niemand' }
-            huidigeSteutnType: {}, // { domeinId: 'informeel'|'collectief'|'formeel'|'geen' }
+            huidigeSteutnType: {}, // { domainId: 'informeel'|'collectief'|'formeel'|'geen' }
             
             // Doelen + Netwerk data
             doelen: {}, // { domainId: 'text' }
             betekenis: {}, // { domainId: 'text' } - Wat maakt dit zinvol?
-            netwerk: {}, // { domeinId: [{naam, type: 'informeel|collectief|formeel'}] }
+            netwerk: {}, // { domainId: [{naam, type: 'informeel|collectief|formeel'}] }
             addModeActief: null, // domeinId of form that is currently in add mode
             
             // Interventies
             geselecteerdeInterventies: [], // [{ naam, type, kosten }]
-            
-            // Afspraken & Evaluatie
-            afspraken: [], // [{ wat: 'text', wie: 'client|professional|familie', wanneer: 'deze-week|2-weken|1-maand' }]
-            evaluatieDatum: null, // '3-weken' | '6-weken' | '3-maanden' | null
             
             // Timestamps
             createdAt: null,
@@ -546,7 +520,7 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             
             // Show target screen
-            const screens = ['start', 'triage', 'doelen', 'interventies', 'plan', 'afspraken'];
+            const screens = ['start', 'triage', 'doelen', 'interventies', 'besluit'];
             const targetId = `screen-${screens[screenNum - 1]}`;
             const target = document.getElementById(targetId);
             
@@ -567,7 +541,6 @@
                 if (screenNum === 3) renderDoelen();
                 if (screenNum === 4) renderInterventies();
                 if (screenNum === 5) renderSamenvatting();
-                if (screenNum === 6) renderAfspraken();
             }
         }
         
@@ -1663,332 +1636,6 @@
         }
         
         // ============================================
-        // AFSPRAKEN & EVALUATIE
-        // ============================================
-        
-        function renderAfspraken() {
-            console.log('📋 Rendering afspraken scherm...');
-            
-            const afspraken = state.afspraken || [];
-            const evaluatieDatum = state.evaluatieDatum || null;
-            
-            let html = `
-                <div style="background:#e0f2fe;border-left:4px solid #0284c7;padding:16px;border-radius:8px;margin-bottom:24px;">
-                    <p style="margin:0;color:#075985;font-size:0.95rem;line-height:1.6;">
-                        <strong>💡 Belangrijk:</strong> Concrete afspraken voorkom dat het mooie plan in een la verdwijnt. 
-                        Wie doet wat, wanneer? En wanneer kijken we samen hoe het gaat?
-                    </p>
-                </div>
-                
-                <!-- ACTIELIJST -->
-                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px;">
-                    <h3 style="font-size:1.2rem;color:#374151;margin:0 0 16px;font-weight:800;">
-                        📋 Actielijst: Wie doet wat?
-                    </h3>
-                    
-                    <div id="actiesLijst" style="margin-bottom:16px;">
-                        ${afspraken.length === 0 ? `
-                            <div style="background:#f9fafb;padding:16px;border-radius:8px;color:#6b7280;font-style:italic;text-align:center;">
-                                Nog geen afspraken toegevoegd
-                            </div>
-                        ` : afspraken.map((afspraak, idx) => `
-                            <div style="display:flex;gap:12px;align-items:start;padding:12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:10px;">
-                                <div style="flex:1;">
-                                    <div style="font-weight:600;color:#374151;margin-bottom:4px;">${afspraak.wat}</div>
-                                    <div style="font-size:0.85rem;color:#6b7280;">
-                                        <span style="font-weight:600;">Wie:</span> ${afspraak.wie === 'client' ? state.clientNaam || 'Cliënt' : afspraak.wie === 'professional' ? 'Professional' : 'Familie/netwerk'}
-                                        &nbsp;•&nbsp;
-                                        <span style="font-weight:600;">Wanneer:</span> ${afspraak.wanneer === 'deze-week' ? 'Deze week' : afspraak.wanneer === '2-weken' ? 'Binnen 2 weken' : 'Binnen 1 maand'}
-                                    </div>
-                                </div>
-                                <button onclick="verwijderAfspraak(${idx})" 
-                                        style="padding:6px 10px;border:1px solid #fca5a5;background:#fee2e2;
-                                               color:#dc2626;border-radius:6px;font-size:0.8rem;cursor:pointer;">
-                                    🗑️
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <!-- NIEUW AFSPRAAK TOEVOEGEN -->
-                    <div style="background:#f0fdf4;border:2px dashed #10b981;border-radius:10px;padding:16px;">
-                        <div style="font-weight:700;color:#166534;margin-bottom:12px;">➕ Nieuwe afspraak toevoegen:</div>
-                        
-                        <div style="margin-bottom:12px;">
-                            <label style="display:block;font-weight:600;margin-bottom:6px;font-size:0.9rem;color:#374151;">
-                                Wat moet er gebeuren?
-                            </label>
-                            <input type="text" id="nieuwe-afspraak-wat" 
-                                   placeholder="Bijv. Budgetcoach bellen, Eigen Kracht Conferentie regelen..."
-                                   style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
-                        </div>
-                        
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-                            <div>
-                                <label style="display:block;font-weight:600;margin-bottom:6px;font-size:0.9rem;color:#374151;">
-                                    Wie doet dit?
-                                </label>
-                                <select id="nieuwe-afspraak-wie" 
-                                        style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
-                                    <option value="client">${state.clientNaam || 'Cliënt'}</option>
-                                    <option value="professional">Professional</option>
-                                    <option value="familie">Familie/netwerk</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label style="display:block;font-weight:600;margin-bottom:6px;font-size:0.9rem;color:#374151;">
-                                    Wanneer?
-                                </label>
-                                <select id="nieuwe-afspraak-wanneer" 
-                                        style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
-                                    <option value="deze-week">Deze week</option>
-                                    <option value="2-weken">Binnen 2 weken</option>
-                                    <option value="1-maand">Binnen 1 maand</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <button onclick="voegAfspraakToe()" 
-                                style="width:100%;padding:12px;border:none;background:#10b981;color:white;
-                                       border-radius:8px;font-weight:700;cursor:pointer;font-size:0.95rem;"
-                                onmouseover="this.style.background='#059669'" 
-                                onmouseout="this.style.background='#10b981'">
-                            ✅ Afspraak toevoegen
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- EVALUATIE DATUM -->
-                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px;">
-                    <h3 style="font-size:1.2rem;color:#374151;margin:0 0 12px;font-weight:800;">
-                        📅 Wanneer evalueren we?
-                    </h3>
-                    <p style="font-size:0.9rem;color:#6b7280;margin:0 0 16px;">
-                        Plan een moment om te kijken: Zijn de afspraken nagekomen? Is het gelukt? Wat moet anders?
-                    </p>
-                    
-                    <div style="display:grid;gap:10px;">
-                        ${['3-weken', '6-weken', '3-maanden', 'geen'].map(optie => {
-                            const labels = {
-                                '3-weken': '📆 Over 3 weken',
-                                '6-weken': '📆 Over 6 weken',
-                                '3-maanden': '📆 Over 3 maanden',
-                                'geen': '⊘ Geen evaluatie nodig'
-                            };
-                            return `
-                                <label style="display:flex;align-items:center;gap:12px;padding:12px;
-                                              border:2px solid ${evaluatieDatum === optie ? 'var(--primary)' : '#e5e7eb'};
-                                              background:${evaluatieDatum === optie ? 'var(--primary-light)' : 'white'};
-                                              border-radius:8px;cursor:pointer;transition:all 0.2s;"
-                                       onmouseover="if('${evaluatieDatum}' !== '${optie}') this.style.borderColor='#9ca3af'"
-                                       onmouseout="if('${evaluatieDatum}' !== '${optie}') this.style.borderColor='#e5e7eb'">
-                                    <input type="radio" name="evaluatie" value="${optie}" 
-                                           ${evaluatieDatum === optie ? 'checked' : ''}
-                                           onchange="setEvaluatieDatum('${optie}')"
-                                           style="width:18px;height:18px;">
-                                    <span style="font-weight:600;color:#374151;">${labels[optie]}</span>
-                                </label>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                
-                <!-- WAARSCHUWING ALS LEEG -->
-                ${afspraken.length === 0 || !evaluatieDatum || evaluatieDatum === 'geen' ? `
-                    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:10px;padding:16px;margin-bottom:24px;">
-                        <div style="display:flex;align-items:start;gap:12px;">
-                            <div style="font-size:2rem;">⚠️</div>
-                            <div>
-                                <div style="font-weight:700;color:#92400e;margin-bottom:4px;">
-                                    ${afspraken.length === 0 ? 'Nog geen afspraken gemaakt' : 'Geen evaluatie ingepland'}
-                                </div>
-                                <div style="font-size:0.9rem;color:#78350f;">
-                                    ${afspraken.length === 0 
-                                        ? 'Zonder concrete afspraken wordt dit plan waarschijnlijk niet uitgevoerd. Voeg minstens 1-2 afspraken toe.' 
-                                        : 'Zonder evaluatie weet je niet of het plan werkt. Plan een terugbelmoment in.'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ` : ''}
-            `;
-            
-            document.getElementById('afsprakenContainer').innerHTML = html;
-        }
-        
-        function voegAfspraakToe() {
-            const wat = document.getElementById('nieuwe-afspraak-wat').value.trim();
-            const wie = document.getElementById('nieuwe-afspraak-wie').value;
-            const wanneer = document.getElementById('nieuwe-afspraak-wanneer').value;
-            
-            if (!wat) {
-                alert('⚠️ Vul in wat er moet gebeuren');
-                return;
-            }
-            
-            if (!state.afspraken) state.afspraken = [];
-            
-            state.afspraken.push({ wat, wie, wanneer });
-            
-            // Reset form
-            document.getElementById('nieuwe-afspraak-wat').value = '';
-            
-            saveState();
-            renderAfspraken();
-            
-            console.log('✅ Afspraak toegevoegd:', { wat, wie, wanneer });
-        }
-        
-        function verwijderAfspraak(index) {
-            if (!state.afspraken) return;
-            state.afspraken.splice(index, 1);
-            saveState();
-            renderAfspraken();
-        }
-        
-        function setEvaluatieDatum(datum) {
-            state.evaluatieDatum = datum;
-            saveState();
-            renderAfspraken();
-            console.log('📅 Evaluatie datum gezet:', datum);
-        }
-        
-        // ============================================
-        // PRINT OVERZICHT
-        // ============================================
-        
-        function printOverzicht() {
-            const afspraken = state.afspraken || [];
-            const evaluatieDatum = state.evaluatieDatum;
-            const interventies = state.geselecteerdeInterventies || [];
-            const focusDomeinen = domains.filter(d => state.scores[d.id] === 1 || state.scores[d.id] === 2);
-            
-            // Bereken T0 en T1
-            let t0_i = 0, t0_c = 0, t0_f = 0;
-            focusDomeinen.forEach(d => {
-                const type = state.huidigeSteutnType[d.id];
-                if (type === 'informeel') t0_i++;
-                else if (type === 'collectief') t0_c++;
-                else if (type === 'formeel') t0_f++;
-            });
-            
-            let t1_i = 0, t1_c = 0, t1_f = 0;
-            interventies.forEach(int => {
-                if (int.type.includes('I')) t1_i++;
-                if (int.type.includes('C')) t1_c++;
-                if (int.type.includes('F')) t1_f++;
-            });
-            
-            const totaal_t0 = focusDomeinen.length || 1;
-            const totaal_t1 = t1_i + t1_c + t1_f || 1;
-            
-            // Genereer print-vriendelijke HTML
-            const printWindow = window.open('', '', 'width=800,height=600');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Netwerkplan - ${state.clientNaam}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
-                        h1 { color: #0284c7; border-bottom: 3px solid #0284c7; padding-bottom: 10px; }
-                        h2 { color: #374151; margin-top: 30px; }
-                        .section { margin-bottom: 30px; }
-                        .focus-domain { background: #f9fafb; padding: 10px; margin-bottom: 10px; border-left: 4px solid #10b981; }
-                        .actie { background: #f0fdf4; padding: 12px; margin-bottom: 8px; border-radius: 6px; }
-                        .meta { color: #6b7280; font-size: 0.9em; }
-                        .footer { margin-top: 50px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 0.9em; }
-                        @media print {
-                            body { padding: 20px; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>🌈 Netwerkplan voor ${state.clientNaam}</h1>
-                    <div class="meta">
-                        Datum: ${new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })}<br>
-                        Professional: [Naam invullen]
-                    </div>
-                    
-                    <div class="section">
-                        <h2>🎯 Focusgebieden</h2>
-                        ${focusDomeinen.map(d => `
-                            <div class="focus-domain">
-                                <strong>${d.emoji} ${d.name}</strong><br>
-                                <span class="meta">
-                                    Doel: ${state.doelen[d.id] || '(Niet ingevuld)'}
-                                    ${state.betekenis && state.betekenis[d.id] ? `<br>Betekenis: ${state.betekenis[d.id]}` : ''}
-                                </span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <div class="section">
-                        <h2>🔄 Netwerkbeweging</h2>
-                        <table style="width:100%;border-collapse:collapse;">
-                            <tr>
-                                <th style="text-align:left;padding:8px;border-bottom:2px solid #e5e7eb;">T0 (Nu)</th>
-                                <th style="text-align:left;padding:8px;border-bottom:2px solid #e5e7eb;">T1 (Straks)</th>
-                            </tr>
-                            <tr>
-                                <td style="padding:8px;">
-                                    🟢 Informeel: ${Math.round((t0_i/totaal_t0)*100)}%<br>
-                                    🟣 Collectief: ${Math.round((t0_c/totaal_t0)*100)}%<br>
-                                    🔵 Formeel: ${Math.round((t0_f/totaal_t0)*100)}%
-                                </td>
-                                <td style="padding:8px;">
-                                    🟢 Informeel: ${Math.round((t1_i/totaal_t1)*100)}%<br>
-                                    🟣 Collectief: ${Math.round((t1_c/totaal_t1)*100)}%<br>
-                                    🔵 Formeel: ${Math.round((t1_f/totaal_t1)*100)}%
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    
-                    <div class="section">
-                        <h2>✅ Afgesproken acties</h2>
-                        ${afspraken.length === 0 ? '<p class="meta">Geen afspraken geregistreerd</p>' : 
-                          afspraken.map((a, i) => `
-                            <div class="actie">
-                                <strong>${i+1}. ${a.wat}</strong><br>
-                                <span class="meta">
-                                    Door: ${a.wie === 'client' ? state.clientNaam : a.wie === 'professional' ? 'Professional' : 'Familie/netwerk'}
-                                    &nbsp;•&nbsp;
-                                    Wanneer: ${a.wanneer === 'deze-week' ? 'Deze week' : a.wanneer === '2-weken' ? 'Binnen 2 weken' : 'Binnen 1 maand'}
-                                </span>
-                            </div>
-                          `).join('')
-                        }
-                    </div>
-                    
-                    <div class="section">
-                        <h2>📅 Evaluatie</h2>
-                        <p>
-                            ${evaluatieDatum && evaluatieDatum !== 'geen' 
-                                ? `<strong>Terugbelafspraak: ${
-                                    evaluatieDatum === '3-weken' ? 'Over 3 weken' :
-                                    evaluatieDatum === '6-weken' ? 'Over 6 weken' : 'Over 3 maanden'
-                                  }</strong>`
-                                : '<span class="meta">Geen evaluatie ingepland</span>'
-                            }
-                        </p>
-                    </div>
-                    
-                    <div class="footer">
-                        <p>Dit netwerkplan is opgesteld met de RPA Positionele Analyse tool (V3.2).<br>
-                        Gebaseerd op de ZIN-methodiek (Zelf In Netwerk) - Laura Terbrack.</p>
-                    </div>
-                    
-                    <script>
-                        window.print();
-                    </script>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-        }
-        
-        // ============================================
         // EXPORT N3 - CONSENT FLOW
         // ============================================
         
@@ -2198,7 +1845,7 @@
                 : state.clientNaam;
             
             return {
-                versie: '3.2',
+                versie: '3.0',
                 exportDate: new Date().toISOString(),
                 consent: {
                     gegeven: true,
@@ -2213,8 +1860,7 @@
                     id: d.id,
                     naam: d.name,
                     status: state.scores[d.id] === 1 ? 'urgent' : 'aandacht',
-                    doel: state.doelen[d.id] || null,
-                    betekenis: state.betekenis ? state.betekenis[d.id] : null
+                    doel: state.doelen[d.id] || null
                 })),
                 netwerk: state.netwerk,
                 interventies: interventies.map(int => {
@@ -2244,15 +1890,8 @@
                     formeel: Math.round((formeelCount / totaal) * 100),
                     totaalAantalInterventies: interventies.length
                 },
-                afspraken: state.afspraken || [],
-                evaluatie: {
-                    datum: state.evaluatieDatum,
-                    beschrijving: state.evaluatieDatum === '3-weken' ? 'Over 3 weken' :
-                                 state.evaluatieDatum === '6-weken' ? 'Over 6 weken' :
-                                 state.evaluatieDatum === '3-maanden' ? 'Over 3 maanden' : 'Geen evaluatie ingepland'
-                },
                 metadata: {
-                    professional: 'RPA V3.2',
+                    professional: 'RPA V3',
                     sessieId: state.createdAt,
                     laatstGewijzigd: state.updatedAt
                 }
