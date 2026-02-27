@@ -868,13 +868,19 @@
                 
                 const btn = (val, emoji, label, color, bg) =>
                     `<button onclick="setStoplicht('${d.id}','${val}')"
-                        style="border:2px solid ${status===val ? color : '#e5e7eb'};
-                               background:${status===val ? bg : 'white'};
+                        class="${status===val ? 'wow-card' : ''}"
+                        style="border:${status===val ? '3px' : '2px'} solid ${status===val ? color : '#e5e7eb'};
+                               background:${status===val ? `linear-gradient(135deg, ${bg} 0%, ${bg}dd 100%)` : 'white'};
                                color:${status===val ? color : '#9ca3af'};
-                               border-radius:6px;padding:8px 12px;
-                               font-size:0.85rem;font-weight:600;cursor:pointer;
-                               white-space:nowrap;transition:all 0.2s;">
-                        ${emoji} ${label}
+                               border-radius:10px;padding:10px 16px;
+                               font-size:0.9rem;font-weight:${status===val ? '800' : '600'};cursor:pointer;
+                               white-space:nowrap;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                               box-shadow:${status===val ? `0 4px 12px ${color}40` : '0 1px 3px rgba(0,0,0,0.05)'};
+                               transform:${status===val ? 'scale(1.05)' : 'scale(1)'};
+                               font-size:${status===val ? '1rem' : '0.85rem'};"
+                        onmouseover="if('${status}'!=='${val}')this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'"
+                        onmouseout="if('${status}'!=='${val}')this.style.transform='scale(1)';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'">
+                        <span style="font-size:1.2rem;margin-right:4px;">${emoji}</span> ${label}
                     </button>`;
                 
                 const notitie = (state.triageNotities && state.triageNotities[d.id]) || '';
