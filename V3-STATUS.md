@@ -24,33 +24,46 @@ http://localhost:3458/positioneel-v3.html
 
 ---
 
-## 🚧 VANDAAG BOUWEN (26 feb)
+## ✅ KLAAR (27 feb 04:20)
 
 ### Prioriteit 1: Core functionaliteit
-- [ ] Kopieer triage stoplicht uit V2
-- [ ] Kopieer domains definitie uit V2
-- [ ] Kopieer evidence-based interventies database uit V2
-- [ ] Test navigatie V2 triage → V3 flow
+- ✅ Kopieer triage stoplicht uit V2
+- ✅ Kopieer domains definitie uit V2
+- ✅ Kopieer evidence-based interventies database uit V2
+- ✅ Test navigatie V2 triage → V3 flow
 
 ### Prioriteit 2: Doelen+Netwerk scherm (NIEUW!)
-- [ ] Bouw doelen-keuze interface
-- [ ] Maak basis doelen-database (33 algemene doelen)
-- [ ] Bouw netwerk-input (naam + type)
-- [ ] I/C/F auto-labeling logica
-- [ ] Test hele flow
+- ✅ Bouw doelen-keuze interface
+- ✅ Maak basis doelen-database (33 algemene doelen)
+- ✅ Bouw netwerk-input (naam + type)
+- ✅ I/C/F auto-labeling logica
+- ✅ Test hele flow
+
+### Prioriteit 3: Interventies scherm (NIEUW!)
+- ✅ Evidence-based database (11 domeinen)
+- ✅ Render per domein (alleen rood/geel)
+- ✅ Metadata badges (evidence/kosten/beschikbaarheid)
+- ✅ Mantelzorg-specifieke interventies
+- ✅ Checkbox selectie
+
+### Prioriteit 4: Samenvatting scherm (NIEUW!)
+- ✅ I/C/F verdeling visualisatie
+- ✅ Slimme feedback (balans waarschuwing)
+- ✅ Overzicht geselecteerde interventies
+- ✅ N3 export (JSON download)
 
 ---
 
 ## 📅 PLANNING
 
 ### Week 1 (26 feb - 2 mrt)
-**Doel:** Werkende basis flow
+**Doel:** Werkende basis flow ✅ **BEREIKT!**
 
-- **Dag 1 (26 feb):** ✅ Foundation + Triage gekopieerd
-- **Dag 2 (27 feb):** Doelen+Netwerk scherm basis
-- **Dag 3 (28 feb):** Doelen database + suggesties
-- **Dag 4 (1 mrt):** I/C/F auto-labeling
-- **Dag 5 (2 mrt):** Test + bugs
+- **Dag 1 (26 feb):** ✅ Foundation + Triage
+- **Dag 2 (27 feb):** ✅ Interventies + Samenvatting + N3 export (**AHEAD OF SCHEDULE!**)
+- **Dag 3 (28 feb):** Laura feedback + polish
+- **Dag 4 (1 mrt):** Extra features (regie-vraag, duurzaamheid)
+- **Dag 5 (2 mrt):** Testing + documentatie
 
 ### Week 2 (3-9 mrt)
 **Doel:** Interventies + export
@@ -83,24 +96,33 @@ http://localhost:3458/positioneel-v3.html
 - **Technische schuld:** Laag (clean slate)
 
 ### V3 (nu)
-- **Regels:** 400 (foundation)
-- **Compleet:** ~5%
+- **Regels:** 1.346 
+- **Compleet:** ~75% ✅
 
 ---
 
 ## 🎯 VOLGENDE STAPPEN
 
-**Als Laura vanavond terugkomt:**
+**Test nu:**
 
-1. Test `positioneel-v3.html`
-2. Kijk of navigatie werkt
-3. Start scherm werkt (naam + doelgroep)
-4. Feedback geven op look & feel
+```bash
+cd ~/Documents/Projects/welzijnswerker
+python3 -m http.server 3458
+```
 
-**Marie bouwt verder:**
-- Vandaag: Triage + Doelen scherm
-- Morgen: Interventies + Export
-- Overmorgen: Polish + testing
+Open: `http://localhost:3458/positioneel-v3.html`
+
+**Test flow:**
+1. Start → Naam + doelgroep
+2. Triage → Klik domeinen rood/geel
+3. Doelen+Netwerk → Kies doelen + voeg helpers toe
+4. Interventies → Selecteer acties (check mantelzorg-sectie!)
+5. Samenvatting → Zie I/C/F verdeling + export naar N3
+
+**Marie wacht op:**
+- Laura's feedback
+- Bugs/wensen
+- Prioriteit volgende features
 
 ---
 
