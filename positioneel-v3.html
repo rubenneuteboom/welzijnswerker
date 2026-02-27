@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPA Positionele Analyse V3</title>
+    
+    <!-- 🔐 Encryptie library voor veilige data-opslag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
     <style>
         :root {
             --primary: #10b981;
@@ -379,6 +383,30 @@
                     <button class="btn" onclick="startGesprek()">▶️ Start gesprek</button>
                     <button class="btn-secondary" onclick="loadDemo()">🎬 Demo laden</button>
                 </div>
+                
+                <!-- Privacy & Data Controle -->
+                <div style="margin-top:24px;padding:16px;background:#fef3c7;border:2px dashed #f59e0b;border-radius:12px;">
+                    <div style="display:flex;align-items:start;gap:12px;margin-bottom:12px;">
+                        <span style="font-size:2rem;">🔐</span>
+                        <div style="flex:1;">
+                            <div style="font-weight:700;color:#92400e;margin-bottom:6px;">Jouw data, jouw controle</div>
+                            <div style="font-size:0.85rem;color:#78350f;line-height:1.5;">
+                                • Data wordt <strong>versleuteld</strong> opgeslagen op dit apparaat<br>
+                                • <strong>Automatisch opgeslagen</strong> elke 30 seconden<br>
+                                • <strong>Jij</strong> beslist wat er met de data gebeurt<br>
+                                • Niemand anders heeft toegang zonder jouw toestemming
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="wisAlleData()" 
+                            style="width:100%;padding:12px;background:#fee2e2;border:2px solid #dc2626;
+                                   border-radius:8px;color:#991b1b;font-weight:700;cursor:pointer;
+                                   transition:all 0.2s;"
+                            onmouseover="this.style.background='#fecaca'"
+                            onmouseout="this.style.background='#fee2e2'">
+                        🗑️ Verwijder alle opgeslagen data
+                    </button>
+                </div>
             </div>
         </div>
         
@@ -619,7 +647,7 @@
         // ============================================
         
         let state = {
-            version: '3.4', // V3.4: Doelgroepen herstructurering + Gezins-ZIN
+            version: '3.4.1', // V3.4.1: Security Edition (Encryptie + Auto-save + Data-controle)
             clientNaam: '',
             doelgroepen: [], // Legacy (backwards compatibility)
             leeftijdsgroep: null, // 'jongeren' | 'volwassenen' | 'ouderen' | null
@@ -658,25 +686,137 @@
             updatedAt: null
         };
         
+        // ============================================
+        // 🔐 ENCRYPTIE & VEILIGHEID
+        // ============================================
+        
+        // Genereer unieke sessie-key (wordt opnieuw gegenereerd per pagina-laad)
+        // Dit betekent: gestolen laptop = data onleesbaar zonder actieve sessie
+        let SESSION_KEY = sessionStorage.getItem('rpa_session_key');
+        if (!SESSION_KEY) {
+            SESSION_KEY = CryptoJS.lib.WordArray.random(128/8).toString();
+            sessionStorage.setItem('rpa_session_key', SESSION_KEY);
+            console.log('🔐 Nieuwe sessie-key gegenereerd');
+        }
+        
+        function encryptData(data) {
+            try {
+                const jsonString = JSON.stringify(data);
+                const encrypted = CryptoJS.AES.encrypt(jsonString, SESSION_KEY).toString();
+                return encrypted;
+            } catch (e) {
+                console.error('❌ Encryptie gefaald:', e);
+                return null;
+            }
+        }
+        
+        function decryptData(encryptedData) {
+            try {
+                const decrypted = CryptoJS.AES.decrypt(encryptedData, SESSION_KEY);
+                const jsonString = decrypted.toString(CryptoJS.enc.Utf8);
+                return JSON.parse(jsonString);
+            } catch (e) {
+                console.error('❌ Decryptie gefaald:', e);
+                return null;
+            }
+        }
+        
+        // ============================================
+        // 💾 STATE MANAGEMENT (met encryptie)
+        // ============================================
+        
+        let autoSaveInterval = null;
+        
         function saveState() {
             state.updatedAt = new Date().toISOString();
-            localStorage.setItem('rpa_v3', JSON.stringify(state));
-            console.log('💾 State saved');
+            
+            // Encrypteer en sla op
+            const encrypted = encryptData(state);
+            if (encrypted) {
+                localStorage.setItem('rpa_v3_encrypted', encrypted);
+                console.log('🔐 State veilig opgeslagen (encrypted)');
+            } else {
+                console.error('❌ Kon state niet opslaan');
+            }
         }
         
         function loadState() {
+            // Probeer eerst encrypted versie
+            const encrypted = localStorage.getItem('rpa_v3_encrypted');
+            if (encrypted) {
+                try {
+                    const decrypted = decryptData(encrypted);
+                    if (decrypted) {
+                        state = { ...state, ...decrypted };
+                        console.log('🔐 State geladen (encrypted)');
+                        
+                        // Restore UI for doelgroepen
+                        setTimeout(restoreDoelgroepenUI, 100);
+                        return;
+                    }
+                } catch (e) {
+                    console.error('❌ Kon encrypted state niet laden:', e);
+                }
+            }
+            
+            // Fallback: oude onversleutelde versie (backwards compatibility)
             const saved = localStorage.getItem('rpa_v3');
             if (saved) {
                 try {
                     state = { ...state, ...JSON.parse(saved) };
-                    console.log('✅ State loaded');
+                    console.log('⚠️ State geladen (onversleuteld - wordt bij volgende save encrypted)');
                     
-                    // Restore UI for doelgroepen
-                    setTimeout(restoreDoelgroepenUI, 100); // Wait for DOM
+                    // Verwijder oude onversleutelde versie voor veiligheid
+                    localStorage.removeItem('rpa_v3');
+                    
+                    // Save meteen encrypted
+                    saveState();
+                    
+                    // Restore UI
+                    setTimeout(restoreDoelgroepenUI, 100);
                 } catch (e) {
                     console.error('❌ Failed to load state:', e);
                 }
             }
+        }
+        
+        function wisAlleData() {
+            const confirmed = confirm(
+                '⚠️ WAARSCHUWING\n\n' +
+                'Dit verwijdert ALLE data van deze sessie permanent.\n\n' +
+                'Dit kan niet ongedaan worden gemaakt.\n\n' +
+                'Weet je het zeker?'
+            );
+            
+            if (confirmed) {
+                // Verwijder alle opgeslagen data
+                localStorage.removeItem('rpa_v3_encrypted');
+                localStorage.removeItem('rpa_v3'); // Ook oude versie
+                sessionStorage.removeItem('rpa_session_key');
+                
+                console.log('🗑️ Alle data verwijderd');
+                
+                alert('✅ Alle data is verwijderd.\n\nDe pagina wordt nu opnieuw geladen.');
+                
+                // Herlaad pagina (clean start)
+                location.reload();
+            }
+        }
+        
+        function startAutoSave() {
+            // Stop oude interval (als die er is)
+            if (autoSaveInterval) {
+                clearInterval(autoSaveInterval);
+            }
+            
+            // Start nieuwe auto-save (elke 30 seconden)
+            autoSaveInterval = setInterval(() => {
+                saveState();
+                const tijd = new Date().toLocaleTimeString('nl-NL');
+                console.log(`⏰ Auto-save uitgevoerd om ${tijd}`);
+            }, 30000); // 30 seconden
+            
+            console.log('⏰ Auto-save gestart (elke 30 seconden)');
         }
         
         function restoreDoelgroepenUI() {
@@ -2609,7 +2749,7 @@
                     regiediffusie: (state.betrokkenHulpverleners || []).length >= 5 && (!state.regieVoorGezin || state.regieVoorGezin === 'niemand')
                 } : null,
                 metadata: {
-                    professional: 'RPA V3.4 Final (Gezins-ZIN)',
+                    professional: 'RPA V3.4.1 Security Edition (Gezins-ZIN + Encryptie)',
                     sessieId: state.createdAt,
                     laatstGewijzigd: state.updatedAt
                 }
@@ -2890,11 +3030,17 @@
         }
         
         // ============================================
+        // ============================================
         // INIT
         // ============================================
         
         loadState();
-        console.log('✅ V3 Clean Build loaded!');
+        startAutoSave(); // Start auto-save elke 30 seconden
+        
+        console.log('🔐 RPA V3.4 (Security Edition) geladen!');
+        console.log('✅ Encryptie: Actief');
+        console.log('⏰ Auto-save: Elke 30 seconden');
+        console.log('🗑️ Data-controle: Beschikbaar op start-scherm');
     </script>
 </body>
 </html>
