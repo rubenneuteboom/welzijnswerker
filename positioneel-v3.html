@@ -1016,7 +1016,199 @@
         }
         
         function loadDemo() {
-            alert('🎬 Demo functie komt binnenkort!');
+            const confirmed = confirm(
+                '🎬 DEMO LADEN\n\n' +
+                'Dit laadt een voorbeeld-casus: Familie Jansen.\n\n' +
+                'Let op: Dit overschrijft eventuele bestaande data.\n\n' +
+                'Doorgaan?'
+            );
+            
+            if (!confirmed) return;
+            
+            // Demo data: Gezin met multi-problematiek (regiediffusie scenario)
+            state = {
+                version: '3.4.1',
+                clientNaam: 'Mw. Jansen (45 jaar)',
+                leeftijdsgroep: 'volwassenen',
+                extraAandacht: ['mantelzorg', 'gezin'],
+                currentScreen: 1,
+                
+                // Triage: Mix van problemen
+                domainStatus: {
+                    'financien': 'steun-nodig',
+                    'dagbesteding': 'steun-aanwezig',
+                    'huisvesting': 'goed',
+                    'huiselijk': 'steun-nodig',
+                    'geestelijk': 'steun-nodig',
+                    'lichamelijk': 'steun-aanwezig',
+                    'verslaving': 'goed',
+                    'adl': 'goed',
+                    'sociaal': 'steun-nodig',
+                    'participatie': 'steun-aanwezig',
+                    'justitie': 'goed'
+                },
+                
+                scores: {
+                    'financien': 1,
+                    'dagbesteding': 2,
+                    'huisvesting': 3,
+                    'huiselijk': 1,
+                    'geestelijk': 1,
+                    'lichamelijk': 2,
+                    'verslaving': 3,
+                    'adl': 3,
+                    'sociaal': 1,
+                    'participatie': 2,
+                    'justitie': 3
+                },
+                
+                triageNotities: {
+                    'financien': 'Schulden €15.000, bewindvoering aangevraagd',
+                    'huiselijk': 'Spanning met puber zoon, relatie onder druk',
+                    'geestelijk': 'Depressie, in behandeling bij GGZ',
+                    'sociaal': 'Sociaal geïsoleerd, schaamt zich voor situatie'
+                },
+                
+                // ZIN T0-baseline
+                regieHuidigePositie: {
+                    'financien': 'professional',
+                    'huiselijk': 'niemand',
+                    'geestelijk': 'professional',
+                    'sociaal': 'client'
+                },
+                
+                huidigeSteutnType: {
+                    'financien': 'formeel',
+                    'dagbesteding': 'collectief',
+                    'huiselijk': 'formeel',
+                    'geestelijk': 'formeel',
+                    'lichamelijk': 'formeel',
+                    'sociaal': 'geen',
+                    'participatie': 'informeel'
+                },
+                
+                // Doelen
+                doelen: {
+                    'financien': 'Schulden onder controle krijgen',
+                    'huiselijk': 'Betere relatie met zoon, minder spanning thuis',
+                    'geestelijk': 'Minder depressief, weer energie voor dagelijks leven',
+                    'sociaal': 'Weer contact met buren en oude vrienden'
+                },
+                
+                betekenis: {
+                    'huiselijk': 'Mijn gezin is het belangrijkste. Ik wil dat mijn zoon een fijne jeugd heeft.',
+                    'geestelijk': 'Ik wil weer de oude ik zijn - vrolijk en energiek',
+                    'sociaal': 'Ik mis het om gewoon met mensen te praten zonder me te schamen'
+                },
+                
+                // Netwerk (triggert draagkracht-alarm!)
+                netwerk: {
+                    'huiselijk': [
+                        { naam: 'Zus (Linda)', type: 'informeel' },
+                        { naam: 'Zus (Linda)', type: 'informeel' },
+                        { naam: 'Zus (Linda)', type: 'informeel' }
+                    ],
+                    'geestelijk': [
+                        { naam: 'Zus (Linda)', type: 'informeel' },
+                        { naam: 'GGZ-behandelaar', type: 'formeel' }
+                    ],
+                    'sociaal': [
+                        { naam: 'Zus (Linda)', type: 'informeel' }
+                    ],
+                    'lichamelijk': [
+                        { naam: 'Zus (Linda)', type: 'informeel' },
+                        { naam: 'Huisarts', type: 'formeel' }
+                    ],
+                    'participatie': [
+                        { naam: 'Buurvrouw', type: 'informeel' }
+                    ]
+                },
+                
+                familieNietBetrekken: {},
+                
+                // Gezins-ZIN: Regiediffusie scenario!
+                betrokkenHulpverleners: [
+                    { naam: 'Wijkteam medewerker', rol: 'Algemeen aanspreekpunt' },
+                    { naam: 'GGZ-behandelaar', rol: 'Voor moeder (depressie)' },
+                    { naam: 'Jeugdhulpverlener', rol: 'Voor zoon (gedragsproblemen)' },
+                    { naam: 'Schuldhulpverlener', rol: 'Financiën' },
+                    { naam: 'Bewindvoerder', rol: 'Budgetbeheer' },
+                    { naam: 'Huisarts', rol: 'Lichamelijke klachten moeder' },
+                    { naam: 'Leerplichtambtenaar', rol: 'Schoolverzuim zoon' },
+                    { naam: 'Maatschappelijk werk school', rol: 'Schoolondersteuning zoon' }
+                ],
+                regieVoorGezin: 'niemand', // → Triggert regiediffusie alarm!
+                
+                // Interventies (voorbeelden)
+                geselecteerdeInterventies: [
+                    { 
+                        naam: 'Gezinscoaching',
+                        type: 'F',
+                        domein: 'huiselijk',
+                        evidence: 'promising',
+                        kosten: 'gratis',
+                        beschikbaarheid: 'direct'
+                    },
+                    { 
+                        naam: 'Eigen Kracht Conferentie - Gezin',
+                        type: 'I/C',
+                        domein: 'huiselijk',
+                        evidence: 'evidence-based',
+                        kosten: 'gratis',
+                        beschikbaarheid: 'direct'
+                    },
+                    { 
+                        naam: 'Schuldhulpverlening',
+                        type: 'F',
+                        domein: 'financien',
+                        evidence: 'evidence-based',
+                        kosten: 'gratis',
+                        beschikbaarheid: 'wachtlijst'
+                    },
+                    { 
+                        naam: 'Buurtnetwerk activeren',
+                        type: 'I',
+                        domein: 'sociaal',
+                        evidence: 'promising',
+                        kosten: 'gratis',
+                        beschikbaarheid: 'direct'
+                    }
+                ],
+                
+                // Afspraken
+                afspraken: [
+                    { wat: 'Gezinscoach eerste gesprek inplannen', wie: 'professional', wanneer: 'deze-week' },
+                    { wat: 'Familie informeren over Eigen Kracht Conferentie', wie: 'client', wanneer: 'deze-week' },
+                    { wat: 'Contact met buurvrouw weer oppakken', wie: 'client', wanneer: '2-weken' }
+                ],
+                evaluatieDatum: '6-weken',
+                
+                // Timestamps
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            saveState();
+            
+            alert(
+                '✅ DEMO GELADEN!\n\n' +
+                '📋 Casus: Mw. Jansen (45)\n' +
+                '- Volwassene + Mantelzorger + Gezin multi-problematiek\n' +
+                '- 8 hulpverleners, GEEN regie → Regiediffusie!\n' +
+                '- Zus draagt >80% → Overbelasting-alarm!\n\n' +
+                '🎯 Klik door de schermen om alle features te zien!'
+            );
+            
+            // Reset naar start scherm
+            goToScreen(1);
+            
+            // Restore UI
+            setTimeout(() => {
+                restoreDoelgroepenUI();
+                document.getElementById('clientNaam').value = state.clientNaam;
+            }, 100);
+            
+            console.log('🎬 Demo data geladen - Familie Jansen');
         }
         
         // ============================================
