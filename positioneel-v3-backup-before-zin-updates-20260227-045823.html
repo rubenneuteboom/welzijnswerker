@@ -460,7 +460,7 @@
         // ============================================
         
         let state = {
-            version: '3.1', // Updated voor ZIN-alignment
+            version: '3.0',
             clientNaam: '',
             doelgroepen: [],
             currentScreen: 1,
@@ -470,13 +470,8 @@
             scores: {}, // { domainId: 1|2|3 } - syncs with domainStatus
             triageNotities: {}, // { domainId: 'notitie text' }
             
-            // ZIN-specifieke data (T0-baseline)
-            regieHuidigePositie: {}, // { domainId: 'client'|'familie'|'professional'|'niemand' }
-            huidigeSteutnType: {}, // { domainId: 'informeel'|'collectief'|'formeel'|'geen' }
-            
             // Doelen + Netwerk data
             doelen: {}, // { domainId: 'text' }
-            betekenis: {}, // { domainId: 'text' } - Wat maakt dit zinvol?
             netwerk: {}, // { domainId: [{naam, type: 'informeel|collectief|formeel'}] }
             addModeActief: null, // domeinId of form that is currently in add mode
             
@@ -601,12 +596,9 @@
             if (!container) return;
             
             if (!state.domainStatus) state.domainStatus = {};
-            if (!state.regieHuidigePositie) state.regieHuidigePositie = {};
-            if (!state.huidigeSteutnType) state.huidigeSteutnType = {};
             
             container.innerHTML = domains.map(d => {
                 const status = state.domainStatus[d.id] || null;
-                const needsDetail = status === 'steun-nodig' || status === 'steun-aanwezig'; // Rood of geel
                 
                 const btn = (val, emoji, label, color, bg) =>
                     `<button onclick="setStoplicht('${d.id}','${val}')"
@@ -620,32 +612,6 @@
                     </button>`;
                 
                 const notitie = (state.triageNotities && state.triageNotities[d.id]) || '';
-                const regie = state.regieHuidigePositie[d.id] || null;
-                const steunType = state.huidigeSteutnType[d.id] || null;
-                
-                const regieBtn = (val, label) =>
-                    `<button onclick="setRegie('${d.id}','${val}')"
-                        style="padding:8px 14px;border:2px solid ${regie===val?'var(--primary)':'#d1d5db'};
-                               background:${regie===val?'var(--primary-light)':'white'};
-                               color:${regie===val?'var(--primary)':'#6b7280'};
-                               border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;
-                               transition:all 0.2s;"
-                        onmouseover="if('${regie}'!=='${val}')this.style.borderColor='#9ca3af'"
-                        onmouseout="if('${regie}'!=='${val}')this.style.borderColor='#d1d5db'">
-                        ${label}
-                    </button>`;
-                
-                const steunBtn = (val, emoji, label, color) =>
-                    `<button onclick="setHuidigeSteun('${d.id}','${val}')"
-                        style="padding:8px 14px;border:2px solid ${steunType===val?color:'#d1d5db'};
-                               background:${steunType===val?color+'15':'white'};
-                               color:${steunType===val?color:'#6b7280'};
-                               border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;
-                               transition:all 0.2s;"
-                        onmouseover="if('${steunType}'!=='${val}')this.style.borderColor='#9ca3af'"
-                        onmouseout="if('${steunType}'!=='${val}')this.style.borderColor='#d1d5db'">
-                        ${emoji} ${label}
-                    </button>`;
                 
                 return `
                     <div style="border-radius:10px;border:2px solid ${status?'#e5e7eb':'#f3f4f6'};
@@ -663,64 +629,21 @@
                                 ${btn('steun-nodig','🔴','Actie','#dc2626','#fee2e2')}
                             </div>
                         </div>
-                        
-                        ${needsDetail ? `
-                        <!-- ZIN: Regie-vraag (T0-baseline) -->
-                        <div style="background:#f0fdf4;padding:12px 12px 12px 52px;border-top:1px solid #d1fae5;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#166534;margin-bottom:8px;">
-                                👥 Wie heeft nu de regie bij ${d.name.toLowerCase()}?
-                            </div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                ${regieBtn('client','Cliënt zelf')}
-                                ${regieBtn('familie','Familie/netwerk')}
-                                ${regieBtn('professional','Professional')}
-                                ${regieBtn('niemand','Niemand (onduidelijk)')}
-                            </div>
-                        </div>
-                        
-                        <!-- ZIN: T0-baseline steun-type -->
-                        <div style="background:#fffbeb;padding:12px 12px 12px 52px;border-top:1px solid #fef3c7;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#92400e;margin-bottom:8px;">
-                                🔍 Is er nu al steun bij ${d.name.toLowerCase()}?
-                            </div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                ${steunBtn('informeel','🟢','Informeel','#10b981')}
-                                ${steunBtn('collectief','🟣','Collectief','#8b5cf6')}
-                                ${steunBtn('formeel','🔵','Formeel','#3b82f6')}
-                                ${steunBtn('geen','⚪','Nog geen steun','#9ca3af')}
-                            </div>
-                        </div>
-                        ` : ''}
-                        
-                        ${status === 'steun-nodig' || status === 'steun-aanwezig' ? `
+                        ${status === 'steun-nodig' ? `
                         <div style="background:#fff5f5;padding:8px 12px 10px 52px;border-top:1px solid #fecaca;">
-                            <input type="text" placeholder="📝 Notities (optioneel, bijv. waarom familie niet kan helpen)..."
+                            <input type="text" placeholder="Korte toelichting (optioneel)..."
                                 value="${notitie.replace(/"/g,'&quot;')}"
                                 onchange="if(!state.triageNotities)state.triageNotities={};
                                          state.triageNotities['${d.id}']=this.value;saveState();"
-                                style="width:100%;max-width:600px;padding:8px 10px;
+                                style="width:100%;max-width:500px;padding:8px 10px;
                                        border:2px solid #fca5a5;border-radius:8px;
-                                       font-size:0.85rem;background:white;">
+                                       font-size:0.9rem;background:white;">
                         </div>` : ''}
                     </div>
                 `;
             }).join('');
             
             updateTriageTeller();
-        }
-        
-        function setRegie(domeinId, regieType) {
-            if (!state.regieHuidigePositie) state.regieHuidigePositie = {};
-            state.regieHuidigePositie[domeinId] = regieType;
-            saveState();
-            renderTriage();
-        }
-        
-        function setHuidigeSteun(domeinId, steunType) {
-            if (!state.huidigeSteutnType) state.huidigeSteutnType = {};
-            state.huidigeSteutnType[domeinId] = steunType;
-            saveState();
-            renderTriage();
         }
         
         function setStoplicht(domainId, status) {
@@ -870,20 +793,6 @@
                                        style="width:100%;padding:12px 16px;border:2px solid #e5e7eb;
                                               border-radius:8px;font-size:1rem;">
                             </div>
-                            
-                            <!-- ZIN: Betekenis-vraag (optioneel) -->
-                            <div style="margin-top:16px;background:#f0fdf4;border:2px dashed #10b981;border-radius:8px;padding:12px;">
-                                <label style="display:block;font-size:0.85rem;color:#166534;margin-bottom:6px;font-weight:600;">
-                                    ✨ Wat maakt dit zinvol voor ${state.clientNaam || 'je'}? (optioneel)
-                                </label>
-                                <textarea 
-                                    id="betekenis-${domein.id}"
-                                    placeholder="Bijv. 'Zodat ik weer zelf boodschappen kan doen' of 'Om mijn kinderen niet te belasten'..."
-                                    onchange="setBetekenis('${domein.id}', this.value)"
-                                    style="width:100%;padding:10px 12px;border:2px solid #d1fae5;
-                                           border-radius:6px;font-size:0.9rem;min-height:60px;
-                                           font-family:inherit;resize:vertical;background:white;">${(state.betekenis && state.betekenis[domein.id]) || ''}</textarea>
-                            </div>
                         </div>
                         
                         <!-- NETWERK -->
@@ -1029,13 +938,6 @@
             if (!state.doelen) state.doelen = {};
             state.doelen[domeinId] = doel.trim();
             saveState();
-        }
-        
-        function setBetekenis(domeinId, betekenis) {
-            if (!state.betekenis) state.betekenis = {};
-            state.betekenis[domeinId] = betekenis.trim();
-            saveState();
-            console.log(`✨ Betekenis gezet voor ${domeinId}:`, betekenis.substring(0, 50));
         }
         
         function voegNetwerkToe(domeinId) {
@@ -1487,25 +1389,13 @@
                         <p style="font-size:0.9rem;color:#6b7280;margin:0;">Export voor strategische analyse</p>
                     </div>
                     
-                    <div style="background:#f9fafb;border-radius:10px;padding:16px;margin-bottom:16px;">
+                    <div style="background:#f9fafb;border-radius:10px;padding:16px;margin-bottom:20px;">
                         <div style="font-weight:600;color:#374151;margin-bottom:10px;font-size:0.95rem;">Deze export bevat:</div>
                         <ul style="margin:0;padding-left:20px;color:#6b7280;font-size:0.85rem;line-height:1.8;">
                             <li>Voornaam cliënt: <strong>${state.clientNaam}</strong></li>
                             <li>Focusgebieden (${domains.filter(d => state.scores[d.id] === 1 || state.scores[d.id] === 2).length}× domeinen)</li>
                             <li>Geselecteerde interventies (${state.geselecteerdeInterventies.length}× acties)</li>
                             <li>Netwerkpositie (I/C/F verdeling)</li>
-                        </ul>
-                    </div>
-                    
-                    <div style="background:#dcfce7;border:2px solid #10b981;border-radius:10px;padding:14px;margin-bottom:20px;">
-                        <div style="font-weight:700;color:#166534;margin-bottom:8px;font-size:0.9rem;display:flex;align-items:center;gap:6px;">
-                            <span style="font-size:1.2rem;">🔒</span> Jouw privacy is gewaarborgd
-                        </div>
-                        <ul style="margin:0;padding-left:24px;color:#15803d;font-size:0.82rem;line-height:1.7;">
-                            <li>Wordt <strong>NIET</strong> gedeeld met andere instanties</li>
-                            <li>Wordt <strong>NIET</strong> in centrale databank opgeslagen</li>
-                            <li>Alleen jij + je professional zien dit</li>
-                            <li>Je kunt op elk moment stoppen</li>
                         </ul>
                     </div>
                     
