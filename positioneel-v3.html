@@ -1565,54 +1565,6 @@
                     </div>
                 </div>
                 
-                <!-- OUDE I/C/F VERDELING (NU MINDER PROMINENT) -->`
-                <div style="background:#f0fdf4;border:3px solid #16a34a;border-radius:14px;padding:20px;margin-bottom:24px;">
-                    <h3 style="font-size:1.3rem;color:#166534;margin:0 0 8px;font-weight:800;">
-                        📊 Netwerkpositie beweging
-                    </h3>
-                    <p style="font-size:0.88rem;color:#15803d;margin:0 0 16px;line-height:1.5;">
-                        Je hebt ${interventies.length} interventie${interventies.length > 1 ? 's' : ''} geselecteerd met de volgende verdeling:
-                    </p>
-                    
-                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
-                        <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:3px solid #10b981;">
-                            <div style="font-size:2rem;font-weight:800;color:#10b981;">${iPercent}%</div>
-                            <div style="font-size:0.85rem;color:#059669;font-weight:600;">🟢 Informeel</div>
-                            <div style="font-size:0.75rem;color:#6b7280;margin-top:4px;">${informatieelCount}× acties</div>
-                        </div>
-                        <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:3px solid #8b5cf6;">
-                            <div style="font-size:2rem;font-weight:800;color:#8b5cf6;">${cPercent}%</div>
-                            <div style="font-size:0.85rem;color:#7c3aed;font-weight:600;">🟣 Collectief</div>
-                            <div style="font-size:0.75rem;color:#6b7280;margin-top:4px;">${collectiefCount}× acties</div>
-                        </div>
-                        <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:3px solid #3b82f6;">
-                            <div style="font-size:2rem;font-weight:800;color:#3b82f6;">${fPercent}%</div>
-                            <div style="font-size:0.85rem;color:#2563eb;font-weight:600;">🔵 Formeel</div>
-                            <div style="font-size:0.75rem;color:#6b7280;margin-top:4px;">${formeelCount}× acties</div>
-                        </div>
-                    </div>
-                    
-                    ${fPercent > 60 ? `
-                        <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:12px;margin-top:12px;">
-                            <div style="font-weight:700;color:#92400e;margin-bottom:4px;">
-                                ⚠️ Let op: Veel formele zorg
-                            </div>
-                            <div style="font-size:0.85rem;color:#78350f;">
-                                Meer dan 60% formeel. Overweeg meer informele/collectieve ondersteuning voor duurzaamheid.
-                            </div>
-                        </div>
-                    ` : iPercent + cPercent > 60 ? `
-                        <div style="background:#dcfce7;border:2px solid #10b981;border-radius:8px;padding:12px;margin-top:12px;">
-                            <div style="font-weight:700;color:#166534;margin-bottom:4px;">
-                                ✅ Goede netwerkbalans!
-                            </div>
-                            <div style="font-size:0.85rem;color:#14532d;">
-                                Mooie mix van informele en collectieve steun voor duurzame oplossingen.
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-                
                 <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px;">
                     <h3 style="font-size:1.2rem;color:#374151;margin:0 0 16px;font-weight:800;">
                         📋 Geselecteerde interventies
