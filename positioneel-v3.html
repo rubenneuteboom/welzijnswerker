@@ -1084,6 +1084,11 @@
                 `;
             }
             
+            // STAP 3: REGIEANALYSE (alleen bij gezin met multi-problematiek)
+            if (state.extraAandacht && state.extraAandacht.includes('gezin')) {
+                html += renderRegieanalyse();
+            }
+            
             container.innerHTML = html;
         }
         
@@ -2418,6 +2423,213 @@
             state.familieNietBetrekken[domeinId].reden = reden.trim();
             saveState();
         }
+        
+        // ============================================
+        // STAP 3: REGIEANALYSE (Gezins-ZIN)
+        // ============================================
+        
+        function renderRegieanalyse() {
+            const hulpverleners = state.betrokkenHulpverleners || [];
+            const regie = state.regieVoorGezin || null;
+            
+            // Check regiediffusie
+            const regiediffusie = hulpverleners.length >= 5 && (!regie || regie === 'niemand');
+            
+            return `
+                <div style="background:#fef3c7;border:3px solid #f59e0b;border-radius:14px;padding:24px;margin-top:24px;">
+                    <h3 style="font-size:1.3rem;color:#92400e;margin:0 0 12px;font-weight:800;display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:1.8rem;">🏥</span> Regieanalyse (ZIN-kern)
+                    </h3>
+                    <p style="font-size:0.9rem;color:#78350f;margin:0 0 20px;line-height:1.6;">
+                        Bij gezinnen met multi-problematiek zijn vaak veel hulpverleners betrokken zonder duidelijke regie. 
+                        Dit leidt tot <strong>regiediffusie</strong> - niemand heeft het overzicht. ZIN helpt dit zichtbaar te maken.
+                    </p>
+                    
+                    <!-- Betrokken hulpverleners -->
+                    <div style="background:white;border-radius:10px;padding:16px;margin-bottom:16px;">
+                        <label style="display:block;font-weight:700;margin-bottom:12px;color:#374151;">
+                            🏥 Wie zijn er nu betrokken bij dit gezin?
+                        </label>
+                        
+                        ${hulpverleners.length === 0 ? `
+                            <div style="background:#f9fafb;padding:12px;border-radius:6px;color:#6b7280;font-style:italic;text-align:center;margin-bottom:12px;">
+                                Nog geen hulpverleners toegevoegd
+                            </div>
+                        ` : `
+                            <div style="margin-bottom:12px;">
+                                ${hulpverleners.map((hv, idx) => `
+                                    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:8px;">
+                                        <div style="flex:1;">
+                                            <div style="font-weight:600;color:#374151;">${hv.naam}</div>
+                                            <div style="font-size:0.85rem;color:#6b7280;">${hv.rol}</div>
+                                        </div>
+                                        <button onclick="verwijderHulpverlener(${idx})"
+                                                style="padding:6px 10px;border:1px solid #fca5a5;background:#fee2e2;
+                                                       color:#dc2626;border-radius:6px;font-size:0.8rem;cursor:pointer;">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                `).join('')}
+                                
+                                <div style="text-align:center;margin-top:12px;padding:10px;background:#fef3c7;border-radius:6px;">
+                                    <div style="font-weight:700;color:#92400e;">
+                                        ${hulpverleners.length} hulpverlener${hulpverleners.length > 1 ? 's' : ''} betrokken
+                                    </div>
+                                </div>
+                            </div>
+                        `}
+                        
+                        <!-- Nieuwe hulpverlener toevoegen -->
+                        <div style="background:#f0fdf4;border:2px dashed #10b981;border-radius:8px;padding:12px;">
+                            <div style="font-weight:600;color:#166534;margin-bottom:8px;">➕ Voeg hulpverlener toe:</div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;">
+                                <input type="text" id="nieuwe-hv-naam" placeholder="Naam (bijv. GGZ-behandelaar)"
+                                       style="padding:8px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
+                                <input type="text" id="nieuwe-hv-rol" placeholder="Rol (bijv. voor moeder)"
+                                       style="padding:8px;border:2px solid #d1d5db;border-radius:6px;font-size:0.9rem;">
+                                <button onclick="voegHulpverlenerToe()"
+                                        style="padding:8px 16px;border:none;background:#10b981;color:white;
+                                               border-radius:6px;font-weight:600;cursor:pointer;"
+                                        onmouseover="this.style.background='#059669'"
+                                        onmouseout="this.style.background='#10b981'">
+                                    ✅
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Regie-vraag -->
+                    <div style="background:white;border-radius:10px;padding:16px;margin-bottom:16px;">
+                        <label style="display:block;font-weight:700;margin-bottom:12px;color:#374151;">
+                            👥 Wie heeft nu de regie over het geheel?
+                        </label>
+                        <div style="display:grid;gap:8px;">
+                            <label onclick="setRegieGezin('gezin-zelf')" id="regie-gezin-zelf"
+                                   style="display:flex;align-items:center;gap:10px;padding:10px 12px;
+                                          border:2px solid ${regie === 'gezin-zelf' ? '#10b981' : '#e5e7eb'};
+                                          background:${regie === 'gezin-zelf' ? '#f0fdf4' : 'white'};
+                                          border-radius:8px;cursor:pointer;transition:all 0.2s;"
+                                   onmouseover="if('${regie}' !== 'gezin-zelf') this.style.borderColor='#9ca3af'"
+                                   onmouseout="if('${regie}' !== 'gezin-zelf') this.style.borderColor='#e5e7eb'">
+                                <div style="font-weight:600;color:#374151;">🏠 Gezin zelf (cliëntregie)</div>
+                            </label>
+                            
+                            ${hulpverleners.map((hv, idx) => `
+                                <label onclick="setRegieGezin('${hv.naam}')" id="regie-hv-${idx}"
+                                       style="display:flex;align-items:center;gap:10px;padding:10px 12px;
+                                              border:2px solid ${regie === hv.naam ? '#10b981' : '#e5e7eb'};
+                                              background:${regie === hv.naam ? '#f0fdf4' : 'white'};
+                                              border-radius:8px;cursor:pointer;transition:all 0.2s;"
+                                       onmouseover="if('${regie}' !== '${hv.naam}') this.style.borderColor='#9ca3af'"
+                                       onmouseout="if('${regie}' !== '${hv.naam}') this.style.borderColor='#e5e7eb'">
+                                    <div style="font-weight:600;color:#374151;">👤 ${hv.naam}</div>
+                                </label>
+                            `).join('')}
+                            
+                            <label onclick="setRegieGezin('niemand')" id="regie-niemand"
+                                   style="display:flex;align-items:center;gap:10px;padding:10px 12px;
+                                          border:2px solid ${regie === 'niemand' ? '#dc2626' : '#e5e7eb'};
+                                          background:${regie === 'niemand' ? '#fee2e2' : 'white'};
+                                          border-radius:8px;cursor:pointer;transition:all 0.2s;"
+                                   onmouseover="if('${regie}' !== 'niemand') this.style.borderColor='#9ca3af'"
+                                   onmouseout="if('${regie}' !== 'niemand') this.style.borderColor='#e5e7eb'">
+                                <div style="font-weight:600;color:${regie === 'niemand' ? '#991b1b' : '#374151'};">
+                                    ⚠️ Niemand / onduidelijk
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- ALARM bij regiediffusie -->
+                    ${regiediffusie ? `
+                        <div style="background:#fee2e2;border:3px solid #dc2626;border-radius:10px;padding:16px;">
+                            <div style="display:flex;align-items:start;gap:12px;">
+                                <div style="font-size:2.5rem;">🚨</div>
+                                <div style="flex:1;">
+                                    <h4 style="font-size:1.1rem;color:#991b1b;margin:0 0 8px;font-weight:800;">
+                                        REGIEDIFFUSIE GEDETECTEERD!
+                                    </h4>
+                                    <p style="font-size:0.9rem;color:#7f1d1d;margin:0 0 12px;line-height:1.6;">
+                                        ${hulpverleners.length} hulpverleners betrokken, maar niemand heeft duidelijke regie.
+                                    </p>
+                                    <div style="background:#fff;border-radius:6px;padding:12px;margin-bottom:12px;">
+                                        <div style="font-weight:700;color:#991b1b;margin-bottom:6px;">Risico's:</div>
+                                        <ul style="margin:0;padding-left:20px;color:#7f1d1d;font-size:0.85rem;">
+                                            <li>Overlappende hulp (dubbel werk)</li>
+                                            <li>Tegenstrijdige adviezen</li>
+                                            <li>Gezinsuitputting (te veel afspraken)</li>
+                                            <li>Blijvende afhankelijkheid (geen afbouw)</li>
+                                        </ul>
+                                    </div>
+                                    <div style="background:#dcfce7;border:2px solid #10b981;border-radius:6px;padding:12px;">
+                                        <div style="font-weight:700;color:#166534;margin-bottom:6px;">✅ ZIN-aanbeveling:</div>
+                                        <div style="font-size:0.85rem;color:#14532d;line-height:1.5;">
+                                            <strong>Stel 1 gezinsregisseur/gezinscoach aan</strong> die:
+                                            <ul style="margin:6px 0 0;padding-left:20px;">
+                                                <li>Overzicht heeft van alle hulp</li>
+                                                <li>Regie voert op het plan</li>
+                                                <li>Aanspreekpunt is voor gezin</li>
+                                                <li>Kan opschalen ÉN afschalen</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : hulpverleners.length > 0 && regie && regie !== 'niemand' ? `
+                        <div style="background:#dcfce7;border:2px solid #10b981;border-radius:10px;padding:14px;">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <span style="font-size:1.8rem;">✅</span>
+                                <div>
+                                    <div style="font-weight:700;color:#166534;">Regie is helder!</div>
+                                    <div style="font-size:0.85rem;color:#14532d;">
+                                        ${regie === 'gezin-zelf' ? 'Het gezin heeft zelf de regie.' : `${regie} heeft de regie.`}
+                                        Dit vermindert regiediffusie.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        function voegHulpverlenerToe() {
+            const naam = document.getElementById('nieuwe-hv-naam').value.trim();
+            const rol = document.getElementById('nieuwe-hv-rol').value.trim();
+            
+            if (!naam) {
+                alert('⚠️ Vul een naam in');
+                return;
+            }
+            
+            if (!state.betrokkenHulpverleners) state.betrokkenHulpverleners = [];
+            state.betrokkenHulpverleners.push({ naam, rol: rol || '(algemeen)' });
+            
+            // Reset form
+            document.getElementById('nieuwe-hv-naam').value = '';
+            document.getElementById('nieuwe-hv-rol').value = '';
+            
+            saveState();
+            renderDoelen();
+            console.log('✅ Hulpverlener toegevoegd:', naam);
+        }
+        
+        function verwijderHulpverlener(index) {
+            if (!state.betrokkenHulpverleners) return;
+            state.betrokkenHulpverleners.splice(index, 1);
+            saveState();
+            renderDoelen();
+        }
+        
+        function setRegieGezin(wie) {
+            state.regieVoorGezin = wie;
+            saveState();
+            renderDoelen();
+            console.log('👥 Regie gezet voor gezin:', wie);
+        }
+        
+        // ============================================
         // INIT
         // ============================================
         
