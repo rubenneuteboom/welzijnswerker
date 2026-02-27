@@ -1326,15 +1326,6 @@
             
             saveState();
             
-            alert(
-                '✅ DEMO GELADEN!\n\n' +
-                '📋 Casus: Mw. Jansen (45)\n' +
-                '- Volwassene + Mantelzorger + Gezin multi-problematiek\n' +
-                '- 8 hulpverleners, GEEN regie → Regiediffusie!\n' +
-                '- Zus draagt >80% → Overbelasting-alarm!\n\n' +
-                '🎯 Klik door de schermen om alle features te zien!'
-            );
-            
             // Reset naar start scherm
             goToScreen(1);
             
@@ -1345,6 +1336,19 @@
             }, 100);
             
             console.log('🎬 Demo data geladen - Familie Jansen');
+            
+            alert(
+                '✅ DEMO GELADEN!\n\n' +
+                '📋 Casus: Mw. Jansen (45)\n' +
+                '- Volwassene + Mantelzorger + Gezin multi-problematiek\n' +
+                '- 8 hulpverleners, GEEN regie → Regiediffusie!\n' +
+                '- Zus draagt >80% → Overbelasting-alarm!\n\n' +
+                '💡 TIP: Klik op "▶️ Start gesprek" en gebruik "Volgende →" om door de schermen te navigeren.\n\n' +
+                'Of klik OK om direct naar de Triage te gaan.'
+            );
+            
+            // Ga automatisch naar triage (scherm 2) zodat gebruiker meteen kan navigeren
+            goToScreen(2);
         }
         
         // ============================================
