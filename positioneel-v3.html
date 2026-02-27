@@ -164,6 +164,81 @@
             color: var(--primary);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+        
+        /* ============================================ */
+        /* WOW-FACTOR ANIMATIONS & EFFECTS */
+        /* ============================================ */
+        
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.6), 0 0 40px rgba(245, 158, 11, 0.3); }
+        }
+        
+        @keyframes urgent-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.7), 0 0 60px rgba(220, 38, 38, 0.4); transform: scale(1.01); }
+        }
+        
+        @keyframes slide-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        .wow-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slide-in-up 0.4s ease-out;
+        }
+        
+        .wow-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .wow-card.selected {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+        
+        .urgent-alert {
+            animation: urgent-pulse 2s ease-in-out infinite;
+        }
+        
+        .gradient-jongeren {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #60a5fa;
+        }
+        
+        .gradient-volwassenen {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border: 2px solid #a78bfa;
+        }
+        
+        .gradient-ouderen {
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            border: 2px solid #f472b6;
+        }
+        
+        .gradient-mantelzorg {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #fbbf24;
+        }
+        
+        .gradient-gezin {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #f87171;
+        }
+        
+        .glow-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .glow-hover:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 30px rgba(var(--primary-rgb), 0.3);
+        }
     </style>
 </head>
 <body>
@@ -220,80 +295,71 @@
                            style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
                 </div>
                 
-                <!-- DOELGROEPEN: Clean & Overzichtelijk -->
-                <div style="margin-bottom: 24px;">
-                    <label style="display: block; font-weight: 700; margin-bottom: 12px; font-size: 1rem; color: #374151;">
-                        Leeftijd / levensfase (optioneel):
+                <!-- DOELGROEPEN: ✨ WOW-FACTOR DESIGN ✨ -->
+                <div style="margin-bottom: 28px;">
+                    <label style="display: block; font-weight: 800; margin-bottom: 16px; font-size: 1.1rem; color: #1f2937; text-align: center;">
+                        ✨ Leeftijd / levensfase
                     </label>
-                    <div style="display: grid; gap: 8px; margin-bottom: 20px;">
-                        <label onclick="selectLeeftijd('jongeren')" id="leeftijd-jongeren"
-                               style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
-                                      border: 2px solid #e5e7eb; border-radius: 10px; background: white; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='var(--primary)'"
-                               onmouseout="if(!this.classList.contains('selected'))this.style.borderColor='#e5e7eb'">
-                            <span style="font-size: 1.5rem;">🎓</span>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; color: #374151;">Jongere (12-25 jaar)</div>
-                                <div style="font-size: 0.85rem; color: #6b7280;">School, identiteit, vriendschappen</div>
-                            </div>
-                        </label>
-                        <label onclick="selectLeeftijd('volwassenen')" id="leeftijd-volwassenen"
-                               style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
-                                      border: 2px solid #e5e7eb; border-radius: 10px; background: white; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='var(--primary)'"
-                               onmouseout="if(!this.classList.contains('selected'))this.style.borderColor='#e5e7eb'">
-                            <span style="font-size: 1.5rem;">💼</span>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; color: #374151;">Volwassene (25-65 jaar)</div>
-                                <div style="font-size: 0.85rem; color: #6b7280;">Werk, gezin, relaties</div>
-                            </div>
-                        </label>
-                        <label onclick="selectLeeftijd('ouderen')" id="leeftijd-ouderen"
-                               style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
-                                      border: 2px solid #e5e7eb; border-radius: 10px; background: white; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='var(--primary)'"
-                               onmouseout="if(!this.classList.contains('selected'))this.style.borderColor='#e5e7eb'">
-                            <span style="font-size: 1.5rem;">👴</span>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; color: #374151;">Oudere (65+ jaar)</div>
-                                <div style="font-size: 0.85rem; color: #6b7280;">Vergrijzing, gezondheid, eenzaamheid</div>
-                            </div>
-                        </label>
+                    
+                    <!-- Grid van 3 cards (naast elkaar!) -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+                        <!-- Jongere -->
+                        <div onclick="selectLeeftijd('jongeren')" id="leeftijd-jongeren"
+                             class="wow-card gradient-jongeren glow-hover"
+                             style="text-align: center; padding: 20px 12px; border-radius: 16px; cursor: pointer;">
+                            <div style="font-size: 3rem; margin-bottom: 8px;">🎓</div>
+                            <div style="font-weight: 700; font-size: 1rem; color: #1e40af; margin-bottom: 4px;">Jongere</div>
+                            <div style="font-size: 0.75rem; color: #3b82f6;">(12-25)</div>
+                        </div>
+                        
+                        <!-- Volwassene -->
+                        <div onclick="selectLeeftijd('volwassenen')" id="leeftijd-volwassenen"
+                             class="wow-card gradient-volwassenen glow-hover"
+                             style="text-align: center; padding: 20px 12px; border-radius: 16px; cursor: pointer;">
+                            <div style="font-size: 3rem; margin-bottom: 8px;">💼</div>
+                            <div style="font-weight: 700; font-size: 1rem; color: #5b21b6; margin-bottom: 4px;">Volwassene</div>
+                            <div style="font-size: 0.75rem; color: #7c3aed;">(25-65)</div>
+                        </div>
+                        
+                        <!-- Oudere -->
+                        <div onclick="selectLeeftijd('ouderen')" id="leeftijd-ouderen"
+                             class="wow-card gradient-ouderen glow-hover"
+                             style="text-align: center; padding: 20px 12px; border-radius: 16px; cursor: pointer;">
+                            <div style="font-size: 3rem; margin-bottom: 8px;">👴</div>
+                            <div style="font-weight: 700; font-size: 1rem; color: #be185d; margin-bottom: 4px;">Oudere</div>
+                            <div style="font-size: 0.75rem; color: #ec4899;">(65+)</div>
+                        </div>
                     </div>
                     
-                    <!-- Visuele scheiding -->
-                    <div style="border-top: 2px dashed #e5e7eb; margin: 20px 0;"></div>
+                    <!-- Sparkle divider -->
+                    <div style="text-align: center; margin: 24px 0; font-size: 1.5rem; opacity: 0.3;">✦ ✦ ✦</div>
                     
-                    <label style="display: block; font-weight: 700; margin-bottom: 12px; font-size: 1rem; color: #374151;">
-                        Extra aandacht voor:
+                    <label style="display: block; font-weight: 800; margin-bottom: 16px; font-size: 1.1rem; color: #1f2937; text-align: center;">
+                        ⚠️ Extra aandacht voor
                     </label>
-                    <div style="display: grid; gap: 8px;">
-                        <label style="display: flex; align-items: start; gap: 10px; padding: 10px 12px; 
-                                      background: #fef3c7; border: 2px dashed #fbbf24; border-radius: 8px; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#f59e0b'"
-                               onmouseout="this.style.borderColor='#fbbf24'">
+                    
+                    <!-- Extra aandacht chips (side by side) -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <!-- Mantelzorg chip -->
+                        <label class="wow-card gradient-mantelzorg glow-hover"
+                               style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px; 
+                                      border-radius: 14px; cursor: pointer; text-align: center;">
                             <input type="checkbox" id="extra-mantelzorg" onchange="toggleExtra('mantelzorg')"
-                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
-                            <div>
-                                <div style="font-weight: 600; color: #92400e;">🫂 Ook mantelzorger</div>
-                                <div style="font-size: 0.85rem; color: #78350f;">Combinatie van eigen leven + zorgen voor ander</div>
-                            </div>
+                                   style="display: none;">
+                            <div style="font-size: 2.5rem;">🫂</div>
+                            <div style="font-weight: 700; font-size: 0.95rem; color: #92400e;">Ook mantelzorger</div>
+                            <div style="font-size: 0.75rem; color: #78350f; line-height: 1.3;">Zorgen voor ander</div>
                         </label>
-                        <label style="display: flex; align-items: start; gap: 10px; padding: 10px 12px; 
-                                      background: #fee2e2; border: 2px dashed #fca5a5; border-radius: 8px; 
-                                      cursor: pointer; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#f87171'"
-                               onmouseout="this.style.borderColor='#fca5a5'">
+                        
+                        <!-- Gezin chip -->
+                        <label class="wow-card gradient-gezin glow-hover"
+                               style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px; 
+                                      border-radius: 14px; cursor: pointer; text-align: center;">
                             <input type="checkbox" id="extra-gezin" onchange="toggleExtra('gezin')"
-                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
-                            <div>
-                                <div style="font-weight: 600; color: #991b1b;">👨‍👩‍👧‍👦 Gezin met multi-problematiek</div>
-                                <div style="font-size: 0.85rem; color: #7f1d1d;">Meerdere gezinsleden met problemen, veel hulpverleners</div>
-                            </div>
+                                   style="display: none;">
+                            <div style="font-size: 2.5rem;">👨‍👩‍👧‍👦</div>
+                            <div style="font-weight: 700; font-size: 0.95rem; color: #991b1b;">Gezin multi-problematiek</div>
+                            <div style="font-size: 0.75rem; color: #7f1d1d; line-height: 1.3;">Veel hulpverleners</div>
                         </label>
                     </div>
                 </div>
@@ -593,9 +659,43 @@
                 try {
                     state = { ...state, ...JSON.parse(saved) };
                     console.log('✅ State loaded');
+                    
+                    // Restore UI for doelgroepen
+                    setTimeout(restoreDoelgroepenUI, 100); // Wait for DOM
                 } catch (e) {
                     console.error('❌ Failed to load state:', e);
                 }
+            }
+        }
+        
+        function restoreDoelgroepenUI() {
+            // Restore leeftijdsgroep selection
+            if (state.leeftijdsgroep) {
+                const elem = document.getElementById(`leeftijd-${state.leeftijdsgroep}`);
+                if (elem) {
+                    elem.style.borderWidth = '4px';
+                    elem.style.borderColor = '#10b981';
+                    elem.classList.add('selected');
+                }
+            }
+            
+            // Restore extra aandacht checkboxes
+            if (state.extraAandacht && state.extraAandacht.length > 0) {
+                state.extraAandacht.forEach(type => {
+                    const checkbox = document.getElementById(`extra-${type}`);
+                    const label = checkbox ? checkbox.closest('label') : null;
+                    
+                    if (checkbox) checkbox.checked = true;
+                    if (label) {
+                        label.style.borderWidth = '4px';
+                        label.style.borderColor = '#10b981';
+                        label.classList.add('selected');
+                        
+                        if (type === 'gezin') {
+                            label.classList.add('urgent-alert');
+                        }
+                    }
+                });
             }
         }
         
@@ -657,16 +757,22 @@
         }
         
         // ============================================
-        // NIEUWE DOELGROEPEN LOGICA (Clean & Overzichtelijk)
+        // ✨ WOW-FACTOR DOELGROEPEN LOGICA
         // ============================================
         
         function selectLeeftijd(groep) {
-            // Deselect all
+            // Deselect all - restore gradient backgrounds
+            const gradients = {
+                'jongeren': 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+                'volwassenen': 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
+                'ouderen': 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)'
+            };
+            
             ['jongeren', 'volwassenen', 'ouderen'].forEach(g => {
                 const elem = document.getElementById(`leeftijd-${g}`);
                 if (elem) {
-                    elem.style.borderColor = '#e5e7eb';
-                    elem.style.background = 'white';
+                    elem.style.background = gradients[g];
+                    elem.style.borderWidth = '2px';
                     elem.classList.remove('selected');
                 }
             });
@@ -678,28 +784,50 @@
                 state.leeftijdsgroep = groep;
                 const elem = document.getElementById(`leeftijd-${groep}`);
                 if (elem) {
-                    elem.style.borderColor = 'var(--primary)';
-                    elem.style.background = 'var(--primary-light)';
-                    elem.classList.add('selected');
+                    elem.style.borderWidth = '4px'; // Thicker border
+                    elem.style.borderColor = '#10b981'; // Green
+                    elem.classList.add('selected'); // Triggers glow-pulse animation
                 }
             }
             
             saveState();
-            console.log('Leeftijdsgroep:', state.leeftijdsgroep);
+            console.log('✨ Leeftijdsgroep:', state.leeftijdsgroep);
         }
         
         function toggleExtra(type) {
             if (!state.extraAandacht) state.extraAandacht = [];
             
             const idx = state.extraAandacht.indexOf(type);
+            const checkbox = document.getElementById(`extra-${type}`);
+            const label = checkbox ? checkbox.closest('label') : null;
+            
             if (idx > -1) {
+                // Deselect
                 state.extraAandacht.splice(idx, 1);
+                if (checkbox) checkbox.checked = false;
+                if (label) {
+                    label.style.borderWidth = '2px';
+                    label.classList.remove('selected');
+                    if (type === 'gezin') label.classList.remove('urgent-alert');
+                }
             } else {
+                // Select
                 state.extraAandacht.push(type);
+                if (checkbox) checkbox.checked = true;
+                if (label) {
+                    label.style.borderWidth = '4px';
+                    label.style.borderColor = '#10b981'; // Green
+                    label.classList.add('selected'); // Triggers glow
+                    
+                    // Extra: gezin krijgt urgent-pulse animation
+                    if (type === 'gezin') {
+                        label.classList.add('urgent-alert');
+                    }
+                }
             }
             
             saveState();
-            console.log('Extra aandacht:', state.extraAandacht);
+            console.log('✨ Extra aandacht:', state.extraAandacht);
         }
         
         function loadDemo() {
@@ -2523,10 +2651,21 @@
             const regiediffusie = hulpverleners.length >= 5 && (!regie || regie === 'niemand');
             
             return `
-                <div style="background:#fef3c7;border:3px solid #f59e0b;border-radius:14px;padding:24px;margin-top:24px;">
-                    <h3 style="font-size:1.3rem;color:#92400e;margin:0 0 12px;font-weight:800;display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:1.8rem;">🏥</span> Regieanalyse (ZIN-kern)
-                    </h3>
+                <div class="wow-card" style="background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border:3px solid #f59e0b;border-radius:16px;padding:28px;margin-top:24px;box-shadow:0 8px 24px rgba(0,0,0,0.1);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                        <h3 style="font-size:1.4rem;color:#92400e;margin:0;font-weight:800;display:flex;align-items:center;gap:10px;">
+                            <span style="font-size:2rem;">🏥</span> Regieanalyse (ZIN-kern)
+                        </h3>
+                        ${hulpverleners.length >= 5 ? `
+                            <div class="${regiediffusie ? 'urgent-alert' : ''}" style="background:#dc2626;color:white;padding:8px 16px;border-radius:20px;font-weight:800;font-size:0.9rem;">
+                                ${hulpverleners.length}× hulpverleners
+                            </div>
+                        ` : hulpverleners.length > 0 ? `
+                            <div style="background:#10b981;color:white;padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem;">
+                                ${hulpverleners.length}× hulpverleners
+                            </div>
+                        ` : ''}
+                    </div>
                     <p style="font-size:0.9rem;color:#78350f;margin:0 0 20px;line-height:1.6;">
                         Bij gezinnen met multi-problematiek zijn vaak veel hulpverleners betrokken zonder duidelijke regie. 
                         Dit leidt tot <strong>regiediffusie</strong> - niemand heeft het overzicht. ZIN helpt dit zichtbaar te maken.
@@ -2545,15 +2684,18 @@
                         ` : `
                             <div style="margin-bottom:12px;">
                                 ${hulpverleners.map((hv, idx) => `
-                                    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:8px;">
+                                    <div class="wow-card glow-hover" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);border:2px solid #e5e7eb;border-radius:10px;margin-bottom:10px;">
+                                        <div style="font-size:1.8rem;">👤</div>
                                         <div style="flex:1;">
-                                            <div style="font-weight:600;color:#374151;">${hv.naam}</div>
-                                            <div style="font-size:0.85rem;color:#6b7280;">${hv.rol}</div>
+                                            <div style="font-weight:700;color:#374151;font-size:0.95rem;">${hv.naam}</div>
+                                            <div style="font-size:0.8rem;color:#6b7280;">${hv.rol}</div>
                                         </div>
                                         <button onclick="verwijderHulpverlener(${idx})"
-                                                style="padding:6px 10px;border:1px solid #fca5a5;background:#fee2e2;
-                                                       color:#dc2626;border-radius:6px;font-size:0.8rem;cursor:pointer;">
-                                            🗑️
+                                                style="padding:8px 12px;border:2px solid #fca5a5;background:#fee2e2;
+                                                       color:#dc2626;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;"
+                                                onmouseover="this.style.background='#fecaca';this.style.transform='scale(1.05)'"
+                                                onmouseout="this.style.background='#fee2e2';this.style.transform='scale(1)'">
+                                            🗑️ Verwijder
                                         </button>
                                     </div>
                                 `).join('')}
@@ -2629,12 +2771,12 @@
                     
                     <!-- ALARM bij regiediffusie -->
                     ${regiediffusie ? `
-                        <div style="background:#fee2e2;border:3px solid #dc2626;border-radius:10px;padding:16px;">
-                            <div style="display:flex;align-items:start;gap:12px;">
-                                <div style="font-size:2.5rem;">🚨</div>
+                        <div class="urgent-alert" style="background:linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);border:4px solid #dc2626;border-radius:12px;padding:20px;box-shadow:0 12px 32px rgba(220, 38, 38, 0.3);">
+                            <div style="display:flex;align-items:start;gap:14px;">
+                                <div style="font-size:3rem;">🚨</div>
                                 <div style="flex:1;">
-                                    <h4 style="font-size:1.1rem;color:#991b1b;margin:0 0 8px;font-weight:800;">
-                                        REGIEDIFFUSIE GEDETECTEERD!
+                                    <h4 style="font-size:1.2rem;color:#991b1b;margin:0 0 10px;font-weight:900;text-transform:uppercase;letter-spacing:0.5px;">
+                                        ⚠️ REGIEDIFFUSIE GEDETECTEERD!
                                     </h4>
                                     <p style="font-size:0.9rem;color:#7f1d1d;margin:0 0 12px;line-height:1.6;">
                                         ${hulpverleners.length} hulpverleners betrokken, maar niemand heeft duidelijke regie.
