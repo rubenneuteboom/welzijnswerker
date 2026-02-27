@@ -2264,7 +2264,7 @@
                                  state.evaluatieDatum === '3-maanden' ? 'Over 3 maanden' : 'Geen evaluatie ingepland'
                 },
                 metadata: {
-                    professional: 'RPA V3.3 Final',
+                    professional: 'RPA V3.2',
                     sessieId: state.createdAt,
                     laatstGewijzigd: state.updatedAt
                 }
