@@ -1978,14 +1978,15 @@
                         <p>Dit netwerkplan is opgesteld met de RPA Positionele Analyse tool (V3.2).<br>
                         Gebaseerd op de ZIN-methodiek (Zelf In Netwerk) - Laura Terbrack.</p>
                     </div>
-                    
-                    <script>
-                        window.print();
-                    </script>
                 </body>
                 </html>
             `);
             printWindow.document.close();
+            
+            // Open print dialog
+            setTimeout(() => {
+                printWindow.print();
+            }, 100);
         }
         
         // ============================================
