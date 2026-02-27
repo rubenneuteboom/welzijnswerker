@@ -259,6 +259,99 @@
         .glow-hover:hover {
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 30px rgba(var(--primary-rgb), 0.3);
         }
+        
+        /* ============================================ */
+        /* TOOLTIPS (Usability Quick Win) */
+        /* ============================================ */
+        
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: help;
+            margin-left: 6px;
+            position: relative;
+            user-select: none;
+        }
+        
+        .tooltip-icon:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+        }
+        
+        .tooltip-icon .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.2s, visibility 0.2s;
+            line-height: 1.4;
+        }
+        
+        .tooltip-icon .tooltip-text.wide {
+            white-space: normal;
+            width: 280px;
+        }
+        
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tooltip-icon .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1f2937;
+        }
+        
+        /* Pauze knop (altijd zichtbaar) */
+        .pause-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 9998;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pause-btn:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.6);
+        }
     </style>
 </head>
 <body>
@@ -273,6 +366,12 @@
         <span style="font-size:1.2rem;">💾</span>
         <span>Opgeslagen</span>
     </div>
+    
+    <!-- Pauze knop (altijd zichtbaar) -->
+    <button class="pause-btn" onclick="pauzeerGesprek()">
+        <span style="font-size:1.3rem;">⏸️</span>
+        <span>PAUZE</span>
+    </button>
     
     <div class="container">
         <!-- Workflow bolletjes -->
@@ -327,9 +426,12 @@
                 
                 <!-- DOELGROEPEN: ✨ WOW-FACTOR DESIGN ✨ -->
                 <div style="margin-bottom: 28px;">
-                    <label style="display: block; font-weight: 800; margin-bottom: 16px; font-size: 1.1rem; color: #1f2937; text-align: center;">
+                    <label style="display: block; font-weight: 800; margin-bottom: 8px; font-size: 1.1rem; color: #1f2937; text-align: center;">
                         ✨ Leeftijd / levensfase
                     </label>
+                    <div style="text-align: center; font-size: 0.85rem; color: #6b7280; margin-bottom: 12px;">
+                        Kies er <strong>één</strong> die het beste past (optioneel)
+                    </div>
                     
                     <!-- Grid van 3 cards (naast elkaar!) -->
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
@@ -364,9 +466,12 @@
                     <!-- Sparkle divider -->
                     <div style="text-align: center; margin: 24px 0; font-size: 1.5rem; opacity: 0.3;">✦ ✦ ✦</div>
                     
-                    <label style="display: block; font-weight: 800; margin-bottom: 16px; font-size: 1.1rem; color: #1f2937; text-align: center;">
+                    <label style="display: block; font-weight: 800; margin-bottom: 8px; font-size: 1.1rem; color: #1f2937; text-align: center;">
                         ⚠️ Extra aandacht voor
                     </label>
+                    <div style="text-align: center; font-size: 0.85rem; color: #6b7280; margin-bottom: 12px;">
+                        Kies <strong>zoveel als van toepassing</strong> (meerdere mogelijk)
+                    </div>
                     
                     <!-- Extra aandacht chips (side by side) -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -837,6 +942,37 @@
             }
         }
         
+        function pauzeerGesprek() {
+            // Save huidige state
+            saveState();
+            
+            const result = confirm(
+                '⏸️ PAUZE\n\n' +
+                'Het gesprek is automatisch opgeslagen.\n\n' +
+                'Wat wil je doen?\n\n' +
+                'OK = Doorgaan met gesprek\n' +
+                'Annuleren = Afsluiten (data blijft bewaard)'
+            );
+            
+            if (!result) {
+                // Gebruiker wil afsluiten
+                const afsluitenConfirm = confirm(
+                    'Weet je zeker dat je wilt afsluiten?\n\n' +
+                    'Je data is opgeslagen en je kunt later verder waar je gebleven bent.'
+                );
+                
+                if (afsluitenConfirm) {
+                    alert(
+                        '✅ Data is veilig opgeslagen.\n\n' +
+                        'Open deze pagina opnieuw om verder te gaan waar je was gebleven.'
+                    );
+                    // Optioneel: sluit venster of ga naar start
+                    goToScreen(1);
+                }
+            }
+            // Anders: gebruiker gaat gewoon door
+        }
+        
         function startAutoSave() {
             // Stop oude interval (als die er is)
             if (autoSaveInterval) {
@@ -1297,8 +1433,12 @@
                         ${needsDetail ? `
                         <!-- ZIN: Regie-vraag (T0-baseline) -->
                         <div style="background:#f0fdf4;padding:12px 12px 12px 52px;border-top:1px solid #d1fae5;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#166534;margin-bottom:8px;">
-                                👥 Wie heeft nu de regie bij ${d.name.toLowerCase()}?
+                            <div style="font-size:0.85rem;font-weight:600;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                                <span>👥 Wie bepaalt nu wat er gebeurt bij ${d.name.toLowerCase()}?</span>
+                                <span class="tooltip-icon" style="font-size:0.65rem;width:16px;height:16px;">
+                                    ⓘ
+                                    <span class="tooltip-text wide">Regie = Wie heeft de beslissingsmacht en neemt de belangrijkste beslissingen?</span>
+                                </span>
                             </div>
                             <div style="display:flex;gap:8px;flex-wrap:wrap;">
                                 ${regieBtn('client','Cliënt zelf')}
@@ -1503,8 +1643,12 @@
                             
                             <!-- ZIN: Betekenis-vraag (optioneel) -->
                             <div style="margin-top:16px;background:#f0fdf4;border:2px dashed #10b981;border-radius:8px;padding:12px;">
-                                <label style="display:block;font-size:0.85rem;color:#166534;margin-bottom:6px;font-weight:600;">
-                                    ✨ Wat maakt dit zinvol voor ${state.clientNaam || 'je'}? (optioneel)
+                                <label style="display:block;font-size:0.85rem;color:#166534;margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:6px;">
+                                    <span>✨ Wat maakt dit zinvol voor ${state.clientNaam || 'je'}? (optioneel)</span>
+                                    <span class="tooltip-icon" style="font-size:0.65rem;width:16px;height:16px;background:#10b981;">
+                                        ⓘ
+                                        <span class="tooltip-text wide">Deze vraag helpt om te begrijpen wat voor jou echt belangrijk is - niet wat anderen denken dat belangrijk is.</span>
+                                    </span>
                                 </label>
                                 <textarea 
                                     id="betekenis-${domein.id}"
@@ -2095,10 +2239,16 @@
                 <!-- T0 vs T1 VISUALISATIE (ZIN KERNPRINCIPE!) -->
                 <div style="background:#e0f2fe;border:3px solid #0284c7;border-radius:14px;padding:24px;margin-bottom:24px;">
                     <h3 style="font-size:1.4rem;color:#075985;margin:0 0 8px;font-weight:800;display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:1.8rem;">🔄</span> Netwerkbeweging (T0 → T1)
+                        <span style="font-size:1.8rem;">🔄</span> Netwerkbeweging (Nu → Straks)
+                        <span class="tooltip-icon">
+                            ⓘ
+                            <span class="tooltip-text wide">
+                                Dit toont hoe het netwerk verschuift van de huidige situatie naar de gewenste situatie met de gekozen interventies.
+                            </span>
+                        </span>
                     </h3>
                     <p style="font-size:0.9rem;color:#0c4a6e;margin:0 0 20px;line-height:1.5;">
-                        Dit laat zien hoe de netwerkpositie verschuift van de huidige situatie (T0) naar de gewenste situatie (T1) na interventies.
+                        Hoe verandert het netwerk van <strong>NU</strong> (huidige steun) naar <strong>STRAKS</strong> (na de gekozen interventies)?
                     </p>
                     
                     <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;">
@@ -2124,14 +2274,26 @@
                                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
                                     <span style="width:16px;height:16px;background:#10b981;border-radius:3px;display:inline-block;"></span>
                                     <span>🟢 Informeel: ${t0_informeel}× (${t0_i_pct}%)</span>
+                                    <span class="tooltip-icon" style="font-size:0.7rem;width:16px;height:16px;">
+                                        ⓘ
+                                        <span class="tooltip-text wide">Familie, vrienden, buren - mensen uit je directe omgeving zonder formele rol</span>
+                                    </span>
                                 </div>
                                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
                                     <span style="width:16px;height:16px;background:#8b5cf6;border-radius:3px;display:inline-block;"></span>
                                     <span>🟣 Collectief: ${t0_collectief}× (${t0_c_pct}%)</span>
+                                    <span class="tooltip-icon" style="font-size:0.7rem;width:16px;height:16px;">
+                                        ⓘ
+                                        <span class="tooltip-text wide">Sportclub, kerk, buurtcentrum, vereniging - georganiseerde groepen zonder zorgfunctie</span>
+                                    </span>
                                 </div>
                                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
                                     <span style="width:16px;height:16px;background:#3b82f6;border-radius:3px;display:inline-block;"></span>
                                     <span>🔵 Formeel: ${t0_formeel}× (${t0_f_pct}%)</span>
+                                    <span class="tooltip-icon" style="font-size:0.7rem;width:16px;height:16px;">
+                                        ⓘ
+                                        <span class="tooltip-text wide">Professionals, hulpverleners, therapeuten - betaalde zorg en ondersteuning</span>
+                                    </span>
                                 </div>
                                 ${t0_geen > 0 ? `
                                 <div style="display:flex;align-items:center;gap:6px;">
