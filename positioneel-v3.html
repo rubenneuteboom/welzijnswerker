@@ -1348,6 +1348,10 @@
             document.getElementById('samenvattingContainer').innerHTML = html;
         }
         
+        // ============================================
+        // EXPORT N3 - CONSENT FLOW
+        // ============================================
+        
         function exportN3() {
             const interventies = state.geselecteerdeInterventies || [];
             
@@ -1355,6 +1359,194 @@
                 alert('⚠️ Geen interventies geselecteerd om te exporteren');
                 return;
             }
+            
+            // Toon consent modal
+            toonConsentModal();
+        }
+        
+        function toonConsentModal() {
+            const modal = document.createElement('div');
+            modal.id = 'consent-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                animation: fadeIn 0.3s ease-in;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background:white;border-radius:16px;max-width:500px;width:90%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align:center;margin-bottom:24px;">
+                        <div style="font-size:3rem;margin-bottom:12px;">🔒</div>
+                        <h2 style="font-size:1.5rem;color:#374151;margin:0 0 8px;">Privacybescherming</h2>
+                        <p style="font-size:0.9rem;color:#6b7280;margin:0;">Export voor strategische analyse</p>
+                    </div>
+                    
+                    <div style="background:#f9fafb;border-radius:10px;padding:16px;margin-bottom:20px;">
+                        <div style="font-weight:600;color:#374151;margin-bottom:10px;font-size:0.95rem;">Deze export bevat:</div>
+                        <ul style="margin:0;padding-left:20px;color:#6b7280;font-size:0.85rem;line-height:1.8;">
+                            <li>Voornaam cliënt: <strong>${state.clientNaam}</strong></li>
+                            <li>Focusgebieden (${domains.filter(d => state.scores[d.id] === 1 || state.scores[d.id] === 2).length}× domeinen)</li>
+                            <li>Geselecteerde interventies (${state.geselecteerdeInterventies.length}× acties)</li>
+                            <li>Netwerkpositie (I/C/F verdeling)</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-bottom:20px;">
+                        <label style="display:flex;align-items:start;gap:10px;padding:12px;border:2px solid #d1d5db;border-radius:8px;cursor:pointer;background:white;"
+                               onmouseover="this.style.borderColor='#10b981'" 
+                               onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#d1d5db'">
+                            <input type="checkbox" id="consent-akkoord" 
+                                   style="width:18px;height:18px;margin-top:2px;flex-shrink:0;"
+                                   onchange="if(this.checked) this.parentElement.style.borderColor='#10b981'; else this.parentElement.style.borderColor='#d1d5db';">
+                            <span style="font-size:0.9rem;color:#374151;line-height:1.5;">
+                                Ik ga akkoord met delen van deze gegevens voor beleidsanalyse (Niveau 3)
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <div style="margin-bottom:24px;">
+                        <label style="display:flex;align-items:start;gap:10px;padding:12px;border:2px dashed #d1d5db;border-radius:8px;cursor:pointer;background:#fffbeb;"
+                               onmouseover="this.style.borderColor='#f59e0b'" 
+                               onmouseout="this.style.borderColor='#d1d5db'">
+                            <input type="checkbox" id="consent-anoniem" 
+                                   style="width:18px;height:18px;margin-top:2px;flex-shrink:0;">
+                            <span style="font-size:0.9rem;color:#78350f;line-height:1.5;">
+                                <strong>Anonymiseer naam</strong> (vervang "${state.clientNaam}" door "Casus ${new Date().toISOString().split('T')[0]}")
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <div style="display:flex;gap:10px;">
+                        <button onclick="sluitConsentModal()" 
+                                style="flex:1;padding:12px;border:2px solid #d1d5db;background:white;color:#6b7280;
+                                       border-radius:8px;font-weight:600;cursor:pointer;font-size:0.95rem;"
+                                onmouseover="this.style.borderColor='#9ca3af'" 
+                                onmouseout="this.style.borderColor='#d1d5db'">
+                            Annuleren
+                        </button>
+                        <button onclick="consentGoedgekeurd()" 
+                                style="flex:1;padding:12px;border:none;background:#10b981;color:white;
+                                       border-radius:8px;font-weight:600;cursor:pointer;font-size:0.95rem;"
+                                onmouseover="this.style.background='#059669'" 
+                                onmouseout="this.style.background='#10b981'">
+                            Akkoord & Verder →
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function sluitConsentModal() {
+            const modal = document.getElementById('consent-modal');
+            if (modal) modal.remove();
+        }
+        
+        function consentGoedgekeurd() {
+            const akkoord = document.getElementById('consent-akkoord');
+            
+            if (!akkoord || !akkoord.checked) {
+                alert('⚠️ Je moet akkoord gaan met het delen van gegevens');
+                return;
+            }
+            
+            const anoniem = document.getElementById('consent-anoniem');
+            const anonymiseer = anoniem && anoniem.checked;
+            
+            // Log consent
+            console.log('✅ Consent gegeven voor export', { anonymiseer, timestamp: new Date().toISOString() });
+            
+            // Sluit consent modal
+            sluitConsentModal();
+            
+            // Toon keuze modal
+            toonKeuzeModal(anonymiseer);
+        }
+        
+        function toonKeuzeModal(anonymiseer) {
+            const modal = document.createElement('div');
+            modal.id = 'keuze-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                animation: fadeIn 0.3s ease-in;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background:white;border-radius:16px;max-width:500px;width:90%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align:center;margin-bottom:24px;">
+                        <div style="font-size:3rem;margin-bottom:12px;">📊</div>
+                        <h2 style="font-size:1.5rem;color:#374151;margin:0 0 8px;">Hoe wil je de data delen?</h2>
+                        <p style="font-size:0.9rem;color:#6b7280;margin:0;">Kies je export-methode</p>
+                    </div>
+                    
+                    <div style="display:grid;gap:12px;margin-bottom:20px;">
+                        <button onclick="exportDirectNaarN3(${anonymiseer})"
+                                style="padding:20px;border:3px solid #10b981;background:#f0fdf4;border-radius:12px;
+                                       cursor:pointer;text-align:left;transition:all 0.2s;"
+                                onmouseover="this.style.background='#dcfce7';this.style.transform='scale(1.02)'" 
+                                onmouseout="this.style.background='#f0fdf4';this.style.transform='scale(1)'">
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                                <div style="font-size:2rem;">🚀</div>
+                                <div style="font-size:1.1rem;font-weight:700;color:#166534;">Direct naar Niveau 3</div>
+                            </div>
+                            <div style="font-size:0.85rem;color:#15803d;line-height:1.5;padding-left:44px;">
+                                Opent strategisch.html meteen met deze data (snelste optie)
+                            </div>
+                        </button>
+                        
+                        <button onclick="exportDownloadJSON(${anonymiseer})"
+                                style="padding:20px;border:3px solid #3b82f6;background:#eff6ff;border-radius:12px;
+                                       cursor:pointer;text-align:left;transition:all 0.2s;"
+                                onmouseover="this.style.background='#dbeafe';this.style.transform='scale(1.02)'" 
+                                onmouseout="this.style.background='#eff6ff';this.style.transform='scale(1)'">
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                                <div style="font-size:2rem;">💾</div>
+                                <div style="font-size:1.1rem;font-weight:700;color:#1e40af;">Download JSON bestand</div>
+                            </div>
+                            <div style="font-size:0.85rem;color:#1e3a8a;line-height:1.5;padding-left:44px;">
+                                Voor later gebruik of delen met anderen (bijv. per email)
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <button onclick="sluitKeuzeModal()" 
+                            style="width:100%;padding:12px;border:2px solid #d1d5db;background:white;color:#6b7280;
+                                   border-radius:8px;font-weight:600;cursor:pointer;font-size:0.95rem;"
+                            onmouseover="this.style.borderColor='#9ca3af'" 
+                            onmouseout="this.style.borderColor='#d1d5db'">
+                        Annuleren
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function sluitKeuzeModal() {
+            const modal = document.getElementById('keuze-modal');
+            if (modal) modal.remove();
+        }
+        
+        function bouwExportData(anonymiseer) {
+            const interventies = state.geselecteerdeInterventies || [];
             
             // Bereken I/C/F verdeling
             let informatieelCount = 0;
@@ -1369,11 +1561,20 @@
             
             const totaal = informatieelCount + collectiefCount + formeelCount;
             
-            const exportData = {
+            const clientNaam = anonymiseer 
+                ? `Casus ${new Date().toISOString().split('T')[0]}`
+                : state.clientNaam;
+            
+            return {
                 versie: '3.0',
                 exportDate: new Date().toISOString(),
+                consent: {
+                    gegeven: true,
+                    geanonimiseerd: anonymiseer,
+                    timestamp: new Date().toISOString()
+                },
                 cliënt: {
-                    naam: state.clientNaam,
+                    naam: clientNaam,
                     doelgroepen: state.doelgroepen || []
                 },
                 focusgebieden: domains.filter(d => state.scores[d.id] === 1 || state.scores[d.id] === 2).map(d => ({
@@ -1416,18 +1617,45 @@
                     laatstGewijzigd: state.updatedAt
                 }
             };
+        }
+        
+        function exportDirectNaarN3(anonymiseer) {
+            const exportData = bouwExportData(anonymiseer);
+            
+            // Sla data op in localStorage voor niveau 3
+            localStorage.setItem('rpa_n3_import', JSON.stringify(exportData));
+            
+            sluitKeuzeModal();
+            
+            console.log('🚀 Data klaargezet voor Niveau 3', exportData);
+            
+            // Open niveau 3 in nieuwe tab
+            window.open('strategisch.html', '_blank');
+            
+            alert('🚀 Niveau 3 (Strategisch) is geopend in een nieuwe tab!\n\nKlik daar op "Importeer Niveau 2 data" om de analyse te laden.');
+        }
+        
+        function exportDownloadJSON(anonymiseer) {
+            const exportData = bouwExportData(anonymiseer);
             
             // Download als JSON
             const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `RPA-N3-export-${state.clientNaam?.replace(/\s+/g, '-') || 'onbekend'}-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const bestandsnaam = anonymiseer 
+                ? `RPA-N3-export-casus-${new Date().toISOString().split('T')[0]}.json`
+                : `RPA-N3-export-${state.clientNaam?.replace(/\s+/g, '-') || 'onbekend'}-${new Date().toISOString().split('T')[0]}.json`;
+            
+            a.download = bestandsnaam;
             a.click();
             URL.revokeObjectURL(url);
             
-            console.log('📊 N3 export succesvol!', exportData);
-            alert('📊 Export gedownload! Dit bestand kan je importeren in Niveau 3 (Strategisch).');
+            sluitKeuzeModal();
+            
+            console.log('💾 JSON export succesvol!', exportData);
+            alert(`💾 Export gedownload als:\n${bestandsnaam}\n\nJe kunt dit bestand importeren in Niveau 3 (Strategisch).`);
         }
         
         // ============================================
