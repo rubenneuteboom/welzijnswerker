@@ -8132,213 +8132,6 @@ Antwoord in dit exacte JSON formaat:
         // Focus is nu op evidence-based interventies per domein op basis van triage
         // Zie git history voor oude implementatie
         
-        function selectBeweging(naar, index) {
-            state.beoogdeBeweging = naar;
-            saveState();
-            document.getElementById('btnNaarInterventies').disabled = false;
-            renderNetwerkBewegingDiagram(); // Update diagram met gekozen beweging
-        }
-        
-        function filterInterventiesByPostcode() {
-            alert('⚠️ Postcode filtering tijdelijk uitgeschakeld\n\nDe app toont nu evidence-based interventies per focusgebied');
-            return;
-            
-            const netwerkInfo = getRPANetwerkPositie();
-            const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
-            const richting = richtingen.find(r => r.naar === gekozenBeweging);
-            
-            if (!richting || !richting.interventies) {
-                container.innerHTML = '<p style="color: var(--text-light);">Geen interventies beschikbaar.</p>';
-                return;
-            }
-            
-            // Voeg lokale interventies toe als postcode is ingevuld
-            let interventies = [...richting.interventies];
-            if (state.postcode) {
-                const regio = state.postcode.substring(0, 4);
-                const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
-                
-                // Voeg lokale collectieve en formele interventies toe
-                interventies = [
-                    ...interventies,
-                    ...lokaal.collectief.map(i => `${i} (lokaal collectief)`),
-                    ...lokaal.formeel.map(i => `${i} (lokaal formeel)`)
-                ];
-                
-                // Voeg doelgroep-specifieke lokale interventies toe
-                if (state.doelgroepen && state.doelgroepen.length > 0) {
-                    state.doelgroepen.forEach(doelgroep => {
-                        if (lokaal[doelgroep]) {
-                            interventies = [
-                                ...interventies,
-                                ...lokaal[doelgroep].map(i => `${i} (lokaal ${doelgroep})`)
-                            ];
-                        }
-                    });
-                }
-            }
-            
-            // Voeg custom interventies toe als die er zijn
-            if (state.customInterventies && state.customInterventies.length > 0) {
-                interventies = [
-                    ...interventies,
-                    ...state.customInterventies.map(i => `${i} (eigen toevoeging)`)
-                ];
-            }
-            
-            // Methodische interventies sectie
-            const methodisch = getMethodischeInterventiesVoorContext();
-            const methodischHTML = methodisch.length > 0 ? `
-                <div style="background:#faf5ff;border:2px solid #a855f7;border-radius:12px;padding:18px;margin-bottom:20px;">
-                    <div style="font-weight:700;color:#7e22ce;margin-bottom:4px;font-size:0.95rem;">🔬 Erkende methodische instrumenten</div>
-                    <p style="font-size:0.8rem;color:#6b7280;margin:0 0 12px;">Passend bij de gekozen beweging en doelgroep. Selecteer wat ingezet wordt.</p>
-                    <div style="display:grid;gap:8px;">
-                        ${methodisch.map((inv, mi) => {
-                            const isSelected = (state.geselecteerdeInterventies || []).some(s => s.id === inv.id);
-                            return `<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:2px solid ${isSelected?'#a855f7':'#e9d5ff'};background:${isSelected?'#f3e8ff':'white'};border-radius:8px;cursor:pointer;transition:all 0.2s;"
-                                onmouseover="this.style.borderColor='#a855f7';this.style.background='#f3e8ff'"
-                                onmouseout="this.style.borderColor='${isSelected?'#a855f7':'#e9d5ff'}';this.style.background='${isSelected?'#f3e8ff':'white'}'">
-                                <input type="checkbox" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;"
-                                    ${isSelected ? 'checked' : ''}
-                                    onchange="toggleMethodischeInterventie('${inv.id}', this.checked)">
-                                <div>
-                                    <div style="font-weight:600;color:#374151;margin-bottom:2px;">${inv.emoji} ${inv.naam}</div>
-                                    <div style="font-size:0.8rem;color:#6b7280;">${inv.beschrijving}</div>
-                                    ${inv.link ? `<a href="${inv.link}" target="_blank" style="font-size:0.75rem;color:#a855f7;">↗ Meer info</a>` : ''}
-                                </div>
-                            </label>`;
-                        }).join('')}
-                    </div>
-                </div>` : '';
-
-            // === NIEUW: VERRIJK INTERVENTIES MET METADATA ===
-            const verrijkteInterventies = interventies.slice(0, 5).map((interventie, index) => {
-                // Herken interventie type en voeg metadata toe
-                const meta = getInterventieMetadata(interventie);
-                return { ...meta, naam: interventie, index };
-            });
-
-            let html = `
-                <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-                    <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">Gekozen beweging:</div>
-                    <div style="font-size: 1.05rem; color: var(--text);">${richting.label}</div>
-                </div>
-
-                ${methodischHTML}
-                
-                <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
-                    <p style="font-size:0.85rem;color:#92400e;margin:0;line-height:1.5;">
-                        💡 We tonen de <strong>5 meest relevante</strong> opties. Dit zijn suggesties - kies samen wat past.
-                    </p>
-                </div>
-                
-                <div style="display: grid; gap: 15px;">
-                    ${verrijkteInterventies.map((item) => `
-                        <label style="display: block; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; background: white; transition: all 0.2s;"
-                               onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#f0f9ff';"
-                               onmouseout="this.style.borderColor='#e0e0e0'; this.style.background='white';">
-                            <div style="display: flex; align-items: start; gap: 12px;">
-                                <input type="checkbox" 
-                                       id="interventie_${item.index}"
-                                       style="width: 20px; height: 20px; margin-top: 2px;"
-                                       onchange="toggleInterventie(${item.index}, this.checked)">
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: var(--text); margin-bottom: 6px; font-size: 1.05rem;">
-                                        ${item.naam}
-                                    </div>
-                                    
-                                    <!-- Meta badges -->
-                                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;">
-                                        ${item.evidence === 'evidence-based' ? '<span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">🟢 Evidence-based</span>' : ''}
-                                        ${item.evidence === 'promising' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">🟡 Veelbelovend</span>' : ''}
-                                        ${item.evidence === 'practice' ? '<span style="background:#f3f4f6;color:#6b7280;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">⚪ Praktijkervaring</span>' : ''}
-                                        
-                                        ${item.kosten === 'gratis' ? '<span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">💚 Gratis</span>' : ''}
-                                        ${item.kosten === 'eigen-bijdrage' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">💛 Eigen bijdrage</span>' : ''}
-                                        ${item.kosten === 'betaald' ? '<span style="background:#fee2e2;color:#991b1b;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">💰 Betaald</span>' : ''}
-                                        
-                                        ${item.beschikbaarheid === 'direct' ? '<span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">⏱️ Direct</span>' : ''}
-                                        ${item.beschikbaarheid === 'wachtlijst' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">⏳ Wachtlijst</span>' : ''}
-                                    </div>
-                                    
-                                    ${item.beschrijving ? `<div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 10px; line-height: 1.5;">${item.beschrijving}</div>` : ''}
-                                    
-                                    ${item.contact ? `
-                                        <div style="font-size: 0.8rem; color: #6b7280; padding: 8px; background: #f9fafb; border-radius: 6px;">
-                                            ${item.contact.telefoon ? `📞 ${item.contact.telefoon}` : ''}
-                                            ${item.contact.website ? ` | 🌐 <a href="https://${item.contact.website}" target="_blank" style="color:#3b82f6;">${item.contact.website}</a>` : ''}
-                                        </div>
-                                    ` : ''}
-                                    
-                                    <div id="focus_${item.index}" style="display: none; padding-top: 10px; border-top: 1px solid #e0e0e0;">
-                                        <!-- Bij wie / contactpersoon -->
-                                        <div style="margin-bottom: 12px;">
-                                            <label style="font-size: 0.85rem; color: var(--text-light); display: block; margin-bottom: 6px;">
-                                                👤 Bij wie / contactpersoon:
-                                            </label>
-                                            <input type="text" 
-                                                   id="contact_${item.index}"
-                                                   placeholder="Bijv. Jan de Vries, wijkverpleegkundige"
-                                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem;"
-                                                   onchange="saveInterventieContact(${item.index}, this.value)">
-                                            <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 4px; margin-bottom: 0; font-style: italic;">
-                                                💡 Optioneel: noteer de naam van de persoon binnen deze organisatie
-                                            </p>
-                                        </div>
-                                        
-                                        <!-- Focus -->
-                                        <div>
-                                            <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px;">Focus:</div>
-                                            <div style="display: flex; gap: 12px;">
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Cliënt</span>
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Netwerk</span>
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                                    <input type="checkbox" style="width: 16px; height: 16px;">
-                                                    <span style="font-size: 0.9rem;">Beiden</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                    `).join('')}
-                </div>
-                
-                <!-- Handmatige toevoeging -->
-                <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border: 2px dashed #f59e0b; border-radius: 12px;">
-                    <h4 style="font-size: 1rem; font-weight: 600; color: #92400e; margin: 0 0 12px 0;">
-                        ➕ Eigen interventie toevoegen
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #78350f; margin-bottom: 12px;">
-                        Staat je interventie er niet bij? Voeg deze hier toe:
-                    </p>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" 
-                               id="customInterventie"
-                               placeholder="Bijv. Schuldhulpmaatje via kerk"
-                               style="flex: 1; padding: 10px 14px; border: 2px solid #fbbf24; border-radius: 8px; font-size: 0.95rem;">
-                        <button class="btn" 
-                                onclick="addCustomInterventie()"
-                                style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap;">
-                            Toevoegen
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            container.innerHTML = html;
-            
-            // Render concrete voorzieningen als ondersteuningsstructuur en postcode zijn ingevuld
-            renderConcreteVoorzieningen();
-        }
-        
         // Voeg custom interventie toe
         function addCustomInterventie() {
             const input = document.getElementById('customInterventie');
@@ -10263,56 +10056,6 @@ END:VEVENT
             }
         }
 
-        // Reset all
-        function resetAll() {
-            if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
-                localStorage.removeItem('welzijnswerker_v2');
-                state = {
-                    version: '3.0',
-                    clientId: 'client_' + Date.now(),
-                    createdAt: new Date().toISOString(),
-                    updatedAt: null,
-                    mode: null,
-                    professionalName: '',
-                    postcode: '',
-                    clientName: '',
-                    clientBirthdate: '',
-                    hulpvraag: '',
-                    wens: '',
-                    scores: {},
-                    notes: {},
-                    domainDetails: {},
-                    network: [],
-                    ratings: {},
-                    ratingNotes: {},
-                    currentScreen: 1,
-                    currentView: 'assessment',
-                    kanbanCards: [],
-                    gptAdviceInterventions: [],
-                    activities: [],
-                    selectedActivities: [],
-                    agendaActivities: [],
-                    agendaMonth: new Date().getMonth(),
-                    agendaYear: new Date().getFullYear(),
-                    cachedProAdvice: null,
-                    cachedClientAdvice: null,
-                    history: {
-                        assessments: [],
-                        networkChanges: [],
-                        adviceLog: [],
-                        activityLog: [],
-                        kanbanLog: []
-                    }
-                };
-                document.querySelectorAll('input[name="modus"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-                document.getElementById('professionalFields').style.display = 'none';
-                if (document.getElementById('postcodeFilter')) document.getElementById('postcodeFilter').value = '';
-                if (document.getElementById('professionalName')) document.getElementById('professionalName').value = '';
-                goToScreen(1);
-            }
-        }
-
         // Initialize
         loadState();
         renderProgressSteps();
@@ -11868,282 +11611,64 @@ function getCaseloadViaInterop() {
   return interopGetCaseload();
 }
 
+function openNiveau(...args) {
+  return openNiveau3Caseload(...args);
+}
+
+function verwijderCaseloadN(...args) {
+  return verwijderCaseloadN2(...args);
+}
+
+function toonRPAMethodiek(...args) {
+  if (typeof toonNetwerkUitleg === 'function') {
+    return toonNetwerkUitleg(...args);
+  }
+}
+
 // Make legacy globals available for inline handlers that still rely on global names.
 Object.assign(window, {
-  _unused_renderTriageDomainGrid
-addCustomInterventie
-addInformeelPersoon
-addInformeelPersoonModal
-addKanbanCard
-addPerson
-addSelectedToAgenda
-addSupporter
-analyzeNetworkDetailed
-analyzeWithAI
-checkDomainsAndContinue
-checkToegang
-cleanEmptyFields
-clearAIKey
-closeEditCardModal
-closePersoonModal
-closeSupporterModal
-confirmPersoonModal
-copyToClipboard
-createAgendaActivities
-createAssessmentSnapshot
-createTooltip
-deleteCardFromModal
-deleteInformeelPersoon
-deleteKanbanCard
-detectSignals
-determineTargetNetwork
-displayClientAdvice
-displayProAdvice
-domeinKaartje
-domeinKaartjeMetSupporters
-drawNetwork
-editSupporter
-esc
-exportDoelen
-exportNaarN3ViaInterop
-exportSamenvatting
-exportToICS
-exportToPrint
-exportVoorStrategischeAnalyse
-extractInterventionsFromAdvice
-filterActivities
-filterInterventiesByPostcode
-formatTimestamp
-getAdviceForDomain
-getAllSupportersForBlok
-getCaseloadViaInterop
-getDomainGoalPlaceholder
-getGoalAdvice
-getHuidigeDraaglagen
-getInterventieMetadata
-getInterventiesVoorDomein
-getInterventions
-getLowestDomains
-getMethodischeInterventiesVoorContext
-getMogelijkeRichtingen
-getNetwerkContext
-getNetwerkPositieLabel
-getNetwerkUitleg
-getNetworkAdvice
-getNetworkGrowthActions
-getNetworkType
-getNextScreenId
-getPreviousScreenId
-getPriorityLabel
-getRPANetwerkPositie
-getScreenConfig
-getScreenNumber
-getSupportersVanType
-getZelfredzaamheidLabel
-goBackToStart
-goToAgenda
-goToNext
-goToNextFromAdvies
-goToPrevFromOrganisaties
-goToPrevious
-goToScreen
-goToScreenById
-handleDragEnd
-handleDragLeave
-handleDragOver
-handleDragStart
-handleDrop
-handleStepClick
-hasAnyDetails
-importCaseloadViaInterop
-importTriageDataToSupporters
-invalidateAdviceCache
-laadCaseloadN2
-laadDemoCaseload
-loadDemo
-loadHulpvraagData
-loadState
-logActivityInteraction
-logAdvice
-logKanbanMove
-logNetworkChange
-naarStrategischeAnalyse
-navigateMonth
-openAfspraakToevoegen
-openEditCardModal
-openNiveau3Caseload
-openOverlegSelector
-openPrivacyToelichting
-openRegiehouderSelector
-openSupporterModal
-opslaanAfspraak
-planKlortKleur
-planOverleg
-removePerson
-removeSupporter
-renderActiviteiten
-renderAdvice
-renderAdviceFallback
-renderAgenda
-renderAgendaActivitiesList
-renderAgendaCalendar
-renderAgendaLijst
-renderBewegingKeuzes
-renderCollectieveSteunOpties
-renderCompactOverzichtInBeweging
-renderConcreteVoorzieningen
-renderDashboard
-renderDashboardStats
-renderDoelen
-renderDoelgroepChips
-renderDoelgroepVragen
-renderDomainCheckboxes
-renderDomainContent
-renderDomainOverviewTable
-renderDomainOverviewTable_OLD
-renderDomainQuickList
-renderDomains
-renderDraaglaagBadge
-renderFormeleSteunOpties
-renderHuidigeSteunPerDomein
-renderInformeleSteunPersonen
-renderInterventiesPerDomein
-renderInterventiesVoorBeweging
-renderKanban
-renderMantelzorgSignalering
-renderNetwerkAggregatie
-renderNetwerkBewegingDiagram
-renderNetwerkDiagramSVG
-renderNetworkBlock
-renderNetworkBlocks
-renderNetworkGrowth
-renderOndersteuningsBlok
-renderOrganisaties
-renderPersonList
-renderPositioneleBeslissingen
-renderProAdvice
-renderProgressSteps
-renderRPANetwerkkaart
-renderRPANetwerkkaartCompact
-renderRPANetwerkkaartCompact2
-renderRatings
-renderReflectieVragen
-renderResults
-renderSamenvatting
-renderSignaalPanel
-renderSociaalNetwerkBlock
-renderSpiderChart
-renderStoplichtGrid
-renderSummary
-renderToestemmingKnoppen
-renderTriageDomainGrid
-renderTriageRecapInBeweging
-renderVoorNaVisualisatie
-renderWieHelptNuSamenvatting
-renderWorkflowBolletjes
-resetAll
-resetAllData
-resetTypeButtons
-saveCardFromModal
-saveCoordination
-saveCreatiefOplossing
-saveHuidigeSteun
-saveHuidigeSteunType
-saveHulpvraag
-saveInterventieContact
-saveNetwerkBevestiging
-saveOrientatie
-saveRatings
-saveState
-saveSteunDetail
-saveSupporterFromModal
-saveTriageAndContinue
-saveVorigGesprek
-scoreColor
-scoreEmoji
-searchBraveActivities
-selectBeweging
-selectConsent
-selectDraagkracht
-selectEffect
-selectHuidigeSteun
-selectMode
-selectSupporterType
-selectTypeCollectief
-selectTypeFormeel
-selectTypeInformeel
-setBesluitLaag
-setBewegingsrichting
-setBewegingsrichtingVoorNa
-setClientReactie
-setDomainScore
-setEvaluatieDatum
-setGespreksModus
-setNetworkCoverage
-setReflectie
-setStoplicht
-setToestemming
-setVerantwoordelijke
-showAISetup
-showDomainDetails
-showToast
-showWensReminder
-sluitAfspraakModal
-startAssessment
-startAssessmentMet
-submitToegang
-switchView
-syncDomainScore
-syncSociaalNetwerkScore
-testInterventies
-toggleAfspraakVoltooid
-toggleCaseloadPanel
-toggleCheckboxStyle
-toggleCollectiefDetail
-toggleCollectieveSteun
-toggleDoelgroep
-toggleDoelgroepChip
-toggleDomainCard
-toggleDomainDetails
-toggleDomainSelection
-toggleDraaglaag
-toggleFormeelDetail
-toggleFormeleSteun
-toggleGewensteDraaglaag
-toggleHuidigeDraaglaag
-toggleInterventie
-toggleLocalActivity
-toggleMethode
-toggleMethodischeInterventie
-toggleNetworkInzet
-toggleOndersteuningBehoefte
-toggleOndersteuningsBlok
-toggleRole
-toggleSteunDoorWie
-toggleSteunDropdown
-toonIntroScreen
-toonIntroductie
-toonNetwerkUitleg
-updateActivityCounts
-updateActivityDate
-updateActivityStatus
-updateAgendaButton
-updateAverageRating
-updateDomainDetail
-updateNetworkType
-updateNote
-updateRatingDisplay
-updateRiskAlert
-updateSteunDoorWie
-updateStoplichtTeller
-updateTriageCounter
-updateWorkflowSteps
-validatePostcode
-validateTriage
-verwijderAfspraak
-verwijderCaseloadN2
-verwijderOverleg
-vulRelatieSnel,
+  startAssessment,
+  goBackToStart,
+  goToNext,
+  goToNextFromAdvies,
+  goToPrevFromOrganisaties,
+  goToPrevious,
+  goToScreen,
+  goToScreenById,
+  getScreenNumber,
+  checkDomainsAndContinue,
+  saveTriageAndContinue,
+  setGespreksModus,
+  setBesluitLaag,
+  setToestemming,
+  saveOrientatie,
+  openNiveau3Caseload,
+  openNiveau,
+  switchView,
+  resetAll,
+  resetAllData,
+  loadDemo,
+  exportSamenvatting,
+  exportToICS,
+  addSelectedToAgenda,
+  filterActivities,
+  filterInterventiesByPostcode,
+  searchBraveActivities,
+  naarStrategischeAnalyse,
+  navigateMonth,
+  addKanbanCard,
+  closeEditCardModal,
+  saveCardFromModal,
+  deleteCardFromModal,
+  closePersoonModal,
+  confirmPersoonModal,
+  toggleCaseloadPanel,
+  toggleDoelgroepChip,
+  toonRPAMethodiek,
+  verwijderCaseloadN2,
+  verwijderCaseloadN,
+  renderSamenvatting,
+  submitToegang,
   exportNaarN3ViaInterop,
   importCaseloadViaInterop,
   getCaseloadViaInterop,
