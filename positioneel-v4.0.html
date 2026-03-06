@@ -4801,6 +4801,8 @@
         import { esc } from './src/shared/utils/esc.js';
         import { ORGANISATIES } from './src/data/organisaties.js';
         import { INTERVENTIES } from './src/data/interventies.js';
+        import { analyzeHulpvraag, generateClientAdvice, generateProfessionalAdvice } from './src/shared/api/openai.js';
+        import { searchActivities } from './src/shared/api/brave.js';
 
         // Score-to-emoji/color helpers
         function scoreEmoji(score) {
@@ -4809,9 +4811,6 @@
         function scoreColor(score) {
             return score === 1 ? '#dc2626' : score === 2 ? '#eab308' : score === 3 ? '#10b981' : '#94a3b8';
         }
-
-        // Brave API key (not used - searches go through proxy)
-        const BRAVE_API_KEY = null;
 
         // Data - Domains (RPA Levensdomeinen)
         // Zelfredzaamheid niveaus (RPA 3-niveau systeem: 🔴🟡🟢)
@@ -6123,27 +6122,7 @@ Antwoord in dit exacte JSON formaat:
   "justitie": 3
 }`;
 
-                const response = await fetch('http://localhost:3459/openai', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [{
-                            role: 'user',
-                            content: prompt
-                        }],
-                        temperature: 0.3,
-                        max_tokens: 500
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('API call failed: ' + response.status);
-                }
-
-                const data = await response.json();
+                const data = await analyzeHulpvraag(prompt);
                 const aiResponse = data.choices[0].message.content;
                 
                 // Parse JSON from response
@@ -13239,27 +13218,10 @@ Geef je antwoord in dit exacte HTML-formaat:
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            { role: 'system', content: 'Je bent een ervaren welzijnswerker die de RPA-methodiek (Relationeel-Positioneel Analysemodel) toepast. Je geeft warme, empathische maar concrete adviezen. Je antwoordt altijd in correct Nederlands.' },
-                            { role: 'user', content: prompt }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1500
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
+                const data = await generateClientAdvice(
+                    'Je bent een ervaren welzijnswerker die de RPA-methodiek (Relationeel-Positioneel Analysemodel) toepast. Je geeft warme, empathische maar concrete adviezen. Je antwoordt altijd in correct Nederlands.',
+                    prompt
+                );
                 const gptAdvice = data.choices[0].message.content;
                 
                 // Cache the advice and log it
@@ -13484,27 +13446,10 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
 </div>`;
 
             try {
-                const response = await fetch('http://localhost:3459/openai', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            { role: 'system', content: 'Je bent een ervaren supervisor voor welzijnswerkers. Je geeft praktische, evidence-based adviezen voor de professionele begeleiding van cliënten. Gebruik vakjargon waar passend maar blijf begrijpelijk.' },
-                            { role: 'user', content: prompt }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1500
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
+                const data = await generateProfessionalAdvice(
+                    'Je bent een ervaren supervisor voor welzijnswerkers. Je geeft praktische, evidence-based adviezen voor de professionele begeleiding van cliënten. Gebruik vakjargon waar passend maar blijf begrijpelijk.',
+                    prompt
+                );
                 const gptAdvice = data.choices[0].message.content;
                 
                 // Cache the advice and log it
@@ -13738,11 +13683,6 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
             const resultsList = document.getElementById('braveResultsList');
             const btn = document.getElementById('btnSearchBrave');
             
-            if (!BRAVE_API_KEY) {
-                alert('Brave Search API key niet ingesteld.\\n\\nVoor online zoeken:\\n1. Ga naar https://brave.com/search/api/\\n2. Maak een gratis account (2000 queries/maand)\\n3. Voeg de API key toe in de code');
-                return;
-            }
-            
             // Get lowest domains for search context
             const sortedDomains = [...domains].sort((a, b) => 
                 (state.scores[a.id] || 5) - (state.scores[b.id] || 5)
@@ -13769,14 +13709,7 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
             `;
             
             try {
-                // Use local proxy to avoid CORS issues
-                const response = await fetch(`http://localhost:3459/brave-search?q=${encodeURIComponent(searchTerms)}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Brave API error: ${response.status}`);
-                }
-                
-                const data = await response.json();
+                const data = await searchActivities(searchTerms);
                 const results = data.web?.results || [];
                 
                 if (results.length === 0) {
