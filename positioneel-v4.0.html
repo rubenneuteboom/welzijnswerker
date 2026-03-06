@@ -4797,12 +4797,8 @@
         </div>
     </div>
 
-    <script>
-        // XSS protection helper
-        function esc(str) {
-            if (!str) return '';
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        }
+    <script type="module">
+        import { esc } from './src/shared/utils/esc.js';
 
         // Score-to-emoji/color helpers
         function scoreEmoji(score) {
@@ -15524,7 +15520,51 @@ END:VEVENT
             }
         }
         // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
-        
+
+        // Expose module-scoped functions/state for existing inline handlers and legacy scripts.
+        const exposedNames = [
+            'addCustomInterventie', 'addKanbanCard', 'addSelectedToAgenda', 'addSupporter',
+            'checkDomainsAndContinue', 'closeEditCardModal', 'closeSupporterModal', 'deleteCardFromModal',
+            'deleteInformeelPersoon', 'editSupporter', 'exportDoelen', 'exportSamenvatting',
+            'exportToICS', 'filterActivities', 'filterInterventiesByPostcode', 'goToNextFromAdvies',
+            'goToPrevFromOrganisaties', 'goToScreen', 'goToScreenById', 'handleDragEnd',
+            'handleDragLeave', 'handleDragOver', 'handleDragStart', 'handleDrop', 'handleStepClick',
+            'laadDemoCaseload', 'loadDemo', 'naarStrategischeAnalyse', 'navigateMonth',
+            'openAfspraakToevoegen', 'openEditCardModal', 'openNiveau3Caseload', 'openOverlegSelector',
+            'opslaanAfspraak', 'planOverleg', 'removePerson', 'removeSupporter', 'renderAdvice',
+            'renderProAdvice', 'renderSamenvatting', 'resetAll', 'resetAllData', 'saveCardFromModal',
+            'saveCoordination', 'saveCreatiefOplossing', 'saveInterventieContact', 'saveNetwerkBevestiging',
+            'saveOrientatie', 'saveSupporterFromModal', 'saveTriageAndContinue', 'saveVorigGesprek',
+            'searchBraveActivities', 'selectBeweging', 'selectConsent', 'selectDraagkracht',
+            'selectEffect', 'selectSupporterType', 'setBesluitLaag', 'setBewegingsrichting',
+            'setBewegingsrichtingVoorNa', 'setClientReactie', 'setEvaluatieDatum', 'setGespreksModus',
+            'setNetworkCoverage', 'setReflectie', 'setStoplicht', 'setToestemming',
+            'setVerantwoordelijke', 'showDomainDetails', 'startAssessment', 'switchView', 'testInterventies',
+            'toggleAfspraakVoltooid', 'toggleCaseloadPanel', 'toggleCheckboxStyle', 'toggleCollectiefDetail',
+            'toggleCollectieveSteun', 'toggleDoelgroepChip', 'toggleDomainCard', 'toggleDomainSelection',
+            'toggleDraaglaag', 'toggleFormeelDetail', 'toggleFormeleSteun', 'toggleGewensteDraaglaag',
+            'toggleHuidigeDraaglaag', 'toggleInterventie', 'toggleLocalActivity', 'toggleMethode',
+            'toggleMethodischeInterventie', 'toggleNetworkInzet', 'toggleOndersteuningBehoefte',
+            'toggleOndersteuningsBlok', 'toggleRole', 'toonNetwerkUitleg', 'toonRPAMethodiek',
+            'updateActivityDate', 'updateActivityStatus', 'updateDomainDetail', 'updateNote',
+            'updateRatingDisplay', 'verwijderAfspraak', 'verwijderCaseloadN2', 'verwijderOverleg', 'vulRelatieSnel'
+        ];
+
+        for (const name of exposedNames) {
+            try {
+                const value = eval(name);
+                if (typeof value === 'function') {
+                    window[name] = value;
+                }
+            } catch (e) {
+                // Function is defined in another script block or not needed globally.
+            }
+        }
+        window.esc = esc;
+        window.state = state;
+        window.saveState = saveState;
+        window.renderDomains = renderDomains;
+
     </script>
 
     <!-- Custom modal: Persoon toevoegen -->
