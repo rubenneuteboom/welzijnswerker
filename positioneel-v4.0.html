@@ -12604,17 +12604,17 @@ Antwoord in dit exacte JSON formaat:
         // Filter interventies op basis van postcode
         function filterInterventiesByPostcode() {
             const postcodeInput = document.getElementById('postcodeFilter');
-            const postcode = postcodeInput.value.trim().toUpperCase();
+            const postcode = postcodeInput.value.trim();
             
             if (!postcode) {
-                alert('⚠️ Vul eerst een postcode in (bijv. 1234AB)');
+                alert('⚠️ Vul eerst een postcode in (bijv. 1234)');
                 return;
             }
             
-            // Valideer postcode format (4 cijfers + 2 letters)
-            const postcodeRegex = /^[0-9]{4}[A-Z]{2}$/;
+            // Valideer postcode format (exact 4 cijfers)
+            const postcodeRegex = /^[0-9]{4}$/;
             if (!postcodeRegex.test(postcode)) {
-                alert('⚠️ Ongeldige postcode. Gebruik format: 1234AB');
+                alert('⚠️ Ongeldige postcode. Gebruik format: 1234');
                 return;
             }
             
