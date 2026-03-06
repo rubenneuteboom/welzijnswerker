@@ -376,7 +376,7 @@
 
                 <div class="cta-gesprek">
                     <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee — zonder wachtlijst.</p>
-                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank" 
+                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank" rel="noopener noreferrer" 
                         style="display:inline-block;background:#059669;color:white;border:none;border-radius:12px;padding:14px 28px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;margin-top:4px;">
                         💬 Vraag een gesprek aan →
                     </a>
@@ -1082,7 +1082,7 @@
                             <strong>📖 Informatie lezen (anoniem)</strong>
                             <div class="hulp-links">
                                 ${hulp.info.map(item => 
-                                    `<a href="${item.url}" target="_blank">${item.name}</a> - ${item.desc || ''}`
+                                    `<a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.name}</a> - ${item.desc || ''}`
                                 ).join('')}
                             </div>
                         </div>
@@ -1095,7 +1095,7 @@
                             <strong>💬 Online chatten (anoniem, geen bellen)</strong>
                             <div class="hulp-links">
                                 ${hulp.chat.map(item => 
-                                    `<a href="${item.url || '#'}" target="_blank">${item.name}</a> ${item.desc ? '- ' + item.desc : ''}`
+                                    `<a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">${item.name}</a> ${item.desc ? '- ' + item.desc : ''}`
                                 ).join('')}
                             </div>
                         </div>

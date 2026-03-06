@@ -12464,7 +12464,7 @@ Antwoord in dit exacte JSON formaat:
                                 <div>
                                     <div style="font-weight:600;color:#374151;margin-bottom:2px;">${inv.emoji} ${inv.naam}</div>
                                     <div style="font-size:0.8rem;color:#6b7280;">${inv.beschrijving}</div>
-                                    ${inv.link ? `<a href="${inv.link}" target="_blank" style="font-size:0.75rem;color:#a855f7;">↗ Meer info</a>` : ''}
+                                    ${inv.link ? `<a href="${inv.link}" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:#a855f7;">↗ Meer info</a>` : ''}
                                 </div>
                             </label>`;
                         }).join('')}
@@ -13236,7 +13236,7 @@ Antwoord in dit exacte JSON formaat:
                                     <div class="org-address">📍 ${org.address}</div>
                                     <div class="org-contact">
                                         <a href="tel:${org.phone}">📞 ${org.phone}</a>
-                                        <a href="https://${org.website}" target="_blank">🌐 ${org.website}</a>
+                                        <a href="https://${org.website}" target="_blank" rel="noopener noreferrer">🌐 ${org.website}</a>
                                     </div>
                                 </div>
                             </div>
@@ -13925,7 +13925,7 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
                 } else {
                     resultsList.innerHTML = results.map(result => `
                         <div class="brave-result" style="background: var(--white); border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <a href="${result.url}" target="_blank" style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 1.05rem;">
+                            <a href="${result.url}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 1.05rem;">
                                 ${result.title}
                             </a>
                             <p style="color: var(--text-light); font-size: 0.85rem; margin: 5px 0;">
