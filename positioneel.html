@@ -6360,12 +6360,11 @@
         // LEAN WORKFLOW - met Intro als eerste stap
         const screenConfigBase = [
             { id: 'start',            label: 'Start',          emoji: '🏠' },
-            { id: 'triage',           label: 'Focusgebieden',  emoji: '🎯' },
-            { id: 'netwerkoverzicht', label: 'Netwerk',        emoji: '🗺️' },
-            { id: 'beweging',         label: 'Plan maken',     emoji: '🎯' },
-            { id: 'reflectie',        label: 'Reflectie',      emoji: '💭' },
-            { id: 'team',             label: 'Team besluit',   emoji: '👥' },
-            { id: 'interventies',     label: 'Concrete hulp',  emoji: '🔧' },
+            { id: 'triage',           label: 'Netwerk',        emoji: '🗺️' },
+            { id: 'beweging',         label: 'Plan',           emoji: '🎯' },
+            { id: 'reflectie',        label: 'Check',          emoji: '✓' },
+            { id: 'team',             label: 'Team',           emoji: '👥' },
+            { id: 'interventies',     label: 'Hulp',           emoji: '🔧' },
             { id: 'samenvatting',     label: 'Besluit',        emoji: '📄' }
         ];
 
@@ -16362,38 +16361,28 @@ END:VEVENT
                     ${status === 'steun-aanwezig' ? `
                     <div style="background:#fefce8;padding:10px;border-top:1px solid #fde68a;">
                         <div style="margin-left:42px;font-size:0.85rem;">
-                            <div style="margin-bottom:8px;font-weight:600;color:#92400e;">Type steun:</div>
-                            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-                                <label style="flex:1;min-width:90px;padding:6px 8px;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;text-align:center;font-size:0.8rem;background:white;transition:all 0.15s;"
-                                       onclick="selectTypeFormeel('${d.id}', this)">
-                                    <input type="radio" name="type-${d.id}" value="formeel" style="margin-right:4px;pointer-events:none;" data-type-group="${d.id}">
-                                    🔵 Professioneel
-                                </label>
-                                <label style="flex:1;min-width:90px;padding:6px 8px;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;text-align:center;font-size:0.8rem;background:white;transition:all 0.15s;"
-                                       onclick="selectTypeCollectief('${d.id}', this)">
-                                    <input type="radio" name="type-${d.id}" value="collectief" style="margin-right:4px;pointer-events:none;" data-type-group="${d.id}">
-                                    🟣 Collectief
-                                </label>
-                                <label style="flex:1;min-width:90px;padding:6px 8px;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;text-align:center;font-size:0.8rem;background:white;transition:all 0.15s;"
-                                       onclick="selectTypeInformeel('${d.id}', this)">
-                                    <input type="radio" name="type-${d.id}" value="informeel" style="margin-right:4px;pointer-events:none;" data-type-group="${d.id}">
-                                    🟢 Informeel
-                                </label>
+                            <div style="margin-bottom:12px;font-weight:600;color:#92400e;">Wie helpt? (voeg personen toe)</div>
+                            
+                            <!-- Direct persoon toevoegen knoppen -->
+                            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                                <button onclick="addPersoonDirectToSteun('${d.id}', 'informeel')" 
+                                        style="flex:1;min-width:110px;padding:10px;border:2px solid #16a34a;background:white;color:#166534;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                    ➕ 🟢 Familie/vriend
+                                </button>
+                                <button onclick="addPersoonDirectToSteun('${d.id}', 'collectief')" 
+                                        style="flex:1;min-width:110px;padding:10px;border:2px solid #a855f7;background:white;color:#7e22ce;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                    ➕ 🟣 Organisatie
+                                </button>
+                                <button onclick="addPersoonDirectToSteun('${d.id}', 'formeel')" 
+                                        style="flex:1;min-width:110px;padding:10px;border:2px solid #3b82f6;background:white;color:#1e40af;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                    ➕ 🔵 Professional
+                                </button>
                             </div>
                             
-                            <div id="dropdown-${d.id}" style="display:none;">
-                                <!-- + Persoon toevoegen knop -->
-                                <div style="margin-bottom:16px;">
-                                    <button onclick="addPersoonToSteun('${d.id}', getCurrentTypeFor('${d.id}'))" 
-                                            style="background:#f59e0b;color:white;border:none;border-radius:8px;padding:12px;font-size:0.95rem;font-weight:600;cursor:pointer;width:100%;box-shadow:0 2px 8px rgba(245,158,11,0.3);">
-                                        ➕ Persoon toevoegen
-                                    </button>
-                                </div>
-                                
-                                <!-- Toegevoegde personen lijst -->
-                                <div id="personen-lijst-${d.id}">
-                                    ${renderPersonenLijst(d.id)}
-                                </div>
+                            <!-- Toegevoegde personen lijst -->
+                            <div id="personen-lijst-${d.id}">
+                                ${renderPersonenLijst(d.id)}
+                            </div>
                                 
                                 <select id="wie-formeel-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','formeel',this.value)">
@@ -18929,6 +18918,11 @@ END:VEVENT
                 if (radio.checked) return radio.value;
             }
             return 'informeel'; // Default
+        }
+        
+        function addPersoonDirectToSteun(domeinId, type) {
+            // Direct modal openen zonder type selectie
+            addPersoonToSteun(domeinId, type);
         }
         
         function addPersoonToSteun(domeinId, type) {
