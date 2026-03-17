@@ -2878,9 +2878,15 @@
             
             laadDemoDataDirect() {
                 // NIEUWE: Direct naar synthese dashboard zonder tussenstappen
-                this.laadDemoData(); // Laad data in localStorage
                 
-                // Direct synthese genereren
+                // Toon loading
+                const importSection = document.getElementById('importSection');
+                importSection.innerHTML = '<div style="text-align:center;padding:60px;"><div style="font-size:3rem;margin-bottom:16px;">⚡</div><div style="font-size:1.3rem;font-weight:700;color:#667eea;">Demo wordt geladen...</div></div>';
+                
+                // Laad demo data
+                this.laadDemoData(); 
+                
+                // Wacht tot data geladen is, dan direct synthese
                 setTimeout(() => {
                     const wijkdataRaw = localStorage.getItem('rpa_wijkdata');
                     const caseloadRaw = localStorage.getItem('rpa_caseload');
@@ -2893,23 +2899,27 @@
                         this.casussen = caseload;
                         this.data = caseload[0];
                         
-                        // Verberg import sectie
-                        document.getElementById('importSection').classList.add('hidden');
+                        // Verberg import sectie VOLLEDIG
+                        importSection.style.display = 'none';
                         
-                        // Toon synthese container direct
+                        // Toon synthese container
                         const syntheseContainer = document.getElementById('syntheseContainer');
                         syntheseContainer.classList.remove('hidden');
+                        syntheseContainer.style.display = 'block';
                         
-                        // Render synthese dashboard
+                        // Render synthese dashboard METEEN
                         this.renderSyntheseDashboard(wijkdata, caseload);
                         
                         // Scroll naar top
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         
-                        // Toon sticky menu
-                        this.toonStickyMenu();
+                        // Toon sticky menu na 1 sec
+                        setTimeout(() => this.toonStickyMenu(), 1000);
+                    } else {
+                        alert('❌ Demo laden mislukt. Probeer opnieuw.');
+                        location.reload();
                     }
-                }, 100);
+                }, 300);
             },
             
             laadDemoData() {
