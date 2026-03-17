@@ -18949,10 +18949,14 @@ END:VEVENT
             saveState();
             
             // Sluit modal
-            document.querySelector('div[style*="position:fixed"]').remove();
+            const modal = document.querySelector('div[style*="position:fixed"]');
+            if (modal) modal.remove();
             
-            // Update lijst
-            renderStoplichtGrid();
+            // Update alleen de lijst (niet hele grid)
+            const container = document.getElementById(`personen-lijst-${domeinId}`);
+            if (container) {
+                container.innerHTML = renderPersonenLijst(domeinId);
+            }
         }
         
         function removePersoonFromSteun(domeinId, persoonIndex) {
