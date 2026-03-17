@@ -8126,10 +8126,20 @@ Antwoord in dit exacte JSON formaat:
                 const steunDetail = state.steunDetails?.[d.id];
                 
                 if (status === 'steun-aanwezig' && steunDetail) {
-                    const type = steunDetail.type;
-                    if (type === 'formeel') professioneel.push({ domein: d });
-                    else if (type === 'collectief') collectief.push({ domein: d });
-                    else if (type === 'informeel') informeel.push({ domein: d });
+                    // NIEUW: Check personen array voor meerdere personen
+                    if (steunDetail.personen && steunDetail.personen.length > 0) {
+                        // Tel alle types
+                        const types = steunDetail.personen.map(p => p.type);
+                        if (types.includes('formeel')) professioneel.push({ domein: d });
+                        if (types.includes('collectief')) collectief.push({ domein: d });
+                        if (types.includes('informeel')) informeel.push({ domein: d });
+                    } else {
+                        // Legacy: single type
+                        const type = steunDetail.type;
+                        if (type === 'formeel') professioneel.push({ domein: d });
+                        else if (type === 'collectief') collectief.push({ domein: d });
+                        else if (type === 'informeel') informeel.push({ domein: d });
+                    }
                 } else if (status === 'steun-nodig') {
                     geenNetwerk.push({ domein: d });
                 }
@@ -17262,6 +17272,9 @@ END:VEVENT
             if (!state.beweging[domeinId]) state.beweging[domeinId] = {};
             state.beweging[domeinId].richting = richting;
             
+            // Check globale mantelzorg overbelasting
+            checkMantelzorgOverbelasting();
+            
             // Mantelzorg bescherming: waarschuwing bij beweging naar informeel
             if (richting === 'informeel') {
                 // Check of er al een waarschuwing div bestaat voor dit domein
@@ -17309,6 +17322,40 @@ END:VEVENT
             saveState();
         }
         
+        function checkMantelzorgOverbelasting() {
+            // Tel hoeveel bewegingen naar informeel gaan
+            let informeelCount = 0;
+            Object.values(state.beweging || {}).forEach(b => {
+                if (b.richting === 'informeel') informeelCount++;
+            });
+            
+            if (informeelCount >= 3) {
+                // Toon globale waarschuwing
+                const existing = document.getElementById('global-mantelzorg-warning');
+                if (!existing) {
+                    const warning = document.createElement('div');
+                    warning.id = 'global-mantelzorg-warning';
+                    warning.style.cssText = 'position:fixed;top:80px;right:20px;background:#fee2e2;border:3px solid #dc2626;border-radius:12px;padding:16px;max-width:350px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.15);';
+                    warning.innerHTML = `
+                        <div style="display:flex;align-items:start;gap:12px;">
+                            <span style="font-size:2rem;">⚠️</span>
+                            <div style="flex:1;">
+                                <div style="font-weight:700;color:#991b1b;margin-bottom:8px;font-size:1rem;">Risico mantelzorg overbelasting</div>
+                                <p style="font-size:0.85rem;color:#7f1d1d;line-height:1.5;margin:0 0 10px;">
+                                    ${informeelCount} domeinen verschuiven naar informeel netwerk. Let op draagkracht!
+                                </p>
+                                <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                        style="background:#dc2626;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;">
+                                    Begrepen
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(warning);
+                }
+            }
+        }
+        
         function saveRegiedrager(domeinId, regiedrager) {
             if (!state.regiedragers) state.regiedragers = {};
             state.regiedragers[domeinId] = regiedrager;
@@ -17317,13 +17364,12 @@ END:VEVENT
             if (regiedrager === 'onduidelijk') {
                 const count = Object.values(state.regiedragers).filter(r => r === 'onduidelijk').length;
                 if (count > 2) {
-                    // Toon multidisciplinair overleg suggestie
                     alert('⚠️ Regiediffusie detectie\n\nMeer dan 2 domeinen zonder duidelijke regie.\n\n💡 Overweeg een multidisciplinair overleg om regieafspraken te maken.');
                 }
             }
             
             saveState();
-            detecteerNetwerkpatronen(); // Update patronen bij regiewijziging
+            detecteerNetwerkpatronen();
         }
         
         function updateStoplichtTeller() {
