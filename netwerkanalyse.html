@@ -3,79 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrachtCheck — Hoe sta jij ervoor?</title>
+    <title>BalansCheck - Kleine check, groot verschil</title>
+
+    <!-- Google Fonts: Inter -->
+    <style>body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }</style>
+
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(160deg, #0ea472 0%, #059669 50%, #047857 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            background-attachment: fixed;
             min-height: 100vh;
-            padding: 20px 16px 40px;
+            padding: 20px 16px 60px;
         }
 
-        .container { max-width: 560px; margin: 0 auto; }
+        .container {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .container { max-width: 800px; }
+            body { padding: 40px 24px 80px; }
+        }
 
         /* Header */
         header {
             text-align: center;
             color: white;
-            padding: 32px 0 20px;
+            padding: 32px 0 24px;
         }
-        header .logo { font-size: 2.8rem; margin-bottom: 8px; }
-        header h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
-        header .tagline { font-size: 1.05rem; opacity: 0.9; font-weight: 400; }
+        header .logo {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        header .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        @media (min-width: 768px) {
+            header { padding: 40px 0 28px; }
+            header .logo { font-size: 4.5rem; }
+            header h1 { font-size: 3rem; }
+            header .tagline { font-size: 1.2rem; }
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 20px 0 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+        }
+        .nav-link.active {
+            background: white;
+            color: #059669;
+        }
 
         /* Progress */
         .progress-wrap { margin: 16px 0 6px; }
-        .progress-bar { background: rgba(255,255,255,0.25); height: 6px; border-radius: 10px; overflow: hidden; }
-        .progress-fill { background: white; height: 100%; border-radius: 10px; transition: width 0.4s ease; }
-        .progress-text { text-align: center; color: rgba(255,255,255,0.8); font-size: 0.82rem; margin-top: 6px; }
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 6px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            text-align: center;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        @media (min-width: 768px) {
+            .progress-bar { height: 8px; }
+            .progress-text { font-size: 0.9rem; }
+        }
 
         /* Card */
         .card {
             background: white;
             border-radius: 20px;
-            padding: 28px 24px;
-            box-shadow: 0 12px 48px rgba(0,0,0,0.18);
-            margin-bottom: 16px;
+            padding: 24px 22px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .card {
+                border-radius: 24px;
+                padding: 28px 32px;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            }
         }
         .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        .screen.exiting { animation: fadeOut 0.2s ease; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-8px); } }
 
-        h2 { color: #065f46; font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; }
+        h2 {
+            color: #065f46;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
 
-        p { line-height: 1.7; color: #374151; margin-bottom: 12px; }
+        p {
+            line-height: 1.7;
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            body { font-size: 1.125rem; } /* 18px voor 65+ */
+            h2 { font-size: 1.75rem; margin-bottom: 10px; }
+            p { font-size: 1.125rem; line-height: 1.6; }
+        }
 
         /* Domain question */
-        .domain-emoji { font-size: 3.5rem; text-align: center; margin-bottom: 10px; }
-        .domain-title { font-size: 1.5rem; font-weight: 800; color: #111827; text-align: center; margin-bottom: 6px; }
-        .domain-description { text-align: center; color: #6b7280; font-size: 0.92rem; margin-bottom: 20px; font-style: italic; }
+        .domain-emoji {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .domain-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #111827;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .domain-description {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.88rem;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 768px) {
+            .domain-emoji { font-size: 3.2rem; margin-bottom: 10px; }
+            .domain-title { font-size: 1.5rem; margin-bottom: 6px; }
+            .domain-description { font-size: 0.95rem; margin-bottom: 16px; }
+        }
 
         /* Options */
-        .options { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+        .options { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
         .option {
-            padding: 16px 18px;
+            padding: 14px 16px;
             border: 2px solid #e5e7eb;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.18s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-size: 1rem;
+            gap: 12px;
+            font-size: 0.98rem;
             font-weight: 600;
             color: #374151;
             background: white;
         }
-        .option:hover { border-color: #059669; background: #f0fdf4; }
-        .option.selected { border-color: #059669; background: #d1fae5; color: #065f46; }
-        .option-emoji { font-size: 1.6rem; }
+        .option:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        .option:focus { outline: 3px solid #059669; outline-offset: 2px; }
+        .option.selected {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .option-emoji { font-size: 1.5rem; }
+
+        @media (min-width: 768px) {
+            .options { gap: 12px; margin: 18px 0; }
+            .option {
+                padding: 16px 18px;
+                border-radius: 12px;
+                font-size: 1.02rem;
+            }
+            .option-emoji { font-size: 1.6rem; }
+        }
 
         /* Age chips */
         .age-chip {
-            padding: 9px 16px;
+            padding: 10px 18px;
             border: 2px solid #e5e7eb;
             border-radius: 999px;
             cursor: pointer;
@@ -83,42 +245,85 @@
             font-weight: 600;
             color: #6b7280;
             background: white;
-            transition: all 0.18s;
+            transition: all 0.2s ease;
             user-select: none;
         }
-        .age-chip:hover { border-color: #059669; color: #065f46; }
-        .age-chip.selected { border-color: #059669; background: #059669; color: white; }
+        .age-chip:hover {
+            border-color: #10b981;
+            color: #065f46;
+        }
+        .age-chip:focus { outline: 3px solid #059669; outline-offset: 2px; }
+        .age-chip.selected {
+            border-color: #10b981;
+            background: #10b981;
+            color: white;
+        }
+
+        @media (min-width: 768px) {
+            .age-chip {
+                padding: 11px 20px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Mantelzorg chips */
+        .mantelzorg-chip {
+            border: 2px solid #f59e0b;
+            font-weight: 600;
+        }
+        .mantelzorg-chip:hover { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+        .mantelzorg-chip.selected { border-color: #f59e0b; background: #f59e0b; color: white; }
+        .mantelzorg-chip[data-cat="nee"].selected {
+            border-color: #d1d5db;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
 
         /* Buttons */
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
         button {
-            padding: 13px 22px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 12px;
-            font-size: 0.95rem;
+            border-radius: 10px;
+            font-size: 0.93rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.18s;
+            transition: all 0.2s ease;
             font-family: inherit;
         }
         .btn-primary {
-            background: #059669;
+            background: #10b981;
             color: white;
             flex: 1;
             min-width: 140px;
         }
-        .btn-primary:hover { background: #047857; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(5,150,105,0.35); }
+        .btn-primary:hover {
+            background: #059669;
+        }
+        .btn-primary:focus { outline: 3px solid #059669; outline-offset: 2px; }
         .btn-secondary {
             background: white;
-            color: #059669;
-            border: 2px solid #059669;
+            color: #10b981;
+            border: 2px solid #10b981;
         }
-        .btn-secondary:hover { background: #f0fdf4; }
-        button:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+        .btn-secondary:hover {
+            background: #f0fdf4;
+        }
+        .btn-secondary:focus { outline: 3px solid #059669; outline-offset: 2px; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (min-width: 768px) {
+            .btn-group { gap: 12px; margin-top: 18px; }
+            button {
+                padding: 14px 24px;
+                font-size: 1rem;
+                border-radius: 12px;
+            }
+        }
 
         /* Result items */
         .result-item {
-            padding: 14px 16px;
+            padding: 16px 18px;
             margin-bottom: 10px;
             border-radius: 12px;
             border-left: 4px solid;
@@ -126,21 +331,53 @@
             align-items: center;
             gap: 12px;
         }
-        .result-item.goed   { background: #d1fae5; border-color: #059669; }
-        .result-item.beter  { background: #fef3c7; border-color: #f59e0b; }
-        .result-item.actie  { background: #fee2e2; border-color: #ef4444; }
+        .result-item.goed   {
+            background: #ecfdf5;
+            border-color: #10b981;
+        }
+        .result-item.beter  {
+            background: #fffbeb;
+            border-color: #f59e0b;
+        }
+        .result-item.actie  {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
         .result-bar { flex:1; }
         .result-bar-track { background: rgba(0,0,0,0.08); border-radius: 6px; height: 8px; margin-top: 4px; }
-        .result-bar-fill   { height: 8px; border-radius: 6px; transition: width 0.6s ease; }
+        .result-bar-fill   {
+            height: 8px;
+            border-radius: 6px;
+            transition: width 0.6s ease;
+        }
+
+        @media (min-width: 768px) {
+            .result-item {
+                padding: 12px 16px;
+                margin-bottom: 8px;
+                border-radius: 10px;
+                border-left-width: 3px;
+            }
+            .result-bar-track { height: 8px; }
+            .result-bar-fill { height: 8px; }
+        }
 
         /* Hulp toggle */
         .hulp-toggle {
             background: #fef3c7; border: 2px solid #f59e0b;
             padding: 13px 16px; border-radius: 10px; margin-top: 12px; cursor: pointer;
+            transition: all 0.2s;
         }
         .hulp-toggle:hover { background: #fde68a; }
+        .hulp-toggle-nested {
+            transition: all 0.2s;
+        }
+        .hulp-toggle-nested:hover {
+            background: #f3f4f6 !important;
+            border-color: #9ca3af !important;
+        }
         .hulp-content { display: none; margin-top: 12px; }
-        .hulp-content.open { display: block; }
+        .hulp-content.open { display: block; animation: fadeIn 0.3s ease; }
         .hulp-stap {
             background: white; padding: 13px; margin-bottom: 8px;
             border-radius: 8px; border-left: 3px solid #059669;
@@ -149,6 +386,110 @@
         .hulp-links { display: flex; flex-direction: column; gap: 5px; }
         .hulp-links a { color: #059669; text-decoration: none; font-size: 0.9rem; }
         .hulp-links a:hover { text-decoration: underline; }
+
+        @media (min-width: 768px) {
+            .hulp-toggle {
+                padding: 9px 12px;
+                margin-top: 8px;
+                font-size: 0.88rem;
+            }
+            .hulp-content { margin-top: 8px; }
+            .hulp-stap {
+                padding: 10px 12px;
+                margin-bottom: 6px;
+                font-size: 0.88rem;
+            }
+            .hulp-stap strong { margin-bottom: 4px; font-size: 0.9rem; }
+            .hulp-links { gap: 3px; }
+            .hulp-links a { font-size: 0.85rem; }
+        }
+
+        /* Context notes - compacter */
+        .context-note {
+            background: #f0f9ff;
+            border-left: 3px solid #bae6fd;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 0 0 14px 0;
+            font-size: 0.82rem;
+            color: #0c4a6e;
+            line-height: 1.4;
+        }
+
+        /* Result summary compacter op desktop */
+        @media (min-width: 768px) {
+            .result-summary-counts {
+                margin-bottom: 12px !important;
+                font-size: 0.9rem !important;
+            }
+            .result-summary-counts > div {
+                margin-bottom: 4px !important;
+            }
+            .result-summary-counts span:first-child {
+                font-size: 1.1rem !important;
+            }
+            .wijkanalyse-block {
+                padding: 12px 14px !important;
+                margin-top: 16px !important;
+            }
+            .wijkanalyse-block h3 {
+                font-size: 0.88rem !important;
+                margin-bottom: 6px !important;
+            }
+            .wijkanalyse-block p {
+                font-size: 0.8rem !important;
+                margin-bottom: 8px !important;
+                line-height: 1.4 !important;
+            }
+        }
+
+        /* Wijkoptie styling */
+        .wijkoptie {
+            transition: all 0.2s ease;
+        }
+        .wijkoptie.selected {
+            border-color: #059669 !important;
+            background: #f0fdf4 !important;
+        }
+        .wijkoptie:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Werk-zorg card - aparte styling */
+        .werk-zorg-card {
+            background: white;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin: 16px 0;
+        }
+        .werk-zorg-card h4 {
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .werk-zorg-card p {
+            font-size: 0.88rem;
+            color: #374151;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .werk-zorg-card .links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+        .werk-zorg-card .links a {
+            color: #059669;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .werk-zorg-card .links a:hover {
+            text-decoration: underline;
+        }
 
         /* Alert */
         .alert { padding: 13px 16px; border-radius: 10px; margin: 12px 0; display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; }
@@ -174,6 +515,23 @@
         }
         .cta-gesprek button:hover { background: #d1fae5; }
 
+        @media (min-width: 768px) {
+            .cta-gesprek {
+                padding: 14px 18px;
+                margin-top: 16px;
+                border-radius: 12px;
+            }
+            .cta-gesprek p {
+                margin-bottom: 10px;
+                font-size: 0.88rem;
+                line-height: 1.5;
+            }
+            .cta-gesprek button {
+                padding: 10px 20px;
+                font-size: 0.92rem;
+            }
+        }
+
         @media (max-width: 480px) {
             .card { padding: 22px 18px; }
             header h1 { font-size: 2rem; }
@@ -193,10 +551,10 @@
 
             /* Linker paneel: branding */
             .desktop-left {
-                width: 340px;
+                width: 300px;
                 flex-shrink: 0;
                 background: linear-gradient(160deg, #0ea472 0%, #047857 100%);
-                padding: 60px 40px;
+                padding: 40px 28px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -211,9 +569,9 @@
                 margin: 0;
             }
 
-            .desktop-left .logo { font-size: 3rem; margin-bottom: 14px; }
-            .desktop-left h1 { font-size: 2.6rem; }
-            .desktop-left .tagline { font-size: 1rem; opacity: 0.85; margin-top: 8px; }
+            .desktop-left .logo { font-size: 2.5rem; margin-bottom: 10px; }
+            .desktop-left h1 { font-size: 2.2rem; }
+            .desktop-left .tagline { font-size: 0.9rem; opacity: 0.85; margin-top: 6px; }
 
             .desktop-left .progress-wrap {
                 margin-top: 40px;
@@ -225,12 +583,55 @@
                 line-height: 1.6;
             }
 
+            /* Desktop progress steps */
+            .desktop-steps {
+                margin-top: 24px;
+                padding-top: 18px;
+                border-top: 1px solid rgba(255,255,255,0.2);
+            }
+            .desktop-step {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 7px 0;
+                color: rgba(255,255,255,0.5);
+                font-size: 0.82rem;
+                font-weight: 500;
+            }
+            .desktop-step-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 2px solid rgba(255,255,255,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.78rem;
+                flex-shrink: 0;
+            }
+            .desktop-step.completed .desktop-step-icon {
+                background: rgba(255,255,255,0.2);
+                border-color: rgba(255,255,255,0.6);
+            }
+            .desktop-step.completed {
+                color: rgba(255,255,255,0.7);
+            }
+            .desktop-step.active {
+                color: white;
+                font-weight: 700;
+            }
+            .desktop-step.active .desktop-step-icon {
+                background: white;
+                color: #047857;
+                border-color: white;
+            }
+
             /* Rechter paneel: inhoud */
             .desktop-right {
                 flex: 1;
-                padding: 60px 48px;
+                padding: 32px 28px;
                 overflow-y: auto;
-                max-width: 680px;
+                max-width: 720px;
             }
 
             .container {
@@ -247,34 +648,28 @@
                 box-shadow: 0 4px 24px rgba(0,0,0,0.08);
                 border: 1px solid #e5e7eb;
                 border-radius: 16px;
-                padding: 36px 40px;
+                padding: 24px 28px;
             }
         }
     </style>
 </head>
 <body>
-<!-- RPA Suite navigatiebalk — buiten desktop-wrap zodat layout intact blijft -->
-<div style="background:rgba(0,0,0,0.18);backdrop-filter:blur(8px);padding:7px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-    <div style="font-weight:800;color:white;font-size:0.82rem;opacity:0.9;">📐 RPA Suite</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <span style="padding:3px 10px;border-radius:8px;font-size:0.75rem;font-weight:700;background:white;color:#059669;">N1 KrachtCheck ●</span>
-        <a href="positioneel.html" style="padding:3px 10px;border-radius:8px;font-size:0.75rem;font-weight:600;background:rgba(255,255,255,0.18);color:white;text-decoration:none;border:1px solid rgba(255,255,255,0.3);">N2 Professionals 🔐</a>
-        <a href="strategisch.html" style="padding:3px 10px;border-radius:8px;font-size:0.75rem;font-weight:600;background:rgba(255,255,255,0.18);color:white;text-decoration:none;border:1px solid rgba(255,255,255,0.3);">N3 Beleid 🔐</a>
-    </div>
-</div>
-
 <div class="desktop-wrap">
     <!-- Linker branding paneel (alleen desktop) -->
     <div class="desktop-left">
         <div>
             <header>
-                <div class="logo">💪</div>
-                <h1>KrachtCheck</h1>
-                <p class="tagline">Hoe sta jij ervoor?<br>Check het in 2 minuten.</p>
+                <div class="logo">💚</div>
+                <h1>BalansCheck</h1>
+                <p class="tagline">Ontdek jouw balans in 2 minuten</p>
             </header>
             <div class="progress-wrap" style="margin-top:40px;">
                 <div class="progress-bar"><div class="progress-fill" id="progressBarDesktop" style="width:0%"></div></div>
                 <div class="progress-text" id="progressTextDesktop"></div>
+            </div>
+
+            <div class="desktop-steps" id="desktopSteps">
+                <!-- Dynamisch gevuld via JS -->
             </div>
         </div>
         <div class="desktop-left-bottom">
@@ -287,10 +682,17 @@
     <div class="desktop-right">
     <div class="container">
         <header>
-            <div class="logo">💪</div>
-            <h1>KrachtCheck</h1>
-            <p class="tagline">Hoe sta jij ervoor? Check het in 2 minuten.</p>
+            <div class="logo">💚</div>
+            <h1>BalansCheck</h1>
+            <p class="tagline">Ontdek jouw balans in 2 minuten</p>
         </header>
+
+        <nav class="nav-bar">
+            <a href="netwerkanalyse.html" class="nav-link active">🏠 Check</a>
+            <a href="KRACHTCHECK_1PAGER.html" class="nav-link">📞 Pitch Guide</a>
+            <a href="KRACHTCHECK_BESTUURLIJK_6PAGINAS.html" class="nav-link">🏛️ Bestuurlijk (6p)</a>
+            <a href="VISIE_KRACHTCHECK_ORGANISATIES_printable.html" class="nav-link">📄 Volledig</a>
+        </nav>
 
         <div class="progress-wrap">
             <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
@@ -300,9 +702,9 @@
         <!-- Screen 0: Intro -->
         <div class="screen active" id="screen0">
             <div class="card">
-                <h2>Hoe gaat het écht? 👋</h2>
-                <p style="font-size:1.05rem;">Beantwoord 7 korte vragen over verschillende delen van je leven. Je ziet meteen waar je sterk bent — en waar je misschien extra steun kunt gebruiken.</p>
-                <p style="font-size:0.85rem;color:#6b7280;margin-top:-4px;margin-bottom:16px;line-height:1.6;">Soms helpt het om even stil te staan bij hoe het écht gaat. Niet voor een professional — voor jezelf.</p>
+                <h2>Check je balans 💚</h2>
+                <p style="font-size:1.05rem;">Hoe gaat het écht met je? Check in 2 minuten je balans op 8 levensgebieden - van geld en gezondheid tot hoe je je voelt en je sociale contacten.</p>
+                <p style="font-size:0.85rem;color:#374151;margin-top:-4px;margin-bottom:16px;line-height:1.6;">Zie waar het goed gaat en waar je aandacht voor kan geven. Geen oordeel, gewoon checken. Voor jezelf - in je eigen tempo.</p>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0;">
                     <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">💰 Financiën</div>
@@ -311,20 +713,20 @@
                     <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">👨‍👩‍👧 Thuis & relaties</div>
                     <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">👥 Sociaal netwerk</div>
                     <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">💼 Dagbesteding</div>
-                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;grid-column:span 2;text-align:center;">💪 Lichamelijke gezondheid</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">💪 Lichamelijke gezondheid</div>
+                    <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;color:#065f46;">🫂 Mantelzorg</div>
                 </div>
 
                 <div style="margin:16px 0;">
                     <p style="font-size:0.85rem;font-weight:600;color:#374151;margin-bottom:10px;">Tip op maat? Kies je leeftijd <span style="font-weight:400;color:#9ca3af;">(optioneel)</span></p>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;" id="ageCategoryGroup">
-                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)">🧒 12–23</div>
-                        <div class="age-chip" data-cat="jongvolwassene" onclick="app.selectAge('jongvolwassene', this)">👨 18–35</div>
-                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)">👩 30–64</div>
-                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)">👴 65+</div>
+                        <div class="age-chip" data-cat="jongere" onclick="app.selectAge('jongere', this)" onkeypress="if(event.key==='Enter' || event.key===' ') app.selectAge('jongere', this)" tabindex="0" role="button" aria-pressed="false">🧒 Jongeren (12-25)</div>
+                        <div class="age-chip" data-cat="volwassene" onclick="app.selectAge('volwassene', this)" onkeypress="if(event.key==='Enter' || event.key===' ') app.selectAge('volwassene', this)" tabindex="0" role="button" aria-pressed="false">👨‍💼 Volwassenen (25-65)</div>
+                        <div class="age-chip" data-cat="ouder" onclick="app.selectAge('ouder', this)" onkeypress="if(event.key==='Enter' || event.key===' ') app.selectAge('ouder', this)" tabindex="0" role="button" aria-pressed="false">👴 Ouderen (65+)</div>
                     </div>
                 </div>
 
-                <p style="font-size:0.78rem;color:#9ca3af;margin-top:16px;">🔒 Jouw antwoorden blijven op dit apparaat — niets wordt opgeslagen.</p>
+                <p style="font-size:0.78rem;color:#9ca3af;margin-top:16px;">🔒 Jouw antwoorden blijven op dit apparaat - niets wordt opgeslagen.</p>
 
                 <div class="btn-group">
                     <button class="btn-primary" onclick="app.goToScreen(1)" style="font-size:1.05rem;padding:15px;">Start de check →</button>
@@ -332,7 +734,7 @@
             </div>
         </div>
 
-        <!-- Screens 1-7: Domain questions -->
+        <!-- Screens 1-8: Domain questions -->
         <div class="screen" id="screen1"></div>
         <div class="screen" id="screen2"></div>
         <div class="screen" id="screen3"></div>
@@ -340,60 +742,1614 @@
         <div class="screen" id="screen5"></div>
         <div class="screen" id="screen6"></div>
         <div class="screen" id="screen7"></div>
+        <div class="screen" id="screen8"></div>
 
-        <!-- Screen 8: Results -->
-        <div class="screen" id="screen8">
+        <!-- Screen 9: Results -->
+        <div class="screen" id="screen9">
             <div class="card">
-                <h2>Zo sta jij ervoor 💪</h2>
-                <p style="color:#6b7280;font-size:0.9rem;margin-bottom:16px;">Hieronder zie je per gebied hoe het gaat. Groen = gaat goed, geel = aandacht, rood = extra steun handig.</p>
+                <h2>Jouw balans 💚</h2>
+                <p style="color:#6b7280;font-size:0.9rem;margin-bottom:16px;">Hieronder zie je per levensgebied waar je staat. Groen = staat sterk, geel = kan versterken, rood = extra steun helpt.</p>
                 <div id="resultsSummary"></div>
 
-                <!-- OPT-IN WIJKDATA — prominent, direct na de scores -->
-                <div id="wijkOptIn" style="background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:16px 18px;margin:16px 0;">
-                    <div style="font-weight:700;color:#166534;margin-bottom:6px;">🏘️ Wil je helpen je buurt beter te maken?</div>
-                    <p style="font-size:0.85rem;color:#374151;margin-bottom:12px;">
-                        Je kunt je anonieme score delen met het wijkteam — alleen ✓/⚠/🔴 per gebied, zonder naam of contact. 
-                        Zo zien zij wat er speelt en kunnen ze gericht hulp organiseren.
-                    </p>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
-                        <input type="text" id="wijkNaam" placeholder="Jouw wijk of buurt (optioneel)" 
-                            style="flex:1;min-width:160px;padding:8px 12px;border:1.5px solid #86efac;border-radius:8px;font-size:0.88rem;">
-                    </div>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <button onclick="app.bijdragenAanWijkdata()" 
-                            style="background:#059669;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:0.88rem;font-weight:600;cursor:pointer;">
-                            ✅ Ja, anoniem bijdragen
-                        </button>
-                        <button onclick="document.getElementById('wijkOptIn').style.display='none'"
-                            style="background:none;border:1px solid #d1d5db;border-radius:8px;padding:9px 18px;font-size:0.88rem;color:#6b7280;cursor:pointer;">
-                            Nee, liever niet
-                        </button>
-                    </div>
-                    <div id="wijkOptInBevestiging" style="display:none;margin-top:10px;font-size:0.85rem;color:#166534;font-weight:600;">
-                        ✅ Bedankt! Je helpt je buurt ermee.
-                    </div>
-                </div>
+                <!-- DUBBEL BLOK VERWIJDERD - Wijkanalyse zit nu alleen onderaan met postcode -->
 
                 <div class="cta-gesprek">
-                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee — zonder wachtlijst.</p>
-                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank" rel="noopener noreferrer" 
+                    <p><strong>Wil je hier verder over praten?</strong><br>Een welzijnswerker in jouw buurt denkt gratis met je mee - zonder wachtlijst.</p>
+                    <a id="gesprekLink" href="https://www.sociaaldomein.nl" target="_blank"
                         style="display:inline-block;background:#059669;color:white;border:none;border-radius:12px;padding:14px 28px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;margin-top:4px;">
                         💬 Vraag een gesprek aan →
                     </a>
-                    <p style="font-size:0.75rem;color:rgba(255,255,255,0.7);margin-top:10px;">Je kunt ook bellen of langsgaan bij je wijkteam.</p>
+                    <p style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:8px;line-height:1.4;">Je kunt ook bellen of langsgaan bij je wijkteam.</p>
                 </div>
 
-                <div class="btn-group" style="margin-top:16px;">
+                <div class="btn-group" style="margin-top:12px;">
                     <button class="btn-secondary" onclick="app.reset()">🔄 Opnieuw</button>
                     <button class="btn-secondary" onclick="window.print()">🖨️ Bewaren</button>
                 </div>
 
-                <p style="font-size:0.75rem;color:#9ca3af;text-align:center;margin-top:16px;">KrachtCheck — een initiatief van SIJN</p>
+                <p style="font-size:0.72rem;color:#9ca3af;text-align:center;margin-top:12px;">BalansCheck - een initiatief van SIJN<br><span style="font-size:0.65rem;opacity:0.5;">v2.2 (Inter font - warmte)</span></p>
             </div>
         </div>
     </div>
-    <script type="module">
-        import './src/n1/app.js';
+
+    <script>
+        const app = {
+            currentScreen: 0,
+            domains: [
+                {
+                    id: 'financien',
+                    emoji: '💰',
+                    title: 'Financiën',
+                    description: 'Denk aan: inkomen, schulden, rondkomen, rekeningen betalen',
+                    context_note: 'Gaat goed = je kunt je vaste lasten betalen en maakt je niet veel zorgen over geld.',
+                    tips_goed: [
+                        'Check maandelijks je budget (Nibud.nl/budgetcheck)',
+                        'Bouw een spaarbuffer op (3 maanden vaste lasten)',
+                        'Ken je rechten: toeslagen, zorgtoeslag (belastingdienst.nl)'
+                    ],
+                    tips_beter: [
+                        'Maak een budgetplan (Nibud.nl - gratis tool)',
+                        'Vraag budgetadvies (gratis via schuldhulpmaatje)',
+                        'Check of je alle toeslagen gebruikt',
+                        'Praat met je werkgever over loonstrook/voorschot'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Als je 18 wordt: direct zorgtoeslag, huurtoeslag en eventueel studiefinanciering aanvragen',
+                            'Geen inkomen en ouders kunnen niet helpen? Bijzondere bijstand aanvragen bij gemeente',
+                            'Check zorgtoeslag en huurtoeslag - veel jongeren missen dit',
+                            'Begin met een kleine spaarbuffer (ook €10/maand helpt)',
+                            'Bij studielening: check welke terugbetaalregeling voor jou geldt',
+                            'Schuldhulpmaatje heeft ook begeleiding voor jongeren (gratis)',
+                            'Nibud.nl/jongeren heeft tools speciaal voor jouw situatie',
+                            'Praat met jobcoach als werk/inkomen niet lukt (gratis via gemeente)'
+                        ],
+                        volwassene: [
+                            'Check regelmatig of je toeslagen hebt bij inkomensdaling',
+                            'Pensioenopbouw checken: Mijnpensioenoverzicht.nl',
+                            'Bij schulden: schakel vroeg schuldhulp in (voorkomt escalatie)',
+                            'Budgetcoaching via wijkteam is gratis en laagdrempelig'
+                        ],
+                        ouder: [
+                            'AOW tijdig aanvragen (5 jaar voor pensioenleeftijd bij SVB)',
+                            'Vraag kwijtschelding gemeentelijke belastingen aan',
+                            'Compensatieregelingen zorgkosten checken via CAK.nl',
+                            'Gratis financieel advies bij Seniorentelefoon: 0800-2525'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Nibud.nl', url: 'https://www.nibud.nl', desc: 'Budgetadvies en rekentools (algemeen)' },
+                            { name: 'Geldfit.nl', url: 'https://www.geldfit.nl', desc: 'Gratis online cursus geldzaken' },
+                            { name: 'Energieloket.nl', url: 'https://www.energieloket.nl', desc: 'Energiebespaartips en regelingen' },
+                            { name: 'Juridisch Loket', url: 'https://www.juridischloket.nl', desc: 'Gratis juridisch advies (schulden, beslag, toeslagen)' },
+                            { name: 'Voedselbanken Nederland', url: 'https://www.voedselbankennederland.nl', desc: 'Bij acute voedselnood' }
+                        ],
+                        chat: [
+                            { name: 'Nibud WhatsApp', url: 'https://www.nibud.nl/contact', desc: 'Chat met budgetadviseur (algemeen)' },
+                            { name: 'Schuldhulplijn chat', url: 'https://www.nvvk.nl', desc: 'Bij schulden' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Kan doorverwijzen naar schuldhulp' },
+                            { name: 'Wijkteam', desc: 'Laagdrempelig lokaal loket' },
+                            { name: 'Gemeente schuldhulp', desc: 'Minimaregelingen, bijzondere bijstand, kwijtschelding' },
+                            { name: 'Schuldhulpmaatje', desc: 'Vrijwilliger die je helpt' }
+                        ],
+                        bellen: [
+                            { name: 'Gemeente schuldhulp', desc: 'Lokaal nummer via gemeente.nl' },
+                            { name: 'Schuldhulplijn', tel: '0800-8000', desc: 'Gratis, landelijk, anoniem mogelijk' },
+                            { name: 'Juridisch Loket', tel: '0900-8020', desc: '€0,10/min - gratis juridisch advies' }
+                        ],
+                        urgent: 'Bij dreigende uitzetting: direct gemeente schuldhulp bellen (lokaal nummer via gemeente.nl)',
+                        leeftijd: {
+                            jongere: {
+                                persoonlijk: [
+                                    { name: 'Schoolmaatschappelijk werk', desc: 'Via je school - ook voor geldproblemen' },
+                                    { name: 'Jongerenwerk', desc: 'In je buurt, laagdrempelig' },
+                                    { name: 'CJG (0-18 jaar)', desc: 'Centrum voor Jeugd en Gezin' }
+                                ],
+                                info: [
+                                    { name: 'Nibud.nl/jongeren', url: 'https://www.nibud.nl/jongeren', desc: 'Speciaal voor jongeren' }
+                                ]
+                            },
+                            ouder: {
+                                persoonlijk: [
+                                    { name: 'Ouderenwerk', desc: 'Financieel advies voor 55+' },
+                                    { name: 'SVB (AOW)', desc: 'Sociale Verzekeringsbank' }
+                                ],
+                                bellen: [
+                                    { name: 'Seniorentelefoon', tel: '0800-2525', desc: 'Gratis voor 65+ (ook financiële vragen)' }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'ggz',
+                    emoji: '🧠',
+                    title: 'Geestelijke gezondheid',
+                    description: 'Hoe voel je je de laatste tijd?',
+                    context_note: 'Denk aan: somberheid, angst, stress, slapeloze nachten, weinig energie. Ook als het al een tijdje niet lekker gaat.',
+                    tips_goed: [
+                        'Beweeg 30 min per dag (wandelen helpt!)',
+                        'Spreek vrienden/familie regelmatig',
+                        'Zorg voor voldoende slaap (7-8 uur)'
+                    ],
+                    tips_beter: [
+                        'Praat met iemand die je vertrouwt',
+                        '113.nl - gratis zelfhulp online',
+                        'Structuur in je dag (vaste tijden)',
+                        'Probeer te bewegen (helpt tegen somberheid)'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Depressie bij jongeren is heel gewoon - en behandelbaar. Ga naar je huisarts',
+                            'Kindertelefoon: 0800-0432 - ook voor somberheid, angst en zelfpijn (gratis, anoniem)',
+                            'Jeugd-GGZ via huisarts of jeugdarts: specifiek voor jouw leeftijdsgroep',
+                            'Je hoeft het niet te begrijpen om hulp te vragen - vertel gewoon hoe het voelt',
+                            '1 op de 5 jongeren heeft last van depressie of angst - jij bent niet de enige',
+                            'Huisarts → POH-GGZ is de snelste route: vraag er expliciet om',
+                            'Online therapie (NiceDay, iPractice, Minddistrict) heeft korte wachttijden',
+                            'MIND Jong: lotgenotencontact voor jongeren (mind.nl)',
+                            'Vroeg hulp zoeken voorkomt dat het erger wordt - stel het niet uit'
+                        ],
+                        volwassene: [
+                            'POH-GGZ via huisarts is de snelste en laagdrempeligste route',
+                            'Stress door werk? Arbo-arts of bedrijfsmaatschappelijk werk inschakelen',
+                            'Mantelzorgondersteuning als zorg voor anderen je uitput - vraag respijtzorg',
+                            'Online therapie (eMental Health) met weinig wachtlijst',
+                            'Burn-out en depressie overlappen vaak - laat het goed onderzoeken'
+                        ],
+                        ouder: [
+                            'Somberheid en eenzaamheid zijn behandelbaar - dit is geen normaal onderdeel van oud worden',
+                            'Rouwverwerking na verlies partner of vriend: via huisarts of Rouwcentrum',
+                            'Ouderenpsychiatrie is gespecialiseerd in jouw situatie',
+                            'Buurthuis en dagactiviteiten helpen aantoonbaar tegen somberheid',
+                            'Zeg het aan uw huisarts: "Ik voel me al een tijdje niet goed" - dat is genoeg'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare info van huisartsen' },
+                            { name: 'MIND.nl', url: 'https://www.mind.nl', desc: 'Informatie over GGZ en ervaringsdeskundige hulp' },
+                            { name: 'NiceDay app', url: 'https://www.niceday.app', desc: 'Dagboek + oefeningen (gratis basisversie)' },
+                            { name: 'iPractice', url: 'https://www.ipractice.nl', desc: 'Online therapie en e-health modules' },
+                            { name: '113.nl', url: 'https://www.113.nl', desc: 'Bij suïcidale gedachten (24/7)' }
+                        ],
+                        chat: [
+                            { name: 'MIND chat', url: 'https://www.mind.nl/contact', desc: 'GGZ informatie en ervaringsdeskundigen' },
+                            { name: 'Kindertelefoon chat', url: 'https://www.kindertelefoon.nl/chat', desc: 'Voor kinderen en jongeren tot 21 jaar' },
+                            { name: '113 Online chat', url: 'https://www.113.nl/chat', desc: 'Bij crisis (24/7, anoniem)' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts → POH-GGZ', desc: 'Eerste stap, vraag expliciet om POH-GGZ' },
+                            { name: 'Wijkteam GGZ', desc: 'Laagdrempelig lokaal gesprek' },
+                            { name: 'MIND ervaringsdeskundige', desc: 'Lotgenotencontact' }
+                        ],
+                        bellen: [
+                            { name: 'Huisartsenpost', tel: '088-003 0600', desc: 'Buiten kantooruren (niet spoed)' },
+                            { name: 'Luisterlijn', tel: '088-0767000', desc: 'Luisterend oor, algemeen' },
+                            { name: 'Kindertelefoon', tel: '0800-0432', desc: 'Gratis voor jongeren tot 21 jaar' },
+                            { name: '113 Zelfmoordpreventie', tel: '0900-0113', desc: '€0,15/min - bij crisis 24/7' }
+                        ],
+                        urgent: 'Bij crisis: 112 of lokale GGZ Crisisdienst 24/7 (zoek via je gemeente of huisartsenpost)',
+                        leeftijd: {
+                            jongere: {
+                                persoonlijk: [
+                                    { name: 'Schoolmaatschappelijk werk', desc: 'Ook voor somberheid en angst' },
+                                    { name: 'Jeugd-GGZ via huisarts', desc: 'Gespecialiseerd in jongeren' },
+                                    { name: 'CJG', desc: 'Centrum voor Jeugd en Gezin (tot 18 jaar)' }
+                                ],
+                                bellen: [
+                                    { name: 'Kindertelefoon', tel: '0800-0432', desc: 'Gratis, tot 21 jaar' }
+                                ],
+                                chat: [
+                                    { name: 'Kindertelefoon chat', url: 'https://www.kindertelefoon.nl/chat', desc: 'Ook WhatsApp' }
+                                ]
+                            },
+
+                            ouder: {
+                                persoonlijk: [
+                                    { name: 'Ouderenpsychiatrie', desc: 'Via huisarts, gespecialiseerd in 65+' },
+                                    { name: 'Rouwcentrum', desc: 'Bij verlies partner/vriend' }
+                                ],
+                                bellen: [
+                                    { name: 'Sensoor (55+)', tel: '0900-0767', desc: 'Ook bij eenzaamheid' },
+                                    { name: 'Luisterlijn Ouderen', tel: '088-0767000', desc: 'Gratis' }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'wonen',
+                    emoji: '🏠',
+                    title: 'Wonen',
+                    description: 'Denk aan: betaalbare woning, veilige buurt, thuisvoelen',
+                    context_note: 'Gaat goed = je voelt je veilig thuis en maakt je geen zorgen over je woning.',
+                    tips_goed: [
+                        'Ken je huurrechten (woonbond.nl)',
+                        'Onderhoud je woning goed',
+                        'Ken je buren (veilig gevoel + sociale steun)'
+                    ],
+                    tips_beter: [
+                        'Problemen met verhuurder? → Woonbond.nl (gratis advies)',
+                        'Te duur? → Check huurtoeslag (belastingdienst.nl)',
+                        'Wil je verhuizen? → Inschrijven op HuisjeHuisje.nl'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Schrijf je nú al in bij woningcorporaties - wachttijd loopt op, ook als je nog thuis woont',
+                            'Woningmarkt is krap: kamerhuur, hospitawonen en tijdelijk wonen zijn realistische opties',
+                            'Jongerenhuisvesting aanvragen bij je gemeente (speciaal aanbod 18-25 jaar)',
+                            'Inschrijven bij woningcorporaties kost niks en inschrijftijd telt - doe het vandaag',
+                            'Kamernet.nl, Pararius, Facebook Groepen voor kamers en starters',
+                            'Huurtoeslag aanvragen via belastingdienst.nl - veel jongeren missen dit',
+                            'Anti-kraakwonen als tijdelijke oplossing (Camelot, Ad Hoc)',
+                            'Thuis niet meer veilig of mogelijk? Wijkteam of jongerenwerk helpt snel',
+                            'Bij urgentie (gezinscrisis, onveiligheid): urgentieverklaring aanvragen bij gemeente',
+                            'Veilig Thuis: 0800-2000 - als de thuissituatie niet langer kan'
+                        ],
+                        volwassene: [
+                            'Praat vroeg met woningcorporatie bij dreigende huurachterstand',
+                            'Bij schuld: schuldhulp inschakelen vóór uitzetting dreigt',
+                            'WMO-woningaanpassing aanvragen voor gezin, kinderen of mantelzorgsituatie',
+                            'Scheiding en woning: gratis juridisch advies via het Juridisch Loket'
+                        ],
+                        ouder: [
+                            'WMO-aanpassing aanvragen: drempels, handgrepen, traplift (gemeente vergoedt)',
+                            'Gelijkvloerse seniorenwoning zoeken via woningcorporatie - vaak kortere wachttijd',
+                            'Wmo-consulent gratis thuisbezoek aanvragen voor woningadvies',
+                            'Valpreventie: gemeente vergoedt soms eenvoudige aanpassingen'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'HuisjeHuisje.nl', url: 'https://www.huisjehuisje.nl', desc: 'Sociale huur zoeken (voorheen Woningnet)' },
+                            { name: 'Woonbond.nl', url: 'https://www.woonbond.nl', desc: 'Huurrechten en advies (ook voor niet-leden)' },
+                            { name: 'Kamernet.nl', url: 'https://www.kamernet.nl', desc: 'Kamerverhuur voor starters en studenten' },
+                            { name: '!WOON', url: 'https://www.wooninfo.nl', desc: 'Belangenbehartiging huurders en kopers' },
+                            { name: 'Huurcommissie', url: 'https://www.huurcommissie.nl', desc: 'Bij geschillen over huurprijs of gebreken' }
+                        ],
+                        chat: [
+                            { name: 'Woonbond WhatsApp', url: 'https://www.woonbond.nl/contact', desc: 'Snelle vraag stellen' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Wijkteam wonen', desc: 'Lokaal woonconsulent (eerste stap)' },
+                            { name: 'Woningcorporatie', desc: 'Urgentie of woningtoewijzing aanvragen' },
+                            { name: 'Juridisch Loket', desc: 'Bij huurgeschillen of dreigende ontruiming' }
+                        ],
+                        bellen: [
+                            { name: 'Woningcorporatie', desc: 'Lokaal nummer (via corporatie.nl)' },
+                            { name: 'Gemeente woonzorg/WMO', desc: 'Voor woningaanpassingen (lokaal nummer)' },
+                            { name: 'Woonbond', tel: '020-551 5150', desc: 'Landelijk advies huurrecht (ook niet-leden)' }
+                        ],
+                        urgent: 'Bij huisuitzetting/dakloosheid: Leger des Heils 088-584 5000 of lokale opvang via wijkteam'
+                    }
+                },
+                {
+                    id: 'huiselijk',
+                    emoji: '👨‍👩‍👧',
+                    title: 'Huiselijke relaties',
+                    description: 'Denk aan: partner, kinderen, familie thuis, sfeer',
+                    context_note: 'Gaat goed = het is thuis over het algemeen rustig en fijn - ook al is het soms druk.',
+                    tips_goed: [
+                        'Praat met elkaar (echt luisteren)',
+                        'Quality time samen (geen telefoons)',
+                        'Waardeer elkaar (kleine dingen tellen)'
+                    ],
+                    tips_beter: [
+                        'Praat over wat lastig is (niet tijdens ruzie)',
+                        'Zoek samen iets leuks te doen',
+                        'Overweeg relatiecoach/cursus (vaak gratis via gemeente)',
+                        'Ikvertrouwjou.nl - ervaringen lezen kan helpen'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Conflicten thuis? Praat met iemand buiten je gezin',
+                            'Kindertelefoon: 0800-0432 - ook voor situaties thuis',
+                            'Jij bent niet verantwoordelijk voor problemen van volwassenen thuis',
+                            'Je hoeft niet te kiezen tussen je ouders',
+                            'Grenzen aangeven mag je leren - ook naar je ouders',
+                            'Eerste relatie: het is normaal dat het soms moeilijk is',
+                            'Gratis relatiegesprekken via wijkteam of huisarts',
+                            'Als het niet veilig voelt: Veilig Thuis 0800-2000'
+                        ],
+                        volwassene: [
+                            'Relatiecoaching is gewoon en helpt echt (vaak vergoed)',
+                            'Ouderschap is zwaar: Stevig Ouderschap cursus (gratis via gemeente)',
+                            'Mantelzorg voor ouders naast eigen gezin: vraag respijtzorg aan',
+                            'Buurtbemiddeling lost meer op dan je denkt (gratis, lokaal)'
+                        ],
+                        ouder: [
+                            'Verlies van partner: rouwondersteuning via huisarts of Rouwcentrum',
+                            'Weinig contact met kinderen/kleinkinderen? Maatjesproject kan helpen',
+                            'Eenzaamheid in relatie is behandelbaar - praat met huisarts',
+                            'Humanitas Thuisadministratie biedt ook sociaal contact'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Triple P Nederland', url: 'https://www.triplep.nl', desc: 'Opvoedondersteuning op maat (positief opvoeden)' },
+                            { name: 'Rouwcentrum Nederland', url: 'https://www.rouwcentrum.nl', desc: 'Ondersteuning bij verlies en rouw' },
+                            { name: 'Ikvertrouwjou.nl', url: 'https://www.ikvertrouwjou.nl', desc: 'Ervaringsverhalen lezen' },
+                            { name: 'Veiligthuis.nl/herken', url: 'https://www.veiligthuis.nl/herken', desc: '"Is dit normaal?" test - bij twijfel over onveiligheid' }
+                        ],
+                        chat: [
+                            { name: 'Kindertelefoon chat', url: 'https://www.kindertelefoon.nl/chat', desc: 'Voor jongeren over thuissituatie' },
+                            { name: 'Veilig Thuis chat', url: 'https://www.veiligthuis.nl/chat', desc: 'Bij onveiligheid (ook als partner thuis is, anoniem)' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Eerste stap: "Ik wil praten over mijn thuissituatie"' },
+                            { name: 'Wijkteam', desc: 'Vertrouwd gesprek, opvoedondersteuning regelen' },
+                            { name: 'Stevig Ouderschap', desc: 'Gratis opvoedcursus via gemeente (voor alle ouders)' },
+                            { name: 'Juridisch Loket', desc: 'Bij scheiding of omgangsregelingen' }
+                        ],
+                        bellen: [
+                            { name: 'Ouders Online', tel: '0900-1285', desc: '€0,10/min - opvoedvragen' },
+                            { name: 'Kindertelefoon', tel: '0800-0432', desc: 'Voor jongeren tot 21 jaar (gratis)' },
+                            { name: 'Veilig Thuis', tel: '0800-2000', desc: 'Bij onveiligheid - 24/7, anoniem mag' }
+                        ],
+                        urgent: 'Bij direct gevaar: 112 | Tijdelijk weg? Veilig Thuis regelt opvang: 0800-2000',
+                        leeftijd: {
+                            jongere: {
+                                persoonlijk: [
+                                    { name: 'Schoolmaatschappelijk werk', desc: 'Ook voor thuisproblemen' },
+                                    { name: 'Vertrouwenspersoon school', desc: 'Mentor of decaan' },
+                                    { name: 'CJG', desc: 'Centrum voor Jeugd en Gezin (tot 18)' }
+                                ],
+                                bellen: [
+                                    { name: 'Kindertelefoon', tel: '0800-0432', desc: 'Gratis, tot 21 jaar' }
+                                ]
+                            },
+                            volwassene: {
+                                persoonlijk: [
+                                    { name: 'Stevig Ouderschap', desc: 'Gratis opvoedcursus (gemeente)' },
+                                    { name: 'Juridisch Loket', desc: 'Bij scheiding, omgang, alimentatie (gratis advies)' }
+                                ]
+                            },
+                            ouder: {
+                                persoonlijk: [
+                                    { name: 'Rouwcentrum', desc: 'Bij verlies partner/vriend' },
+                                    { name: 'Humanitas Thuisbezoek', desc: 'Tegen eenzaamheid na verlies' }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'sociaal',
+                    emoji: '👥',
+                    title: 'Sociaal netwerk',
+                    description: 'Denk aan: contact met familie, vrienden, buren, collega\'s. Ook als je je eenzaam voelt - dat kan iedereen overkomen.',
+                    context_note: 'Gaat goed = je hebt mensen om je heen op wie je kunt terugvallen als het even tegenzit.',
+                    tips_goed: [
+                        'Blijf contact houden (ook als het druk is)',
+                        'Af en toe nieuwe mensen ontmoeten',
+                        'Vriendschappen zijn tweezijdig (geven en nemen)'
+                    ],
+                    tips_beter: [
+                        'Ga naar buurthuis activiteit (koffie-ochtend)',
+                        'Vrijwilligerswerk (vrijwilligerswerk.nl)',
+                        'Sportclub/hobby (nieuwe mensen ontmoeten)',
+                        'Buurtapp gebruiken (Nextdoor, Facebook buurtgroep)'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Sport of hobby is de beste manier om vrienden te maken',
+                            'Pesten? Meld het bij school en praat erover thuis',
+                            'Online vrienden tellen ook - maar zorg ook voor echte ontmoetingen',
+                            'Nieuwe school = nieuwe kans voor nieuwe vriendschappen',
+                            'Nieuwe stad of studie? Proeflessen en intro-activiteiten zijn echt voor jou',
+                            'Vrijwilligerswerk verbindt en vult ook je CV',
+                            'Introvert? Eén echte vriend is genoeg als fundament - bouw van daaruit',
+                            'Sportclub of hobby groep: makkelijkste manier om mensen te leren kennen'
+                        ],
+                        volwassene: [
+                            'Buren leren kennen via buurtapp (Nextdoor) of buurtborrel',
+                            'Vriendschappen kosten onderhoud - plan bewust contact in',
+                            'Eenzaamheid is taboe maar heel gewoon - praat erover met huisarts',
+                            'Kleine dingen met collega\'s (koffie, wandellunch) bouwen echte connecties'
+                        ],
+                        ouder: [
+                            'Seniorenprogramma buurthuis: laagdrempelig en bewezen effectief',
+                            'Thuisbezoek van vrijwilliger via Humanitas of Maatjesproject',
+                            'Digitale vaardigheden leren helpt om contact te houden met (klein)kinderen',
+                            'Ouderenbonden organiseren activiteiten in jouw wijk'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Vrijwilligerswerk.nl', url: 'https://www.vrijwilligerswerk.nl', desc: 'Meedoen en mensen ontmoeten (algemeen)' },
+                            { name: 'Oma\'s Soep', url: 'https://www.omassoep.nl', desc: 'Samen koken en eten met buurtgenoten (jong en oud)' },
+                            { name: 'Humanitas Maatjesproject', url: 'https://www.humanitas.nl/maatjes', desc: 'Iemand die regelmatig langskomt (1-op-1)' },
+                            { name: 'Seniorenweb.nl', url: 'https://www.seniorenweb.nl', desc: 'Online community en activiteiten voor 50+' }
+                        ],
+                        chat: [
+                            { name: 'Facebook buurtgroepen', desc: 'Zoek "[jouw wijk] + buurtgroep"' },
+                            { name: 'Nextdoor app', url: 'https://nextdoor.nl', desc: 'Lokaal buurtnetwerk app' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Buurthuis/Wijkcentrum', desc: 'Dichtbij, laagdrempelig: koffie-ochtend, sport, activiteiten' },
+                            { name: 'Bibliotheek', desc: 'Vaak gratis activiteiten en ontmoeting' },
+                            { name: 'Sportvereniging', desc: 'Via sportindebuurt.nl zoeken' },
+                            { name: 'Humanitas Maatjesproject', desc: '1-op-1 contact, thuisbezoek' }
+                        ],
+                        bellen: [
+                            { name: 'Lokaal buurthuis', desc: 'Zoek via gemeente.nl + [jouw wijk]' },
+                            { name: 'Luisterlijn', tel: '088-0767000', desc: 'Landelijk luisterend oor bij eenzaamheid' }
+                        ],
+                        urgent: null,
+                        leeftijd: {
+                            jongere: {
+                                persoonlijk: [
+                                    { name: 'Jongerenwerk', desc: 'Activiteiten + ontmoeting in je buurt' },
+                                    { name: 'Sportclub/hobby', desc: 'Via je school of sportindebuurt.nl' },
+                                    { name: 'Scouting/vereniging', desc: 'Laagdrempelig, vaak goedkoop' }
+                                ]
+                            },
+                            ouder: {
+                                persoonlijk: [
+                                    { name: 'Ouderenwerk', desc: 'Seniorenprogramma buurthuis' },
+                                    { name: 'Humanitas Thuisbezoek', desc: 'Vrijwilliger komt regelmatig langs' },
+                                    { name: 'Ouderenbonden', desc: 'PCOB, KBO, ANBO' }
+                                ],
+                                bellen: [
+                                    { name: 'Seniorentelefoon', tel: '0800-2525', desc: 'Gratis, ook voor eenzaamheid' }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'dagbesteding',
+                    emoji: '💼',
+                    title: 'Dagbesteding & werk',
+                    description: 'Denk aan: werk, opleiding, vrijwilligerswerk, nuttige tijdsbesteding',
+                    context_note: 'Gaat goed = je hebt overdag een invulling die je zinvol vindt, betaald of onbetaald.',
+                    tips_goed: [
+                        'Blijf jezelf ontwikkelen (cursussen, leren)',
+                        'Onderhoud je netwerk (collega\'s, LinkedIn)',
+                        'Let op werk-privé balans'
+                    ],
+                    tips_beter: [
+                        'Vrijwilligerswerk (zinvol + netwerk opbouwen)',
+                        'Cursus/opleiding (vaak gratis via UWV)',
+                        'Denk na over je kwaliteiten (waar ben je goed in?)',
+                        'Praat met jobcoach (gratis via gemeente)'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'School is je belangrijkste fundament - vraag hulp als het niet lukt',
+                            'Bijbaan kan zinvol zijn, maar mag niet ten koste van school gaan',
+                            'Hobby\'s zijn je toekomstige netwerk en vaardigheden',
+                            'Gratis studiekeuzegesprek via school of gemeente',
+                            'UWV biedt gratis loopbaanadvies en begeleiding bij werk zoeken',
+                            'Stagegesprekken openen deuren - ook als er geen stage is',
+                            'Burn-out kan ook jong voorkomen - herken de signalen vroeg',
+                            'Mbo-4 of zij-instroom zijn legit als eerste stap - geen schaamte'
+                        ],
+                        volwassene: [
+                            'Burn-out: meld je vroeg bij arbo-arts (niet na 2 jaar)',
+                            'Re-integratie via UWV als je langdurig ziek bent',
+                            'Mantelzorg + werk combineren? Respijtzorg via WMO verlicht de druk',
+                            'Pensioenplanning: check via Mijnpensioenoverzicht.nl'
+                        ],
+                        ouder: [
+                            'Vrijwilligerswerk geeft structuur en betekenis na pensionering',
+                            'Volksuniversiteit of seniorencursussen: zinvol en sociaal',
+                            'Bijklussen naast pensioen mag (belastingvrij tot bepaalde grens)',
+                            'Mantelzorg voor anderen is ook waardevolle dagbesteding'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Werk.nl', url: 'https://www.werk.nl', desc: 'Vacatures, scholing, loopbaanadvies (algemeen)' },
+                            { name: 'Vrijwilligerswerk.nl', url: 'https://www.vrijwilligerswerk.nl', desc: 'Onbetaald meedoen, netwerk opbouwen' },
+                            { name: 'Volksuniversiteit', url: 'https://www.volksuniversiteit.nl', desc: 'Cursussen en levenslang leren' },
+                            { name: 'LinkedIn.com', url: 'https://www.linkedin.com', desc: 'Professioneel netwerk, vacatures' },
+                            { name: 'UWV.nl', url: 'https://www.uwv.nl', desc: 'Bij uitkeringen, re-integratie, arbeidsongeschiktheid' }
+                        ],
+                        chat: [
+                            { name: 'Werk.nl chat', url: 'https://www.werk.nl/contact', desc: 'Algemene arbeidsvragen' },
+                            { name: 'UWV chat', url: 'https://www.uwv.nl/contact', desc: 'Bij uitkeringen en re-integratie' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Bij werk-stress of burn-out → arbo-arts' },
+                            { name: 'Wijkteam participatie', desc: 'Lokaal participatiecoach (eerste stap)' },
+                            { name: 'Jobcoach', desc: 'Gratis via gemeente of UWV' },
+                            { name: 'Arbo-arts', desc: 'Via werkgever bij werk-stress, burn-out of re-integratie' },
+                            { name: 'ROC loopbaanadvies', desc: 'Gratis voor werkzoekenden' }
+                        ],
+                        bellen: [
+                            { name: 'Gemeente Participatie', desc: 'Lokaal nummer via gemeente.nl' },
+                            { name: 'UWV Werknemerslijn', tel: '0900-9294', desc: 'Landelijk, voor uitkering/re-integratie' },
+                            { name: 'FNV/CNV Ledenservice', tel: '088-368 8000', desc: 'Vakbond advies (ook niet-leden)' }
+                        ],
+                        urgent: null,
+                        leeftijd: {
+                            jongere: {
+                                persoonlijk: [
+                                    { name: 'Schooldecaan/LOB', desc: 'Loopbaanoriëntatie en -begeleiding' },
+                                    { name: 'Leer-werktraject', desc: 'Combinatie school + stage (via school/gemeente)' },
+                                    { name: 'Jongerenwerk', desc: 'Ook voor werkhulp en stage' }
+                                ],
+                                info: [
+                                    { name: 'Stagemarkt.nl', url: 'https://www.stagemarkt.nl', desc: 'Stages en bijbanen voor jongeren' }
+                                ]
+                            },
+
+                            ouder: {
+                                persoonlijk: [
+                                    { name: 'Ouderenwerk vrijwilligerscentrale', desc: 'Vrijwilligerswerk na pensionering' },
+                                    { name: 'Seniorencursussen', desc: 'Via Volksuniversiteit of bibliotheek' }
+                                ],
+                                info: [
+                                    { name: 'ANBO/PCOB', url: 'https://www.anbo.nl', desc: 'Ouderenbonden met dagbesteding' }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'lichamelijk',
+                    emoji: '💪',
+                    title: 'Lichamelijke gezondheid',
+                    description: 'Denk aan: chronische ziektes, pijn, mobiliteit, medicijnen, doktersbezoek',
+                    context_note: 'Gaat goed = je lichamelijke klachten belemmeren je dagelijks leven niet of nauwelijks.',
+                    context_note: 'Als je zorg nodig hebt - bijvoorbeeld de tandarts die je al een tijdje uitstelt, of fysio voor die rug - tel dat ook mee bij je antwoord.',
+                    tips_goed: [
+                        'Beweeg 30 min per dag (wandelen telt!)',
+                        'Eet gezond (groente en fruit)',
+                        'Voldoende drinken (1.5-2L water)',
+                        'Check-ups bij huisarts (vooral na 50)'
+                    ],
+                    tips_beter: [
+                        'Begin klein (10 min wandelen per dag)',
+                        'Fysiotherapeut bij pijnklachten (vaak vergoed)',
+                        'Thuisarts.nl - tips gezond leven',
+                        'Praat met je huisarts over je zorgen'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Tieners hebben 9 uur slaap nodig - slaaptekort remt alles',
+                            'Iets klopt niet in je lichaam? Praat met huisarts - ook voor puberteitsvragen',
+                            'Tandarts of fysio te duur? Bijzondere bijstand kan meebetalen - vraag het aan je gemeente',
+                            'Je hebt recht op zorg. Dat uitstellen maakt het bijna altijd duurder én zwaarder',
+                            'Tandarts niet meer naar gegaan? Je bent niet de enige - maar het loopt op. Sociale Tandartsen Netwerk helpt',
+                            'Fysio niet vergoed? Check je aanvullende verzekering of vraag het wijkteam',
+                            'Zorgverzekeringslijn: 0900-9999 - gratis advies over wat vergoed wordt',
+                            'Preventieve huisartscheck is gratis - plan hem gewoon in'
+                        ],
+
+                        volwassene: [
+                            'Sla de tandarts of fysio niet over omdat het "te duur" lijkt - er zijn bijna altijd opties',
+                            'Bijzondere bijstand: gemeente kan meebetalen aan tandarts, bril of fysio',
+                            'Zorgverzekeringslijn: 0900-9999 - gratis advies over vergoedingen',
+                            'Chronische rugklachten? Fysiotherapie via huisarts is vaak (deels) vergoed'
+                        ],
+                        ouder: [
+                            'Valpreventie: "Sterk & Stabiel" programma via gemeente (bewezen effectief)',
+                            'Gehoor of gezicht minder? Aanpakken vermindert valongelukken én eenzaamheid',
+                            'Gratis medicatieoverzicht via apotheek - check wisselwerkingen',
+                            'WMO kan hulpmiddelen vergoeden die uw zorgverzekering niet dekt - vraag de gemeente'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Thuisarts.nl', url: 'https://www.thuisarts.nl', desc: 'Betrouwbare gezondheidsinformatie van huisartsen (algemeen)' },
+                            { name: 'Apotheek.nl', url: 'https://www.apotheek.nl', desc: 'Info over medicijnen en bijwerkingen' },
+                            { name: 'Zorgwijzer.nl', url: 'https://www.zorgwijzer.nl', desc: 'Vergelijk zorgverzekeringen en vergoedingen' },
+                            { name: 'Sociaal Tandartsen Netwerk', url: 'https://www.sociaal-tandartsen-netwerk.nl', desc: 'Tandarts voor mensen die het niet kunnen betalen' },
+                            { name: 'Vilans.nl', url: 'https://www.vilans.nl', desc: 'Ouderenzorg, valpreventie, zorgtechnologie' }
+                        ],
+                        chat: [
+                            { name: 'Huisartsenpost chat', desc: 'Via huisarts.nl of je eigen praktijk' },
+                            { name: 'Apotheek WhatsApp', desc: 'Steeds meer apotheken hebben WhatsApp - vraag je apotheek' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Eerste stap: klachten, verwijzingen, preventie-check' },
+                            { name: 'Fysiotherapeut', desc: 'Bij bewegingsklachten (vaak (deels) vergoed)' },
+                            { name: 'Wijkteam/WMO-consulent', desc: 'Helpt uitzoeken wat gemeente vergoedt' },
+                            { name: 'Gemeente bijzondere bijstand', desc: 'Als tandarts/fysio/bril te duur is' }
+                        ],
+                        bellen: [
+                            { name: 'Huisarts', desc: 'Lokaal nummer (via huisarts.nl)' },
+                            { name: 'Huisartsenpost', tel: '088-003 0600', desc: 'Buiten kantooruren (niet spoed)' },
+                            { name: 'Apotheek', desc: 'Voor vragen over medicijnen (lokaal)' },
+                            { name: 'Zorgverzekeringslijn', tel: '0900-9999', desc: 'Landelijk advies over vergoedingen' },
+                            { name: 'CAK', tel: '088-900 8000', desc: 'Eigen bijdragen, regelingen' }
+                        ],
+                        urgent: 'Bij spoed: 112 | Bij twijfel spoed: Huisartsenpost 088-003 0600'
+                    }
+                },
+                {
+                    id: 'mantelzorg',
+                    emoji: '🫂',
+                    title: 'Mantelzorg',
+                    description: 'Denk aan: zorgen voor partner, ouder, kind, broer/zus met ziekte of beperking',
+                    context_note: 'Mantelzorg = je zorgt regelmatig voor een naaste (partner, ouder, kind, broer/zus) met ziekte, beperking of hulpbehoefte. Dit mag niet ten koste gaan van jezelf.',
+                    tips_goed: [
+                        'Plan regelmatig tijd voor jezelf in',
+                        'Blijf contact houden met vrienden/familie',
+                        'Accepteer hulp van anderen (ook kleine dingen)',
+                        'Mezzo.nl - mantelzorgorganisatie kan ondersteunen'
+                    ],
+                    tips_beter: [
+                        'Vraag respijtzorg aan via gemeente (Wmo) - tijdelijke vervanging',
+                        'Praat met lotgenoten (Mezzo.nl - lotgenotencontact)',
+                        'Mantelzorgcompliment aanvragen bij gemeente (financiële waardering)',
+                        'Spreek met huisarts over jouw situatie - niet alleen die van je naaste'
+                    ],
+                    tips_leeftijd: {
+                        jongere: [
+                            'Jongeren Mantelzorg Nederland: ondersteuning voor jonge mantelzorgers',
+                            'School/studie mag niet lijden onder zorg - vraag studiebegeleiding',
+                            'Je bent niet verantwoordelijk voor de ziekte van je ouder/broer/zus',
+                            'Respijtzorg via gemeente: iemand anders neemt tijdelijk over',
+                            'Werk en zorg combineren: praat met je werkgever over flexibiliteit - je hebt wettelijk recht op mantelzorgverlof',
+                            'Mantelzorgverlof: kortdurend (10 dagen/jaar betaald) en langdurend (6 weken, vaak onbetaald)',
+                            'FNV/CNV: gratis advies over werk-zorg combinatie en je arbeidsrechten',
+                            'Zeg het tegen je leidinggevende - verzwijgen leidt tot burn-out (en dat helpt niemand)',
+                            'Thuiswerken of flexibele tijden kunnen het verschil maken',
+                            'Mezzo.nl lotgenotencontact: andere jonge mantelzorgers herkennen je situatie',
+                            'Zet je eigen leven niet on hold - respijtzorg maakt dat mogelijk'
+                        ],
+                        volwassene: [
+                            'Mantelzorgverlof via werkgever: wettelijk recht (kortdurend betaald, langdurend vaak onbetaald)',
+                            'Arbeidstijdverkorting overwegen als balans weg is - werkgever moet goed motiveren bij weigering',
+                            'Praat met HR/leidinggevende: verzwijgen leidt tot uitval (duurder voor werkgever dan flexibiliteit)',
+                            'FNV/CNV: gratis advies over werk-zorg combinatie en CAO-regelingen',
+                            'Sommige CAO\'s vergoeden langdurend zorgverlof deels - check je CAO',
+                            'Respijtzorg via Wmo: professionele vervanging zodat jij even los kan',
+                            'Mantelzorgcompliment gemeente: financiële waardering (gemiddeld €250-500/jaar)'
+                        ],
+                        ouder: [
+                            'Partner verzorgen: dit is zwaarder dan verwacht - vraag hulp',
+                            'Thuiszorg via wijkverpleging kan taken overnemen',
+                            'Dagopvang voor je partner: jullie allebei tijd voor jezelf',
+                            'Mantelzorgondersteuning specifiek voor ouderen via Mezzo.nl'
+                        ]
+                    },
+                    hulp: {
+                        info: [
+                            { name: 'Mantelzorg.nl', url: 'https://www.mantelzorg.nl', desc: 'Landelijke informatie over rechten en ondersteuning (start hier)' },
+                            { name: 'Expertisecentrum Mantelzorg', url: 'https://www.expertisecentrummantelzorg.nl', desc: 'Kennis en praktische tools' },
+                            { name: 'Rijksoverheid Mantelzorgverlof', url: 'https://www.rijksoverheid.nl/onderwerpen/verlof/mantelzorgverlof', desc: 'Officiële info over je wettelijke rechten' },
+                            { name: 'FNV Werk en Zorg', url: 'https://www.fnv.nl/themas/werk-en-zorg', desc: 'Vakbond advies over mantelzorgverlof en arbeidsrechten' },
+                            { name: 'Jongeren & Mantelzorg', url: 'https://www.jongerenmantelzorg.nl', desc: 'Specifiek voor jonge mantelzorgers (tot 30 jaar)' }
+                        ],
+                        chat: [
+                            { name: 'Lotgenotencontact', url: 'https://www.mantelzorg.nl/lotgenoten', desc: 'Contact met andere mantelzorgers (herkenning)' },
+                            { name: 'Mantelzorg.nl WhatsApp', url: 'https://www.mantelzorg.nl/contact', desc: 'Snelle vraag stellen' }
+                        ],
+                        persoonlijk: [
+                            { name: 'Huisarts', desc: 'Eerste stap voor JOU - niet alleen je naaste (overbelasting melden!)' },
+                            { name: 'Wijkteam/Mantelzorgconsulent', desc: 'Lokaal, voor respijtzorg en ondersteuning' },
+                            { name: 'Mantelzorgcafé', desc: 'Lotgenotencontact in je buurt (via mantelzorg.nl)' },
+                            { name: 'HR/Leidinggevende', desc: 'Werk-zorg balans en mantelzorgverlof (wettelijk recht!)' }
+                        ],
+                        bellen: [
+                            { name: 'Gemeente WMO', desc: 'Respijtzorg aanvragen (lokaal nummer via gemeente.nl)' },
+                            { name: 'Mantelzorglijn', tel: '030-760 6055', desc: 'Landelijke telefoonlijn voor vragen' },
+                            { name: 'FNV Ledenservice', tel: '088-368 8000', desc: 'Arbeidsrechten, verlof (ook niet-leden)' }
+                        ],
+                        urgent: 'Bij acute overbelasting: huisarts bellen, wijkteam spoed, of GGZ-crisisdienst (088-krisis)',
+                        leeftijd: {
+                            jongere: {
+                                info: [
+                                    { name: 'Jongerenmantelzorg.nl', url: 'https://www.jongerenmantelzorg.nl', desc: 'Voor mantelzorgers tot 30 jaar' }
+                                ],
+                                persoonlijk: [
+                                    { name: 'Schoolmaatschappelijk werk', desc: 'Ook voor mantelzorgsituaties' },
+                                    { name: 'Jongerenwerk', desc: 'Kan ondersteuning regelen' }
+                                ]
+                            },
+
+                            volwassene: {
+                                persoonlijk: [
+                                    { name: 'HR-adviseur', desc: 'Werk-zorg balans + mantelzorgverlof' },
+                                    { name: 'Bedrijfsmaatschappelijk werk', desc: 'Via werkgever (gratis)' }
+                                ]
+                            },
+                            ouder: {
+                                persoonlijk: [
+                                    { name: 'Wijkverpleging', desc: 'Kan partner-verzorging ondersteunen' },
+                                    { name: 'Dagopvang partner', desc: 'Via Wmo regelen' }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            answers: {},
+            ageCategory: null, // jongere | jongvolwassene | volwassene | ouder
+
+            init() {
+                this.loadFromStorage();
+                console.log('App initialized. ageCategory:', this.ageCategory);
+                console.log('Answers:', this.answers);
+                this.renderDomainScreens();
+                this.updateProgress();
+                this.updateDesktopSteps();
+                // Herstel visuele selectie leeftijdscategorie
+                if (this.ageCategory) {
+                    const chip = document.querySelector(`#ageCategoryGroup .age-chip[data-cat="${this.ageCategory}"]`);
+                    if (chip) {
+                        chip.classList.add('selected');
+                        chip.setAttribute('aria-pressed', 'true');
+                    }
+                }
+            },
+
+            renderDomainScreens() {
+                this.domains.forEach((domain, index) => {
+                    const screenNum = index + 1;
+                    const screen = document.getElementById(`screen${screenNum}`);
+                    if (!screen) return; // Screen bestaat niet
+
+                    const savedAnswer = this.answers[domain.id];
+
+                    screen.innerHTML = `
+                        <div class="card">
+                            <div class="domain-emoji">${domain.emoji}</div>
+                            <div class="domain-title">${domain.title}</div>
+                            <div class="domain-description">${domain.description}</div>
+
+                            ${domain.context_note ? `
+                            <div class="context-note">
+                                ${domain.context_note}
+                            </div>` : ''}
+
+                            <p style="text-align: center; margin-bottom: 14px; font-size: 0.95rem; color: #374151;">Hoe sta je ervoor met ${domain.title.toLowerCase()}?</p>
+
+                            <div class="options">
+                                <div class="option ${savedAnswer === 'goed' ? 'selected' : ''}" data-value="goed"
+                                     onclick="app.selectOption('${domain.id}', 'goed', this)"
+                                     onkeypress="if(event.key==='Enter' || event.key===' ') app.selectOption('${domain.id}', 'goed', this)"
+                                     tabindex="0" role="button" aria-pressed="${savedAnswer === 'goed'}">
+                                    <span class="option-emoji">🟢</span>
+                                    <span>Gaat goed</span>
+                                </div>
+                                <div class="option ${savedAnswer === 'beter' ? 'selected' : ''}" data-value="beter"
+                                     onclick="app.selectOption('${domain.id}', 'beter', this)"
+                                     onkeypress="if(event.key==='Enter' || event.key===' ') app.selectOption('${domain.id}', 'beter', this)"
+                                     tabindex="0" role="button" aria-pressed="${savedAnswer === 'beter'}">
+                                    <span class="option-emoji">🟡</span>
+                                    <span>Vraagt aandacht</span>
+                                </div>
+                                <div class="option ${savedAnswer === 'actie' ? 'selected' : ''}" data-value="actie"
+                                     onclick="app.selectOption('${domain.id}', 'actie', this)"
+                                     onkeypress="if(event.key==='Enter' || event.key===' ') app.selectOption('${domain.id}', 'actie', this)"
+                                     tabindex="0" role="button" aria-pressed="${savedAnswer === 'actie'}">
+                                    <span class="option-emoji">💙</span>
+                                    <span>Hulp is welkom</span>
+                                </div>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn-secondary" onclick="app.goToScreen(${screenNum - 1})">← Vorige</button>
+                                <button class="btn-primary" id="next${screenNum}" onclick="app.goToScreen(${screenNum + 1})" ${savedAnswer ? '' : 'disabled'}>
+                                    Volgende →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            },
+
+            selectOption(domainId, value, element) {
+                // Remove selected from siblings and update aria-pressed
+                element.parentElement.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.setAttribute('aria-pressed', 'false');
+                });
+
+                // Add selected to clicked and update aria-pressed
+                element.classList.add('selected');
+                element.setAttribute('aria-pressed', 'true');
+
+                // Save answer
+                this.answers[domainId] = value;
+                this.saveToStorage();
+
+                // Update desktop steps
+                this.updateDesktopSteps();
+
+                // Enable next button
+                const screenNum = this.domains.findIndex(d => d.id === domainId) + 1;
+                const btn = document.getElementById(`next${screenNum}`);
+
+                if (btn) {
+                    btn.disabled = false;
+                    // Scroll knop in beeld (met kleine delay zodat DOM update klaar is)
+                    setTimeout(() => {
+                        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            },
+
+            goToScreen(num) {
+                const resultsScreen = 9; // Screen 9 = resultaten (na 8 domeinen)
+
+                // Valideer of alle domeinen beantwoord zijn vóór resultatenScherm
+                if (num === resultsScreen) {
+                    const unanswered = this.domains.filter(d => !this.answers[d.id]);
+                    if (unanswered.length > 0) {
+                        const first = unanswered[0];
+                        const firstScreenNum = this.domains.indexOf(first) + 1;
+                        alert(`Nog niet ingevuld: ${first.emoji} ${first.title}\n\nBeantwoord dit onderdeel eerst.`);
+                        num = firstScreenNum;
+                    }
+                }
+
+                // Hide all screens
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+                // Show target screen
+                document.getElementById(`screen${num}`).classList.add('active');
+
+                this.currentScreen = num;
+                this.updateProgress();
+
+                // If results screen, generate results
+                if (num === resultsScreen) {
+                    this.showResults();
+                }
+
+                // Scroll to top - instant voor mobiel, smooth voor desktop
+                // Probeer eerst desktop-right paneel (als het bestaat)
+                const desktopRight = document.querySelector('.desktop-right');
+                if (desktopRight) {
+                    desktopRight.scrollTo({ top: 0, behavior: 'instant' });
+                }
+                // Altijd ook window scrollen voor mobiel
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            },
+
+            updateProgress() {
+                const total = 9; // 0=intro, 1-8=domeinen, 9=resultaten
+                const percentage = (this.currentScreen / (total)) * 100;
+
+                document.getElementById('progressBar').style.width = percentage + '%';
+
+                let progressText = '';
+                if (this.currentScreen === 0) {
+                    progressText = 'Start';
+                } else if (this.currentScreen === 9) {
+                    progressText = 'Resultaat';
+                } else if (this.currentScreen >= 1 && this.currentScreen <= 8) {
+                    progressText = `Vraag ${this.currentScreen} van 8`;
+                }
+
+                document.getElementById('progressText').textContent = progressText;
+
+                // Update desktop steps
+                this.updateDesktopSteps();
+            },
+
+            updateDesktopSteps() {
+                const stepsContainer = document.getElementById('desktopSteps');
+                if (!stepsContainer) return; // Alleen op desktop
+
+                let stepsHtml = '';
+                this.domains.forEach((domain, index) => {
+                    const screenNum = index + 1;
+                    const isCompleted = this.answers[domain.id] !== undefined;
+                    const isActive = this.currentScreen === screenNum;
+
+                    const stateClass = isCompleted ? 'completed' : (isActive ? 'active' : '');
+                    const icon = isCompleted ? '✓' : (isActive ? '•' : '○');
+
+                    stepsHtml += `
+                        <div class="desktop-step ${stateClass}">
+                            <div class="desktop-step-icon">${icon}</div>
+                            <div>${domain.emoji} ${domain.title}</div>
+                        </div>
+                    `;
+                });
+
+                stepsContainer.innerHTML = stepsHtml;
+            },
+
+            showResults() {
+                const container = document.getElementById('resultsSummary');
+
+                const goed = this.domains.filter(d => this.answers[d.id] === 'goed');
+                const beter = this.domains.filter(d => this.answers[d.id] === 'beter');
+                const actie = this.domains.filter(d => this.answers[d.id] === 'actie');
+
+                // Helper: kies leeftijdsspecifieke tips of val terug op generiek
+                const ageCat = this.ageCategory;
+                const ageLabelMap = { jongere: '🧒 Jongeren (12-25)', volwassene: '👨‍💼 Volwassenen (25-65)', ouder: '👴 Ouderen (65+)' };
+                const getTips = (domain) => {
+                    if (ageCat && domain.tips_leeftijd && domain.tips_leeftijd[ageCat]) {
+                        return domain.tips_leeftijd[ageCat];
+                    }
+                    return domain.tips_beter;
+                };
+
+                let html = '<div class="result-summary">';
+
+                // Leeftijdsbadge tonen als gekozen
+                if (ageCat) {
+                    html += `<div style="text-align:center; margin-bottom: 12px;">
+                        <span style="background:#059669; color:white; padding:5px 14px; border-radius:999px; font-size:0.8rem; font-weight:600;">
+                            Tips op maat voor: ${ageLabelMap[ageCat]}
+                        </span>
+                    </div>`;
+                }
+
+                // Summary counts
+                html += `
+                    <div class="result-summary-counts" style="text-align: center; margin-bottom: 16px; font-size: 1rem;">
+                        <div style="margin-bottom: 6px;">
+                            <span style="color: #22c55e; font-weight: 700; font-size: 1.3rem;">✓ ${goed.length}</span>
+                            <span style="color: #718096;">gaat goed</span>
+                        </div>
+                        <div style="margin-bottom: 6px;">
+                            <span style="color: #f59e0b; font-weight: 700; font-size: 1.3rem;">⚠ ${beter.length}</span>
+                            <span style="color: #718096;">vraagt aandacht</span>
+                        </div>
+                        <div>
+                            <span style="color: #3b82f6; font-weight: 700; font-size: 1.3rem;">💙 ${actie.length}</span>
+                            <span style="color: #718096;">hulp is welkom</span>
+                        </div>
+                    </div>
+                `;
+
+                // Gaat goed
+                if (goed.length > 0) {
+                    html += `<div class="result-item goed" style="flex-direction: column; align-items: flex-start;">
+                        <strong style="display: block; margin-bottom: 6px; font-size: 0.95rem;">🟢 Gaat goed (${goed.length})</strong>
+                        <div style="font-size: 0.9rem; color: #065f46; line-height: 1.6;">
+                            ${goed.map(d => `${d.emoji} ${d.title}`).join(' • ')}
+                        </div>
+
+                        <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="width: 100%; background: #dcfce7; border-color: #22c55e;">
+                            <strong>💡 Houd dit vast - tips ▼</strong>
+                        </div>
+                        <div class="hulp-content" style="width: 100%;">
+                            ${goed.map(d => `
+                                <div style="margin-bottom: 10px;">
+                                    <strong style="color: #22c55e; font-size: 0.9rem;">${d.emoji} ${d.title}:</strong>
+                                    <ul style="margin: 6px 0 0 18px; line-height: 1.6; font-size: 0.88rem;">
+                                        ${d.tips_goed.map(tip => `<li>${tip}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+
+                // Vraagt aandacht
+                if (beter.length > 0) {
+                    beter.forEach(domain => {
+                        html += `<div class="result-item beter" style="flex-direction: column; align-items: flex-start;">
+                            <strong style="display: block; margin-bottom: 6px; font-size: 0.95rem;">🟡 ${domain.emoji} ${domain.title} - vraagt aandacht</strong>
+
+                            <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="width: 100%; background: #fef3c7; border-color: #f59e0b;">
+                                <strong>💡 Wat kan helpen? Klik hier ▼</strong>
+                            </div>
+                            <div class="hulp-content" style="width: 100%;">
+                                <ul style="margin: 6px 0 0 18px; line-height: 1.6; font-size: 0.88rem;">
+                                    ${getTips(domain).map(tip => `<li>${tip}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                    });
+                }
+
+                // Hulp is welkom
+                if (actie.length > 0) {
+                    actie.forEach(domain => {
+                        html += `<div class="result-item actie" style="flex-direction: column; align-items: flex-start;">
+                            <strong style="display: block; margin-bottom: 6px; font-size: 0.95rem;">💙 ${domain.emoji} ${domain.title} - hulp is welkom</strong>
+                            <div class="hulp-toggle" onclick="this.nextElementSibling.classList.toggle('open')" style="width: 100%;">
+                                <strong>💙 Waar vind je hulp? Klik hier ▼</strong>
+                            </div>
+                            <div class="hulp-content" style="width: 100%;">
+                                ${this.renderHulp(domain.hulp)}
+                            </div>
+                        </div>`;
+                    });
+                }
+
+                html += '</div>';
+
+                // WIJKANALYSE OPT-IN - GELAAGDE KEUZE
+                html += `
+                    <div class="wijkanalyse-block" style="background:#fffbeb;border:1px solid #d1d5db;border-radius:12px;padding:16px;margin-top:20px;">
+                        <h3 style="font-size:0.95rem;color:#6b7280;margin:0 0 8px;font-weight:600;display:flex;align-items:center;gap:6px;">
+                            🏘️ Help je buurt (optioneel)
+                        </h3>
+                        <p style="font-size:0.85rem;color:#6b7280;line-height:1.5;margin-bottom:12px;">
+                            Jouw antwoorden helpen de gemeente zien waar hulp nodig is - 100% anoniem.<br>
+                            <strong>Voorbeeld:</strong> "In Noord hebben veel jongeren schulden" → gemeente regelt meer schuldhulp
+                        </p>
+
+                        <div style="font-size:0.88rem;color:#6b7280;margin-bottom:12px;font-weight:600;">
+                            ⏱️ Kies zelf hoeveel je deelt:
+                        </div>
+
+                        <!-- OPTIE 1: Alleen postcode -->
+                        <div class="wijkoptie" onclick="app.selectWijkOptie(1); event.stopPropagation();" style="background:white;border:2px solid #d1d5db;border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;" onmouseover="if(!this.classList.contains('selected')) this.style.borderColor='#059669'" onmouseout="if(!this.classList.contains('selected')) this.style.borderColor='#d1d5db'">
+                            <div style="display:flex;align-items:start;gap:10px;">
+                                <input type="radio" name="wijkoptie" id="wijkoptie1" style="margin-top:3px;cursor:pointer;accent-color:#059669;" onclick="app.selectWijkOptie(1); event.stopPropagation();">
+                                <div style="flex:1;cursor:pointer;" onclick="app.selectWijkOptie(1);">
+                                    <div style="font-weight:700;color:#374151;margin-bottom:4px;">Alleen postcode delen (30 sec)</div>
+                                    <div style="font-size:0.8rem;color:#6b7280;line-height:1.4;">Minimaal, maar helpt al!</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OPTIE 2: Postcode + vragen -->
+                        <div class="wijkoptie" onclick="app.selectWijkOptie(2); event.stopPropagation();" style="background:white;border:2px solid #d1d5db;border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;" onmouseover="if(!this.classList.contains('selected')) this.style.borderColor='#059669'" onmouseout="if(!this.classList.contains('selected')) this.style.borderColor='#d1d5db'">
+                            <div style="display:flex;align-items:start;gap:10px;">
+                                <input type="radio" name="wijkoptie" id="wijkoptie2" style="margin-top:3px;cursor:pointer;accent-color:#059669;" onclick="app.selectWijkOptie(2); event.stopPropagation();">
+                                <div style="flex:1;cursor:pointer;" onclick="app.selectWijkOptie(2);">
+                                    <div style="font-weight:700;color:#374151;margin-bottom:4px;">+ 5 korte vragen (~2 minuten)</div>
+                                    <div style="font-size:0.8rem;color:#6b7280;line-height:1.4;">
+                                        Helpt gemeente nóg gerichter:<br>
+                                        • Waar wil je als eerste mee aan de slag?<br>
+                                        • Heb je al eerder iemand om hulp gevraagd?<br>
+                                        • Wat zou helpen? + 2 vragen over je buurt
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OPTIE 3: Niet meedoen -->
+                        <div class="wijkoptie" onclick="app.selectWijkOptie(3); event.stopPropagation();" style="background:white;border:2px solid #d1d5db;border-radius:10px;padding:12px;margin-bottom:14px;cursor:pointer;transition:all 0.2s;" onmouseover="if(!this.classList.contains('selected')) this.style.borderColor='#9ca3af'" onmouseout="if(!this.classList.contains('selected')) this.style.borderColor='#d1d5db'">
+                            <div style="display:flex;align-items:start;gap:10px;">
+                                <input type="radio" name="wijkoptie" id="wijkoptie3" style="margin-top:3px;cursor:pointer;" onclick="app.selectWijkOptie(3); event.stopPropagation();">
+                                <div style="flex:1;cursor:pointer;" onclick="app.selectWijkOptie(3);">
+                                    <div style="font-weight:700;color:#374151;margin-bottom:4px;">Niet meedoen</div>
+                                    <div style="font-size:0.8rem;color:#6b7280;line-height:1.4;">Ook goed! Je check blijft privé.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FORMULIER (verborgen tot optie gekozen) -->
+                        <div id="wijkFormulier" style="display:none;">
+                            <!-- Postcode (voor optie 1 en 2) -->
+                            <div id="postcodeVeld" style="margin-bottom:12px;">
+                                <label for="wijkanalyse-postcode" style="display:block;font-size:0.85rem;color:#6b7280;font-weight:600;margin-bottom:6px;">
+                                    📍 Postcode (4 cijfers)
+                                </label>
+                                <input type="text" id="wijkanalyse-postcode" placeholder="bijv. 1012" maxlength="4" pattern="[0-9]{4}"
+                                    style="width:100%;max-width:140px;padding:10px 12px;border:2px solid #d1d5db;border-radius:8px;font-size:0.95rem;font-weight:600;text-align:center;"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <div style="font-size:0.75rem;color:#9ca3af;margin-top:4px;font-style:italic;">
+                                    Voor wijkanalyse (bijv. 1012 = Amsterdam Centrum)
+                                </div>
+                            </div>
+
+                            <!-- Extra vragen (alleen voor optie 2) -->
+                            <div id="extraVragen" style="display:none;">
+                                <div style="background:#f0fdf4;border-left:3px solid #059669;padding:12px;border-radius:8px;margin-bottom:14px;">
+                                    <!-- BLOK 1: Over jouw situatie -->
+                                    <div style="font-size:0.85rem;color:#065f46;font-weight:600;margin-bottom:10px;">📋 Over jouw situatie (allemaal optioneel)</div>
+
+                                    <!-- Vraag 1: Prioritering -->
+                                    <div style="margin-bottom:12px;">
+                                        <label style="display:block;font-size:0.82rem;color:#374151;font-weight:600;margin-bottom:6px;">
+                                            1. Waar wil je als eerste mee aan de slag?
+                                        </label>
+                                        <select id="vraag-prioriteit" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                            <option value="">-- Kies of laat leeg --</option>
+                                            ${this.domains.filter(d => this.answers[d.id] === 'beter' || this.answers[d.id] === 'actie').map(d =>
+                                                `<option value="${d.id}">${d.emoji} ${d.title}</option>`
+                                            ).join('')}
+                                            <option value="wil-niet-zeggen">Wil ik niet zeggen</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Vraag 2: Hulpzoekgedrag -->
+                                    <div style="margin-bottom:12px;">
+                                        <label style="display:block;font-size:0.82rem;color:#374151;font-weight:600;margin-bottom:6px;">
+                                            2. Heb je al eerder iemand om hulp gevraagd?
+                                        </label>
+                                        <select id="vraag-hulpzoek" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                            <option value="">-- Kies of laat leeg --</option>
+                                            <option value="nooit">Nee, nog niet</option>
+                                            <option value="hielp-niet">Ja, maar het hielp niet genoeg</option>
+                                            <option value="wordt-geholpen">Ja, en ik word nu geholpen</option>
+                                            <option value="wil-niet-zeggen">Wil ik niet zeggen</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Vraag 3: Drempel -->
+                                    <div style="margin-bottom:0;">
+                                        <label style="display:block;font-size:0.82rem;color:#374151;font-weight:600;margin-bottom:6px;">
+                                            3. Wat zou het makkelijker maken om hulp te vragen?
+                                        </label>
+                                        <select id="vraag-drempel" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                            <option value="">-- Kies of laat leeg --</option>
+                                            <option value="meer-info">Meer informatie over waar ik terecht kan</option>
+                                            <option value="makkelijker-contact">Makkelijker contact (chat, WhatsApp)</option>
+                                            <option value="korter-wachten">Korter wachten op afspraak</option>
+                                            <option value="minder-schaamte">Minder schaamte of oordeel</option>
+                                            <option value="anders">Anders / weet niet</option>
+                                            <option value="wil-niet-zeggen">Wil ik niet zeggen</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- BLOK 2: Over jouw buurt -->
+                                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb;">
+                                        <div style="font-size:0.85rem;color:#065f46;font-weight:600;margin-bottom:10px;">🏘️ Over jouw buurt (allemaal optioneel)</div>
+
+                                        <!-- Vraag 4: Buurtverbinding -->
+                                        <div style="margin-bottom:12px;">
+                                            <label style="display:block;font-size:0.82rem;color:#374151;font-weight:600;margin-bottom:6px;">
+                                                4. Heb je mensen in je buurt om op terug te vallen?
+                                            </label>
+                                            <select id="vraag-buurtverbinding" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                                <option value="">-- Kies of laat leeg --</option>
+                                                <option value="ja-regelmatig">✅ Ja, we hebben regelmatig contact</option>
+                                                <option value="ja-zelden">🟡 Ja, maar we spreken elkaar zelden</option>
+                                                <option value="nee">❌ Nee, ik ken mijn buren nauwelijks</option>
+                                                <option value="wil-niet-zeggen">🤐 Wil ik niet zeggen</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Vraag 5: Barrière cohesie -->
+                                        <div style="margin-bottom:0;">
+                                            <label style="display:block;font-size:0.82rem;color:#374151;font-weight:600;margin-bottom:6px;">
+                                                5. Wat zou helpen om meer contact te hebben met mensen in je buurt?
+                                            </label>
+                                            <select id="vraag-buurtbarriere" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:0.85rem;">
+                                                <option value="">-- Kies of laat leeg --</option>
+                                                <option value="meer-tijd">⏰ Meer tijd</option>
+                                                <option value="ontmoetingsplek">🏠 Een plek om elkaar te ontmoeten</option>
+                                                <option value="taal-cultuur">🗣️ Een tolk of iemand die mij begrijpt</option>
+                                                <option value="initiatief">🤝 Een buurtactiviteit of buurtcoach</option>
+                                                <option value="meer-info">💡 Meer informatie over wat er in de buurt is</option>
+                                                <option value="niets">✅ Niets - ik heb genoeg contact</option>
+                                                <option value="wil-niet-zeggen">🤐 Wil ik niet zeggen</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onclick="app.saveWijkanalyse()"
+                                    style="width:100%;padding:12px 16px;background:#059669;color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;"
+                                    onmouseover="this.style.background='#047857'"
+                                    onmouseout="this.style.background='#059669'">
+                                💾 Opslaan en afronden
+                            </button>
+                        </div>
+
+                        <div id="wijkanalyse-feedback" style="margin-top:10px;font-size:0.85rem;text-align:center;"></div>
+
+                        <div style="font-size:0.75rem;color:#9ca3af;margin-top:12px;line-height:1.5;padding-top:10px;border-top:1px solid #e5e7eb;">
+                            🔒 <strong>Wat delen we NIET:</strong> geen naam, adres of complete postcode<br>
+                            ✓ <strong>Wel:</strong> patronen zoals "In deze wijk veel financiële problemen bij jongeren"
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = html;
+            },
+
+            renderHulp(hulp) {
+                let html = '';
+
+                // Debug: log leeftijdscategorie
+                console.log('renderHulp called, ageCategory:', this.ageCategory);
+                console.log('hulp.leeftijd:', hulp.leeftijd);
+
+                const ageCat = this.ageCategory;
+                const ageLabelMap = {
+                    jongere: '🧒 Jongeren (12-25)',
+                    volwassene: '👨‍💼 Volwassenen (25-65)',
+                    ouder: '👴 Ouderen (65+)'
+                };
+
+                // EERST: Leeftijdsspecifieke hulpbronnen (direct zichtbaar)
+                if (ageCat && hulp.leeftijd && hulp.leeftijd[ageCat]) {
+                    console.log('Age-specific help found for:', ageCat);
+                    const ageHulp = hulp.leeftijd[ageCat];
+                    let hasContent = false;
+                    let ageHtml = '';
+
+                    if (ageHulp.info && ageHulp.info.length > 0) {
+                        hasContent = true;
+                        ageHtml += `
+                            <div class="hulp-links" style="margin-bottom: 8px;">
+                                <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem; color: #065f46;">📖 Informatie:</strong>
+                                ${ageHulp.info.map(item =>
+                                    `<a href="${item.url}" target="_blank" style="font-size: 0.85rem;">${item.name}</a> - ${item.desc || ''}`
+                                ).join('')}
+                            </div>
+                        `;
+                    }
+
+                    if (ageHulp.chat && ageHulp.chat.length > 0) {
+                        hasContent = true;
+                        ageHtml += `
+                            <div class="hulp-links" style="margin-bottom: 8px;">
+                                <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem; color: #065f46;">💬 Chat:</strong>
+                                ${ageHulp.chat.map(item =>
+                                    `<a href="${item.url || '#'}" target="_blank" style="font-size: 0.85rem;">${item.name}</a> ${item.desc ? '- ' + item.desc : ''}`
+                                ).join('')}
+                            </div>
+                        `;
+                    }
+
+                    if (ageHulp.persoonlijk && ageHulp.persoonlijk.length > 0) {
+                        hasContent = true;
+                        ageHtml += `
+                            <div class="hulp-links" style="margin-bottom: 8px;">
+                                <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem; color: #065f46;">🤝 Persoonlijk:</strong>
+                                ${ageHulp.persoonlijk.map(item =>
+                                    `<span style="font-size: 0.85rem;">${item.name}</span> - ${item.desc || ''}`
+                                ).join('')}
+                            </div>
+                        `;
+                    }
+
+                    if (ageHulp.bellen && ageHulp.bellen.length > 0) {
+                        hasContent = true;
+                        ageHtml += `
+                            <div class="hulp-links" style="margin-bottom: 8px;">
+                                <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem; color: #065f46;">📞 Bellen:</strong>
+                                ${ageHulp.bellen.map(item =>
+                                    `<span style="font-size: 0.85rem;"><strong>${item.name}:</strong> ${item.tel || ''}</span> ${item.desc ? '- ' + item.desc : ''}`
+                                ).join('')}
+                            </div>
+                        `;
+                    }
+
+                    console.log('hasContent:', hasContent);
+
+                    if (hasContent) {
+                        html += `
+                            <div class="hulp-stap" style="background: #f0fdf4; border-left: 4px solid #059669; border-radius: 8px;">
+                                <strong style="color: #065f46; font-size: 0.95rem; display: block; margin-bottom: 8px;">✨ Voor jouw leeftijd (${ageLabelMap[ageCat]})</strong>
+                                ${ageHtml}
+                            </div>
+                        `;
+                    }
+                } else {
+                    console.log('No age-specific help available. ageCat:', ageCat, 'hulp.leeftijd exists:', !!hulp.leeftijd);
+                }
+
+                // DAARNA: Algemene hulpbronnen in dropdown
+                let algemeneHulp = '';
+
+                if (hulp.info && hulp.info.length > 0) {
+                    algemeneHulp += `
+                        <div style="margin-bottom: 10px;">
+                            <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem;">📖 Informatie lezen (anoniem)</strong>
+                            <div class="hulp-links">
+                                ${hulp.info.map(item =>
+                                    `<a href="${item.url}" target="_blank">${item.name}</a> - ${item.desc || ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (hulp.chat && hulp.chat.length > 0) {
+                    algemeneHulp += `
+                        <div style="margin-bottom: 10px;">
+                            <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem;">💬 Online chatten (anoniem)</strong>
+                            <div class="hulp-links">
+                                ${hulp.chat.map(item =>
+                                    `<a href="${item.url || '#'}" target="_blank">${item.name}</a> ${item.desc ? '- ' + item.desc : ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (hulp.persoonlijk && hulp.persoonlijk.length > 0) {
+                    algemeneHulp += `
+                        <div style="margin-bottom: 10px;">
+                            <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem;">🤝 Persoonlijk gesprek</strong>
+                            <div class="hulp-links">
+                                ${hulp.persoonlijk.map(item =>
+                                    `<span>${item.name}</span> - ${item.desc || ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (hulp.bellen && hulp.bellen.length > 0) {
+                    algemeneHulp += `
+                        <div style="margin-bottom: 10px;">
+                            <strong style="display: block; margin-bottom: 4px; font-size: 0.88rem;">📞 Bellen</strong>
+                            <div class="hulp-links">
+                                ${hulp.bellen.map(item =>
+                                    `<span><strong>${item.name}:</strong> ${item.tel || ''}</span> ${item.desc ? '- ' + item.desc : ''}`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (algemeneHulp) {
+                    const randomId = 'meer' + Math.random().toString(36).substr(2, 9);
+                    html += `
+                        <div style="margin-top: 10px;">
+                            <div class="hulp-toggle-nested" onclick="document.getElementById('${randomId}').classList.toggle('open')"
+                                 style="background: #f9fafb; border: 1px solid #d1d5db; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; color: #6b7280; font-weight: 600;">
+                                📚 Meer algemene hulpbronnen ▼
+                            </div>
+                            <div id="${randomId}" class="hulp-content" style="margin-top: 8px; padding: 10px; background: #fafafa; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                ${algemeneHulp}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (hulp.urgent) {
+                    html += `
+                        <div class="hulp-stap" style="border-left-color: #ef4444; background: #fee2e2; margin-top: 10px;">
+                            <strong style="color: #ef4444;">🚨 Urgent</strong>
+                            <span style="color: #991b1b;">${hulp.urgent}</span>
+                        </div>
+                    `;
+                }
+
+                return html;
+            },
+
+            selectAge(category, element) {
+                this.ageCategory = (this.ageCategory === category) ? null : category; // toggle
+                console.log('Age selected:', this.ageCategory);
+                document.querySelectorAll('#ageCategoryGroup .age-chip').forEach(c => {
+                    c.classList.remove('selected');
+                    c.setAttribute('aria-pressed', 'false');
+                });
+                if (this.ageCategory) {
+                    element.classList.add('selected');
+                    element.setAttribute('aria-pressed', 'true');
+                }
+                this.saveToStorage();
+                console.log('Saved to storage');
+            },
+
+            saveToStorage() {
+                localStorage.setItem('rpa_niveau1', JSON.stringify({
+                    answers: this.answers,
+                    ageCategory: this.ageCategory
+                }));
+            },
+
+            loadFromStorage() {
+                const saved = localStorage.getItem('rpa_niveau1');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        // Support both old format (just answers) and new format
+                        if (parsed.answers) {
+                            this.answers = parsed.answers;
+                            this.ageCategory = parsed.ageCategory || null;
+                            
+                            // Migratie: oude 'jongvolwassene' categorie mappen naar 'jongere'
+                            // (We kiezen 'jongere' omdat 18-25 dichter bij de nieuwe 'jongere' categorie ligt)
+                            if (this.ageCategory === 'jongvolwassene') {
+                                this.ageCategory = 'jongere';
+                                console.log('Leeftijdscategorie gemigreerd van jongvolwassene naar jongere');
+                                this.saveToStorage(); // Opslaan na migratie
+                            }
+                            
+                            // isMantelzorger wordt niet meer gebruikt, data zit in answers.mantelzorg
+                        } else {
+                            this.answers = parsed; // old format
+                        }
+                    } catch(e) { /* ignore */ }
+                }
+            },
+
+            bijdragenAanWijkdata() {
+                const wijk = (document.getElementById('wijkNaam')?.value || '').trim() || 'onbekend';
+                const timestamp = new Date().toISOString();
+
+                // Bouw anoniem record: alleen scores per domein, geen persoonlijke info
+                const record = {
+                    tijdstip: timestamp,
+                    wijk: wijk,
+                    leeftijdscategorie: this.ageCategory || 'onbekend',
+                    scores: {}
+                };
+
+                this.domains.forEach(d => {
+                    record.scores[d.id] = this.answers[d.id] || null;
+                });
+
+                // Opslaan in locale wijkbatch
+                try {
+                    const raw = localStorage.getItem('rpa_wijkdata');
+                    const batch = raw ? JSON.parse(raw) : [];
+                    // Verwijder entries ouder dan 180 dagen
+                    const limiet = Date.now() - (180 * 24 * 60 * 60 * 1000);
+                    const gefilterd = batch.filter(r => new Date(r.tijdstip).getTime() > limiet);
+                    gefilterd.push(record);
+                    localStorage.setItem('rpa_wijkdata', JSON.stringify(gefilterd));
+                } catch(e) { console.warn('Wijkdata opslaan mislukt', e); }
+
+                // Bevestiging tonen
+                document.getElementById('wijkOptIn').querySelector('div:last-child').style.display = 'none';
+                document.querySelectorAll('#wijkOptIn button').forEach(b => b.style.display = 'none');
+                const bevestiging = document.getElementById('wijkOptInBevestiging');
+                if (bevestiging) bevestiging.style.display = 'block';
+            },
+
+            selectWijkOptie(optie) {
+                console.log('Wijkoptie geselecteerd:', optie);
+
+                // Reset feedback
+                const feedback = document.getElementById('wijkanalyse-feedback');
+                feedback.innerHTML = '';
+
+                // Update radio buttons en styling
+                document.querySelectorAll('.wijkoptie').forEach((el, idx) => {
+                    el.classList.remove('selected');
+                    el.style.borderColor = '#d1d5db';
+                    el.style.background = 'white';
+                    const radio = el.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = false;
+                });
+
+                const selectedOptie = document.querySelectorAll('.wijkoptie')[optie - 1];
+                if (selectedOptie) {
+                    selectedOptie.classList.add('selected');
+                    selectedOptie.style.borderColor = '#059669';
+                    selectedOptie.style.background = '#f0fdf4';
+                    const radio = selectedOptie.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                }
+
+                // Toon/verberg formulier
+                const formulier = document.getElementById('wijkFormulier');
+                const extraVragen = document.getElementById('extraVragen');
+
+                if (optie === 1) {
+                    // Alleen postcode
+                    formulier.style.display = 'block';
+                    extraVragen.style.display = 'none';
+                } else if (optie === 2) {
+                    // Postcode + vragen
+                    formulier.style.display = 'block';
+                    extraVragen.style.display = 'block';
+                } else if (optie === 3) {
+                    // Niet meedoen
+                    formulier.style.display = 'none';
+                    feedback.innerHTML = '<span style="color:#6b7280;font-weight:600;"><span style="font-size:1.2rem;">✓</span> Ook goed! Je resultaten blijven privé.</span>';
+                }
+            },
+
+            saveWijkanalyse() {
+                const feedback = document.getElementById('wijkanalyse-feedback');
+                const postcodeInput = document.getElementById('wijkanalyse-postcode');
+
+                // Check welke optie gekozen is
+                const optie1 = document.getElementById('wijkoptie1').checked;
+                const optie2 = document.getElementById('wijkoptie2').checked;
+
+                if (!optie1 && !optie2) {
+                    feedback.innerHTML = '<span style="color:#dc2626;">⚠️ Kies eerst een optie hierboven.</span>';
+                    return;
+                }
+
+                // Lees postcode (4 cijfers)
+                const postcode = postcodeInput ? postcodeInput.value.trim() : '';
+
+                if (!postcode || postcode.length !== 4) {
+                    feedback.innerHTML = '<span style="color:#dc2626;">⚠️ Vul een geldige postcode in (4 cijfers).</span>';
+                    return;
+                }
+
+                let wijk = 'onbekend';
+
+                // Bepaal wijk op basis van postcode (Amsterdam)
+                const num = parseInt(postcode);
+                if (num >= 1000 && num <= 1019) wijk = 'Amsterdam-Centrum';
+                else if (num >= 1011 && num <= 1109) wijk = 'Amsterdam-Oost';
+                else if (num >= 1013 && num <= 1093) wijk = 'Amsterdam-Zuid';
+                else if (num >= 1014 && num <= 1068) wijk = 'Amsterdam-West';
+                else if (num >= 1020 && num <= 1069) wijk = 'Amsterdam-Noord';
+                else wijk = `Postcode ${postcode}`; // Andere postcodes
+
+                // Bereid wijkdata voor (ANONIEM!)
+                const wijkdata = {
+                    timestamp: new Date().toISOString(),
+                    leeftijd: this.ageCategory || 'onbekend',
+                    antwoorden: this.answers, // Alleen scores, geen persoonsgegevens
+                    wijk: wijk,
+                    postcode: postcode
+                };
+
+                // Extra vragen (als optie 2 gekozen)
+                if (optie2) {
+                    const prioriteit = document.getElementById('vraag-prioriteit')?.value || null;
+                    const hulpzoek = document.getElementById('vraag-hulpzoek')?.value || null;
+                    const drempel = document.getElementById('vraag-drempel')?.value || null;
+                    const buurtverbinding = document.getElementById('vraag-buurtverbinding')?.value || null;
+                    const buurtbarriere = document.getElementById('vraag-buurtbarriere')?.value || null;
+
+                    wijkdata.extra = {
+                        prioriteit: prioriteit,
+                        hulpzoekgedrag: hulpzoek,
+                        drempel: drempel,
+                        buurtverbinding: buurtverbinding,
+                        buurtbarriere: buurtbarriere
+                    };
+                }
+
+                // Haal bestaande wijkdata op
+                const raw = localStorage.getItem('rpa_wijkdata');
+                const batch = raw ? JSON.parse(raw) : [];
+
+                // Voeg toe
+                batch.push(wijkdata);
+
+                // Opslaan
+                localStorage.setItem('rpa_wijkdata', JSON.stringify(batch));
+
+                // Feedback
+                feedback.innerHTML = `
+                    <div style="color:#16a34a;font-weight:700;margin-bottom:10px;">✅ Bedankt! Je helpt je buurt ermee.</div>
+                    <a href="strategisch.html" style="display:inline-block;background:#6366f1;color:white;padding:10px 18px;border-radius:8px;font-weight:700;font-size:0.9rem;text-decoration:none;">
+                        📊 Bekijk de wijkanalyse in N3 →
+                    </a>
+                `;
+
+                // Disable button en formulier
+                event.target.disabled = true;
+                event.target.style.opacity = '0.5';
+                event.target.textContent = '✅ Opgeslagen';
+                postcodeInput.disabled = true;
+
+                if (optie2) {
+                    document.getElementById('vraag-prioriteit').disabled = true;
+                    document.getElementById('vraag-hulpzoek').disabled = true;
+                    document.getElementById('vraag-drempel').disabled = true;
+                    document.getElementById('vraag-buurtverbinding').disabled = true;
+                    document.getElementById('vraag-buurtbarriere').disabled = true;
+                }
+            },
+
+            reset() {
+                if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Je antwoorden worden gewist.')) {
+                    this.answers = {};
+                    this.ageCategory = null;
+                    localStorage.removeItem('rpa_niveau1');
+                    document.querySelectorAll('.age-chip').forEach(c => c.classList.remove('selected'));
+                    this.goToScreen(0);
+                }
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+        // Sync desktop progress bar
+        const _go = app.goToScreen.bind(app);
+        app.goToScreen = function(n) {
+            _go(n);
+
+            const total = 9; // 0=intro, 1-8=domeinen, 9=resultaten
+            const pct = ((n / total) * 100).toFixed(0);
+            const dpb = document.getElementById('progressBarDesktop');
+            const dpt = document.getElementById('progressTextDesktop');
+
+            if (dpb) dpb.style.width = pct + '%';
+
+            if (dpt) {
+                let text = '';
+                if (n === 0) text = 'Start';
+                else if (n === 9) text = 'Resultaat';
+                else if (n >= 1 && n <= 8) text = 'Vraag ' + n + ' van 8';
+                dpt.textContent = text;
+            }
+        };
     </script>
     </div><!-- .container -->
     </div><!-- .desktop-right -->

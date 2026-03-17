@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPA Positionele Analyse v4.0 Clean - Relationeel-Positioneel Analysemodel</title>
+    <title>RPA Positionele Analyse v4.0 - Relationeel-Positioneel Analysemodel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -3557,101 +3557,82 @@
             color: #1e40af;
         }
     
+/* ====== RPA v4.0 ADDITIONS ====== */
+.evidence-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+}
 
-        /* ========================================
-           HUIDIGE STEUN KNOPPEN (v4.0)
-           ======================================== */
-        .steun-knoppen {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 16px 0 24px 0;
-        }
-        
-        .steun-btn {
-            flex: 1;
-            min-width: 140px;
-            max-width: 180px;
-            padding: 16px;
-            border: 3px solid #e5e7eb;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #374151;
-            text-align: center;
-        }
-        
-        .steun-btn:hover {
-            border-color: #9ca3af;
-        }
-        
-        .steun-btn.active-zelfstandig {
-            border-color: #10b981;
-            background: #d1fae5;
-            color: #065f46;
-        }
-        
-        .steun-btn.active-aanwezig {
-            border-color: #f59e0b;
-            background: #fef3c7;
-            color: #92400e;
-        }
-        
-        .steun-btn.active-nodig {
-            border-color: #dc2626;
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        
-        .steun-dropdown {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            border-radius: 10px;
-            padding: 16px;
-            margin: 16px 0 24px 0;
-        }
-        
-        .steun-dropdown select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #f59e0b;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            background: white;
-        }
+.evidence-badge.evidence-based {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
 
-    
+.evidence-badge.clinical {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
 
-        /* Dropdown per domein (verschijnt bij "Steun aanwezig") */
-        .domein-steun-dropdown {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 8px;
-            display: none;
-        }
-        
-        .domein-steun-dropdown select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #f59e0b;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            background: white;
-        }
-        
-        .domein-steun-dropdown label {
-            display: block;
-            font-weight: 600;
-            color: #92400e;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-        }
+.evidence-badge.ethical {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+.mantelzorg-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.financien-alert {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 3px solid #dc2626;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+}
+
+.privacy-screen {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3px solid #0ea5e9;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.privacy-guarantee {
+    background: white;
+    border-left: 5px solid #10b981;
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 8px;
+}
+
+.regie-badge {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.client-choice {
+    background: #fef3c7;
+    border-left: 6px solid #eab308;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 10px 10px 0;
+}
 
     </style>
 </head>
@@ -3660,7 +3641,7 @@
         <div>
             <h1>
                 RPA Positionele Analyse
-                <span class="version-badge">v4.0 Clean</span>
+                <span class="version-badge">v4.0 - Team Review Edition</span>
             </h1>
             <p>Relationeel-Positioneel Analysemodel</p>
         </div>
@@ -3893,7 +3874,7 @@
                     </div>
 
                     <div class="btn-group" style="margin-top: 25px;">
-                        <button class="btn btn-primary" onclick="goToScreenById('triage')" style="font-size: 1.1rem; padding: 14px 28px;">Start gesprek →</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('screen-privacy')" style="font-size: 1.1rem; padding: 14px 28px;">Start gesprek →</button>
                     </div>
                 </div>
             </div>
@@ -4177,7 +4158,49 @@
                 </div>
             </div>
 
-            <!-- Screen 2: Oriëntatie - Het hier en nu -->
+            
+    <!-- RPA v4.0: PRIVACY & REGIE SCHERM -->
+    <div class="screen" id="screen-privacy" style="display:none;">
+        <div class="card">
+            <div class="privacy-screen">
+                <div style="font-size:3.5rem;text-align:center;margin-bottom:16px;">🔒</div>
+                <h2 style="text-align:center;color:#0369a1;margin-bottom:20px;font-size:1.6rem;">
+                    Voordat we beginnen: Jouw Privacy & Regie
+                </h2>
+                
+                <div class="privacy-guarantee">
+                    <h3 style="color:#065f46;margin-bottom:10px;font-size:1rem;">✅ Wat gebeurt er met jouw informatie?</h3>
+                    <ul style="line-height:2;color:#374151;">
+                        <li><strong>Niets wordt automatisch opgeslagen</strong> - dit gesprek blijft op dit scherm</li>
+                        <li><strong>Geen verzending naar servers</strong> - alle informatie blijft lokaal</li>
+                        <li><strong>Jij bepaalt wat er in het dossier komt</strong> - aan het einde kies jij of je de samenvatting deelt</li>
+                        <li><strong>Je kunt op elk moment stoppen</strong> - zonder verklaring</li>
+                    </ul>
+                </div>
+                
+                <div class="client-choice">
+                    <p style="font-weight:700;color:#92400e;margin-bottom:8px;font-size:1.05rem;">👤 Dit is JOUW gesprek</p>
+                    <p style="color:#78350f;line-height:1.8;margin:0;">
+                        De professional is er om <strong>jou te helpen nadenken</strong>, niet om jou te beoordelen. 
+                        <strong>Jij beslist</strong> welke onderwerpen we bespreken en hoe diep we ingaan.
+                    </p>
+                </div>
+                
+                <div style="text-align:center;margin:24px 0;">
+                    <div class="regie-badge">👑 Jij hebt de regie - altijd</div>
+                </div>
+            </div>
+            
+            <div style="text-align:center;margin-top:24px;">
+                <button class="btn btn-primary" onclick="goToScreenById('triage')" style="font-size:1.1rem;padding:14px 32px;">
+                    Ik begrijp het, ga verder →
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Screen 2: Oriëntatie - Het hier en nu -->
             <!-- ORIËNTATIE-SCHERM VERWIJDERD (Positionele Analyse = direct naar domeinscan) -->
             <!-- 
             <div class="screen" id="screen-hulpvraag">
@@ -4239,8 +4262,7 @@
             <!-- Screen 3: TRIAGE - Selecteer relevante domeinen (Prioriteit 1) -->
             <div class="screen" id="screen-triage">
                 <div class="card">
-                    <h2 style="font-size:1.6rem;margin-bottom:8px;">
-🗺️ Waar staat het netwerk?</h2>
+                    <h2 style="font-size:1.6rem;margin-bottom:8px;">🗺️ Waar staat het netwerk?</h2>
 
                     <!-- Uitnodiging -->
                     <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
@@ -4251,40 +4273,6 @@
                     <!-- Stoplicht grid -->
                     <div id="stoplichtGrid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
                         <!-- Gevuld door renderStoplichtGrid() -->
-                    
-                    <!-- TEMPLATE voor domein dropdown (wordt gekopieerd per domein) -->
-                    <template id="domein-dropdown-template">
-                        <div class="domein-steun-dropdown">
-                            <label>Wie helpt hierbij?</label>
-                            <select onchange="saveDomeinSteun(this.closest('.domein-steun-dropdown').dataset.domein)">
-                                <option value="">-- Selecteer --</option>
-                                <optgroup label="Professioneel">
-                                    <option value="ambulante-ggz">Ambulante GGZ</option>
-                                    <option value="wijkverpleging">Wijkverpleging</option>
-                                    <option value="thuiszorg">Thuiszorg</option>
-                                    <option value="maatschappelijk-werk">Maatschappelijk werk</option>
-                                    <option value="sociale-wijkteam">Sociaal wijkteam</option>
-                                    <option value="budgetcoach">Budgetcoach</option>
-                                    <option value="schuldhulpverlening">Schuldhulpverlening</option>
-                                </optgroup>
-                                <optgroup label="Informeel">
-                                    <option value="partner">Partner</option>
-                                    <option value="familie">Familie/kinderen</option>
-                                    <option value="ouders">Ouders</option>
-                                    <option value="mantelzorger">Mantelzorger</option>
-                                    <option value="vrienden">Vrienden</option>
-                                    <option value="buren">Buren</option>
-                                </optgroup>
-                                <optgroup label="Collectief">
-                                    <option value="vrijwilligers">Vrijwilligersorganisatie</option>
-                                    <option value="buurtcentrum">Buurtcentrum</option>
-                                    <option value="kerk">Kerk/moskee</option>
-                                </optgroup>
-                                <option value="anders">Anders</option>
-                            </select>
-                        </div>
-                    </template>
-
                     </div>
 
                     <!-- Professioneel nootje -->
@@ -4293,62 +4281,6 @@
                     </p>
 
                     <!-- Teller (subtiel) -->
-                    
-
-
-                    <!-- HUIDIGE STEUN BLOKJE (v4.0) -->
-                    <div style="background:#f0f9ff;border:2px solid #3b82f6;border-radius:12px;padding:20px;margin-bottom:24px;">
-                        <h3 style="color:#1e40af;font-size:1.1rem;margin:0 0 8px 0;text-align:center;">
-                            💼 Loopt er nu al ondersteuning?
-                        </h3>
-                        <p style="text-align:center;color:#1e3a8a;font-size:0.9rem;margin:0 0 16px;">
-                            Klik hieronder wat nu van toepassing is:
-                        </p>
-                        
-                        <div class="steun-knoppen">
-                            <button type="button" class="steun-btn" id="steun-btn-zelfstandig" onclick="selectHuidigeSteun('zelfstandig')">
-                                <div style="font-size:1.8rem;margin-bottom:6px;">🟢</div>
-                                Zelfstandig
-                            </button>
-                            
-                            <button type="button" class="steun-btn" id="steun-btn-aanwezig" onclick="selectHuidigeSteun('aanwezig')">
-                                <div style="font-size:1.8rem;margin-bottom:6px;">🟡</div>
-                                Steun aanwezig
-                            </button>
-                            
-                            <button type="button" class="steun-btn" id="steun-btn-nodig" onclick="selectHuidigeSteun('nodig')">
-                                <div style="font-size:1.8rem;margin-bottom:6px;">🔴</div>
-                                Steun nodig
-                            </button>
-                        </div>
-                        
-                        <!-- Dropdown (verschijnt bij "Steun aanwezig") -->
-                        <div id="steun-aanwezig-dropdown" class="steun-dropdown" style="display:none;">
-                            <label style="font-weight:700;color:#92400e;display:block;margin-bottom:10px;">
-                                Wie of wat helpt er nu?
-                            </label>
-                            <select id="steun-type-select" onchange="saveHuidigeSteunType()">
-                                <option value="">-- Selecteer --</option>
-                                <optgroup label="Professionele hulp">
-                                    <option value="ambulante-ggz">Ambulante GGZ</option>
-                                    <option value="wijkverpleging">Wijkverpleging</option>
-                                    <option value="thuiszorg">Thuiszorg</option>
-                                    <option value="maatschappelijk-werk">Maatschappelijk werk</option>
-                                    <option value="sociale-wijkteam">Sociaal wijkteam</option>
-                                </optgroup>
-                                <optgroup label="Informele steun">
-                                    <option value="partner">Partner</option>
-                                    <option value="familie">Familie</option>
-                                    <option value="mantelzorger">Mantelzorger</option>
-                                    <option value="vrienden">Vrienden</option>
-                                    <option value="buren">Buren</option>
-                                </optgroup>
-                                <option value="anders">Anders</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-
                     <div id="triageCounter" style="padding:8px 16px;background:#f9fafb;border-radius:8px;margin-bottom:16px;font-size:0.8rem;color:#9ca3af;text-align:center;">
                         <span id="triageCount">0</span>/11 &nbsp;·&nbsp;
                         🔴 <span id="countProbleem">0</span> &nbsp;
@@ -7178,7 +7110,7 @@ Antwoord in dit exacte JSON formaat:
             const stoplichtStatus = (state.domainStatus || {})[domain.id] || null;
             const stoplichtLabel = {
                 'goed': '🟢 Zelfstandig',
-                'steun-wenselijk': '🟡 Steun aanwezig',
+                'steun-wenselijk': '🟡 Steun wenselijk',
                 'steun-nodig': '🔴 Steun nodig'
             }[stoplichtStatus] || '⚪ Niet ingevuld';
             const stoplichtColor = {
@@ -7256,7 +7188,85 @@ Antwoord in dit exacte JSON formaat:
                             ${sitLabel ? `<div style="margin-top:8px;">${sitLabel}</div>` : ''}
                             <div id="addBtnPrompt-${domain.id}">${addBtnPrompt}</div>
                         </div>
-                        <style>@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #93c5fd}50%{box-shadow:0 0 0 5px #bfdbfe}}</style>
+                        <style>@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #93c5fd}50%{box-shadow:0 0 0 5px #bfdbfe}}
+/* ====== RPA v4.0 ADDITIONS ====== */
+.evidence-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.evidence-badge.evidence-based {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.evidence-badge.clinical {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.evidence-badge.ethical {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+.mantelzorg-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.financien-alert {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 3px solid #dc2626;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+}
+
+.privacy-screen {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3px solid #0ea5e9;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.privacy-guarantee {
+    background: white;
+    border-left: 5px solid #10b981;
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 8px;
+}
+
+.regie-badge {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.client-choice {
+    background: #fef3c7;
+    border-left: 6px solid #eab308;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 10px 10px 0;
+}
+
+    </style>
                         <span id="addBtnHighlight-${domain.id}" data-highlight="${addBtnHighlight}"></span>`;
                     }
                 })() : ''}
@@ -7809,7 +7819,7 @@ Antwoord in dit exacte JSON formaat:
         function exportSamenvatting() {
             const vandaag = new Date().toLocaleDateString('nl-NL', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
             const netwerkInfo = getRPANetwerkPositie();
-            const stoplichtLabels = {'goed':'🟢 Zelfstandig','steun-wenselijk':'🟡 Steun aanwezig','steun-nodig':'🔴 Steun nodig'};
+            const stoplichtLabels = {'goed':'🟢 Zelfstandig','steun-wenselijk':'🟡 Steun wenselijk','steun-nodig':'🔴 Steun nodig'};
             const bewegingLabels = {informeel:'→ Meer mensen om je heen',formeel:'→ Hulpverlener inzetten',gemengd:'→ Combineren',stoppen:'Stoppen'};
             const methodenLabels = {familiegesprek:'👨‍👩‍👧 Familiegesprek',mdo:'🏥 MDO',ekc:'💪 EKC',netwerkberaad:'🤝 Netwerkberaad',bemoeizorg:'🚪 Bemoeizorg',trajectbegeleiding:'📋 Trajectbegeleiding'};
             const planKloptKleur = {ja:'#16a34a',twijfel:'#f59e0b',nee:'#dc2626'};
@@ -7852,7 +7862,85 @@ Antwoord in dit exacte JSON formaat:
                 <style>
                     body { font-family: -apple-system, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; color: #1f2937; }
                     @media print { body { margin: 20px; } .no-print { display: none; } }
-                </style>
+                
+/* ====== RPA v4.0 ADDITIONS ====== */
+.evidence-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.evidence-badge.evidence-based {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.evidence-badge.clinical {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.evidence-badge.ethical {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+.mantelzorg-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.financien-alert {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 3px solid #dc2626;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+}
+
+.privacy-screen {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3px solid #0ea5e9;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.privacy-guarantee {
+    background: white;
+    border-left: 5px solid #10b981;
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 8px;
+}
+
+.regie-badge {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.client-choice {
+    background: #fef3c7;
+    border-left: 6px solid #eab308;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 10px 10px 0;
+}
+
+    </style>
             </head><body>
                 <div class="no-print" style="background:#fef9c3;padding:10px 16px;border-radius:8px;margin-bottom:20px;font-size:0.88rem;">
                     💡 Druk op <strong>Ctrl+P</strong> (of Cmd+P) om op te slaan als PDF of af te drukken.
@@ -11946,7 +12034,85 @@ Antwoord in dit exacte JSON formaat:
                             transform: rotate(90deg);
                         }
                     }
-                </style>
+                
+/* ====== RPA v4.0 ADDITIONS ====== */
+.evidence-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.evidence-badge.evidence-based {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.evidence-badge.clinical {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.evidence-badge.ethical {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #6366f1;
+}
+
+.mantelzorg-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.financien-alert {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 3px solid #dc2626;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+}
+
+.privacy-screen {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3px solid #0ea5e9;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.privacy-guarantee {
+    background: white;
+    border-left: 5px solid #10b981;
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 8px;
+}
+
+.regie-badge {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.client-choice {
+    background: #fef3c7;
+    border-left: 6px solid #eab308;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 10px 10px 0;
+}
+
+    </style>
             `;
             
             container.innerHTML = html;
@@ -14437,7 +14603,7 @@ END:VEVENT
                         <span style="flex:1;font-size:0.88rem;font-weight:600;color:#374151;">${d.name}</span>
                         <div style="display:flex;gap:6px;">
                             ${btn('goed','🟢','Zelfstandig','#16a34a','#dcfce7')}
-                            ${btn('steun-wenselijk','🟡','Steun aanwezig','#ca8a04','#fef9c3')}
+                            ${btn('steun-wenselijk','🟡','Steun wenselijk','#ca8a04','#fef9c3')}
                             ${btn('steun-nodig','🔴','Steun nodig','#dc2626','#fee2e2')}
                         </div>
                     </div>
@@ -14784,7 +14950,7 @@ END:VEVENT
                             <span style="font-size:1.6rem;">${domain.emoji}</span>
                             <div>
                                 <div style="font-size:1rem;font-weight:700;color:var(--text);">${domain.name}</div>
-                                <div style="font-size:0.8rem;color:${stoplichtKleur};">${stoplichtLabel} ${stoplicht ? { 'goed': 'Gaat goed', 'steun-wenselijk': 'Steun aanwezig', 'steun-nodig': 'Steun nodig' }[stoplicht] : 'Niet beoordeeld'}</div>
+                                <div style="font-size:0.8rem;color:${stoplichtKleur};">${stoplichtLabel} ${stoplicht ? { 'goed': 'Gaat goed', 'steun-wenselijk': 'Steun wenselijk', 'steun-nodig': 'Steun nodig' }[stoplicht] : 'Niet beoordeeld'}</div>
                             </div>
                         </div>
 
@@ -15459,148 +15625,6 @@ END:VEVENT
                 document.getElementById('toegangsInput').style.borderColor = '#dc2626';
             }
         }
-    
-
-        
-        /* ========================================
-           HUIDIGE STEUN FUNCTIES (v4.0)
-           ======================================== */
-        
-        function selectHuidigeSteun(keuze) {
-            // Reset alle buttons
-            ['zelfstandig', 'aanwezig', 'nodig'].forEach(k => {
-                const btn = document.getElementById('steun-btn-' + k);
-                if (btn) {
-                    btn.className = 'steun-btn';  // Reset classes
-                }
-            });
-            
-            // Activeer geselecteerde
-            const btn = document.getElementById('steun-btn-' + keuze);
-            if (btn) {
-                btn.className = 'steun-btn active-' + keuze;
-            }
-            
-            // Toon/verberg dropdown
-            const dropdown = document.getElementById('steun-aanwezig-dropdown');
-            if (dropdown) {
-                dropdown.style.display = (keuze === 'aanwezig') ? 'block' : 'none';
-            }
-            
-            // Bewaar in state
-            if (!state.huidigeSteun) state.huidigeSteun = {};
-            state.huidigeSteun.status = keuze;
-            saveState();
-            
-            console.log('Huidige steun geselecteerd:', keuze);
-        }
-        
-        function saveHuidigeSteunType() {
-            const select = document.getElementById('steun-type-select');
-            if (!select) return;
-            
-            if (!state.huidigeSteun) state.huidigeSteun = {};
-            state.huidigeSteun.type = select.value;
-            saveState();
-            
-            console.log('Steun type opgeslagen:', select.value);
-        }
-
-    
-
-        
-        // ========================================
-        // DROPDOWN PER DOMEIN (v4.0)
-        // ========================================
-        
-        function toggleDomeinDropdown(domeinId, status) {
-            const dropdown = document.getElementById('dropdown-' + domeinId);
-            if (!dropdown) return;
-            
-            if (status === 'aanwezig') {
-                dropdown.style.display = 'block';
-            } else {
-                dropdown.style.display = 'none';
-            }
-        }
-        
-        function saveDomeinSteun(domeinId) {
-            const select = document.getElementById('steun-select-' + domeinId);
-            if (!select) return;
-            
-            if (!state.domeinSteun) state.domeinSteun = {};
-            state.domeinSteun[domeinId] = select.value;
-            saveState();
-            
-            console.log('Domein steun opgeslagen:', domeinId, select.value);
-        }
-
-    
-
-        
-        // Wrapper voor stoplicht klik (onderschept "aanwezig" klik)
-        const originalSelectTriageStatus = window.selectTriageStatus;
-        window.selectTriageStatus = function(domeinId, status) {
-            // Roep originele functie aan
-            if (originalSelectTriageStatus) {
-                originalSelectTriageStatus(domeinId, status);
-            }
-            
-            // Toggle dropdown bij "aanwezig"
-            toggleDomeinDropdown(domeinId, status);
-        };
-
-    
-
-        
-        // Injecteer dropdowns in bestaande domein rows
-        function injectDomeinDropdowns() {
-            const template = document.getElementById('domein-dropdown-template');
-            if (!template) {
-                console.warn('Dropdown template niet gevonden');
-                return;
-            }
-            
-            // Voor elk domein, voeg dropdown toe
-            const domeinen = [
-                'financien', 'dagbesteding', 'huisvesting', 'huiselijke-relaties',
-                'geestelijke-gezondheid', 'lichamelijke-gezondheid', 'verslaving',
-                'adl', 'sociaal-netwerk', 'participatie', 'justitie'
-            ];
-            
-            domeinen.forEach(domeinId => {
-                const domeinRow = document.querySelector(`[data-domein="${domeinId}"]`);
-                if (!domeinRow) return;
-                
-                // Check of dropdown al bestaat
-                if (domeinRow.querySelector('.domein-steun-dropdown')) return;
-                
-                // Clone template
-                const clone = template.content.cloneNode(true);
-                const dropdown = clone.querySelector('.domein-steun-dropdown');
-                dropdown.id = 'dropdown-' + domeinId;
-                dropdown.dataset.domein = domeinId;
-                
-                // Pas select ID aan
-                const select = dropdown.querySelector('select');
-                select.id = 'steun-select-' + domeinId;
-                
-                // Voeg toe aan domein row
-                domeinRow.appendChild(dropdown);
-            });
-            
-            console.log('Domein dropdowns geïnjecteerd');
-        }
-        
-        // Roep aan na het renderen van het grid
-        const originalRenderStoplichtGrid = window.renderStoplichtGrid;
-        if (originalRenderStoplichtGrid) {
-            window.renderStoplichtGrid = function() {
-                originalRenderStoplichtGrid();
-                setTimeout(injectDomeinDropdowns, 100); // Kleine delay voor render
-            };
-        }
-
     </script>
 
     <!-- ZWEVEND WOORDENBOEK -->

@@ -16372,7 +16372,12 @@ END:VEVENT
                             </div>
                             
                             <div id="dropdown-${d.id}" style="display:none;">
-                                <div style="margin-bottom:8px;font-weight:600;color:#92400e;">Wie helpt?</div>
+                                <!-- NIEUW: Toegevoegde personen lijst -->
+                                <div id="personen-lijst-${d.id}" style="margin-bottom:12px;">
+                                    ${renderPersonenLijst(d.id)}
+                                </div>
+                                
+                                <div style="margin-bottom:8px;font-weight:600;color:#92400e;">Wie helpt? (eerste persoon of extra toevoegen)</div>
                                 
                                 <select id="wie-formeel-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','formeel',this.value)">
@@ -16625,6 +16630,17 @@ END:VEVENT
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                
+                                <!-- NIEUW: + Nog iemand toevoegen knop -->
+                                <div style="margin-top:12px;padding-top:12px;border-top:2px solid #fde68a;">
+                                    <button onclick="addPersoonToSteun('${d.id}', getCurrentTypeFor('${d.id}'))" 
+                                            style="background:#f59e0b;color:white;border:none;border-radius:6px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;width:100%;">
+                                        ➕ Nog iemand toevoegen
+                                    </button>
+                                    <p style="font-size:0.75rem;color:#92400e;margin:4px 0 0;text-align:center;font-style:italic;">
+                                        Soms zijn meerdere mensen betrokken bij dit domein
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -18796,9 +18812,30 @@ END:VEVENT
         }
         
         // LEGACY: backward compatible met oude structuur
-        function saveSteunDetail(domeinId, type, wie) {
+        function saveSteunDetail(domeinId, type, wie, persoonIndex) {
             if (!state.steunDetails) state.steunDetails = {};
-            if (!state.steunDetails[domeinId]) state.steunDetails[domeinId] = {};
+            if (!state.steunDetails[domeinId]) state.steunDetails[domeinId] = { personen: [] };
+            
+            // NIEUW: Ondersteun meerdere personen
+            if (!state.steunDetails[domeinId].personen) state.steunDetails[domeinId].personen = [];
+            
+            // Als persoonIndex is gegeven, update die specifieke persoon
+            if (persoonIndex !== undefined && state.steunDetails[domeinId].personen[persoonIndex]) {
+                state.steunDetails[domeinId].personen[persoonIndex].type = type;
+                state.steunDetails[domeinId].personen[persoonIndex].wie = wie;
+            } else {
+                // Anders: legacy mode (eerste persoon) of nieuw toevoegen
+                if (state.steunDetails[domeinId].personen.length === 0) {
+                    // Eerste persoon
+                    state.steunDetails[domeinId].personen.push({ type, wie, rollen: [] });
+                } else {
+                    // Update eerste persoon (backward compatibility)
+                    state.steunDetails[domeinId].personen[0].type = type;
+                    state.steunDetails[domeinId].personen[0].wie = wie;
+                }
+            }
+            
+            // Legacy velden voor backward compatibility
             state.steunDetails[domeinId].type = type;
             state.steunDetails[domeinId].wie = wie;
             
@@ -18841,6 +18878,84 @@ END:VEVENT
             }
             
             saveState();
+        }
+        
+        function getCurrentTypeFor(domeinId) {
+            // Detecteer welk type radio button actief is
+            const radios = document.querySelectorAll(`input[name="type-${domeinId}"]`);
+            for (let radio of radios) {
+                if (radio.checked) return radio.value;
+            }
+            return 'informeel'; // Default
+        }
+        
+        function addPersoonToSteun(domeinId, type) {
+            if (!state.steunDetails) state.steunDetails = {};
+            if (!state.steunDetails[domeinId]) state.steunDetails[domeinId] = { personen: [] };
+            if (!state.steunDetails[domeinId].personen) state.steunDetails[domeinId].personen = [];
+            
+            // Prompt voor naam
+            const typeLabel = type === 'formeel' ? 'professional' : type === 'collectief' ? 'collectieve voorziening' : 'persoon';
+            const naam = prompt(`Naam van de ${typeLabel}:`);
+            
+            if (!naam || naam.trim() === '') {
+                return; // Geannuleerd
+            }
+            
+            // Voeg persoon toe
+            state.steunDetails[domeinId].personen.push({
+                type: type,
+                wie: naam.trim(),
+                rollen: []
+            });
+            
+            saveState();
+            renderStoplichtGrid(); // Re-render om lijst te updaten
+            
+            // Bevestiging
+            const container = document.getElementById(`personen-lijst-${domeinId}`);
+            if (container) {
+                container.innerHTML = renderPersonenLijst(domeinId);
+            }
+        }
+        
+        function removePersoonFromSteun(domeinId, persoonIndex) {
+            if (confirm('Deze persoon verwijderen?')) {
+                if (state.steunDetails && state.steunDetails[domeinId] && state.steunDetails[domeinId].personen) {
+                    state.steunDetails[domeinId].personen.splice(persoonIndex, 1);
+                    saveState();
+                    renderStoplichtGrid();
+                }
+            }
+        }
+        
+        function renderPersonenLijst(domeinId) {
+            const steunDetail = state.steunDetails?.[domeinId];
+            if (!steunDetail || !steunDetail.personen || steunDetail.personen.length === 0) {
+                return '';
+            }
+            
+            return steunDetail.personen.map((persoon, idx) => {
+                const typeEmoji = persoon.type === 'formeel' ? '🔵' : persoon.type === 'collectief' ? '🟣' : '🟢';
+                const typeLabelStyle = persoon.type === 'formeel' ? 'color:#1e40af;' : persoon.type === 'collectief' ? 'color:#7e22ce;' : 'color:#166534;';
+                
+                return `
+                    <div style="background:white;border:2px solid #e5e7eb;border-radius:8px;padding:10px;margin-top:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;">
+                            <div style="font-weight:600;font-size:0.9rem;${typeLabelStyle}">${typeEmoji} ${persoon.wie || '(nog niet ingevuld)'}</div>
+                            <button onclick="removePersoonFromSteun('${domeinId}', ${idx})" 
+                                    style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:2px 6px;font-size:0.75rem;cursor:pointer;">
+                                🗑
+                            </button>
+                        </div>
+                        ${persoon.rollen && persoon.rollen.length > 0 ? `
+                            <div style="font-size:0.8rem;color:#6b7280;">
+                                ${persoon.rollen.join(', ')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
         }
         
         // Opslaan van checkbox selecties voor informeel netwerk

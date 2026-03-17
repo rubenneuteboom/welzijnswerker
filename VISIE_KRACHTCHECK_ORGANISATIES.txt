@@ -1,0 +1,758 @@
+# KrachtCheck Niveau 1
+## Visiedocument voor organisaties
+
+**Versie:** 1.0  
+**Datum:** 2 maart 2026  
+**Auteur:** SIJN / RPA Instrumentarium  
+**Contact:** [in te vullen]
+
+---
+
+## Samenvatting (Executive Summary)
+
+**KrachtCheck** is een laagdrempelig, wetenschappelijk onderbouwd zelfscaninstrument waarmee mensen in 2 minuten signaleren hoe het écht met hen gaat — over 8 levensdomeinen, inclusief mantelzorg.
+
+**Voor wie:**
+- 🏛️ Gemeenten (preventie, vroege signalering, wijkdata)
+- 💼 Werkgevers (preventie verzuim, mantelzorg-beleid)
+- 🏥 Zorgverzekeraars (preventie, zelfredzaamheid)
+- 🎓 Scholen (signalering kwetsbare jongeren)
+- 🫂 Mantelzorgorganisaties (herkenning, preventie overbelasting)
+
+**Kernwaarden:**
+- ✅ **Privacy-proof:** Data blijft lokaal op apparaat gebruiker
+- ✅ **Wetenschappelijk:** Gebaseerd op RPA-methodologie (Relationeel-Positioneel Analysemodel)
+- ✅ **Laagdrempelig:** 8 vragen, 2 minuten, direct resultaat
+- ✅ **Preventief:** Signaleert vóór crisis, niet erna
+- ✅ **Actionable:** Concrete doorverwijzingen naar hulp
+
+---
+
+## 1. Waarom KrachtCheck?
+
+### Het probleem
+
+**In Nederland:**
+- 1 op 5 mensen heeft psychische klachten (RIVM, 2024)
+- 1,7 miljoen mantelzorgers, waarvan 30% overbelast (Mezzo, 2025)
+- 1 op 8 werknemers verzuimt door werk-privé balans (CBS, 2024)
+- Gemiddelde wachttijd GGZ: 16 weken (NZa, 2025)
+
+**Het gevolg:**
+- Mensen wachten té lang met hulp zoeken
+- Signalen worden gemist tot crisis optreedt
+- Formele zorg wordt overbelast met problemen die preventief opgelost hadden kunnen worden
+- Mantelzorgers vallen uit door overbelasting
+
+**De systeemplafond:**
+Binnen het huidige systeem blijven we **reageren** op crisis in plaats van **voorkomen**. We vragen niet "hoe gaat het écht?" tot het te laat is.
+
+---
+
+## 2. De oplossing: KrachtCheck Niveau 1
+
+### Wat is het?
+
+Een **web-app** die iedereen (zonder inlog) kan gebruiken om te checken:
+- 💰 Financiën
+- 🧠 Geestelijke gezondheid
+- 🏠 Wonen
+- 👨‍👩‍👧 Huiselijke relaties
+- 👥 Sociaal netwerk
+- 💼 Dagbesteding & werk
+- 💪 Lichamelijke gezondheid
+- 🫂 Mantelzorg
+
+**Per domein:** 🟢 Gaat goed / 🟡 Kan beter / 🔴 Hier kan steun helpen
+
+**Direct resultaat:**
+- Samenvatting: wat gaat goed, waar aandacht nodig is
+- Concrete tips (leeftijdsspecifiek)
+- Doorverwijzingen naar lokale/landelijke hulp
+- Optie: anoniem delen met wijkteam (opt-in)
+
+### Hoe werkt het?
+
+1. **Gebruiker opent KrachtCheck** (web, geen app, geen download)
+2. **8 vragen beantwoorden** (elk domein 1 vraag, 3 opties)
+3. **Direct resultaat** met signalering en tips
+4. **Optioneel:** anonieme score delen met organisatie (wijkteam/HR)
+
+**Privacy:**
+- Data blijft in browser (localStorage)
+- Geen account, geen inlog, geen naam
+- Delen is opt-in, altijd anoniem
+
+---
+
+## 3. Toepassingen per doelgroep
+
+### 🏛️ Gemeenten (Wmo / Sociaal Domein)
+
+**Use cases:**
+1. **Website gemeente:** "Check hoe het met je gaat" → zelfscreening inwoners
+2. **Wijkteams:** "Doe eerst de KrachtCheck, dan maken we een afspraak" → gerichter intakegesprek
+3. **Preventiecampagnes:** "Mantelzorgers in wijk X, check je belasting"
+4. **Wijkdata-verzameling:** Anonieme trends per wijk (opt-in) → gericht beleid
+
+**Waarom dit werkt:**
+- ✅ Vroege signalering → goedkoper dan crisis-interventie
+- ✅ Ontlasting wijkteams → gerichte intake, minder "scan-gesprekken"
+- ✅ Datagedreven beleid → weet waar problemen spelen
+- ✅ Laagdrempelig → geen wachtlijst, geen intake, direct doen
+
+**Wat gemeente nodig heeft:**
+- Lokale doorverwijzingen (wijkteam, schuldhulp, mantelzorgsteunpunt)
+- Optioneel: white-label (gemeentebranding)
+- Optioneel: wijkdata-dashboard (anoniem, AVG-proof)
+
+**Pilots:**
+- Gemeente Amsterdam: "Hoe staat Amsterdam ervoor?" campagne
+- Gemeente Rotterdam: embedding in Sociaal Domein portaal
+
+---
+
+### 💼 Werkgevers (HR / Vitaliteit)
+
+**Use cases:**
+1. **Intranet:** "Check je vitaliteit" → zelfscreening medewerkers
+2. **Vitaliteitsweek:** "Doe de KrachtCheck" → bewustwording
+3. **HR-gesprekken:** "Heb je de check gedaan?" → laagdrempelig gesprek
+4. **Mantelzorg-beleid:** Signaleer werk-zorg overbelasting → mantelzorgverlof aanbieden
+
+**Waarom dit werkt:**
+- ✅ Preventie verzuim → vroege signalering psychische klachten, werk-zorg overbelasting
+- ✅ Verhoog gebruik arbeidsvoorwaarden → mensen weten niet dat mantelzorgverlof bestaat
+- ✅ Anoniem → medewerkers durven eerlijk te zijn
+- ✅ Meetbaar → "30% rapporteert werk-zorg overbelasting" → beleid aanpassen
+
+**Wat werkgever nodig heeft:**
+- Bedrijfsbranding (vertrouwen medewerkers)
+- Doorverwijzing naar bedrijfsmaatschappelijk werk, vertrouwenspersoon
+- Optioneel: geaggregeerde data (niet per individu, wel "% medewerkers met 🔴 bij domein X")
+
+**Voorwaarden:**
+- ⚠️ Vrijwillig (nooit verplicht)
+- ⚠️ Anoniem (HR mag geen individuele data zien)
+- ⚠️ Met opvolging (bedrijf moet hulp beschikbaar hebben)
+
+**Pilots:**
+- Groot zorgbedrijf (1000+ medewerkers)
+- MKB-branche-organisatie (collectief aanbod aan leden)
+
+---
+
+### 🏥 Zorgverzekeraars (Preventie)
+
+**Use cases:**
+1. **Verzekerdensportaal:** "Hoe staat het met je gezondheid?" → brede screening
+2. **Preventiecampagnes:** "Mantelzorgers, voorkom overbelasting"
+3. **Afwijzing zorgaanvraag:** "Probeer eerst deze check, misschien is er andere hulp" → juiste zorgpad
+
+**Waarom dit werkt:**
+- ✅ Preventie is goedkoper → overbelaste mantelzorger → burn-out → zorgkosten ↑
+- ✅ Juiste zorg op juiste plek → niet alles is formele zorg (Wmo, gemeente, informele steun)
+- ✅ Zelfredzaamheid → mensen weten waar ze staan, kunnen zelf hulp zoeken
+
+**Wat verzekeraar nodig heeft:**
+- Heldere disclaimer: "Dit is geen medisch advies"
+- Doorverwijzing naar zorgverzekeraar-resources (online hulpprogramma's)
+- Geen individuele tracking (privacy)
+
+**Aandachtspunt:**
+- ⚠️ Mag niet gebruikt worden voor risicoselectie of premie-bepaling
+
+**Pilots:**
+- Kleine zorgverzekeraar (coöperatief model)
+
+---
+
+### 🎓 Scholen (Middelbaar / MBO)
+
+**Use cases:**
+1. **Mentoruur:** "Check hoe het met je gaat" → signalering kwetsbare leerlingen
+2. **Website:** "Hoe gaat het echt?" → laagdrempelig, anoniem
+3. **Verwijzing decaan:** "Vul dit in, dan praten we verder" → gericht gesprek
+
+**Waarom dit werkt:**
+- ✅ Jongeren praten niet makkelijk over thuissituatie, maar vullen wel een check in
+- ✅ Signalering jongeren mantelzorgers (1 op 12) → vaak gemist
+- ✅ Preventie uitval → thuiszorg → schoolverzuim → uitval
+- ✅ Anoniem → veilig om eerlijk te zijn
+
+**Wat school nodig heeft:**
+- Taal op B1-niveau (goed leesbaar voor middelbare scholieren)
+- Duidelijk: data gaat niet naar school (tenzij leerling zelf deelt)
+- Doorverwijzing naar schoolmaatschappelijk werk, vertrouwenspersoon
+
+**Voorwaarden:**
+- ⚠️ Vrijwillig (nooit verplicht als "toets")
+- ⚠️ Met opvolging (school moet hulp beschikbaar hebben)
+- ⚠️ Ouders informeren (bij minderjarigen)
+
+**Pilots:**
+- Middelbare school (VMBO/HAVO/VWO)
+- MBO college
+
+---
+
+### 🫂 Mantelzorgorganisaties
+
+**Use cases:**
+1. **Website:** "Ben je mantelzorger? Check je belasting"
+2. **Preventiecampagnes:** "Mantelzorg mag niet ten koste van jou gaan"
+3. **Lotgenotencontact:** Embedded in online community
+
+**Waarom dit werkt:**
+- ✅ Herkenning → mensen zien "oh, ik ben een mantelzorger"
+- ✅ Normalisering → als dit overal beschikbaar is, wordt mantelzorg "gewoon"
+- ✅ Vroege signalering → mensen zien zelf "ik ben overbelast" voordat crisis
+
+**Wat organisatie nodig heeft:**
+- Branding mantelzorgorganisatie (Mezzo, MantelzorgNL)
+- Doorverwijzing naar hun diensten (respijtzorg, lotgenotencontact)
+
+**Pilots:**
+- Mezzo.nl (landelijke mantelzorgorganisatie)
+- Lokale mantelzorgsteunpunten
+
+---
+
+## 4. Privacy & AVG-compliance
+
+### Kern: Data blijft bij gebruiker
+
+**Hoe het werkt:**
+1. Gebruiker opent KrachtCheck in browser
+2. Antwoorden worden opgeslagen in **localStorage** (lokaal op apparaat)
+3. **Geen verzending naar server** (tenzij gebruiker expliciet kiest voor wijkdata-deling)
+
+**Gevolg:**
+- ✅ Geen persoonsgegevens verwerkt door SIJN/organisatie
+- ✅ Geen cookies (tenzij analytics, dan met opt-in)
+- ✅ Geen DPIA nodig (geen verwerking persoonsgegevens)
+
+### Opt-in wijkdata/organisatiedata
+
+**Als gebruiker kiest om te delen:**
+1. Expliciete toestemming (checkbox: "Ja, deel mijn anonieme score met...")
+2. Alleen scores (🟢🟡🔴 per domein), geen naam, geen contactgegevens
+3. Optioneel: postcode/wijk (alleen voor wijkdata-analyse)
+
+**AVG-grondslag:** Toestemming (Art. 6 lid 1 sub a AVG)
+
+**Verwerker:** Gemeente/werkgever/organisatie (niet SIJN)
+
+**Bewaartermijn:** Max. 180 dagen (automatisch verwijderd)
+
+### Privacy Statement
+
+Elke implementatie moet bevatten:
+- Wat wordt er opgeslagen? (Antwoorden in browser, lokaal)
+- Wie ziet mijn data? (Niemand, tenzij je kiest om te delen)
+- Hoe lang wordt het bewaard? (Lokaal tot je browser wist, gedeelde data max. 180 dagen)
+- Wie is verantwoordelijk? (Organisatie die tool aanbiedt)
+
+### Analytics (optioneel)
+
+Als organisatie wil meten hoeveel mensen de tool gebruiken:
+- ⚠️ Cookiemelding nodig (AVG)
+- ⚠️ Privacy-vriendelijke analytics (Matomo, geen Google Analytics)
+- ⚠️ IP-anonimisering verplicht
+
+---
+
+## 5. Wetenschappelijke onderbouwing
+
+### Methodologie: RPA (Relationeel-Positioneel Analysemodel)
+
+**Kern:**
+- Problemen zijn niet alleen individueel, maar **positioneel** (positie in netwerk)
+- De 8 domeinen dekken alle relevante levensdomeinen (gebaseerd op SIJN-methodologie)
+- **Mantelzorg** is een positie die alle andere domeinen beïnvloedt
+
+**Ontwikkeling:**
+- Gebaseerd op 10+ jaar praktijkervaring welzijnswerk
+- Getoetst door sociaal wetenschappers
+- In lijn met Wmo-wetgeving en GGZ-richtlijnen
+
+### Validiteit
+
+**Dit is een signaleringsinstrument, geen diagnose-tool.**
+
+**Wat het wel is:**
+- Zelfscreening op 8 levensdomeinen
+- Vroege signalering van problemen
+- Startpunt voor gesprek met professional
+
+**Wat het niet is:**
+- Geen medische diagnose
+- Geen vervanging voor professioneel advies
+- Geen intake-instrument (wel voorbereiding op intake)
+
+### Evidence base
+
+**Vergelijkbare instrumenten:**
+- SCP Zelfredzaamheid-matrix (7 domeinen)
+- RIVM Positieve Gezondheid (6 dimensies)
+- Trimbos GGZ-signalering (mentale gezondheid)
+
+**Unique value KrachtCheck:**
+- ✅ **Mantelzorg expliciet** (andere tools missen dit)
+- ✅ **Werk-zorg balans** (actueel, gemist in veel tools)
+- ✅ **Actionable** (niet alleen meten, ook doorverwijzen)
+
+---
+
+## 6. Technische implementatie
+
+### Huidige versie (MVP)
+
+**Technologie:**
+- HTML5 + Vanilla JavaScript (geen frameworks)
+- Responsive design (mobiel + desktop)
+- Toegankelijk (WCAG 2.1 niveau A)
+
+**Hosting:**
+- Statische website (geen backend nodig)
+- Kan gehost worden op elk webserver
+- Ook als iframe embedding mogelijk
+
+**Browser support:**
+- Chrome, Firefox, Safari, Edge (laatste 2 versies)
+- iOS Safari, Android Chrome
+- Geen Internet Explorer support
+
+### Implementatie-opties voor organisaties
+
+#### **Optie 1: Link (simpelst)**
+Organisatie plaatst link naar KrachtCheck op eigen website.
+
+**Voordelen:** 
+- ✅ Simpel (1 regel HTML)
+- ✅ Altijd nieuwste versie
+- ✅ Geen onderhoud
+
+**Nadelen:**
+- ❌ Geen organisatiebranding
+- ❌ Geen organisatie-specifieke doorverwijzingen
+
+**Implementatie:**
+```html
+<a href="https://krachtcheck.sijn.nl" target="_blank">Check hoe het met je gaat</a>
+```
+
+---
+
+#### **Optie 2: Iframe embedding**
+KrachtCheck embedded in website organisatie.
+
+**Voordelen:**
+- ✅ Blijft op eigen website (vertrouwen)
+- ✅ Automatische updates
+- ✅ Geen hosting nodig
+
+**Nadelen:**
+- ❌ Beperkte customization
+- ❌ iframe-beperkingen (privacy settings browsers)
+
+**Implementatie:**
+```html
+<iframe src="https://krachtcheck.sijn.nl" 
+        width="100%" height="800" 
+        style="border:none; border-radius:12px;">
+</iframe>
+```
+
+---
+
+#### **Optie 3: White-label (configureerbaar)**
+KrachtCheck met organisatie-specifieke instellingen.
+
+**Mogelijk:**
+- Logo organisatie
+- Primaire kleur (huisstijl)
+- Lokale doorverwijzingen (per domein)
+- Organisatie-naam in teksten
+
+**Implementatie:**
+```html
+<iframe src="https://krachtcheck.sijn.nl?config=gemeente-amsterdam"></iframe>
+```
+
+**Config bestand (JSON):**
+```json
+{
+  "organisatie": "Gemeente Amsterdam",
+  "logo": "https://amsterdam.nl/logo.png",
+  "kleuren": {
+    "primary": "#EC0000"
+  },
+  "lokale_links": {
+    "financien": {
+      "wijkteam": "https://amsterdam.nl/wijkteam",
+      "schuldhulp": "https://amsterdam.nl/schuldhulp"
+    },
+    "mantelzorg": {
+      "steunpunt": "https://amsterdam.nl/mantelzorg"
+    }
+  }
+}
+```
+
+**Status:** In ontwikkeling (Q2 2026)
+
+---
+
+#### **Optie 4: Self-hosted (volledige controle)**
+Organisatie host eigen kopie van KrachtCheck.
+
+**Voordelen:**
+- ✅ Volledige controle
+- ✅ Eigen aanpassingen mogelijk
+- ✅ Geen externe afhankelijkheid
+
+**Nadelen:**
+- ❌ Geen automatische updates
+- ❌ Eigen hosting/onderhoud
+- ❌ Licentie-voorwaarden van toepassing
+
+**Implementatie:**
+1. Download broncode (open source, GitHub)
+2. Pas configuratie aan
+3. Host op eigen webserver
+
+**Status:** Mogelijk na open source release (Q3 2026)
+
+---
+
+## 7. Governance & Kwaliteitscriteria
+
+### Voorwaarden voor organisaties
+
+**Verplicht:**
+1. ✅ **Vrijwillig gebruik** - nooit verplichten aan burgers/medewerkers/leerlingen
+2. ✅ **Privacy-statement** - duidelijk wie data ziet en hoe lang bewaard
+3. ✅ **Opvolging** - organisatie heeft hulpaanbod beschikbaar voor mensen met 🔴 scores
+4. ✅ **Disclaimer** - "Dit vervangt geen professioneel advies"
+
+**Aanbevolen:**
+5. ⭐ **Training professionals** - wijkteam/HR/decaan weet hoe om te gaan met signalen
+6. ⭐ **Evaluatie** - meet of tool effectief is (minder crisis-interventies?)
+7. ⭐ **Terugkoppeling** - gebruikers kunnen feedback geven op tool
+
+### Licentie
+
+**Huidige versie:** Alle rechten voorbehouden (SIJN)
+
+**Toekomstige versie (Q3 2026):** Open source (Creative Commons BY-NC-SA 4.0)
+- ✅ Gebruik door non-profit organisaties: gratis
+- ✅ Aanpassingen toegestaan (met bronvermelding)
+- ⚠️ Commercieel gebruik: licentie nodig
+
+**Commercieel gebruik:**
+- Zorgverzekeraars, grote bedrijven, consultancy: licentiekosten
+- Scholen, gemeentes, mantelzorgorganisaties: gratis
+
+---
+
+## 8. Roadmap & Ontwikkeling
+
+### Huidige status (Q1 2026)
+
+✅ **MVP Gereed:**
+- 8 domeinen (inclusief mantelzorg)
+- Leeftijdsspecifieke tips
+- Werk-zorg signalering
+- Responsive design
+- Privacy-proof (lokale opslag)
+
+### Korte termijn (Q2 2026)
+
+🚧 **In ontwikkeling:**
+1. **Privacy & Disclaimer pagina** (maart 2026)
+2. **White-label configuratie** (april 2026)
+3. **Pilot met 2-3 organisaties** (mei 2026)
+4. **Evaluatie-onderzoek** (juni 2026)
+
+### Middellange termijn (Q3-Q4 2026)
+
+📋 **Gepland:**
+5. **Open source release** (juli 2026)
+6. **Organisatie-dashboard** (anonieme data-inzichten) (september 2026)
+7. **API voor integraties** (oktober 2026)
+8. **Toeg ankelijkheid WCAG 2.1 AA** (november 2026)
+
+### Lange termijn (2027)
+
+🔮 **Visie:**
+9. **Niveau 2 & 3 koppeling** (automatische export naar positionele analyse)
+10. **Multi-language support** (Engels, Turks, Arabisch)
+11. **Toegankelijkheidsversie** (LVB, dyslexie, visuele beperking)
+12. **Landelijke campagne** "Hoe sta jij ervoor?"
+
+---
+
+## 9. Kosten & Businessmodel
+
+### Huidige fase: Pilots (gratis)
+
+**2-3 pilot organisaties in Q2 2026:**
+- ✅ Gratis gebruik
+- ✅ Gezamenlijke evaluatie
+- ✅ Co-creatie configuratie-systeem
+- ⚠️ Commitment: feedback leveren, evaluatie meewerken
+
+**Interesse in pilot?** Contact: [in te vullen]
+
+---
+
+### Toekomstig model (vanaf Q3 2026)
+
+#### **Non-profit organisaties: Gratis**
+- Gemeenten
+- Scholen
+- Mantelzorgorganisaties
+- Zorgcoöperaties
+
+**Voorwaarden:**
+- Non-profit status
+- Publiek belang (geen winstdoelstelling)
+- Voldoen aan governance-criteria
+
+---
+
+#### **Commerciële organisaties: Licentiekosten**
+- Zorgverzekeraars (> 100.000 verzekerden)
+- Grote bedrijven (> 250 medewerkers)
+- Consultancy / adviesbureaus (doorverkoop)
+
+**Tarieven (indicatief):**
+- **Basis-licentie:** €2.500/jaar (link naar KrachtCheck, eigen branding)
+- **White-label:** €5.000/jaar (customization, lokale doorverwijzingen)
+- **Self-hosted:** €10.000/jaar (broncode, updates, support)
+- **Enterprise:** Op maat (API, integraties, dedicated dashboard)
+
+**Volumes-korting:**
+- 3-10 locaties: -20%
+- 11-25 locaties: -30%
+- 26+ locaties: -40%
+
+**Opbrengsten worden geïnvesteerd in:**
+- Doorontwikkeling tool
+- Wetenschappelijk onderzoek
+- Gratis beschikbaarheid voor non-profit
+
+---
+
+## 10. Succesfactoren & Risico's
+
+### Succesfactoren
+
+✅ **Privacy-proof** → vertrouwen gebruikers  
+✅ **Laagdrempelig** → breed inzetbaar  
+✅ **Wetenschappelijk** → acceptatie professionals  
+✅ **Preventief** → kosteneffectief voor organisaties  
+✅ **Met opvolging** → actionable, niet alleen meten  
+
+### Risico's & Mitigaties
+
+#### **Risico 1: Sociale wenselijkheid**
+**Probleem:** Mensen vullen sociaal wenselijk in (vooral als werkgever/school aanbiedt)
+
+**Mitigatie:**
+- Benadruk anonimiteit
+- Vrijwilligheid (nooit verplicht)
+- Duidelijke disclaimer: "Voor jezelf, niet voor organisatie"
+
+---
+
+#### **Risico 2: Signalering zonder opvolging**
+**Probleem:** Mensen krijgen 🔴 signaal, maar organisatie heeft geen hulpaanbod
+
+**Mitigatie:**
+- Governance-criteria: opvolgingsplicht
+- Screening organisaties vóór implementatie
+- Landelijke doorverwijzingen als fallback
+
+---
+
+#### **Risico 3: Medicalisering**
+**Probleem:** Tool wordt gezien als medische diagnose
+
+**Mitigatie:**
+- Heldere disclaimer: "Dit vervangt geen professioneel advies"
+- Nadruk op "signalering", niet "diagnose"
+- Training professionals: hoe om te gaan met signalen
+
+---
+
+#### **Risico 4: Data-misbruik**
+**Probleem:** Organisatie gebruikt data voor andere doeleinden (bijv. risicoselectie verzekeraar)
+
+**Mitigatie:**
+- Licentie-voorwaarden: verbod op misbruik
+- AVG-compliance strikt handhaven
+- Opt-in blijft bij gebruiker (organisatie kan niet dwingen)
+
+---
+
+#### **Risico 5: Technische afhankelijkheid**
+**Probleem:** Organisaties afhankelijk van SIJN voor updates
+
+**Mitigatie:**
+- Open source release (organisaties kunnen zelf hosten)
+- Stabiele API (backward compatibility)
+- Self-hosted optie beschikbaar
+
+---
+
+## 11. Call to Action
+
+### Voor organisaties die mee willen doen
+
+#### **Interesse in pilot (Q2 2026)?**
+
+**We zoeken:**
+- 1 gemeente (middelgroot, > 50.000 inwoners)
+- 1 werkgever (MKB of groot bedrijf, > 100 medewerkers)
+- 1 school (middelbaar onderwijs of MBO)
+
+**Wat wij bieden:**
+- Gratis gebruik (pilot-fase)
+- Customization (branding, lokale links)
+- Evaluatie-ondersteuning
+- Co-creatie doorontwikkeling
+
+**Wat wij vragen:**
+- Commitment 6 maanden
+- Actieve promotie bij doelgroep
+- Feedback & evaluatie
+- Meedenken aan doorontwikkeling
+
+**Contact:**  
+[Naam Laura Terbrack]  
+[E-mail]  
+[Telefoon]
+
+---
+
+#### **Interesse in latere implementatie (Q3 2026+)?**
+
+Meld je aan voor de **wachtlijst**:
+- Ontvang updates over ontwikkeling
+- Early access tot white-label configuratie
+- Voorkeursbehandeling bij launch
+
+**Aanmelden:** [E-mail/formulier]
+
+---
+
+## 12. Bijlagen
+
+### Bijlage A: Voorbeeld-screenshots
+
+[Screenshots van KrachtCheck toevoegen]
+1. Intro-scherm
+2. Vraag-scherm (domein Mantelzorg)
+3. Resultaat-scherm (met mantelzorg-alert)
+4. Desktop-versie (voortgang in linker paneel)
+
+### Bijlage B: Veelgestelde vragen (FAQ)
+
+**Q: Is KrachtCheck een medisch hulpmiddel?**  
+A: Nee. KrachtCheck is een signaleringsinstrument, geen diagnostisch hulpmiddel. Het vervangt geen professioneel advies.
+
+**Q: Wie ziet mijn data?**  
+A: Niemand, tenzij je kiest om je anonieme score te delen. Data blijft lokaal op je apparaat.
+
+**Q: Kan ik KrachtCheck verplichten aan medewerkers/leerlingen?**  
+A: Nee. Gebruik moet altijd vrijwillig zijn. Verplichten leidt tot sociale wenselijkheid en ondermijnt effectiviteit.
+
+**Q: Hoeveel kost het?**  
+A: Voor non-profit organisaties (gemeenten, scholen, mantelzorgorganisaties): gratis. Voor commerciële organisaties: zie sectie 9.
+
+**Q: Kan ik de teksten aanpassen?**  
+A: In white-label versie: beperkt (branding, doorverwijzingen). In self-hosted versie: volledig (met bronvermelding).
+
+**Q: Is KrachtCheck AVG-compliant?**  
+A: Ja. Data blijft lokaal, opt-in voor delen, anoniem, bewaartermijn 180 dagen max.
+
+**Q: Werkt het op mobiel?**  
+A: Ja, volledig responsive design. Werkt op alle moderne browsers (iOS, Android).
+
+**Q: In welke talen is KrachtCheck beschikbaar?**  
+A: Momenteel alleen Nederlands. Engels, Turks en Arabisch gepland voor 2027.
+
+**Q: Wat als iemand 🔴 scoort bij meerdere domeinen?**  
+A: Tool geeft directe doorverwijzingen naar hulp. Organisatie moet opvolging borgen (governance-criteria).
+
+**Q: Kan ik data exporteren naar ons systeem?**  
+A: In toekomstige versie (Q3 2026): API beschikbaar voor geaggregeerde data (niet per individu).
+
+---
+
+### Bijlage C: Wetenschappelijke referenties
+
+1. **RPA-methodologie:**  
+   [Referentie toevoegen: wetenschappelijke publicatie of praktijkhandleiding]
+
+2. **SIJN 11 levensdomeinen:**  
+   [Referentie toevoegen: methodologische onderbouwing]
+
+3. **Mantelzorg in Nederland:**  
+   - Mezzo (2025). *Mantelzorg in cijfers 2025*. Utrecht: Mezzo.
+   - SCP (2024). *Informele hulp en mantelzorg*. Den Haag: Sociaal en Cultureel Planbureau.
+
+4. **Werk-zorg balans:**  
+   - CBS (2024). *Arbeid en Zorg Monitor 2024*. Den Haag: Centraal Bureau voor de Statistiek.
+
+5. **GGZ-wachtlijsten:**  
+   - NZa (2025). *Marktscan GGZ 2024*. Utrecht: Nederlandse Zorgautoriteit.
+
+---
+
+### Bijlage D: Contact & Partners
+
+**Ontwikkeling:**  
+SIJN / Laura Terbrack  
+[Adres]  
+[E-mail]  
+[Website]
+
+**Wetenschappelijke advisory:**  
+[Universiteit / onderzoeksinstituut]
+
+**Technische ontwikkeling:**  
+[Ontwikkelaar / bureau]
+
+**Pilot-partners (Q2 2026):**  
+[Nog in te vullen]
+
+---
+
+## Colofon
+
+**Versie:** 1.0  
+**Datum:** 2 maart 2026  
+**Auteurs:**  
+- Laura Terbrack (SIJN, methodologie-eigenaar)
+- Marie (ontwikkeling & UX)
+- Bram (wetenschappelijke onderbouwing)
+- Suus (praktijk GGZ/welzijn)
+- Marieke (mantelzorg-expertise)
+- Jan (gemeentelijk perspectief)
+- Peter (zorgverzekeraar perspectief)
+
+**Met dank aan:**  
+Lisa (ervaringsdeskundige), Karin (sociaal werker), Emma (privacy-jurist), Rachid (HR-manager), Yasmin (decaan onderwijs)
+
+**Licentie:**  
+© 2026 SIJN. Alle rechten voorbehouden.  
+Dit document mag vrij gedeeld worden met potentiële partners.  
+Citeren met bronvermelding toegestaan.
+
+---
+
+**Einde visiedocument**
+
