@@ -2717,23 +2717,43 @@
 
             renderWijkDashboard() {
                 const raw = localStorage.getItem('rpa_wijkdata');
-                const batch = raw ? JSON.parse(raw) : [];
+                let batch = raw ? JSON.parse(raw) : [];
                 const el = document.getElementById('wijkDashboardInhoud');
                 if (!el) return;
+                
+                // BACKWARDS COMPATIBILITY: Normaliseer oude N1-structuur naar nieuwe
+                batch = batch.map(r => {
+                    // Als oude structuur (scores ipv antwoorden), migreer
+                    if (r.scores && !r.antwoorden) {
+                        return {
+                            timestamp: r.tijdstip || r.timestamp,
+                            wijk: r.wijk,
+                            leeftijd: r.leeftijdscategorie || r.leeftijd,
+                            antwoorden: r.scores  // Migreer scores → antwoorden
+                        };
+                    }
+                    // Anders: nieuwe structuur, return as-is
+                    return {
+                        timestamp: r.timestamp || r.tijdstip,
+                        wijk: r.wijk,
+                        leeftijd: r.leeftijd || r.leeftijdscategorie,
+                        antwoorden: r.antwoorden || r.scores
+                    };
+                });
 
                 if (batch.length === 0) {
                     el.innerHTML = `<div style="background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:32px;text-align:center;">
                         <div style="font-size:2.5rem;margin-bottom:12px;">📊</div>
                         <div style="font-weight:600;color:#374151;margin-bottom:6px;">Nog geen wijkdata beschikbaar</div>
-                        <div style="font-size:0.88rem;color:#6b7280;">Deel de KrachtCheck met inwoners. Aan het einde kunnen zij anoniem bijdragen aan de wijkdata.</div>
+                        <div style="font-size:0.88rem;color:#6b7280;">Deel de BalansCheck met inwoners. Aan het einde kunnen zij anoniem bijdragen aan de wijkdata.</div>
                     </div>`;
                     return;
                 }
 
-                // Domeinlijst
+                // Domeinlijst - support zowel 'geestelijk' als 'ggz'
                 const domeinen = ['financien','dagbesteding','huisvesting','huiselijk','geestelijk','lichamelijk','verslaving','adl','sociaal','participatie','justitie'];
-                const domeinEmoji = {'financien':'💰','dagbesteding':'💼','huisvesting':'🏠','huiselijk':'👨‍👩‍👧','geestelijk':'🧠','lichamelijk':'💪','verslaving':'🚭','adl':'🛁','sociaal':'👥','participatie':'🤝','justitie':'⚖️'};
-                const domeinNaam = {'financien':'Financiën','dagbesteding':'Dagbesteding','huisvesting':'Huisvesting','huiselijk':'Huiselijke relaties','geestelijk':'Geestelijke gezondheid','lichamelijk':'Lichamelijke gezondheid','verslaving':'Verslaving','adl':'ADL','sociaal':'Sociaal netwerk','participatie':'Participatie','justitie':'Justitie'};
+                const domeinEmoji = {'financien':'💰','dagbesteding':'💼','huisvesting':'🏠','huiselijk':'👨‍👩‍👧','geestelijk':'🧠','ggz':'🧠','lichamelijk':'💪','verslaving':'🚭','adl':'🛁','sociaal':'👥','participatie':'🤝','justitie':'⚖️'};
+                const domeinNaam = {'financien':'Financiën','dagbesteding':'Dagbesteding','huisvesting':'Huisvesting','huiselijk':'Huiselijke relaties','geestelijk':'Geestelijke gezondheid','ggz':'Geestelijke gezondheid','lichamelijk':'Lichamelijke gezondheid','verslaving':'Verslaving','adl':'ADL','sociaal':'Sociaal netwerk','participatie':'Participatie','justitie':'Justitie'};
 
                 // Groepeer per wijk
                 const wijken = {};
@@ -2751,11 +2771,27 @@
                 // OVERALL STATISTIEKEN
                 const alleScores = {};
                 domeinen.forEach(id => {
-                    const metScore = batch.filter(r => r.antwoorden && r.antwoorden[id]);
+                    // Support zowel 'geestelijk' als 'ggz' alias
+                    const metScore = batch.filter(r => {
+                        const antwoorden = r.antwoorden || {};
+                        return antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                    });
                     if (metScore.length === 0) return;
-                    const actie = metScore.filter(r => r.antwoorden[id]==='actie').length;
-                    const beter = metScore.filter(r => r.antwoorden[id]==='beter').length;
-                    const goed = metScore.filter(r => r.antwoorden[id]==='goed').length;
+                    const actie = metScore.filter(r => {
+                        const antwoorden = r.antwoorden || {};
+                        const score = antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                        return score === 'actie';
+                    }).length;
+                    const beter = metScore.filter(r => {
+                        const antwoorden = r.antwoorden || {};
+                        const score = antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                        return score === 'beter';
+                    }).length;
+                    const goed = metScore.filter(r => {
+                        const antwoorden = r.antwoorden || {};
+                        const score = antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                        return score === 'goed';
+                    }).length;
                     const n = metScore.length;
                     alleScores[id] = {
                         actie,
@@ -2818,11 +2854,27 @@
                         <div style="display:flex;flex-direction:column;gap:10px;">`;
 
                     domeinen.forEach(id => {
-                        const metScore = records.filter(r => r.antwoorden && r.antwoorden[id]);
+                        // Support zowel nieuwe (antwoorden) als oude (scores) structuur + ggz alias
+                        const metScore = records.filter(r => {
+                            const antwoorden = r.antwoorden || r.scores || {};
+                            return antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                        });
                         if (metScore.length === 0) return;
-                        const goed = metScore.filter(r => r.antwoorden[id]==='goed').length;
-                        const beter = metScore.filter(r => r.antwoorden[id]==='beter').length;
-                        const actie = metScore.filter(r => r.antwoorden[id]==='actie').length;
+                        const goed = metScore.filter(r => {
+                            const antwoorden = r.antwoorden || r.scores || {};
+                            const score = antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                            return score === 'goed';
+                        }).length;
+                        const beter = metScore.filter(r => {
+                            const antwoorden = r.antwoorden || r.scores || {};
+                            const score = antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                            return score === 'beter';
+                        }).length;
+                        const actie = metScore.filter(r => {
+                            const antwoorden = r.antwoorden || r.scores || {};
+                            const score = antwoorden[id] || (id === 'geestelijk' && antwoorden['ggz']);
+                            return score === 'actie';
+                        }).length;
                         const n = metScore.length;
                         const pctGoed = Math.round(goed/n*100);
                         const pctBeter = Math.round(beter/n*100);
@@ -2854,12 +2906,19 @@
 
                 const domeinen = ['financien','dagbesteding','huisvesting','huiselijk','geestelijk','lichamelijk','verslaving','adl','sociaal','participatie','justitie'];
                 const header = ['tijdstip','wijk','leeftijd',...domeinen].join(',');
-                const rows = batch.map(r => [
-                    r.timestamp || r.tijdstip, 
-                    r.wijk || 'onbekend', 
-                    r.leeftijd || 'onbekend',
-                    ...domeinen.map(d => (r.antwoorden && r.antwoorden[d]) || '')
-                ].join(','));
+                const rows = batch.map(r => {
+                    // Backwards compatibility
+                    const antwoorden = r.antwoorden || r.scores || {};
+                    const leeftijd = r.leeftijd || r.leeftijdscategorie || 'onbekend';
+                    const timestamp = r.timestamp || r.tijdstip;
+                    
+                    return [
+                        timestamp, 
+                        r.wijk || 'onbekend', 
+                        leeftijd,
+                        ...domeinen.map(d => antwoorden[d] || (d === 'geestelijk' && antwoorden['ggz']) || '')
+                    ].join(',');
+                });
                 const csv = [header,...rows].join('\n');
 
                 const blob = new Blob([csv], {type:'text/csv'});
