@@ -928,6 +928,15 @@
                 <div id="roiPerDomeinTable"></div>
             </div>
 
+            <!-- FOLLOW-UP INZICHTEN -->
+            <div class="screen active" style="margin-top:20px;">
+                <h3 style="color:var(--primary);margin-bottom:16px;">🔄 Follow-up Inzichten (gemeten effect)</h3>
+                <p style="color:#6b7280;margin-bottom:12px;font-size:0.95rem;line-height:1.6;">
+                    Van theorie naar praktijk: hoeveel mensen verbeterden echt na de BalansCheck?
+                </p>
+                <div id="followupInzichten"></div>
+            </div>
+
             <!-- PM OPSPLITSING -->
             <div class="screen active" style="margin-top:20px;">
                 <h3 style="color:var(--primary);margin-bottom:16px;">💰 Wie betaalt de escalatiekosten?</h3>
@@ -1687,6 +1696,7 @@
                 // Render components
                 this.renderFinancieringsstromen();
                 this.renderROIPerDomein();
+                this.renderFollowupInzichten(); // NIEUW
                 this.renderPMOpsplitsing();
                 this.renderQALYAnalyse();
                 this.renderSensitiviteit();
@@ -1975,6 +1985,127 @@
                 
                 html += '</tbody></table>';
                 document.getElementById('roiPerDomeinTable').innerHTML = html;
+            },
+            
+            renderFollowupInzichten() {
+                const followupData = JSON.parse(localStorage.getItem('rpa_followup_data') || '[]');
+                const el = document.getElementById('followupInzichten');
+                
+                if (followupData.length === 0) {
+                    el.innerHTML = `
+                        <div style="background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:32px;text-align:center;">
+                            <div style="font-size:2rem;margin-bottom:12px;">📊</div>
+                            <div style="font-weight:600;color:#374151;margin-bottom:6px;">Nog geen follow-up data</div>
+                            <div style="font-size:0.88rem;color:#6b7280;line-height:1.6;">
+                                Als burgers na 6 weken terugkomen naar de BalansCheck,<br>
+                                kunnen zij vrijwillig hun vooruitgang delen.<br><br>
+                                Die data verschijnt hier: <strong>gemeten effect</strong> ipv literatuur-schattingen.
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Analyseer follow-up data
+                let totaalVerbeterd = 0;
+                let totaalGelijk = 0;
+                let totaalVerslechterd = 0;
+                let hulpGezocht = 0;
+                let zelfAangepakt = 0;
+                const opmerkingen = [];
+                
+                followupData.forEach(f => {
+                    totaalVerbeterd += f.verbeterd || 0;
+                    totaalGelijk += f.gelijk || 0;
+                    totaalVerslechterd += f.verslechterd || 0;
+                    if (f.actie === 'hulp_gezocht') hulpGezocht++;
+                    if (f.actie === 'zelf_aangepakt') zelfAangepakt++;
+                    if (f.opmerking) opmerkingen.push(f.opmerking);
+                });
+                
+                const n = followupData.length;
+                const gemiddeldeWeken = followupData.reduce((s, f) => s + (f.wekenTussen || 0), 0) / n;
+                
+                let html = `
+                    <div style="background:#e0f2fe;border:2px solid #3b82f6;border-radius:12px;padding:20px;margin-bottom:20px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+                            <h4 style="margin:0;color:#1e40af;font-size:1.1rem;">✅ Gemeten Resultaten</h4>
+                            <div style="background:white;padding:6px 12px;border-radius:6px;font-size:0.85rem;color:#1e40af;">
+                                <strong>${n}</strong> follow-ups • Gem. ${Math.round(gemiddeldeWeken)} weken later
+                            </div>
+                        </div>
+                        
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+                            <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #10b981;">
+                                <div style="font-size:0.85rem;color:#6b7280;margin-bottom:4px;">Verbeterd</div>
+                                <div style="font-size:1.8rem;font-weight:800;color:#10b981;">${Math.round((totaalVerbeterd/(totaalVerbeterd+totaalGelijk+totaalVerslechterd))*100)}%</div>
+                                <div style="font-size:0.75rem;color:#9ca3af;">${totaalVerbeterd} domeinen beter</div>
+                            </div>
+                            <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #6b7280;">
+                                <div style="font-size:0.85rem;color:#6b7280;margin-bottom:4px;">Gelijk gebleven</div>
+                                <div style="font-size:1.8rem;font-weight:800;color:#6b7280;">${Math.round((totaalGelijk/(totaalVerbeterd+totaalGelijk+totaalVerslechterd))*100)}%</div>
+                                <div style="font-size:0.75rem;color:#9ca3af;">${totaalGelijk} domeinen stabiel</div>
+                            </div>
+                            <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #ef4444;">
+                                <div style="font-size:0.85rem;color:#6b7280;margin-bottom:4px;">Verslechterd</div>
+                                <div style="font-size:1.8rem;font-weight:800;color:#ef4444;">${Math.round((totaalVerslechterd/(totaalVerbeterd+totaalGelijk+totaalVerslechterd))*100)}%</div>
+                                <div style="font-size:0.75rem;color:#9ca3af;">${totaalVerslechterd} domeinen slechter</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background:white;padding:20px;border-radius:12px;border:1px solid #e5e7eb;margin-bottom:20px;">
+                        <h4 style="margin:0 0 12px;color:#374151;">💡 Wat deden mensen?</h4>
+                        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                            <div style="flex:1;min-width:200px;">
+                                <div style="font-size:0.85rem;color:#6b7280;margin-bottom:8px;">Hulp gezocht</div>
+                                <div style="background:#e5e7eb;height:24px;border-radius:6px;overflow:hidden;">
+                                    <div style="background:#10b981;height:100%;width:${Math.round((hulpGezocht/n)*100)}%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:700;">
+                                        ${hulpGezocht} (${Math.round((hulpGezocht/n)*100)}%)
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="flex:1;min-width:200px;">
+                                <div style="font-size:0.85rem;color:#6b7280;margin-bottom:8px;">Zelf aangepakt</div>
+                                <div style="background:#e5e7eb;height:24px;border-radius:6px;overflow:hidden;">
+                                    <div style="background:#3b82f6;height:100%;width:${Math.round((zelfAangepakt/n)*100)}%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:700;">
+                                        ${zelfAangepakt} (${Math.round((zelfAangepakt/n)*100)}%)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Opmerkingen tonen (als er zijn)
+                if (opmerkingen.length > 0) {
+                    html += `
+                        <div style="background:#f0fdf4;border:2px solid #10b981;border-radius:12px;padding:20px;">
+                            <h4 style="margin:0 0 12px;color:#065f46;">💬 Wat mensen zelf zeggen:</h4>
+                            <div style="display:grid;gap:10px;">
+                                ${opmerkingen.slice(0, 5).map(o => `
+                                    <div style="background:white;padding:12px;border-radius:8px;border-left:3px solid #10b981;font-size:0.9rem;color:#374151;font-style:italic;">
+                                        "${o}"
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${opmerkingen.length > 5 ? `<div style="margin-top:10px;font-size:0.8rem;color:#6b7280;text-align:center;">... en ${opmerkingen.length - 5} andere ervaringen</div>` : ''}
+                        </div>
+                    `;
+                }
+                
+                // Disclaimer: dit is opt-in data
+                html += `
+                    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:10px;padding:16px;margin-top:20px;font-size:0.85rem;color:#92400e;">
+                        <strong>⚠️ Methodologische disclaimer:</strong><br>
+                        • Dit zijn vrijwillige follow-ups (opt-in, n=${n})<br>
+                        • Mogelijk positieve bias (gemotiveerde mensen reageren vaker)<br>
+                        • Gebruik voor indicatie, niet voor harde ROI-conclusies<br>
+                        • Voor wetenschappelijk bewijs: vergelijk met controlegroep
+                    </div>
+                `;
+                
+                el.innerHTML = html;
             },
             
             renderPMOpsplitsing() {
