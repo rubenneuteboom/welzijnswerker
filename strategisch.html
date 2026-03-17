@@ -496,6 +496,11 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 24px rgba(245,158,11,0.6); }
+        }
     </style>
 </head>
 <body>
@@ -728,8 +733,8 @@
         <div id="burgersignalenContainer" class="hidden">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
                 <h2 style="margin:0;color:var(--primary);">🏘️ Burgersignalen Dashboard</h2>
-                <button onclick="app.sluitBurgersignalen()" style="background:white;color:#6b7280;border:2px solid #e5e7eb;border-radius:8px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;">
-                    ← Terug naar import
+                <button onclick="app.sluitBurgersignalen()" style="background:white;color:#6b7280;border:2px solid #e5e7eb;border-radius:8px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">
+                    ← Terug naar databronnen
                 </button>
             </div>
 
@@ -826,9 +831,14 @@
         <div id="syntheseContainer" class="hidden">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
                 <h2 style="margin:0;color:var(--primary);">🎯 Strategische Synthese</h2>
-                <button onclick="app.sluitSynthese()" style="background:white;color:#6b7280;border:2px solid #e5e7eb;border-radius:8px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;">
-                    ← Terug naar import
-                </button>
+                <div style="display:flex;gap:8px;">
+                    <button onclick="app.sluitSynthese()" style="background:white;color:#6b7280;border:2px solid #e5e7eb;border-radius:8px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">
+                        ← Terug naar databronnen
+                    </button>
+                    <button onclick="app.switchImportTab('caseload')" style="background:#667eea;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                        + Casussen toevoegen
+                    </button>
+                </div>
             </div>
 
             <!-- EXECUTIVE SUMMARY - Synthese -->
@@ -1595,6 +1605,8 @@
             sluitSynthese() {
                 document.getElementById('syntheseContainer').classList.add('hidden');
                 document.getElementById('importSection').classList.remove('hidden');
+                // Blijf in dezelfde tab (synthese)
+                this.switchImportTab('synthese');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
             
@@ -3117,8 +3129,26 @@
                     // Check synthese availability (nu hebben we mogelijk beide!)
                     this.checkSyntheseAvailability();
                     
-                    // Bevestiging
-                    alert(`✅ Demo data geladen!\n\n• ${demoCasussen.length} Positionele analyses (N2)\n• ${wijkdata.length} Burgersignalen (N1)\n\nJe kunt nu:\n1. Caseload analyseren in deze tab\n2. Strategische Synthese genereren (Tab 3)`);
+                    // Auto-switch naar Tab 3 als beide data beschikbaar
+                    const heeftN1 = wijkdata.length > 0;
+                    const heeftN2 = demoCasussen.length > 0;
+                    
+                    if (heeftN1 && heeftN2) {
+                        // Beide beschikbaar → direct naar Tab 3
+                        setTimeout(() => {
+                            this.switchImportTab('synthese');
+                            // Scroll naar genereer knop
+                            const syntheseBtn = document.querySelector('#tabContentSynthese button[onclick*="genereerSynthese"]');
+                            if (syntheseBtn) {
+                                syntheseBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                syntheseBtn.style.animation = 'pulse 1s ease-in-out 3';
+                            }
+                        }, 300);
+                        alert(`✅ Demo data geladen!\n\n• ${wijkdata.length} Burgersignalen (N1)\n• ${demoCasussen.length} Casussen (N2)\n\n➡️ Je wordt doorgestuurd naar Strategische Synthese`);
+                    } else {
+                        // Alleen N2 → blijf in caseload tab
+                        alert(`✅ Demo data geladen!\n\n• ${demoCasussen.length} Positionele analyses (N2)\n• ${wijkdata.length} Burgersignalen (N1)\n\nJe kunt nu:\n1. Caseload analyseren in deze tab\n2. Strategische Synthese (Tab 3) als je N1-data toevoegt`);
+                    }
                 }
             },
 
