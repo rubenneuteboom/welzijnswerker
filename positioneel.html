@@ -4578,8 +4578,43 @@
                         <p style="font-size:0.75rem;color:#9ca3af;margin:4px 0 0;">Komma-gescheiden. Inclusief de cliënt zelf.</p>
                     </div>
 
+                    <!-- Privacy Consent (Team feedback #6: Jan - GDPR) -->
+                    <div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:12px;padding:16px;margin-bottom:20px;">
+                        <div style="display:flex;align-items:start;gap:12px;">
+                            <input type="checkbox" id="privacyConsent" 
+                                   ${state.teamBesluit?.privacyConsent ? 'checked' : ''}
+                                   onchange="savePrivacyConsent(this.checked)"
+                                   style="width:20px;height:20px;margin-top:2px;cursor:pointer;">
+                            <div style="flex:1;">
+                                <label for="privacyConsent" style="font-size:0.95rem;font-weight:700;color:#1e40af;cursor:pointer;">
+                                    🔒 Toestemming voor delen met team
+                                </label>
+                                <p style="font-size:0.85rem;color:#1e40af;margin:6px 0 0;line-height:1.5;">
+                                    Ik ga akkoord dat mijn gegevens (naam, situatie, afspraken) gedeeld worden met de hierboven genoemde teamleden. 
+                                    Deze informatie wordt gebruikt voor begeleiding en blijft binnen dit team.
+                                </p>
+                                <details style="margin-top:8px;">
+                                    <summary style="font-size:0.8rem;color:#3b82f6;cursor:pointer;list-style:none;font-weight:600;">
+                                        ℹ️ Meer over privacy
+                                    </summary>
+                                    <div style="font-size:0.8rem;color:#6b7280;margin-top:8px;padding:10px;background:white;border-radius:6px;">
+                                        <strong>Wat delen we?</strong> Je naam, de besproken domeinen, afspraken en betrokkenen.<br>
+                                        <strong>Met wie?</strong> Alleen de personen die je hierboven hebt ingevuld.<br>
+                                        <strong>Hoelang?</strong> Tot het moment dat de begeleiding stopt of je toestemming intrekt.<br>
+                                        <strong>Je rechten:</strong> Je kunt altijd vragen welke gegevens we hebben, deze laten aanpassen of verwijderen.
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                        ${!state.teamBesluit?.privacyConsent ? `
+                        <div style="background:#fef3c7;border-left:3px solid #f59e0b;padding:10px 12px;margin-top:12px;border-radius:6px;font-size:0.85rem;color:#92400e;">
+                            ⚠️ Zonder toestemming kunnen we deze afspraken niet vastleggen of delen met het team.
+                        </div>
+                        ` : ''}
+                    </div>
+                    
                     <!-- Regieafspraken per domein -->
-                    <div id="teamRegieafspraken" style="margin-bottom:20px;">
+                    <div id="teamRegieafspraken" style="margin-bottom:20px;${!state.teamBesluit?.privacyConsent ? 'opacity:0.4;pointer-events:none;' : ''}">
                         <!-- Gevuld door renderTeamRegieafspraken() -->
                     </div>
 
@@ -4697,6 +4732,26 @@
                     <!-- Creatieve oplossing: wordt gevuld door renderSamenvatting() via #creatiefBlok -->
                     <div id="creatiefBlok"></div>
 
+                    <!-- Outcome Meting Info (Team feedback #7: Peter) -->
+                    <div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:12px;padding:16px;margin:20px 0;">
+                        <div style="display:flex;align-items:start;gap:12px;">
+                            <span style="font-size:2rem;">📈</span>
+                            <div style="flex:1;">
+                                <h3 style="font-size:1rem;font-weight:700;color:#1e40af;margin:0 0 8px;">Meet je vooruitgang</h3>
+                                <p style="font-size:0.85rem;color:#1e40af;margin:0 0 12px;line-height:1.5;">
+                                    Wil je over 6-8 weken zien of de afspraken geholpen hebben? Gebruik de BalansCheck om je eigen vooruitgang te meten.
+                                </p>
+                                <a href="netwerkanalyse.html" target="_blank"
+                                   style="display:inline-block;background:#3b82f6;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">
+                                    🔗 Open BalansCheck (N1)
+                                </a>
+                                <p style="font-size:0.75rem;color:#6b7280;margin:10px 0 0;font-style:italic;">
+                                    💡 Tip: Bewaar de link na het invullen. Je krijgt automatisch een herinnering na 6 weken om opnieuw in te vullen.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
@@ -8236,6 +8291,7 @@ Antwoord in dit exacte JSON formaat:
                         ${planKlopt === 'ja' ? '<span style="font-size:0.75rem;background:#dcfce7;color:#166534;border-radius:4px;padding:1px 7px;margin-left:auto;">✅ akkoord</span>' :
                           planKlopt === 'nee' ? '<span style="font-size:0.75rem;background:#fee2e2;color:#dc2626;border-radius:4px;padding:1px 7px;margin-left:auto;">❌ herzien</span>' :
                           planKlopt === 'twijfel' ? '<span style="font-size:0.75rem;background:#fefce8;color:#d97706;border-radius:4px;padding:1px 7px;margin-left:auto;">⚠️ twijfel</span>' : ''}
+                        <button onclick="bewerkDomein('${d.id}')" style="background:#3b82f6;color:white;border:none;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;margin-left:4px;" title="Bewerken">✏️</button>
                     </div>
                     ${beweging ? `<div style="font-size:0.85rem;color:#6b7280;margin-bottom:6px;">${bewegingLabels[beweging] || beweging}</div>` : ''}
                     ${ref.concreetPlan ? `
@@ -8738,6 +8794,54 @@ Antwoord in dit exacte JSON formaat:
                 state.agenda.splice(index, 1);
                 saveState();
                 renderSamenvatting();
+            }
+        }
+        
+        // Privacy consent (Team feedback #6: Jan - GDPR)
+        function savePrivacyConsent(checked) {
+            if (!state.teamBesluit) state.teamBesluit = {};
+            state.teamBesluit.privacyConsent = checked;
+            state.teamBesluit.privacyConsentDatum = checked ? new Date().toISOString() : null;
+            saveState();
+            
+            // Re-render team scherm om disabled state te updaten
+            const teamScherm = document.querySelector('[data-screen="team"]');
+            if (teamScherm) {
+                renderTeamRegieafspraken();
+            }
+        }
+        
+        // NIEUW: Bewerk domein (Team feedback #5: Bram - validatie/terugkijken)
+        function bewerkDomein(domeinId) {
+            // Bepaal welk scherm het meest relevant is voor dit domein
+            const beweging = state.beweging?.[domeinId];
+            const reflectie = state.strategischeReflectie?.[domeinId];
+            
+            // Als er een plan is maar het klopt niet → naar reflectie
+            if (reflectie?.planKlopt === 'nee' || reflectie?.planKlopt === 'twijfel') {
+                goToScreenById('reflectie');
+                // Scroll naar dit domein na render
+                setTimeout(() => {
+                    const elem = document.querySelector(`[data-domein="${domeinId}"]`);
+                    if (elem) elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+            // Als er beweging is gedefinieerd → naar beweging scherm
+            else if (beweging) {
+                goToScreenById('beweging');
+                setTimeout(() => {
+                    const elem = document.querySelector(`[data-domein="${domeinId}"]`);
+                    if (elem) elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+            // Anders → naar netwerk/triage
+            else {
+                goToScreenById('triage');
+                // Focus op dit domein in stoplicht
+                setTimeout(() => {
+                    const domeinCard = document.querySelector(`[data-domain-id="${domeinId}"]`);
+                    if (domeinCard) domeinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
             }
         }
         
