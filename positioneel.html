@@ -16372,12 +16372,20 @@ END:VEVENT
                             </div>
                             
                             <div id="dropdown-${d.id}" style="display:none;">
+                                <!-- NIEUW: + Persoon toevoegen knop bovenaan -->
+                                <div style="margin-bottom:12px;">
+                                    <button onclick="addPersoonToSteun('${d.id}', getCurrentTypeFor('${d.id}'))" 
+                                            style="background:#f59e0b;color:white;border:none;border-radius:6px;padding:10px 14px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;">
+                                        ➕ Persoon toevoegen
+                                    </button>
+                                </div>
+                                
                                 <!-- NIEUW: Toegevoegde personen lijst -->
                                 <div id="personen-lijst-${d.id}" style="margin-bottom:12px;">
                                     ${renderPersonenLijst(d.id)}
                                 </div>
                                 
-                                <div style="margin-bottom:8px;font-weight:600;color:#92400e;">Wie helpt? (eerste persoon of extra toevoegen)</div>
+                                <div style="margin-bottom:8px;font-weight:600;color:#92400e;display:none;">Wie helpt? (legacy)</div>
                                 
                                 <select id="wie-formeel-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','formeel',this.value)">
@@ -16632,16 +16640,6 @@ END:VEVENT
                                     </div>
                                 </div>
                                 
-                                <!-- NIEUW: + Nog iemand toevoegen knop -->
-                                <div style="margin-top:12px;padding-top:12px;border-top:2px solid #fde68a;">
-                                    <button onclick="addPersoonToSteun('${d.id}', getCurrentTypeFor('${d.id}'))" 
-                                            style="background:#f59e0b;color:white;border:none;border-radius:6px;padding:8px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;width:100%;">
-                                        ➕ Nog iemand toevoegen
-                                    </button>
-                                    <p style="font-size:0.75rem;color:#92400e;margin:4px 0 0;text-align:center;font-style:italic;">
-                                        Soms zijn meerdere mensen betrokken bij dit domein
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>` : ''}
