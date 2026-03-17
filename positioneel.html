@@ -3774,6 +3774,17 @@
             <span>RPA Methodiek</span>
         </button> -->
     </header>
+    
+    <!-- VOORTGANGSBALK (Team feedback: Lisa) -->
+    <div id="progressBar" style="background:white;padding:16px 20px;margin:0 auto 20px;max-width:900px;border-radius:12px;box-shadow:var(--shadow);display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span id="progressText" style="font-size:0.9rem;font-weight:600;color:var(--text);">Stap 1 van 7</span>
+            <span id="progressPercent" style="font-size:0.85rem;color:var(--text-light);">0%</span>
+        </div>
+        <div style="background:#e5e7eb;height:8px;border-radius:10px;overflow:hidden;">
+            <div id="progressFill" style="background:var(--primary);height:100%;width:0%;transition:width 0.3s;border-radius:10px;"></div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- View Tabs REMOVED for LEAN workflow -->
@@ -6344,15 +6355,15 @@
             professional: '#3182CE'
         };
 
-        // Screen configuration - dynamic based on mode
-        // LEAN WORKFLOW - met Intro als eerste stap
+        // Screen configuration - FIXED FLOW (team feedback)
+        // Correcte volgorde: Start → Netwerk → Check (nu) → Plan (gewenst) → Hulp → Team → Besluit
         const screenConfigBase = [
-            { id: 'start',            label: 'Start',          emoji: '🏠' },
-            { id: 'triage',           label: 'Netwerk',        emoji: '🗺️' },
-            { id: 'beweging',         label: 'Plan',           emoji: '🎯' },
-            { id: 'reflectie',        label: 'Check',          emoji: '✓' },
-            { id: 'team',             label: 'Team',           emoji: '👥' },
-            { id: 'interventies',     label: 'Hulp',           emoji: '🔧' },
+            { id: 'start',            label: 'Kennismaking',   emoji: '🏠' },
+            { id: 'triage',           label: 'Jouw mensen',    emoji: '👥' },
+            { id: 'reflectie',        label: 'Hoe gaat het?',  emoji: '📊' }, // Was Check, nu vóór Plan
+            { id: 'beweging',         label: 'Wat wil je?',    emoji: '🎯' }, // Was Plan, nu ná Check
+            { id: 'interventies',     label: 'Wat helpt?',     emoji: '💡' }, // Was Hulp, nu vóór Team
+            { id: 'team',             label: 'Wie vraag je?',  emoji: '🤝' }, // Was Team, verduidelijkt
             { id: 'samenvatting',     label: 'Besluit',        emoji: '📄' }
         ];
 
@@ -7296,6 +7307,9 @@ Antwoord in dit exacte JSON formaat:
             state.currentScreen = screenNum;
             saveState();
             
+            // Update voortgangsbalk (Team feedback: Lisa)
+            updateProgressBar(screenNum, config.length);
+            
             // Get screen id from config
             const screenConfig = config[screenNum - 1];
             console.log('🔍 screenConfig voor screenNum', screenNum, ':', screenConfig);
@@ -7415,6 +7429,30 @@ Antwoord in dit exacte JSON formaat:
                 return config[nextIndex].id;
             }
             return null;
+        }
+        
+        // Voortgangsbalk update (Team feedback: Lisa - "Hoeveel stappen nog?")
+        function updateProgressBar(current, total) {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressFill = document.getElementById('progressFill');
+            
+            if (!progressBar) return;
+            
+            // Toon balk (verberg op intro/start scherm)
+            if (current > 1) {
+                progressBar.style.display = 'block';
+            } else {
+                progressBar.style.display = 'none';
+                return;
+            }
+            
+            const percent = Math.round((current / total) * 100);
+            
+            progressText.textContent = `Stap ${current} van ${total}`;
+            progressPercent.textContent = `${percent}%`;
+            progressFill.style.width = `${percent}%`;
         }
 
         // Wrapper functies voor navigatie knoppen
