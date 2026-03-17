@@ -1929,8 +1929,36 @@
                         </div>
                     </div>
                 `;
+                
+                // FOLLOW-UP: Bewaar link voor later
+                html += `
+                    <div style="background:#f0f9ff;border:2px solid #3b82f6;border-radius:12px;padding:20px;margin-top:24px;">
+                        <h3 style="margin:0 0 12px;color:#1e40af;font-size:1.1rem;">📊 Volg je vooruitgang</h3>
+                        <p style="margin:0 0 16px;color:#1e3a8a;font-size:0.9rem;line-height:1.6;">
+                            Wil je over 6 weken zien of het beter gaat?<br>
+                            Bewaar deze link en kom terug voor een vergelijking.
+                        </p>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button onclick="app.bewaarFollowupLink()" style="background:#3b82f6;color:white;border:none;border-radius:8px;padding:10px 20px;font-weight:700;cursor:pointer;font-size:0.9rem;">
+                                📲 Bewaar link
+                            </button>
+                            <button onclick="app.downloadQRCode()" style="background:white;color:#3b82f6;border:2px solid #3b82f6;border-radius:8px;padding:10px 20px;font-weight:700;cursor:pointer;font-size:0.9rem;">
+                                📱 QR-code
+                            </button>
+                        </div>
+                        <div style="margin-top:12px;font-size:0.8rem;color:#6b7280;font-style:italic;">
+                            💡 Helemaal vrijwillig - geen verplichtingen
+                        </div>
+                    </div>
+                `;
 
                 container.innerHTML = html;
+                
+                // Sla huidige check op voor follow-up
+                this.saveCheckForFollowup();
+                
+                // Check of dit een follow-up visit is
+                setTimeout(() => this.checkFollowup(), 500);
             },
 
             renderHulp(hulp) {
@@ -2323,6 +2351,108 @@
                     document.querySelectorAll('.age-chip').forEach(c => c.classList.remove('selected'));
                     this.goToScreen(0);
                 }
+            },
+            
+            // FOLLOW-UP FUNCTIES
+            saveCheckForFollowup() {
+                const checkData = {
+                    datum: new Date().toISOString(),
+                    leeftijd: this.ageCategory,
+                    scores: { ...this.answers },
+                    id: this.generateFollowupId()
+                };
+                
+                localStorage.setItem('balanscheck_laatste', JSON.stringify(checkData));
+            },
+            
+            generateFollowupId() {
+                return 'fc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            },
+            
+            bewaarFollowupLink() {
+                const checkData = JSON.parse(localStorage.getItem('balanscheck_laatste'));
+                if (!checkData) {
+                    alert('Geen check gevonden.');
+                    return;
+                }
+                
+                const baseUrl = window.location.origin + window.location.pathname;
+                const followupUrl = `${baseUrl}?follow=${checkData.id}`;
+                
+                navigator.clipboard.writeText(followupUrl).then(() => {
+                    alert('✅ Link gekopieerd!\n\nBewaar deze en kom over 6 weken terug.');
+                }).catch(() => {
+                    prompt('Bewaar deze link:', followupUrl);
+                });
+            },
+            
+            downloadQRCode() {
+                const checkData = JSON.parse(localStorage.getItem('balanscheck_laatste'));
+                if (!checkData) return;
+                
+                const baseUrl = window.location.origin + window.location.pathname;
+                const followupUrl = `${baseUrl}?follow=${checkData.id}`;
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(followupUrl)}`;
+                
+                window.open(qrUrl, '_blank');
+            },
+            
+            checkFollowup() {
+                const checkData = JSON.parse(localStorage.getItem('balanscheck_laatste') || 'null');
+                if (!checkData) return;
+                
+                const wekenGeleden = (Date.now() - new Date(checkData.datum)) / (7*24*60*60*1000);
+                const dontAsk = localStorage.getItem('followup_niet_meer_vragen');
+                
+                if (wekenGeleden >= 6 && !dontAsk && this.currentScreen === 9) {
+                    setTimeout(() => this.toonFollowupBanner(checkData, wekenGeleden), 1000);
+                }
+            },
+            
+            toonFollowupBanner(oudeCheck, wekenGeleden) {
+                if (document.getElementById('followupBanner')) return;
+                
+                const banner = document.createElement('div');
+                banner.id = 'followupBanner';
+                banner.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;padding:16px 24px;border-radius:12px;box-shadow:0 8px 24px rgba(59,130,246,0.4);z-index:99999;max-width:500px;width:90%;';
+                
+                banner.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;gap:16px;">
+                        <div>
+                            <div style="font-weight:800;margin-bottom:8px;">🔄 Welkom terug!</div>
+                            <div style="font-size:0.85rem;opacity:0.95;">
+                                Je deed ${Math.round(wekenGeleden)} weken geleden ook de check.<br>Wil je vergelijken?
+                            </div>
+                        </div>
+                        <button onclick="app.sluitFollowupBanner()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;padding:4px 8px;">✕</button>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:8px;">
+                        <button onclick="app.toonVergelijking()" style="background:white;color:#2563eb;border:none;padding:8px 16px;border-radius:6px;font-weight:700;cursor:pointer;">
+                            📊 Vergelijk
+                        </button>
+                        <button onclick="app.sluitFollowupBannerVoorAltijd()" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);padding:8px 16px;border-radius:6px;cursor:pointer;">
+                            Niet meer vragen
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(banner);
+            },
+            
+            sluitFollowupBanner() {
+                const banner = document.getElementById('followupBanner');
+                if (banner) banner.remove();
+            },
+            
+            sluitFollowupBannerVoorAltijd() {
+                localStorage.setItem('followup_niet_meer_vragen', 'true');
+                this.sluitFollowupBanner();
+            },
+            
+            toonVergelijking() {
+                this.sluitFollowupBanner();
+                alert('Vergelijking komt hier (wordt getoond in overlay)');
+                // TODO: Volledige vergelijking UI (te lang voor nu)
             }
         };
 
