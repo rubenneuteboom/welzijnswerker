@@ -16372,20 +16372,18 @@ END:VEVENT
                             </div>
                             
                             <div id="dropdown-${d.id}" style="display:none;">
-                                <!-- NIEUW: + Persoon toevoegen knop bovenaan -->
-                                <div style="margin-bottom:12px;">
+                                <!-- + Persoon toevoegen knop -->
+                                <div style="margin-bottom:16px;">
                                     <button onclick="addPersoonToSteun('${d.id}', getCurrentTypeFor('${d.id}'))" 
-                                            style="background:#f59e0b;color:white;border:none;border-radius:6px;padding:10px 14px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;">
+                                            style="background:#f59e0b;color:white;border:none;border-radius:8px;padding:12px;font-size:0.95rem;font-weight:600;cursor:pointer;width:100%;box-shadow:0 2px 8px rgba(245,158,11,0.3);">
                                         ➕ Persoon toevoegen
                                     </button>
                                 </div>
                                 
-                                <!-- NIEUW: Toegevoegde personen lijst -->
-                                <div id="personen-lijst-${d.id}" style="margin-bottom:12px;">
+                                <!-- Toegevoegde personen lijst -->
+                                <div id="personen-lijst-${d.id}">
                                     ${renderPersonenLijst(d.id)}
                                 </div>
-                                
-                                <div style="margin-bottom:8px;font-weight:600;color:#92400e;display:none;">Wie helpt? (legacy)</div>
                                 
                                 <select id="wie-formeel-${d.id}" class="wie-select-${d.id}" style="display:none;width:100%;max-width:300px;padding:6px;border:1px solid #f59e0b;border-radius:6px;font-size:0.85rem;margin-bottom:8px;"
                                         onchange="saveSteunDetail('${d.id}','formeel',this.value)">
@@ -18970,25 +18968,27 @@ END:VEVENT
         function renderPersonenLijst(domeinId) {
             const steunDetail = state.steunDetails?.[domeinId];
             if (!steunDetail || !steunDetail.personen || steunDetail.personen.length === 0) {
-                return '';
+                return '<div style="text-align:center;padding:20px;color:#9ca3af;font-size:0.85rem;font-style:italic;">Nog niemand toegevoegd</div>';
             }
             
             return steunDetail.personen.map((persoon, idx) => {
                 const typeEmoji = persoon.type === 'formeel' ? '🔵' : persoon.type === 'collectief' ? '🟣' : '🟢';
-                const typeLabelStyle = persoon.type === 'formeel' ? 'color:#1e40af;' : persoon.type === 'collectief' ? 'color:#7e22ce;' : 'color:#166534;';
+                const bgColor = persoon.type === 'formeel' ? '#eff6ff' : persoon.type === 'collectief' ? '#faf5ff' : '#f0fdf4';
+                const borderColor = persoon.type === 'formeel' ? '#3b82f6' : persoon.type === 'collectief' ? '#a855f7' : '#16a34a';
+                const textColor = persoon.type === 'formeel' ? '#1e40af' : persoon.type === 'collectief' ? '#7e22ce' : '#166534';
                 const rol = persoon.rol || (persoon.rollen && persoon.rollen.length > 0 ? persoon.rollen.join(', ') : '');
                 
                 return `
-                    <div style="background:white;border:2px solid #e5e7eb;border-radius:8px;padding:10px;margin-top:8px;">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;">
-                            <div style="font-weight:600;font-size:0.9rem;${typeLabelStyle}">${typeEmoji} ${persoon.wie || '(nog niet ingevuld)'}</div>
+                    <div style="background:${bgColor};border:2px solid ${borderColor};border-radius:8px;padding:12px;margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;">
+                            <div style="font-weight:700;font-size:0.95rem;color:${textColor};">${typeEmoji} ${persoon.wie}</div>
                             <button onclick="removePersoonFromSteun('${domeinId}', ${idx})" 
-                                    style="background:#fee2e2;color:#991b1b;border:none;border-radius:4px;padding:2px 6px;font-size:0.75rem;cursor:pointer;">
-                                🗑
+                                    style="background:#fee2e2;color:#991b1b;border:none;border-radius:6px;padding:4px 8px;font-size:0.75rem;cursor:pointer;font-weight:600;">
+                                🗑 Verwijder
                             </button>
                         </div>
                         ${rol ? `
-                            <div style="font-size:0.8rem;color:#6b7280;font-style:italic;">
+                            <div style="font-size:0.85rem;color:#6b7280;line-height:1.4;">
                                 ${rol}
                             </div>
                         ` : ''}
