@@ -1439,6 +1439,17 @@
                     <button class="btn-secondary" onclick="app.resetImport()">🔄 Nieuwe analyse</button>
                     <button onclick="app.showScreen(6);app.renderWijkDashboard();" style="background:#059669;color:white;border:none;border-radius:8px;padding:10px 20px;font-weight:600;cursor:pointer;">🏘️ Wijkdashboard</button>
                 </div>
+                
+                <!-- Synthese knop (alleen zichtbaar als N1 data beschikbaar) -->
+                <div id="naarSyntheseKnop" style="display:none;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:16px;padding:24px;margin-top:32px;text-align:center;box-shadow:0 8px 24px rgba(245,158,11,0.3);">
+                    <h3 style="color:white;margin:0 0 12px;font-size:1.3rem;">🎯 Klaar voor strategische analyse?</h3>
+                    <p style="color:rgba(255,255,255,0.9);margin-bottom:20px;font-size:0.95rem;">
+                        Je hebt caseload-data. Combineer dit met burgersignalen (N1) voor volledige businesscase!
+                    </p>
+                    <button onclick="app.naarSynthese()" style="background:white;color:#d97706;border:none;border-radius:10px;padding:14px 32px;font-size:1.05rem;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        📊 Ga naar Strategische Synthese →
+                    </button>
+                </div>
             </div>
 
             <!-- Screen 6: Wijkdashboard -->
@@ -1572,6 +1583,29 @@
                     if (syntheseBeschikbaar) syntheseBeschikbaar.style.display = 'none';
                     if (geenSynthese) geenSynthese.style.display = 'block';
                 }
+                
+                // Update "Naar Synthese" knop in rapportage (Screen 5)
+                const naarSyntheseKnop = document.getElementById('naarSyntheseKnop');
+                if (naarSyntheseKnop) {
+                    naarSyntheseKnop.style.display = (heeftN1 && heeftN2) ? 'block' : 'none';
+                }
+            },
+            
+            naarSynthese() {
+                // Reset naar import sectie, switch naar synthese tab
+                document.getElementById('analysisContainer').classList.add('hidden');
+                document.getElementById('importSection').classList.remove('hidden');
+                this.switchImportTab('synthese');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Highlight de genereer knop
+                setTimeout(() => {
+                    const syntheseBtn = document.querySelector('#tabContentSynthese button[onclick*="genereerSynthese"]');
+                    if (syntheseBtn) {
+                        syntheseBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        syntheseBtn.style.animation = 'pulse 1s ease-in-out 3';
+                    }
+                }, 500);
             },
             
             genereerSynthese() {
@@ -2630,6 +2664,9 @@
                 this.berekenMaatschappelijkeImpact();
                 this.berekenSchaalscenarios();
                 this.genereerRapportage();
+                
+                // Check of synthese nu beschikbaar is
+                this.checkSyntheseAvailability();
             },
 
             vulExecutiveSummaryMulti() {
