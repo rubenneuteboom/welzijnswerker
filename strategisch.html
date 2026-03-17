@@ -869,6 +869,83 @@
                 </div>
             </div>
             
+            <!-- TWEE-TRACK STRATEGIE -->
+            <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:3px solid #f59e0b;border-radius:16px;padding:24px;margin-bottom:24px;">
+                <h3 style="color:#92400e;margin:0 0 12px;font-size:1.2rem;font-weight:800;">📊 Twee investeringsstrategieën</h3>
+                <p style="color:#78350f;font-size:0.9rem;margin-bottom:20px;line-height:1.6;">
+                    N1 (BalansCheck) en N2 (Positionele Analyse) zijn <strong>verschillende groepen</strong>.<br>
+                    N1 = mensen zonder zorg (preventie) · N2 = mensen in zorg (interventie)
+                </p>
+                
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px;">
+                    <!-- Track 1: PREVENTIE -->
+                    <div style="background:white;border-radius:12px;padding:20px;border-left:4px solid #3b82f6;">
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                            <span style="background:#dbeafe;color:#1e40af;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:700;">TRACK 1</span>
+                            <h4 style="margin:0;color:#1e40af;font-size:1rem;">PREVENTIE (N1)</h4>
+                        </div>
+                        <div style="font-size:0.85rem;color:#374151;line-height:1.7;">
+                            <div style="margin-bottom:8px;">
+                                <strong style="color:#1e40af;">Target:</strong> <span id="preventieN1">—</span> mensen zonder zorg
+                            </div>
+                            <div style="margin-bottom:8px;">
+                                <strong style="color:#1e40af;">Risico:</strong> Escalatie naar crisis → <span id="preventieRisico">€ —</span>/jaar
+                            </div>
+                            <div style="margin-bottom:8px;">
+                                <strong style="color:#1e40af;">Investering:</strong> Laagdrempelig aanbod → <span id="preventieInvest">€ —</span>
+                            </div>
+                            <div style="background:#dbeafe;padding:8px;border-radius:6px;margin-top:12px;">
+                                <strong style="color:#1e40af;">ROI:</strong> <span id="preventieROI" style="font-size:1.3rem;font-weight:800;">1:—</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Track 2: INTERVENTIE -->
+                    <div style="background:white;border-radius:12px;padding:20px;border-left:4px solid #10b981;">
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                            <span style="background:#dcfce7;color:#065f46;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:700;">TRACK 2</span>
+                            <h4 style="margin:0;color:#065f46;font-size:1rem;">INTERVENTIE (N2)</h4>
+                        </div>
+                        <div style="font-size:0.85rem;color:#374151;line-height:1.7;">
+                            <div style="margin-bottom:8px;">
+                                <strong style="color:#065f46;">Target:</strong> <span id="interventieN2">—</span> mensen in zorg
+                            </div>
+                            <div style="margin-bottom:8px;">
+                                <strong style="color:#065f46;">Huidig:</strong> Formele zorg → <span id="interventieHuidig">€ —</span>/jaar
+                            </div>
+                            <div style="margin-bottom:8px;">
+                                <strong style="color:#065f46;">Investering:</strong> Collectief aanbod → <span id="interventieInvest">€ —</span>
+                            </div>
+                            <div style="background:#dcfce7;padding:8px;border-radius:6px;margin-top:12px;">
+                                <strong style="color:#065f46;">Besparing:</strong> <span id="interventieBesparing" style="font-size:1.3rem;font-weight:800;">€ —</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TOTAAL -->
+                <div style="background:white;border-radius:12px;padding:20px;border:3px solid #f59e0b;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+                        <div>
+                            <h4 style="margin:0 0 8px;color:#92400e;font-size:1.1rem;">💰 Gecombineerde businesscase</h4>
+                            <div style="font-size:0.9rem;color:#78350f;line-height:1.6;">
+                                Totale investering: <strong id="totaalInvest">€ —</strong><br>
+                                Totale besparing/preventie: <strong id="totaalBesparing">€ —</strong><br>
+                                Gecombineerde ROI: <strong style="font-size:1.2rem;color:#92400e;" id="totaalROI">1:—</strong>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.8rem;color:#92400e;margin-bottom:4px;">Nettowinst/jaar</div>
+                            <div id="nettoWinst" style="font-size:2.2rem;font-weight:900;color:#92400e;">€ —</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background:rgba(146,64,14,0.1);padding:12px;border-radius:8px;margin-top:16px;font-size:0.85rem;color:#92400e;">
+                    💡 <strong>Waarom twee tracks?</strong> N1-burgers zitten niet in zorg en kiezen zelf (autonomie). N2-cliënten hebben professional nodig. Budget voor BEIDE = totaalstrategie wijk.
+                </div>
+            </div>
+            
             <!-- ERVARINGSVERHALEN -->
             <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:3px solid #3b82f6;border-radius:16px;padding:24px;margin-bottom:24px;">
                 <h3 style="color:#1e40af;margin:0 0 16px;font-size:1.1rem;font-weight:800;">💬 Wat zeggen mensen zelf?</h3>
@@ -1703,15 +1780,71 @@
                 document.getElementById('synROI').textContent = `ROI 1:${roi.toFixed(1)} (conservatief scenario)`;
                 
                 // Render components
+                this.renderTweeTrackStrategie(n1, n2); // NIEUW - bovenaan!
                 this.renderFinancieringsstromen();
                 this.renderROIPerDomein();
-                this.renderFollowupInzichten(); // NIEUW
+                this.renderFollowupInzichten();
                 this.renderPMOpsplitsing();
                 this.renderQALYAnalyse();
                 this.renderSensitiviteit();
                 this.renderNCWBerekening();
                 this.renderBronvermelding();
                 this.renderAanbevelingenRaad(n1, n2);
+            },
+            
+            renderTweeTrackStrategie(n1, n2) {
+                // TRACK 1: PREVENTIE (N1 - mensen zonder zorg)
+                // Schatting: 10% van N1 escaleert zonder interventie naar N2
+                const escalatiePercentage = 0.10;
+                const gemiddeldeCrisisKosten = 800; // €/mnd formele zorg
+                const n1Escalatie = Math.round(n1 * escalatiePercentage);
+                const preventieRisico = n1Escalatie * gemiddeldeCrisisKosten * 12; // per jaar
+                
+                // Investering preventie: Online tools, voorlichting, laagdrempelig
+                const preventieInvesteringPerPersoon = 50; // €/jaar
+                const preventieInvestering = n1 * preventieInvesteringPerPersoon;
+                
+                // ROI preventie (conservatief: voorkomt 60% van escalatie)
+                const preventieEffectiviteit = 0.60;
+                const preventieBesparing = preventieRisico * preventieEffectiviteit;
+                const preventieROI = preventieInvestering > 0 ? (preventieBesparing / preventieInvestering) : 0;
+                
+                // TRACK 2: INTERVENTIE (N2 - mensen in zorg)
+                // Huidige kosten formele zorg
+                const huidigeFormeleKosten = n2 * gemiddeldeCrisisKosten * 12;
+                
+                // Na herpositionering: 50% afschalen naar collectief (€150/mnd)
+                const afschaalPercentage = 0.50;
+                const collectiefKosten = 150; // €/mnd
+                const n2Afgeschaald = Math.round(n2 * afschaalPercentage);
+                const nieuweKosten = (n2 - n2Afgeschaald) * gemiddeldeCrisisKosten * 12 + n2Afgeschaald * collectiefKosten * 12;
+                const interventieBesparing = huidigeFormeleKosten - nieuweKosten;
+                
+                // Investering interventie: Opzetten collectieve voorzieningen
+                const interventieInvesteringPerPersoon = 1000; // €/jaar (opstartkosten, coördinatie)
+                const interventieInvestering = n2Afgeschaald * interventieInvesteringPerPersoon;
+                
+                // TOTAAL
+                const totaalInvestering = preventieInvestering + interventieInvestering;
+                const totaalBesparing = preventieBesparing + interventieBesparing;
+                const totaalROI = totaalInvestering > 0 ? (totaalBesparing / totaalInvestering) : 0;
+                const nettoWinst = totaalBesparing - totaalInvestering;
+                
+                // Vul data in
+                document.getElementById('preventieN1').textContent = n1;
+                document.getElementById('preventieRisico').textContent = `€ ${Math.round(preventieRisico/1000)}k`;
+                document.getElementById('preventieInvest').textContent = `€ ${Math.round(preventieInvestering/1000)}k`;
+                document.getElementById('preventieROI').textContent = `1:${preventieROI.toFixed(1)}`;
+                
+                document.getElementById('interventieN2').textContent = n2;
+                document.getElementById('interventieHuidig').textContent = `€ ${Math.round(huidigeFormeleKosten/1000)}k`;
+                document.getElementById('interventieInvest').textContent = `€ ${Math.round(interventieInvestering/1000)}k`;
+                document.getElementById('interventieBesparing').textContent = `€ ${Math.round(interventieBesparing/1000)}k`;
+                
+                document.getElementById('totaalInvest').textContent = `€ ${Math.round(totaalInvestering/1000)}k`;
+                document.getElementById('totaalBesparing').textContent = `€ ${Math.round(totaalBesparing/1000)}k`;
+                document.getElementById('totaalROI').textContent = `1:${totaalROI.toFixed(1)}`;
+                document.getElementById('nettoWinst').textContent = `€ ${Math.round(nettoWinst/1000)}k`;
             },
             
             renderFinancieringsstromen() {
