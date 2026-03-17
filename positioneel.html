@@ -18894,29 +18894,56 @@ END:VEVENT
             if (!state.steunDetails[domeinId]) state.steunDetails[domeinId] = { personen: [] };
             if (!state.steunDetails[domeinId].personen) state.steunDetails[domeinId].personen = [];
             
-            // Prompt voor naam
+            // Toon inline formulier
             const typeLabel = type === 'formeel' ? 'professional' : type === 'collectief' ? 'collectieve voorziening' : 'persoon';
-            const naam = prompt(`Naam van de ${typeLabel}:`);
+            const typeEmoji = type === 'formeel' ? '🔵' : type === 'collectief' ? '🟣' : '🟢';
             
-            if (!naam || naam.trim() === '') {
-                return; // Geannuleerd
-            }
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+            modal.innerHTML = `
+                <div style="background:white;border-radius:12px;padding:24px;max-width:500px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+                    <h3 style="margin:0 0 16px;color:#374151;font-size:1.2rem;">${typeEmoji} Naam van de ${typeLabel}:</h3>
+                    <input type="text" id="naamInput" placeholder="Bijv: Jan de Vries" 
+                           style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:16px;box-sizing:border-box;">
+                    <div style="display:flex;gap:10px;justify-content:flex-end;">
+                        <button onclick="this.closest('div[style*=fixed]').remove()" 
+                                style="background:#f3f4f6;color:#374151;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;">
+                            Annuleren
+                        </button>
+                        <button onclick="saveNewPersoon('${domeinId}', '${type}')" 
+                                style="background:#f59e0b;color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            setTimeout(() => document.getElementById('naamInput').focus(), 100);
             
-            // Voeg persoon toe
+            // Enter = OK
+            document.getElementById('naamInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') saveNewPersoon(domeinId, type);
+            });
+        }
+        
+        function saveNewPersoon(domeinId, type) {
+            const naam = document.getElementById('naamInput').value.trim();
+            if (!naam) return;
+            
+            if (!state.steunDetails[domeinId].personen) state.steunDetails[domeinId].personen = [];
             state.steunDetails[domeinId].personen.push({
                 type: type,
-                wie: naam.trim(),
+                wie: naam,
                 rollen: []
             });
             
             saveState();
-            renderStoplichtGrid(); // Re-render om lijst te updaten
             
-            // Bevestiging
-            const container = document.getElementById(`personen-lijst-${domeinId}`);
-            if (container) {
-                container.innerHTML = renderPersonenLijst(domeinId);
-            }
+            // Sluit modal
+            document.querySelector('div[style*="position:fixed"]').remove();
+            
+            // Update lijst
+            renderStoplichtGrid();
         }
         
         function removePersoonFromSteun(domeinId, persoonIndex) {
