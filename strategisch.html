@@ -1650,13 +1650,217 @@
             },
             
             renderFinancieringsstromen() {
-                // TODO: Grote visualisatie met 6 potten (voor & na)
-                const html = `
-                    <div style="background:#f9fafb;padding:20px;border-radius:12px;">
-                        <p style="font-style:italic;color:#6b7280;">💡 Financieringsstromen visualisatie komt hier (stacked bar chart met Zvw, WMO, WLZ, Participatiewet, Eigen bijdrage, PM)</p>
-                        <p style="font-size:0.85rem;color:#9ca3af;margin-top:10px;">Laat VOOR en NA situatie zien + verschuivingen tussen potten</p>
+                // Mapping: domein + draaglaag → financieringsstroom
+                const financieringsMapping = {
+                    // GGZ
+                    'ggz_formeel': { zvw: 800, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    'ggz_collectief': { zvw: 0, wmo: 120, wlz: 0, pm: 0, eigen: 15 },
+                    'ggz_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    
+                    // Begeleiding (dagbesteding, huiselijk, sociaal)
+                    'begeleiding_formeel': { zvw: 0, wmo: 700, wlz: 0, pm: 0, eigen: 27 },
+                    'begeleiding_collectief': { zvw: 0, wmo: 130, wlz: 0, pm: 0, eigen: 20 },
+                    'begeleiding_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    
+                    // Lichamelijke zorg (ADL, lichamelijk)
+                    'lichamelijk_formeel': { zvw: 650, wmo: 150, wlz: 0, pm: 0, eigen: 27 },
+                    'lichamelijk_collectief': { zvw: 0, wmo: 120, wlz: 0, pm: 0, eigen: 15 },
+                    'lichamelijk_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    
+                    // Financiën / Schuld
+                    'financien_formeel': { zvw: 0, wmo: 250, wlz: 0, pm: 0, eigen: 0 },
+                    'financien_collectief': { zvw: 0, wmo: 80, wlz: 0, pm: 0, eigen: 0 },
+                    'financien_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    
+                    // Wonen
+                    'wonen_formeel': { zvw: 100, wmo: 400, wlz: 0, pm: 0, eigen: 27 },
+                    'wonen_collectief': { zvw: 0, wmo: 120, wlz: 0, pm: 0, eigen: 15 },
+                    'wonen_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    
+                    // Mantelzorg ondersteuning
+                    'mantelzorg_formeel': { zvw: 200, wmo: 500, wlz: 0, pm: 0, eigen: 27 },
+                    'mantelzorg_collectief': { zvw: 0, wmo: 140, wlz: 0, pm: 0, eigen: 10 },
+                    'mantelzorg_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 },
+                    
+                    // Default (gemiddeld)
+                    'default_formeel': { zvw: 400, wmo: 400, wlz: 0, pm: 0, eigen: 27 },
+                    'default_collectief': { zvw: 0, wmo: 130, wlz: 0, pm: 0, eigen: 15 },
+                    'default_informeel': { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 }
+                };
+                
+                // Categoriseer domeinen
+                const domeinCategorie = {
+                    'geestelijk': 'ggz',
+                    'ggz': 'ggz',
+                    'dagbesteding': 'begeleiding',
+                    'huiselijk': 'begeleiding',
+                    'sociaal': 'begeleiding',
+                    'participatie': 'begeleiding',
+                    'lichamelijk': 'lichamelijk',
+                    'adl': 'lichamelijk',
+                    'financien': 'financien',
+                    'huisvesting': 'wonen',
+                    'wonen': 'wonen',
+                    'mantelzorg': 'mantelzorg'
+                };
+                
+                // Bereken VOOR en NA per financieringsstroom
+                const voor = { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 };
+                const na = { zvw: 0, wmo: 0, wlz: 0, pm: 0, eigen: 0 };
+                
+                // Loop door alle casussen
+                const alleDomeinen = this.casussen.flatMap(c => c.domeinen || []);
+                
+                alleDomeinen.forEach(domein => {
+                    if (!domein.bewegingsrichting) return;
+                    
+                    const cat = domeinCategorie[domein.id] || 'default';
+                    
+                    // VOOR situatie
+                    domein.huidigeDraaglagen.forEach(draag => {
+                        const key = `${cat}_${draag}`;
+                        const mapping = financieringsMapping[key] || financieringsMapping[`default_${draag}`];
+                        if (mapping) {
+                            voor.zvw += mapping.zvw;
+                            voor.wmo += mapping.wmo;
+                            voor.wlz += mapping.wlz;
+                            voor.pm += mapping.pm;
+                            voor.eigen += mapping.eigen;
+                        }
+                    });
+                    
+                    // NA situatie
+                    domein.gewensteDraaglagen.forEach(draag => {
+                        const key = `${cat}_${draag}`;
+                        const mapping = financieringsMapping[key] || financieringsMapping[`default_${draag}`];
+                        if (mapping) {
+                            na.zvw += mapping.zvw;
+                            na.wmo += mapping.wmo;
+                            na.wlz += mapping.wlz;
+                            na.pm += mapping.pm;
+                            na.eigen += mapping.eigen;
+                        }
+                    });
+                });
+                
+                // PM toevoegen (escalatiekosten)
+                const preventieEffect = Math.max(0, voor.zvw + voor.wmo - na.zvw - na.wmo) * 2.5; // ROI factor
+                voor.pm += preventieEffect * 0.3; // 30% escalatie zonder preventie
+                
+                const totaalVoor = voor.zvw + voor.wmo + voor.wlz + voor.pm + voor.eigen;
+                const totaalNa = na.zvw + na.wmo + na.wlz + na.pm + na.eigen;
+                
+                // Visualisatie
+                const stromen = [
+                    { label: 'Zvw (Zorgverzekeraar)', kleur: '#3b82f6', voor: voor.zvw, na: na.zvw },
+                    { label: 'WMO (Gemeente)', kleur: '#10b981', voor: voor.wmo, na: na.wmo },
+                    { label: 'WLZ (Langdurige zorg)', kleur: '#8b5cf6', voor: voor.wlz, na: na.wlz },
+                    { label: 'Eigen bijdrage', kleur: '#f59e0b', voor: voor.eigen, na: na.eigen },
+                    { label: 'PM (UWV, Jeugd, etc)', kleur: '#ef4444', voor: voor.pm, na: na.pm }
+                ];
+                
+                let html = `
+                    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin-bottom:24px;">
+                        <!-- VOOR -->
+                        <div>
+                            <h4 style="text-align:center;margin-bottom:16px;color:#374151;">Voor interventie (€${Math.round(totaalVoor).toLocaleString('nl-NL')}/mnd)</h4>
+                            <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                `;
+                
+                stromen.forEach(stroom => {
+                    const pct = totaalVoor > 0 ? ((stroom.voor / totaalVoor) * 100).toFixed(0) : 0;
+                    html += `
+                        <div style="margin-bottom:12px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <span style="font-size:0.85rem;font-weight:600;">${stroom.label}</span>
+                                <span style="font-size:0.85rem;color:#6b7280;">€${Math.round(stroom.voor).toLocaleString('nl-NL')}</span>
+                            </div>
+                            <div style="background:#e5e7eb;height:20px;border-radius:6px;overflow:hidden;">
+                                <div style="background:${stroom.kleur};height:100%;width:${pct}%;transition:width 0.3s;"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                            </div>
+                        </div>
+                        
+                        <!-- PIJL -->
+                        <div style="font-size:3rem;color:#667eea;">→</div>
+                        
+                        <!-- NA -->
+                        <div>
+                            <h4 style="text-align:center;margin-bottom:16px;color:#374151;">Na interventie (€${Math.round(totaalNa).toLocaleString('nl-NL')}/mnd)</h4>
+                            <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                `;
+                
+                stromen.forEach(stroom => {
+                    const pct = totaalNa > 0 ? ((stroom.na / totaalNa) * 100).toFixed(0) : 0;
+                    html += `
+                        <div style="margin-bottom:12px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <span style="font-size:0.85rem;font-weight:600;">${stroom.label}</span>
+                                <span style="font-size:0.85rem;color:#6b7280;">€${Math.round(stroom.na).toLocaleString('nl-NL')}</span>
+                            </div>
+                            <div style="background:#e5e7eb;height:20px;border-radius:6px;overflow:hidden;">
+                                <div style="background:${stroom.kleur};height:100%;width:${pct}%;transition:width 0.3s;"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                            </div>
+                        </div>
                     </div>
                 `;
+                
+                // Verschuivingstabel
+                const besparing = totaalVoor - totaalNa;
+                html += `
+                    <div style="background:${besparing > 0 ? '#f0fdf4' : '#fef3c7'};border:2px solid ${besparing > 0 ? '#10b981' : '#f59e0b'};border-radius:12px;padding:20px;">
+                        <h4 style="color:${besparing > 0 ? '#065f46' : '#92400e'};margin-bottom:12px;">💰 Wie bespaart wat?</h4>
+                        <table style="width:100%;border-collapse:collapse;">
+                            <thead><tr style="border-bottom:2px solid ${besparing > 0 ? '#10b981' : '#f59e0b'};">
+                                <th style="padding:8px;text-align:left;font-size:0.85rem;">Financier</th>
+                                <th style="padding:8px;text-align:right;font-size:0.85rem;">Voor</th>
+                                <th style="padding:8px;text-align:right;font-size:0.85rem;">Na</th>
+                                <th style="padding:8px;text-align:right;font-size:0.85rem;">Verschil</th>
+                            </tr></thead>
+                            <tbody>
+                `;
+                
+                stromen.forEach(stroom => {
+                    const verschil = stroom.voor - stroom.na;
+                    if (Math.abs(verschil) < 1) return; // Skip als verwaarloosbaar
+                    html += `
+                        <tr style="border-bottom:1px solid #e5e7eb;">
+                            <td style="padding:8px;font-weight:600;font-size:0.85rem;">${stroom.label}</td>
+                            <td style="padding:8px;text-align:right;font-size:0.85rem;">€${Math.round(stroom.voor).toLocaleString('nl-NL')}</td>
+                            <td style="padding:8px;text-align:right;font-size:0.85rem;">€${Math.round(stroom.na).toLocaleString('nl-NL')}</td>
+                            <td style="padding:8px;text-align:right;font-weight:700;font-size:0.85rem;color:${verschil > 0 ? '#10b981' : '#ef4444'};">
+                                ${verschil > 0 ? '-' : '+'}€${Math.abs(Math.round(verschil)).toLocaleString('nl-NL')}
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                html += `
+                    <div style="background:#e0f2fe;border:2px solid #3b82f6;border-radius:10px;padding:16px;margin-top:20px;font-size:0.85rem;color:#1e40af;">
+                        <strong>💡 Voor gezamenlijke financiering:</strong> Zvw bespaart €${Math.round(Math.max(0, voor.zvw - na.zvw)).toLocaleString('nl-NL')}/mnd aan crisis-GGZ en thuiszorg. 
+                        WMO investeert €${Math.round(Math.max(0, na.wmo - voor.wmo)).toLocaleString('nl-NL')}/mnd in preventie. 
+                        PM bespaart €${Math.round(Math.max(0, voor.pm - na.pm)).toLocaleString('nl-NL')}/mnd aan UWV en arbeidsuitval.
+                        → <strong>Win-win-win scenario</strong> voor kostenbesparingsdeling.
+                    </div>
+                `;
+                
                 document.getElementById('financieringsstromenViz').innerHTML = html;
             },
             
