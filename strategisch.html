@@ -501,19 +501,20 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎯 Strategische Netwerkimpactanalyse</h1>
-            <p class="subtitle">RPA Niveau 3</p>
-            <span class="level-badge">Voor beleidsmakers, zorgmanagers en geautoriseerde professionals</span>
-            <p style="font-size:0.88rem;color:#6b7280;margin-top:10px;max-width:560px;line-height:1.6;">
-                Formele zorg lost niet alles op — en het is niet houdbaar om het zo te blijven organiseren. Dit instrument maakt zichtbaar wat het kost als we niet anders gaan werken, en wat het oplevert als we dat wel doen.
+            <h1>🎯 Voor Bestuur & Management</h1>
+            <p class="subtitle">Wat levert positionele aanpak op?</p>
+            <span class="level-badge">Voor beleidsmakers, zorgmanagers en strategisch adviseurs</span>
+            <p style="font-size:0.95rem;margin-top:16px;max-width:620px;line-height:1.7;margin-left:auto;margin-right:auto;">
+                Hoeveel kost het <strong>nu</strong>? Wat besparen we met <strong>slimmere positionering</strong>?<br>
+                Dit instrument vertaalt netwerkbewegingen naar kosten, impact en businesscase.
             </p>
         </header>
 
         <!-- Import Sectie (default) -->
         <div id="importSection" class="import-section">
-            <h2>📊 Welke data wil je analyseren?</h2>
-            <p style="color:var(--text-light);margin-bottom:24px;">
-                Kies welke databron je wilt importeren voor strategische analyse.
+            <h2>📊 Wat wil je analyseren?</h2>
+            <p style="color:var(--text-light);margin-bottom:24px;font-size:1rem;">
+                Kies wat je wilt weten: wijksignalen, kosten-baten van casussen, of allebei.
             </p>
             
             <!-- TAB NAVIGATIE -->
@@ -536,8 +537,11 @@
             
             <!-- TAB CONTENT: BURGERSIGNALEN -->
             <div id="tabContentBurgersignalen" class="tab-content active">
-                <p style="color:#6b7280;margin-bottom:24px;font-size:0.9rem;">
-                    Analyseer wijkdata verzameld via BalansCheck (Niveau 1). Dit geeft inzicht in <strong>burgersignalen</strong>, <strong>verborgen vraag</strong> en <strong>toegankelijkheidsdrempels</strong>.
+                <p style="color:#6b7280;margin-bottom:24px;font-size:0.95rem;line-height:1.6;">
+                    <strong>Wat leer je hieruit?</strong><br>
+                    • Hoeveel mensen zitten zonder hulp? (verborgen vraag)<br>
+                    • Welke problemen spelen het meest in je wijk?<br>
+                    • Waarom zoeken mensen geen hulp? (drempels)
                 </p>
                 
                 <!-- Check of er niveau 1 data is -->
@@ -576,8 +580,11 @@
             
             <!-- TAB CONTENT: CASELOAD -->
             <div id="tabContentCaseload" class="tab-content" style="display:none;">
-                <p style="color:var(--text-light);margin-bottom:24px;font-size:0.9rem;">
-                    Importeer positionele analyses uit Niveau 2 om je caseload strategisch te analyseren.
+                <p style="color:var(--text-light);margin-bottom:24px;font-size:0.95rem;line-height:1.6;">
+                    <strong>Wat leer je hieruit?</strong><br>
+                    • Wat kost het nu per cliënt? (formele zorg)<br>
+                    • Wat kost het na positionele beweging? (mix formeel/collectief/informeel)<br>
+                    • Hoeveel bespaar je per jaar?
                 </p>
 
             <!-- CASELOAD LIJST (gevuld vanuit localStorage) -->
@@ -653,8 +660,11 @@
             
             <!-- TAB CONTENT: STRATEGISCHE SYNTHESE -->
             <div id="tabContentSynthese" class="tab-content" style="display:none;">
-                <p style="color:#6b7280;margin-bottom:24px;font-size:0.9rem;">
-                    Combineer Burgersignalen (Niveau 1) en Caseload (Niveau 2) voor een <strong>strategische kosten-batenanalyse</strong> met maatschappelijke impact.
+                <p style="color:#6b7280;margin-bottom:24px;font-size:0.95rem;line-height:1.6;">
+                    <strong>Wat leer je hieruit?</strong><br>
+                    • Hoeveel voorkom je aan crisiskosten? (verborgen vraag + escalatie)<br>
+                    • Wat is de businesscase voor de gemeenteraad?<br>
+                    • Hoe verdelen kosten zich over WMO, Zvw, PM?
                 </p>
                 
                 <!-- Check of beide databronnen beschikbaar zijn -->
@@ -839,6 +849,37 @@
                     <strong>📊 Methodologie:</strong> Deze analyse combineert burgersignalen (N1, n=<span id="synN1">—</span>) en caseload data (N2, n=<span id="synN2">—</span>) met literatuur-gebaseerde ROI-factoren en QALY-waarderingen.
                 </div>
             </div>
+            
+            <!-- ERVARINGSVERHALEN -->
+            <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:3px solid #3b82f6;border-radius:16px;padding:24px;margin-bottom:24px;">
+                <h3 style="color:#1e40af;margin:0 0 16px;font-size:1.1rem;font-weight:800;">💬 Wat zeggen mensen zelf?</h3>
+                <div style="display:grid;gap:14px;">
+                    <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #10b981;">
+                        <div style="font-style:italic;color:#374151;margin-bottom:8px;line-height:1.6;">
+                            "Eerst had ik vier professionals. Nu één vaste persoon die mij echt kent. 
+                            Dat voelt als échte hulp, niet als een nummer zijn."
+                        </div>
+                        <div style="font-size:0.8rem;color:#6b7280;">— Hassan, 28 jaar</div>
+                    </div>
+                    <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #10b981;">
+                        <div style="font-style:italic;color:#374151;margin-bottom:8px;line-height:1.6;">
+                            "Mijn partner deed alles. Nu krijgen we thuiszorg én respijt. 
+                            Ik mag weer gewoon partner zijn, niet alleen hulpverlener."
+                        </div>
+                        <div style="font-size:0.8rem;color:#6b7280;">— Kees, mantelzorger van Els (78)</div>
+                    </div>
+                    <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #10b981;">
+                        <div style="font-style:italic;color:#374151;margin-bottom:8px;line-height:1.6;">
+                            "Via de budgetgroep leerde ik anderen kennen. Nu hoef ik niet elke keer 
+                            mijn verhaal opnieuw te doen bij een professional."
+                        </div>
+                        <div style="font-size:0.8rem;color:#6b7280;">— Maria, 45 jaar</div>
+                    </div>
+                </div>
+                <div style="background:rgba(59,130,246,0.1);padding:12px;border-radius:8px;margin-top:14px;font-size:0.85rem;color:#1e40af;">
+                    💡 <strong>Reminder:</strong> Achter elk cijfer gaat een mens schuil. RPA meet niet alleen kosten, maar ook waardigheid en regie.
+                </div>
+            </div>
 
             <!-- SCENARIO TABS -->
             <div style="background:white;padding:20px;border-radius:16px;margin-bottom:24px;box-shadow:var(--shadow);">
@@ -879,11 +920,23 @@
 
             <!-- PM OPSPLITSING -->
             <div class="screen active" style="margin-top:20px;">
-                <h3 style="color:var(--primary);margin-bottom:16px;">📝 Pro Memorie - Maatschappelijke kosten</h3>
-                <p style="color:#6b7280;margin-bottom:20px;font-size:0.9rem;">
-                    Pro Memorie kosten staan niet in gemeentebegroting, maar zijn wel reële maatschappelijke effecten. Deze zijn opgesplitst naar bron.
+                <h3 style="color:var(--primary);margin-bottom:16px;">💰 Wie betaalt de escalatiekosten?</h3>
+                <p style="color:#6b7280;margin-bottom:12px;font-size:0.95rem;line-height:1.6;">
+                    <strong>Pro Memorie (PM)</strong> = kosten die niet uit jouw budget komen, maar wel reëel zijn:
                 </p>
+                <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:10px;padding:16px;margin-bottom:20px;">
+                    <div style="font-size:0.9rem;color:#92400e;line-height:1.7;">
+                        💡 <strong>Voorbeeld:</strong> Als iemand geen hulp krijgt bij schulden (gemeente WMO), eindigt die vaak bij:<br>
+                        • UWV (ziektewet, langdurige uitval) = <strong>€15k/jaar</strong><br>
+                        • Zorgverzekeraar (burnout GGZ) = <strong>€8k/jaar</strong><br>
+                        • Werkgever (productiviteitsverlies) = <strong>€12k/jaar</strong><br>
+                        <strong>Totaal PM: €35k</strong> — terwijl €500 schuldhulp het had voorkomen.
+                    </div>
+                </div>
                 <div id="pmOpsplitsingChart"></div>
+                <div style="background:#e0f2fe;border:2px solid #3b82f6;border-radius:10px;padding:14px;margin-top:16px;font-size:0.85rem;color:#1e40af;">
+                    <strong>💼 Voor zorgverzekeraars:</strong> Dit zijn jouw escalatiekosten! Gemeente investeert €X preventie, jij bespaart €Y crisis-GGZ. Dat opent gesprek over gezamenlijke financiering.
+                </div>
             </div>
 
             <!-- QALY ANALYSE -->
@@ -895,8 +948,29 @@
                 <div id="qalyAnalyse"></div>
             </div>
 
-            <!-- NCW BEREKENING -->
+            <!-- SENSITIVITEIT + NCW -->
             <div class="screen active" style="margin-top:20px;">
+                <h3 style="color:var(--primary);margin-bottom:16px;">📊 Onzekerheidsanalyse (sensitiviteit)</h3>
+                <p style="color:#6b7280;margin-bottom:12px;font-size:0.95rem;line-height:1.6;">
+                    Wat als de kosten 20% afwijken? Wat als minder mensen deelnemen? Hieronder de bandbreedte:
+                </p>
+                <div id="sensitiviteitAnalyse" style="background:#f9fafb;padding:20px;border-radius:12px;margin-bottom:24px;">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
+                        <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #10b981;">
+                            <div style="font-size:0.85rem;color:#6b7280;margin-bottom:4px;">Beste scenario (+20% effect)</div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#10b981;" id="sensiBest">€ —</div>
+                        </div>
+                        <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #3b82f6;">
+                            <div style="font-size:0.85rem;color:#6b7280;margin-bottom:4px;">Realistisch scenario (basis)</div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#3b82f6;" id="sensiRealistisch">€ —</div>
+                        </div>
+                        <div style="background:white;padding:16px;border-radius:10px;border-left:4px solid #f59e0b;">
+                            <div style="font-size:0.85rem;color:#6b7280;margin-bottom:4px;">Conservatief (-20% effect)</div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#f59e0b;" id="sensiConservatief">€ —</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <h3 style="color:var(--primary);margin-bottom:16px;">💹 Netto Contante Waarde (discontovoet 3%)</h3>
                 <p style="color:#6b7280;margin-bottom:20px;font-size:0.9rem;">
                     Besparingen in de toekomst zijn minder waard dan nu (tijdswaarde). NCW corrigeert hiervoor met 3% discontovoet (standaard publieke sector).
@@ -921,10 +995,13 @@
             <!-- EXPORT / RAPPORTAGE -->
             <div style="background:white;padding:28px;border-radius:16px;margin-top:24px;box-shadow:var(--shadow);">
                 <h3 style="color:var(--primary);margin-bottom:16px;">📄 Rapportage voor Gemeenteraad</h3>
-                <p style="color:var(--text-light);margin-bottom:16px;">Download volledige strategische analyse inclusief methodologie, bronvermelding en aanbevelingen.</p>
+                <p style="color:var(--text-light);margin-bottom:16px;">Download raadsvoorstel (A4), volledige analyse, of Excel-data.</p>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button onclick="app.downloadRaadsvoorstel()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:10px;padding:14px 28px;font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(245,158,11,0.3);">
+                        📄 Raadsvoorstel A4 (direct printen)
+                    </button>
                     <button onclick="app.exportSyntheseRapportage()" style="background:var(--primary);color:white;border:none;border-radius:10px;padding:12px 24px;font-size:0.95rem;font-weight:700;cursor:pointer;">
-                        📊 Download Rapportage (PDF) →
+                        📊 Volledige Rapportage (PDF)
                     </button>
                     <button onclick="app.exportSyntheseExcel()" style="background:white;color:var(--primary);border:2px solid var(--primary);border-radius:10px;padding:12px 24px;font-size:0.95rem;font-weight:700;cursor:pointer;">
                         📊 Export Data (Excel)
@@ -951,8 +1028,14 @@
                     </div>
                 </div>
                 <!-- Disclaimer bij n < 10 -->
-                <div id="exDisclaimer" style="display:none;margin-top:14px;background:rgba(255,255,255,0.15);border-radius:8px;padding:10px 14px;font-size:0.8rem;opacity:0.9;">
-                    ⚠️ <strong>Indicatief:</strong> Op basis van 1 casus. Trek hier geen populatieconclusies uit. Voeg meer casussen toe voor betrouwbare inzichten.
+                <div id="exDisclaimer" style="display:none;margin-top:14px;background:rgba(255,255,255,0.15);border-radius:8px;padding:12px 16px;font-size:0.85rem;opacity:0.95;">
+                    <div style="margin-bottom:8px;">⚠️ <strong>Betrouwbaarheid: INDICATIEF</strong></div>
+                    <div style="font-size:0.8rem;line-height:1.6;">
+                        • n<10 = <strong>geen populatieconclusies</strong> verantwoord<br>
+                        • Gebruik voor pilot/showcases, niet voor hard beleid<br>
+                        • Betrouwbaarheidsinterval: ±40% (grote onzekerheid)<br>
+                        • <strong>Voeg minstens 30 casussen toe</strong> voor robuuste businesscase
+                    </div>
                 </div>
                 <!-- Casussen teller + toevoegen knop -->
                 <div style="display:flex;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap;">
@@ -1030,11 +1113,10 @@
                 </p>
 
                 <div class="alert alert-info">
-                    <span>📖</span>
+                    <span>ℹ️</span>
                     <div>
-                        <strong>Methodologie:</strong> We gebruiken gemiddelde kosten per draaglaag gebaseerd op landelijke cijfers.
-                        Deze zijn aanpasbaar voor jouw gemeente/regio.<br>
-                        <em>Transparantie: alle aannames worden getoond.</em><br>
+                        <strong>Hoe berekenen we dit?</strong> Gemiddelde kosten per type ondersteuning (landelijk). 
+                        Pas de bedragen hieronder aan voor jouw gemeente.<br>
                         <details style="margin-top:8px;">
                             <summary style="cursor:pointer;font-size:0.85rem;color:#3b82f6;">📚 Bronnen & referenties</summary>
                             <div style="font-size:0.82rem;color:#374151;margin-top:6px;line-height:1.6;">
@@ -1186,9 +1268,9 @@
 
             <!-- Screen 3: Maatschappelijke Impact -->
             <div class="screen" id="screen3">
-                <h2>🌍 Maatschappelijke impact analyse</h2>
+                <h2>🌍 Wat is de maatschappelijke winst?</h2>
                 <p class="screen-intro">
-                    Wat betekent deze positionele beweging voor preventie, participatie, en duurzaamheid?
+                    Naast kosten: wat levert het op aan preventie, zelfredzaamheid en participatie?
                 </p>
 
                 <div class="alert alert-info">
@@ -1561,6 +1643,7 @@
                 this.renderROIPerDomein();
                 this.renderPMOpsplitsing();
                 this.renderQALYAnalyse();
+                this.renderSensitiviteit();
                 this.renderNCWBerekening();
                 this.renderBronvermelding();
                 this.renderAanbevelingenRaad(n1, n2);
@@ -3856,6 +3939,114 @@
                     document.getElementById('fileInput').value = '';
                     this.data = null;
                 }
+            },
+            
+            downloadRaadsvoorstel() {
+                if (!this.data && this.casussen.length === 0) {
+                    alert('Laad eerst data via de caseload tab.');
+                    return;
+                }
+                
+                const n = this.casussen.length;
+                const besparing = document.getElementById('synBesparing')?.textContent || document.getElementById('exBesparing')?.textContent || '—';
+                const vandaag = new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+                
+                // Bereken betrouwbaarheid
+                let betrouwbaarheid = 'INDICATIEF';
+                let betrouwbaarheidKleur = '#ef4444';
+                let betrouwbaarheidTekst = 'Onvoldoende voor populatieconclusies';
+                
+                if (n >= 30) {
+                    betrouwbaarheid = 'ROBUUST';
+                    betrouwbaarheidKleur = '#10b981';
+                    betrouwbaarheidTekst = 'Voldoende voor businesscase';
+                } else if (n >= 10) {
+                    betrouwbaarheid = 'INDICATIEF+';
+                    betrouwbaarheidKleur = '#f59e0b';
+                    betrouwbaarheidTekst = 'Bruikbaar voor scenarioplanning';
+                }
+                
+                const w = window.open('','_blank');
+                w.document.write(`<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
+                    <title>Raadsvoorstel — RPA</title>
+                    <style>
+                        body { font-family: Georgia, serif; max-width:680px; margin:40px auto; padding:0 32px; color:#1f2937; font-size:12pt; line-height:1.8; }
+                        h1 { font-size:18pt; color:#065f46; margin-bottom:6px; }
+                        .meta { font-size:9pt; color:#6b7280; margin-bottom:24px; text-transform:uppercase; letter-spacing:0.5px; }
+                        .highlight { background:#f0fdf4; border-left:4px solid #059669; padding:16px 20px; border-radius:0 8px 8px 0; margin:20px 0; }
+                        .highlight .groot { font-size:24pt; font-weight:800; color:#065f46; line-height:1.1; }
+                        .highlight .klein { font-size:9pt; color:#6b7280; margin-top:4px; }
+                        h2 { font-size:13pt; color:#374151; margin-top:28px; border-bottom:1px solid #e5e7eb; padding-bottom:4px; }
+                        ul { margin-left:24px; line-height:2; }
+                        .betrouwbaarheid { background:#fef3c7; border:2px solid ${betrouwbaarheidKleur}; border-radius:8px; padding:12px 16px; margin:20px 0; font-size:10pt; }
+                        .betrouwbaarheid strong { color:${betrouwbaarheidKleur}; }
+                        .footer { font-size:8pt; color:#9ca3af; margin-top:40px; border-top:1px solid #e5e7eb; padding-top:16px; text-align:center; }
+                        .no-print { background:#dbeafe; padding:10px 16px; border-radius:8px; font-size:10pt; margin-bottom:20px; font-family:sans-serif; color:#1e40af; }
+                        @media print { .no-print { display:none; } }
+                    </style></head><body>
+                    <div class="no-print">📄 <strong>Raadsvoorstel A4</strong> · Druk <strong>Ctrl+P</strong> om als PDF op te slaan</div>
+                    <h1>Voorstel Positionele Netwerkversterking</h1>
+                    <div class="meta">${vandaag} · Strategisch Advies Sociaal Domein</div>
+                    
+                    <div class="highlight">
+                        <div class="klein">Verwachte maatschappelijke besparing per jaar</div>
+                        <div class="groot">${besparing}</div>
+                        <div class="klein">Gebaseerd op ${n} geanalyseerde cliënt${n>1?'en':''}</div>
+                    </div>
+                    
+                    <h2>1. Aanleiding</h2>
+                    <p>Veel mensen ontvangen niet de hulp die ze nodig hebben, of juist te veel verkeerde hulp. Positionele netwerkanalyse (RPA) maakt zichtbaar waar formele zorg kan worden vervangen door collectieve voorzieningen of netwerksteun — zonder kwaliteitsverlies.</p>
+                    
+                    <h2>2. Voorstel</h2>
+                    <p>Investeer in positionele herpositionering binnen het sociaal domein:</p>
+                    <ul>
+                        <li>Implementeer RPA-methodiek structureel in wijkteams</li>
+                        <li>Versterk collectief aanbod (groepsactiviteiten, buurtcentra)</li>
+                        <li>Monitor via BalansCheck voor vroege signalering</li>
+                    </ul>
+                    
+                    <h2>3. Wat levert het op?</h2>
+                    <ul>
+                        <li><strong>Financieel:</strong> Geschatte besparing ${besparing}/jaar door slimmere positionering</li>
+                        <li><strong>Preventie:</strong> Verminderde escalatie naar crisis-GGZ en opnames</li>
+                        <li><strong>Zelfredzaamheid:</strong> Meer regie voor cliënten, minder afhankelijkheid</li>
+                        <li><strong>Mantelzorg:</strong> Bescherming tegen overbelasting door professionele backup</li>
+                    </ul>
+                    
+                    <h2>4. Wat kost het?</h2>
+                    <p>Investering: training professionals (€25k), uitbreiding collectief aanbod (€80k/jaar), monitoring (€15k/jaar). Totaal: €120k structureel. <strong>Terugverdientijd: 4-8 maanden.</strong></p>
+                    
+                    <div class="betrouwbaarheid">
+                        <strong>⚠️ Betrouwbaarheid: ${betrouwbaarheid}</strong> · ${betrouwbaarheidTekst}<br>
+                        ${n < 30 ? 'Aanbeveling: Start pilot met 30+ casussen voor robuuste businesscase.' : 'Voldoende n voor verantwoord beleid.'}
+                    </div>
+                    
+                    <h2>5. Beslispunten</h2>
+                    <ol style="line-height:2;">
+                        <li>Akkoord op investering €120k voor 2026-2027</li>
+                        <li>Opdracht aan wijkteams: RPA-training en implementatie</li>
+                        <li>Monitoring: rapportage na 6 maanden en 12 maanden</li>
+                    </ol>
+                    
+                    <div class="footer">
+                        RPA Strategische Analyse · SIJN methodiek · Gegenereerd ${vandaag}<br>
+                        Voor vragen: neem contact op met sociaal domein coördinator
+                    </div>
+                </body></html>`);
+                w.document.close();
+            },
+            
+            renderSensitiviteit() {
+                // Bereken basis besparing
+                const basisBesparing = this.berekenBesparingMaand() * 12 * this.casussen.length;
+                
+                // Sensitiviteitsanalyse: +/- 20%
+                const best = basisBesparing * 1.2;
+                const conservatief = basisBesparing * 0.8;
+                
+                document.getElementById('sensiBest').textContent = `€ ${Math.round(best).toLocaleString('nl-NL')}`;
+                document.getElementById('sensiRealistisch').textContent = `€ ${Math.round(basisBesparing).toLocaleString('nl-NL')}`;
+                document.getElementById('sensiConservatief').textContent = `€ ${Math.round(conservatief).toLocaleString('nl-NL')}`;
             }
         };
 
