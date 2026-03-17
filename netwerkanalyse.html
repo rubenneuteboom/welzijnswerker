@@ -2046,14 +2046,26 @@
             },
             
             toonDomeinDetails(domein, score) {
-                // Bepaal welke tips te tonen
+                // Bepaal welke tips te tonen - ALTIJD eerst leeftijd-specifiek checken!
                 const ageCat = this.ageCategory;
-                const getTips = (domain) => {
-                    if (ageCat && domain.tips_leeftijd && domain.tips_leeftijd[ageCat]) {
-                        return domain.tips_leeftijd[ageCat];
-                    }
-                    return score === 'goed' ? domain.tips_goed : domain.tips_beter;
+                const ageLabelMap = { 
+                    jongere: '🧒 Jongeren (12-25)', 
+                    volwassene: '👨‍💼 Volwassenen (25-65)', 
+                    ouder: '👴 Ouderen (65+)' 
                 };
+                
+                let tips = null;
+                
+                // PRIORITEIT: Leeftijd-specifieke tips (voor alle scores)
+                if (ageCat && domein.tips_leeftijd && domein.tips_leeftijd[ageCat]) {
+                    tips = domein.tips_leeftijd[ageCat];
+                }
+                // FALLBACK: Generieke tips op basis van score
+                else if (score === 'goed' && domein.tips_goed) {
+                    tips = domein.tips_goed;
+                } else if (domein.tips_beter) {
+                    tips = domein.tips_beter;
+                }
                 
                 const scoreLabel = score === 'goed' ? 'Gaat goed ✓' : 
                                   score === 'beter' ? 'Vraagt aandacht ⚠️' : 
@@ -2068,23 +2080,25 @@
                     <div id="domeinModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s;">
                         <div style="background:white;border-radius:16px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
                             <div style="background:${scoreKleur};color:white;padding:20px;border-radius:16px 16px 0 0;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;">
-                                    <h2 style="margin:0;font-size:1.5rem;">${domein.emoji} ${domein.title}</h2>
-                                    <button onclick="app.sluitDomeinModal()" style="background:rgba(255,255,255,0.2);border:none;color:white;font-size:1.5rem;cursor:pointer;padding:4px 12px;border-radius:6px;">✕</button>
+                                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                                    <div>
+                                        <h2 style="margin:0 0 4px;font-size:1.5rem;">${domein.emoji} ${domein.title}</h2>
+                                        <div style="font-size:0.9rem;opacity:0.95;">${scoreLabel}</div>
+                                        ${ageCat ? `<div style="margin-top:8px;font-size:0.8rem;background:rgba(255,255,255,0.2);display:inline-block;padding:4px 10px;border-radius:6px;">Tips op maat: ${ageLabelMap[ageCat]}</div>` : ''}
+                                    </div>
+                                    <button onclick="app.sluitDomeinModal()" style="background:rgba(255,255,255,0.2);border:none;color:white;font-size:1.5rem;cursor:pointer;padding:4px 12px;border-radius:6px;flex-shrink:0;">✕</button>
                                 </div>
-                                <div style="margin-top:8px;font-size:0.9rem;opacity:0.95;">${scoreLabel}</div>
                             </div>
                             <div style="padding:24px;">
                 `;
                 
-                // Tips
-                const tips = getTips(domein);
+                // Tips (al bepaald bovenaan functie)
                 if (tips && tips.length > 0) {
                     modalHTML += `
                         <div style="margin-bottom:24px;">
                             <h3 style="color:#374151;margin-bottom:12px;font-size:1.1rem;">💡 ${score === 'goed' ? 'Houd dit vast' : 'Wat kan helpen?'}</h3>
-                            <ul style="margin:0;padding-left:20px;color:#4b5563;line-height:1.8;">
-                                ${tips.map(tip => `<li>${tip}</li>`).join('')}
+                            <ul style="margin:0;padding-left:20px;color:#4b5563;line-height:1.8;font-size:0.95rem;">
+                                ${tips.map(tip => `<li style="margin-bottom:8px;">${tip}</li>`).join('')}
                             </ul>
                         </div>
                     `;
@@ -2118,15 +2132,54 @@
             },
             
             renderHulpInModal(hulp) {
+                const ageCat = this.ageCategory;
+                
                 let html = '<div style="margin-top:24px;background:#f9fafb;padding:16px;border-radius:10px;">';
                 html += '<h3 style="color:#374151;margin-bottom:12px;font-size:1.1rem;">📞 Waar vind je hulp?</h3>';
                 
+                // EERST: Leeftijd-specifieke hulp (als beschikbaar)
+                if (ageCat && hulp.leeftijd && hulp.leeftijd[ageCat]) {
+                    const ageHulp = hulp.leeftijd[ageCat];
+                    
+                    if (ageHulp.bellen && ageHulp.bellen.length > 0) {
+                        html += '<div style="margin-bottom:12px;background:#e0f2fe;padding:10px;border-radius:6px;"><strong style="color:#1e40af;">📞 Voor jouw leeftijd:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;">';
+                        ageHulp.bellen.forEach(item => {
+                            html += `<li><strong>${item.name}</strong>`;
+                            if (item.tel) html += ` - <a href="tel:${item.tel}" style="color:#3b82f6;">${item.tel}</a>`;
+                            if (item.desc) html += ` <span style="color:#6b7280;">(${item.desc})</span>`;
+                            html += `</li>`;
+                        });
+                        html += '</ul></div>';
+                    }
+                    
+                    if (ageHulp.persoonlijk && ageHulp.persoonlijk.length > 0) {
+                        html += '<div style="margin-bottom:12px;background:#e0f2fe;padding:10px;border-radius:6px;"><strong style="color:#1e40af;">👤 Voor jouw leeftijd:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;">';
+                        ageHulp.persoonlijk.forEach(item => {
+                            html += `<li><strong>${item.name}</strong>`;
+                            if (item.desc) html += ` - ${item.desc}`;
+                            html += `</li>`;
+                        });
+                        html += '</ul></div>';
+                    }
+                    
+                    if (ageHulp.info && ageHulp.info.length > 0) {
+                        html += '<div style="margin-bottom:12px;background:#e0f2fe;padding:10px;border-radius:6px;"><strong style="color:#1e40af;">🌐 Voor jouw leeftijd:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;">';
+                        ageHulp.info.forEach(item => {
+                            html += `<li><a href="${item.url}" target="_blank" style="color:#3b82f6;text-decoration:none;"><strong>${item.name}</strong></a>`;
+                            if (item.desc) html += ` - ${item.desc}`;
+                            html += `</li>`;
+                        });
+                        html += '</ul></div>';
+                    }
+                }
+                
+                // DAARNA: Algemene hulp (altijd tonen)
                 // Bellen
                 if (hulp.bellen && hulp.bellen.length > 0) {
-                    html += '<div style="margin-bottom:12px;"><strong style="color:#059669;">📞 Bellen:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;">';
-                    hulp.bellen.forEach(item => {
+                    html += '<div style="margin-bottom:12px;"><strong style="color:#059669;">📞 Algemeen:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;font-size:0.9rem;">';
+                    hulp.bellen.slice(0, 2).forEach(item => {
                         html += `<li><strong>${item.name}</strong>`;
-                        if (item.tel) html += ` - ${item.tel}`;
+                        if (item.tel) html += ` - <a href="tel:${item.tel}" style="color:#3b82f6;">${item.tel}</a>`;
                         if (item.desc) html += ` <span style="color:#6b7280;">(${item.desc})</span>`;
                         html += `</li>`;
                     });
@@ -2135,8 +2188,8 @@
                 
                 // Persoonlijk
                 if (hulp.persoonlijk && hulp.persoonlijk.length > 0) {
-                    html += '<div style="margin-bottom:12px;"><strong style="color:#059669;">👤 Persoonlijk:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;">';
-                    hulp.persoonlijk.slice(0, 3).forEach(item => {
+                    html += '<div style="margin-bottom:12px;"><strong style="color:#059669;">👤 Persoonlijk:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;font-size:0.9rem;">';
+                    hulp.persoonlijk.slice(0, 2).forEach(item => {
                         html += `<li><strong>${item.name}</strong>`;
                         if (item.desc) html += ` - ${item.desc}`;
                         html += `</li>`;
@@ -2146,8 +2199,8 @@
                 
                 // Info
                 if (hulp.info && hulp.info.length > 0) {
-                    html += '<div><strong style="color:#059669;">🌐 Online:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;">';
-                    hulp.info.slice(0, 3).forEach(item => {
+                    html += '<div><strong style="color:#059669;">🌐 Online:</strong><ul style="margin:4px 0 0 20px;line-height:1.7;font-size:0.9rem;">';
+                    hulp.info.slice(0, 2).forEach(item => {
                         html += `<li><a href="${item.url}" target="_blank" style="color:#3b82f6;text-decoration:none;"><strong>${item.name}</strong></a>`;
                         if (item.desc) html += ` - ${item.desc}`;
                         html += `</li>`;
