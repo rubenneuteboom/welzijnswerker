@@ -17141,7 +17141,16 @@ END:VEVENT
                                     ${tmpl}
                                 </label>
                             `).join('')}
-                            <div id="doel-anders-${item.domein.id}" style="margin-top:8px;${bewegingData.doel && !templates.includes(bewegingData.doel) ? '' : 'display:none;'}">
+                            <!-- NIEUW: "Weet ik niet" optie (Team feedback: Karin) -->
+                            <label style="display:block;padding:8px;margin-bottom:4px;border:2px dashed ${bewegingData.doel === 'weet-niet' ? '#6b7280' : '#d1d5db'};
+                                   background:${bewegingData.doel === 'weet-niet' ? '#f3f4f6' : 'white'};border-radius:6px;cursor:pointer;font-size:0.85rem;font-style:italic;color:#6b7280;">
+                                <input type="radio" name="doel-${item.domein.id}" value="weet-niet" 
+                                       ${bewegingData.doel === 'weet-niet' ? 'checked' : ''}
+                                       onchange="saveBewegingDoel('${item.domein.id}', this.value)"
+                                       style="margin-right:8px;">
+                                💭 Weet ik nog niet / Hier moet ik over nadenken
+                            </label>
+                            <div id="doel-anders-${item.domein.id}" style="margin-top:8px;${bewegingData.doel && !templates.includes(bewegingData.doel) && bewegingData.doel !== 'weet-niet' ? '' : 'display:none;'}">
                                 <input type="text" placeholder="Beschrijf wat je wilt bereiken..." 
                                        value="${bewegingData.doelAnders || ''}"
                                        onchange="saveBewegingDoelAnders('${item.domein.id}', this.value)"
@@ -17166,13 +17175,23 @@ END:VEVENT
                                     <strong>✅ Blijft zoals het nu is</strong> ${item.huidig ? `<span style="color:#6b7280;font-weight:400;font-size:0.85rem;">(${positieEmoji(item.huidig.type)} ${positieLabel(item.huidig.type)})</span>` : ''}
                                 </label>
                                 
-                                <label style="display:block;padding:10px;border:2px solid ${bewegingData.actie === 'anders' ? '#3b82f6' : '#e5e7eb'};
+                                <label style="display:block;padding:10px;margin-bottom:6px;border:2px solid ${bewegingData.actie === 'anders' ? '#3b82f6' : '#e5e7eb'};
                                        background:${bewegingData.actie === 'anders' ? '#dbeafe' : 'white'};border-radius:8px;cursor:pointer;">
                                     <input type="radio" name="actie-${item.domein.id}" value="anders"
                                            ${bewegingData.actie === 'anders' ? 'checked' : ''}
                                            onchange="saveBewegingActie('${item.domein.id}', this.value)"
                                            style="margin-right:8px;">
                                     <strong>🔄 Ik wil dit anders regelen</strong> <span style="color:#6b7280;font-weight:400;font-size:0.85rem;">(andere hulp of persoon)</span>
+                                </label>
+                                
+                                <!-- NIEUW: "Weet ik niet" optie voor actie (Team feedback: Karin) -->
+                                <label style="display:block;padding:10px;border:2px dashed ${bewegingData.actie === 'weet-niet' ? '#6b7280' : '#d1d5db'};
+                                       background:${bewegingData.actie === 'weet-niet' ? '#f3f4f6' : 'white'};border-radius:8px;cursor:pointer;font-style:italic;color:#6b7280;">
+                                    <input type="radio" name="actie-${item.domein.id}" value="weet-niet"
+                                           ${bewegingData.actie === 'weet-niet' ? 'checked' : ''}
+                                           onchange="saveBewegingActie('${item.domein.id}', this.value)"
+                                           style="margin-right:8px;">
+                                    <strong>💭 Weet ik nog niet</strong> <span style="font-weight:400;font-size:0.85rem;">(hier moet ik nog over nadenken)</span>
                                 </label>
                             </div>
                             
