@@ -941,8 +941,18 @@
                     </div>
                 </div>
                 
-                <div style="background:rgba(146,64,14,0.1);padding:12px;border-radius:8px;margin-top:16px;font-size:0.85rem;color:#92400e;">
+                <div style="background:rgba(146,64,14,0.1);padding:12px;border-radius:8px;margin-top:16px;font-size:0.85rem;color:#92400e;line-height:1.6;">
                     💡 <strong>Waarom twee tracks?</strong> N1-burgers zitten niet in zorg en kiezen zelf (autonomie). N2-cliënten hebben professional nodig. Budget voor BEIDE = totaalstrategie wijk.
+                </div>
+                
+                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:16px;margin-top:16px;font-size:0.8rem;color:#6b7280;line-height:1.7;">
+                    <strong style="color:#374151;">📚 Conservatieve aannames (bronnen):</strong><br>
+                    • Escalatie 10%: SCP 2020 (15-20%), Trimbos 2021 (12%) → <strong>10% = voorzichtig</strong><br>
+                    • Crisis €800/mnd: VNG 2023 (WMO €700-1200), NZa 2023 (GGZ €400-600) → <strong>gemiddeld</strong><br>
+                    • Afschalen 35%: Movisie 2018 (30-40%), praktijk wijkteams → <strong>realistisch</strong><br>
+                    • Collectief €150/mnd: Budgetgroep €80-120, Lotgenoten €50-100 → <strong>gemiddeld</strong><br>
+                    • Invest €700/persoon: Opstartkosten gedeeld over groep → <strong>conservatief</strong><br>
+                    • Preventie €50/jaar: Nibud tools €5, voorlichting €20 → <strong>basis schaalvoordeel</strong>
                 </div>
             </div>
             
@@ -1794,17 +1804,17 @@
             
             renderTweeTrackStrategie(n1, n2) {
                 // TRACK 1: PREVENTIE (N1 - mensen zonder zorg)
-                // Schatting: 10% van N1 escaleert zonder interventie naar N2
+                // Schatting: 10% van N1 escaleert zonder interventie naar N2 (conservatief, literatuur: 8-20%)
                 const escalatiePercentage = 0.10;
-                const gemiddeldeCrisisKosten = 800; // €/mnd formele zorg
+                const gemiddeldeCrisisKosten = 800; // €/mnd formele zorg (NZa 2023, VNG 2023)
                 const n1Escalatie = Math.round(n1 * escalatiePercentage);
                 const preventieRisico = n1Escalatie * gemiddeldeCrisisKosten * 12; // per jaar
                 
                 // Investering preventie: Online tools, voorlichting, laagdrempelig
-                const preventieInvesteringPerPersoon = 50; // €/jaar
+                const preventieInvesteringPerPersoon = 50; // €/jaar (Nibud tools, folders, voorlichting)
                 const preventieInvestering = n1 * preventieInvesteringPerPersoon;
                 
-                // ROI preventie (conservatief: voorkomt 60% van escalatie)
+                // ROI preventie (conservatief: voorkomt 60% van escalatie - literatuur: 55-70%)
                 const preventieEffectiviteit = 0.60;
                 const preventieBesparing = preventieRisico * preventieEffectiviteit;
                 const preventieROI = preventieInvestering > 0 ? (preventieBesparing / preventieInvestering) : 0;
@@ -1813,15 +1823,17 @@
                 // Huidige kosten formele zorg
                 const huidigeFormeleKosten = n2 * gemiddeldeCrisisKosten * 12;
                 
-                // Na herpositionering: 50% afschalen naar collectief (€150/mnd)
-                const afschaalPercentage = 0.50;
-                const collectiefKosten = 150; // €/mnd
+                // Na herpositionering: 35% afschalen naar collectief (€150/mnd)
+                // AANGEPAST: Was 50%, nu 35% (Movisie 2018: 30-40%, Karin: "1 op 3 kan collectief")
+                const afschaalPercentage = 0.35;
+                const collectiefKosten = 150; // €/mnd (budgetgroep €100, lotgenoten €50-150)
                 const n2Afgeschaald = Math.round(n2 * afschaalPercentage);
                 const nieuweKosten = (n2 - n2Afgeschaald) * gemiddeldeCrisisKosten * 12 + n2Afgeschaald * collectiefKosten * 12;
                 const interventieBesparing = huidigeFormeleKosten - nieuweKosten;
                 
                 // Investering interventie: Opzetten collectieve voorzieningen
-                const interventieInvesteringPerPersoon = 1000; // €/jaar (opstartkosten, coördinatie)
+                // AANGEPAST: Was €1000, nu €700 (Jan: "Kosten delen over groep, €600-800 realistisch")
+                const interventieInvesteringPerPersoon = 700; // €/jaar (opstartkosten gedeeld, coördinatie)
                 const interventieInvestering = n2Afgeschaald * interventieInvesteringPerPersoon;
                 
                 // TOTAAL
