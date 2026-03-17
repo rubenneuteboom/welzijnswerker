@@ -18899,8 +18899,59 @@ END:VEVENT
             return 'informeel'; // Default
         }
         
+        function getRolOptionsForType(type) {
+            const rollen = {
+                'informeel': [
+                    'Helpt met huishouden',
+                    'Doet boodschappen',
+                    'Helpt met vervoer',
+                    'Biedt gezelschap',
+                    'Luisterend oor',
+                    'Helpt met geldzaken',
+                    'Helpt met kinderen',
+                    'Begeleidt naar afspraken',
+                    'Anders...'
+                ],
+                'collectief': [
+                    'Sociaal netwerk/activiteiten',
+                    'Sportclub/bewegen',
+                    'Dagbesteding',
+                    'Vrijwilligerswerk',
+                    'Buurtcentrum',
+                    'Mantelzorgondersteuning',
+                    'Zelfhulpgroep',
+                    'Anders...'
+                ],
+                'formeel': [
+                    'Begeleiding/coaching',
+                    'Huishoudelijke hulp',
+                    'Persoonlijke verzorging',
+                    'Behandeling',
+                    'Casemanagement',
+                    'Budgetbeheer',
+                    'Schuldhulp',
+                    'Arbeidscoach',
+                    'Anders...'
+                ]
+            };
+            
+            return (rollen[type] || rollen['informeel']).map(r => 
+                `<option value="${r}">${r}</option>`
+            ).join('');
+        }
+        
+        function toggleRolAnders() {
+            const select = document.getElementById('rolSelect');
+            const input = document.getElementById('rolInput');
+            if (select.value === 'Anders...') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+            }
+        }
+        
         function addPersoonDirectToSteun(domeinId, type) {
-            // Direct modal openen zonder type selectie
             addPersoonToSteun(domeinId, type);
         }
         
@@ -18924,8 +18975,13 @@ END:VEVENT
                            style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:16px;box-sizing:border-box;">
                     
                     <label style="display:block;font-weight:600;color:#374151;margin-bottom:6px;font-size:0.9rem;">Rol / Wat doet deze persoon?</label>
-                    <input type="text" id="rolInput" placeholder="Bijv: Helpt met zoeken naar werk" 
-                           style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:16px;box-sizing:border-box;">
+                    <select id="rolSelect" onchange="toggleRolAnders()" 
+                            style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:8px;box-sizing:border-box;">
+                        <option value="">-- Kies een rol --</option>
+                        ${getRolOptionsForType(type)}
+                    </select>
+                    <input type="text" id="rolInput" placeholder="Of typ zelf..." 
+                           style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:16px;box-sizing:border-box;display:none;">
                     
                     <div style="display:flex;gap:10px;justify-content:flex-end;">
                         <button onclick="this.closest('div[style*=fixed]').remove()" 
@@ -18950,10 +19006,16 @@ END:VEVENT
         
         function saveNewPersoon(domeinId, type) {
             const naam = document.getElementById('naamInput').value.trim();
-            const rol = document.getElementById('rolInput').value.trim();
+            const rolSelect = document.getElementById('rolSelect').value;
+            const rolInput = document.getElementById('rolInput').value.trim();
+            const rol = rolSelect === 'Anders...' ? rolInput : rolSelect;
             
             if (!naam) {
                 alert('Vul een naam in');
+                return;
+            }
+            if (!rol) {
+                alert('Kies of typ een rol');
                 return;
             }
             
