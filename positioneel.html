@@ -287,6 +287,16 @@
             transition: box-shadow 0.3s ease;
         }
         
+        /* Accordion styling */
+        details[open] summary span:first-child {
+            transform: rotate(90deg);
+        }
+        
+        details summary:hover {
+            background: #f9fafb !important;
+            border-color: var(--primary) !important;
+        }
+
         .card:hover {
             box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
         }
@@ -4819,11 +4829,26 @@
                     </div>
 
                     <!-- Track A: Gap-analyse (NIEUW) -->
-                    <div id="gapAnalyse" style="display:none;"></div>
+                    <div id="gapAnalyse" style="display:none;margin-bottom:28px;"></div>
                     
-                    <div id="samenvattingInhoud">
-                        <!-- Wordt gevuld door renderSamenvatting() -->
+                    <!-- Track A: Compact overzicht -->
+                    <div id="compactOverzicht" style="display:none;margin-bottom:28px;">
+                        <!-- Gevuld door renderCompactOverzicht() -->
                     </div>
+                    
+                    <!-- Details (accordion voor Track A) -->
+                    <details id="detailsAccordion" style="margin-bottom:28px;">
+                        <summary style="cursor:pointer;padding:16px 20px;background:white;border:2px solid #e5e7eb;border-radius:12px;font-weight:700;color:#374151;list-style:none;display:flex;align-items:center;gap:10px;transition:all 0.2s;">
+                            <span style="font-size:1.1rem;transition:transform 0.2s;">▼</span>
+                            <span style="font-size:1.05rem;">📋 Bekijk details per domein</span>
+                            <span style="margin-left:auto;font-size:0.85rem;font-weight:600;color:#667eea;background:#ede9fe;padding:4px 12px;border-radius:20px;" id="aantalDomeinenDetails"></span>
+                        </summary>
+                        <div style="padding:16px 0;">
+                            <div id="samenvattingInhoud">
+                                <!-- Wordt gevuld door renderSamenvatting() -->
+                            </div>
+                        </div>
+                    </details>
 
                     <!-- Creatieve / maatwerkoplossing -->
                     <!-- Creatieve oplossing: wordt gevuld door renderSamenvatting() via #creatiefBlok -->
@@ -8526,6 +8551,64 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // Render samenvatting (Medium flow eindscherm)
+        // Compact overzicht voor Track A
+        function renderCompactOverzicht() {
+            const container = document.getElementById('compactOverzicht');
+            if (!container) return;
+            
+            // Alleen voor Track A
+            if (state.selectedTrack !== 'hulpvraag') {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            
+            // Tel data
+            const domeinen = state.hulpvraagSelectedDomains || [];
+            let totaalPersonen = 0;
+            let waarschuwingen = 0;
+            let problematisch = 0;
+            
+            domeinen.forEach(id => {
+                const personen = state.domeinPersonen?.[id] || [];
+                const warning = state.domainMatchingWarnings?.[id];
+                const status = state.domainStatus?.[id];
+                
+                totaalPersonen += personen.length;
+                if (warning) waarschuwingen++;
+                if (status === 'steun-nodig') problematisch++;
+            });
+            
+            container.innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+                    <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:2rem;font-weight:800;color:#667eea;">${domeinen.length}</div>
+                        <div style="font-size:0.85rem;color:#6b7280;">Gebied${domeinen.length === 1 ? '' : 'en'}</div>
+                    </div>
+                    
+                    <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:2rem;font-weight:800;color:#22c55e;">${totaalPersonen}</div>
+                        <div style="font-size:0.85rem;color:#6b7280;">Personen</div>
+                    </div>
+                    
+                    ${waarschuwingen > 0 ? `
+                    <div style="background:white;border:2px solid #f59e0b;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:2rem;font-weight:800;color:#f59e0b;">${waarschuwingen}</div>
+                        <div style="font-size:0.85rem;color:#6b7280;">Waarschuwing${waarschuwingen === 1 ? '' : 'en'}</div>
+                    </div>
+                    ` : ''}
+                    
+                    ${problematisch > 0 ? `
+                    <div style="background:white;border:2px solid #dc2626;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:2rem;font-weight:800;color:#dc2626;">${problematisch}</div>
+                        <div style="font-size:0.85rem;color:#6b7280;">Aandachtspunt${problematisch === 1 ? '' : 'en'}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
         // Gap-analyse voor Track A (Methodologie Summit v5.0)
         function renderGapAnalyse() {
             const container = document.getElementById('gapAnalyse');
@@ -8581,30 +8664,20 @@ Antwoord in dit exacte JSON formaat:
             }
             
             container.innerHTML = `
-                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:16px;padding:24px;margin-bottom:24px;box-shadow:0 8px 24px rgba(102,126,234,0.3);">
-                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                        <span style="font-size:2.5rem;">🎯</span>
-                        <div>
-                            <h3 style="margin:0;font-size:1.3rem;font-weight:800;">Je vraag</h3>
-                            <p style="margin:4px 0 0;font-size:1.1rem;opacity:0.95;">"${state.hulpvraagFocus}"</p>
+                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:12px;padding:20px;margin-bottom:24px;box-shadow:0 4px 16px rgba(102,126,234,0.2);">
+                    <div style="margin-bottom:12px;">
+                        <div style="font-size:0.85rem;opacity:0.9;margin-bottom:4px;">🎯 Je vraag</div>
+                        <div style="font-size:1.1rem;font-weight:700;line-height:1.4;">"${state.hulpvraagFocus}"</div>
+                    </div>
+                    
+                    <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:12px;">
+                        <div style="font-size:0.9rem;line-height:1.6;margin-bottom:8px;">
+                            ✅ ${gap}
+                        </div>
+                        <div style="font-size:0.9rem;line-height:1.6;">
+                            💡 ${advies}
                         </div>
                     </div>
-                    
-                    <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:16px;margin-bottom:16px;">
-                        <div style="font-size:0.9rem;font-weight:600;margin-bottom:6px;opacity:0.9;">📊 Huidige situatie:</div>
-                        <div style="font-size:1rem;line-height:1.6;">${gap}</div>
-                    </div>
-                    
-                    <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:16px;">
-                        <div style="font-size:0.9rem;font-weight:600;margin-bottom:6px;opacity:0.9;">💡 Advies:</div>
-                        <div style="font-size:1rem;line-height:1.6;">${advies}</div>
-                    </div>
-                    
-                    ${state.hulpvraagEersteGedachte ? `
-                        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2);">
-                            <div style="font-size:0.85rem;opacity:0.9;">💭 Je eerste gedachte: "${state.hulpvraagEersteGedachte}"</div>
-                        </div>
-                    ` : ''}
                 </div>
             `;
         }
@@ -8613,9 +8686,23 @@ Antwoord in dit exacte JSON formaat:
             const container = document.getElementById('samenvattingInhoud');
             if (!container) return;
 
-            // Track A: Render gap-analyse EERST
+            // Track A: Render gap-analyse + compact overzicht
             if (state.selectedTrack === 'hulpvraag') {
                 renderGapAnalyse();
+                renderCompactOverzicht();
+                
+                // Toon accordion, verberg standaard details
+                const accordion = document.getElementById('detailsAccordion');
+                const aantalSpan = document.getElementById('aantalDomeinenDetails');
+                if (accordion) {
+                    accordion.style.display = 'block';
+                    const n = state.hulpvraagSelectedDomains?.length || 0;
+                    if (aantalSpan) aantalSpan.textContent = `${n} ${n === 1 ? 'domein' : 'domeinen'}`;
+                }
+            } else {
+                // Track B: toon details direct (geen accordion)
+                const accordion = document.getElementById('detailsAccordion');
+                if (accordion) accordion.style.display = 'none';
             }
 
             // Meta: naam + datum
