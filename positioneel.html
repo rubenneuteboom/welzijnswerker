@@ -9584,6 +9584,11 @@ Antwoord in dit exacte JSON formaat:
             // Detecteer patronen voor export
             detecteerNetwerkpatronen();
             
+            // Valideer patronen met professional
+            setTimeout(() => {
+                validatePatronen();
+            }, 1000);
+            
             // Bereken netwerk voor/na
             const huidig = berekenHuidigNetwerk();
             const na = berekenNetwerkNa();
@@ -18045,6 +18050,207 @@ END:VEVENT
             
             saveState();
             return { patronen, scores };
+        }
+        
+        // VALIDATIE PATRONEN (na automatische detectie)
+        function validatePatronen() {
+            const patronen = state.netwerkpatronen?.labels || [];
+            
+            if (patronen.length === 0) {
+                return; // Geen patronen om te valideren
+            }
+            
+            // Initialiseer validatie state
+            if (!state.patroonValidatie) {
+                state.patroonValidatie = {};
+            }
+            
+            // Check of al gevalideerd
+            if (state.patroonValidatie.validated) {
+                return;
+            }
+            
+            // Toon validatie modal
+            showPatroonValidatieModal(patronen);
+        }
+        
+        function showPatroonValidatieModal(patronen) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                padding: 20px;
+            `;
+            
+            const patronenHTML = patronen.map((label, index) => {
+                const emoji = label === 'overbelaste-mantelzorg' ? '🫂' : 
+                             label === 'formele-dominantie' ? '🔵' : 
+                             label === 'netwerkarmoede' ? '⚪' : 
+                             label === 'regiediffusie' ? '❓' : 
+                             label === 'systeemdruk' ? '⚖️' : '📊';
+                const tekst = label === 'overbelaste-mantelzorg' ? 'Overbelaste mantelzorg' : 
+                             label === 'formele-dominantie' ? 'Formele zorg dominantie' : 
+                             label === 'netwerkarmoede' ? 'Netwerkarmoede' : 
+                             label === 'regiediffusie' ? 'Regiediffusie' : 
+                             label === 'systeemdruk' ? 'Systeemdruk' : label;
+                const beschrijving = label === 'overbelaste-mantelzorg' ? 'Mantelzorg draagt te veel domeinen, risico op overbelasting' : 
+                                    label === 'formele-dominantie' ? 'Meer dan 60% van steun is formele zorg' : 
+                                    label === 'netwerkarmoede' ? 'Netwerk is klein en heeft weinig verbindingen' : 
+                                    label === 'regiediffusie' ? 'Bij meerdere domeinen is onduidelijk wie regie heeft' : 
+                                    label === 'systeemdruk' ? 'Veel formele zorg én overbelaste mantelzorg tegelijk' : 'Automatisch gedetecteerd patroon';
+                
+                return `
+                    <div style="padding: 16px; margin-bottom: 12px; background: #f9fafb; border-radius: 12px; border-left: 4px solid #f59e0b;">
+                        <div style="font-weight: 700; color: #374151; margin-bottom: 6px;">
+                            ${emoji} ${tekst}
+                        </div>
+                        <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 12px;">
+                            ${beschrijving}
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="setPatroonValidatie('${label}', 'ja')" 
+                                    class="validatie-btn validatie-ja"
+                                    style="flex: 1; padding: 8px 12px; border: 2px solid #22c55e; background: white; 
+                                           color: #166534; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                ✓ Ja, dit klopt
+                            </button>
+                            <button onclick="setPatroonValidatie('${label}', 'nee')" 
+                                    class="validatie-btn validatie-nee"
+                                    style="flex: 1; padding: 8px 12px; border: 2px solid #dc2626; background: white; 
+                                           color: #991b1b; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                ✗ Nee, niet herkenbaar
+                            </button>
+                            <button onclick="setPatroonValidatie('${label}', 'weet-niet')" 
+                                    class="validatie-btn validatie-weet-niet"
+                                    style="flex: 1; padding: 8px 12px; border: 2px solid #9ca3af; background: white; 
+                                           color: #4b5563; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                ? Weet niet
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 20px;
+                    padding: 32px;
+                    max-width: 600px;
+                    width: 100%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                ">
+                    <h2 style="margin-bottom: 16px; color: #f59e0b;">🔍 Herken je deze patronen?</h2>
+                    
+                    <p style="color: #6b7280; margin-bottom: 20px; line-height: 1.6;">
+                        We hebben automatisch ${patronen.length} netwerkpatroon${patronen.length > 1 ? 'en' : ''} gedetecteerd. 
+                        Herken je deze in de situatie van de cliënt?
+                    </p>
+                    
+                    ${patronenHTML}
+                    
+                    <button onclick="completePatroonValidatie()" 
+                            id="btnCompleteValidatie" 
+                            disabled
+                            style="
+                                width: 100%;
+                                padding: 14px;
+                                background: #e5e7eb;
+                                color: #9ca3af;
+                                border: none;
+                                border-radius: 12px;
+                                font-weight: 600;
+                                cursor: not-allowed;
+                                margin-top: 16px;
+                            ">
+                        Alle patronen beoordelen om door te gaan
+                    </button>
+                    
+                    <p style="font-size: 0.85rem; color: #9ca3af; margin-top: 12px; text-align: center;">
+                        Dit helpt ons de methodiek te verbeteren
+                    </p>
+                </div>
+            `;
+            
+            modal.id = 'patroonValidatieModal';
+            document.body.appendChild(modal);
+        }
+        
+        function setPatroonValidatie(label, antwoord) {
+            if (!state.patroonValidatie) {
+                state.patroonValidatie = { beoordelingen: {} };
+            }
+            
+            state.patroonValidatie.beoordelingen[label] = antwoord;
+            saveState();
+            
+            // Update UI - markeer gekozen knop
+            const buttons = document.querySelectorAll(`[onclick*="${label}"]`);
+            buttons.forEach(btn => {
+                btn.style.background = 'white';
+                btn.style.fontWeight = '600';
+            });
+            
+            const activeBtn = Array.from(buttons).find(btn => btn.onclick.toString().includes(antwoord));
+            if (activeBtn) {
+                if (antwoord === 'ja') {
+                    activeBtn.style.background = '#dcfce7';
+                    activeBtn.style.borderWidth = '3px';
+                } else if (antwoord === 'nee') {
+                    activeBtn.style.background = '#fee2e2';
+                    activeBtn.style.borderWidth = '3px';
+                } else {
+                    activeBtn.style.background = '#f3f4f6';
+                    activeBtn.style.borderWidth = '3px';
+                }
+            }
+            
+            // Check of alle patronen beoordeeld zijn
+            const patronen = state.netwerkpatronen?.labels || [];
+            const beoordeeld = Object.keys(state.patroonValidatie.beoordelingen).length;
+            
+            if (beoordeeld === patronen.length) {
+                const btn = document.getElementById('btnCompleteValidatie');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.background = 'linear-gradient(135deg, #2ECC71, #27AE60)';
+                    btn.style.color = 'white';
+                    btn.style.cursor = 'pointer';
+                    btn.textContent = 'Ga verder →';
+                }
+            }
+        }
+        
+        function completePatroonValidatie() {
+            state.patroonValidatie.validated = true;
+            state.patroonValidatie.timestamp = new Date().toISOString();
+            saveState();
+            
+            // Sluit modal
+            const modal = document.getElementById('patroonValidatieModal');
+            if (modal) {
+                modal.remove();
+            }
+            
+            // Geef feedback over beoordelingen
+            const beoordelingen = state.patroonValidatie.beoordelingen;
+            const nietHerkend = Object.keys(beoordelingen).filter(k => beoordelingen[k] === 'nee').length;
+            
+            if (nietHerkend > 0) {
+                alert(`✅ Validatie voltooid!\n\n${nietHerkend} patroon${nietHerkend > 1 ? 'en' : ''} werd niet herkend. Deze informatie helpt ons de detectie te verbeteren.`);
+            } else {
+                alert('✅ Validatie voltooid! Alle patronen zijn beoordeeld.');
+            }
         }
         
         // === BEWEGING PER DOMEIN (Context → Doel → Beweging) ===
