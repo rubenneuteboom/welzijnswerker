@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA Gefocuste Flow - Prototype</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --primary-light: #E8F8F0;
+            --primary-dark: #27AE60;
+            --secondary: #6FCF97;
+            --warning: #F2994A;
+            --danger: #EB5757;
+            --text: #1f2937;
+            --text-light: #4b5563;
+            --bg: #F0FFF4;
+            --white: #fff;
+            --shadow: 0 4px 20px rgba(46, 204, 113, 0.15);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .domain-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .domain-option {
+            padding: 16px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .domain-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .domain-option.selected {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .domain-emoji {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .domain-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .scale-options {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .scale-option {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px 15px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .scale-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .scale-option.selected {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .scale-option.level-1 { border-color: #dc2626; }
+        .scale-option.level-1.selected { background: #dc2626; color: white; }
+        .scale-option.level-2 { border-color: #eab308; }
+        .scale-option.level-2.selected { background: #eab308; color: white; }
+        .scale-option.level-3 { border-color: #10b981; }
+        .scale-option.level-3.selected { background: #10b981; color: white; }
+
+        .scale-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .scale-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #1e40af;
+        }
+
+        .supporter-input {
+            margin: 20px 0;
+        }
+
+        .supporter-input input,
+        .supporter-input textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .supporter-input input:focus,
+        .supporter-input textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .supporter-type {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .type-chip {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .type-chip.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .supporter-list {
+            margin: 20px 0;
+        }
+
+        .supporter-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .supporter-card strong {
+            color: var(--primary-dark);
+            font-size: 1.05rem;
+        }
+
+        .supporter-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 6px;
+        }
+
+        .expand-btn {
+            background: none;
+            border: 1px solid #d1d5db;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin: 10px 0;
+        }
+
+        .expand-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .summary-grid {
+            display: grid;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .summary-domain {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .summary-domain h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .summary-domain .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .status.level-1 { background: #fee2e2; color: #991b1b; }
+        .status.level-2 { background: #fef3c7; color: #92400e; }
+        .status.level-3 { background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 RPA Gefocuste Flow</h1>
+        <p>Prototype: Focus op één domein tegelijk</p>
+    </header>
+
+    <div class="container">
+        <!-- Screen 1: Domein selecteren -->
+        <div class="screen active" id="screen-select">
+            <div class="card">
+                <h2>Welk gebied wil je aanpakken?</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    Kies het levensgebied waar je nu mee aan de slag wilt.
+                </p>
+
+                <div class="info-box">
+                    <p><strong>💡 Marie's Tip:</strong> Begin met het gebied dat het meeste verschil kan maken, of waar je het meest last van hebt.</p>
+                </div>
+
+                <div class="domain-select" id="domainSelect">
+                    <!-- Gevuld door JS -->
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="startDomainAnalysis()" id="btnStart" disabled>
+                        Start analyse →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Analyse van geselecteerd domein -->
+        <div class="screen" id="screen-analyze">
+            <div class="card">
+                <h2 id="domainTitle">Analyse domein</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    We gaan dit gebied doorlopen in 3 stappen: situatie, netwerk, beweging.
+                </p>
+
+                <!-- Stap 1: Hoe gaat het nu? -->
+                <div id="step1" class="analysis-step">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 16px;">1️⃣ Hoe gaat het nu?</h3>
+                    <div class="scale-options" id="scaleOptions">
+                        <!-- Gevuld door JS -->
+                    </div>
+                </div>
+
+                <!-- Stap 2: Wie helpt er? -->
+                <div id="step2" class="analysis-step" style="display: none;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 16px;">2️⃣ Wie helpt er?</h3>
+                    
+                    <div class="info-box">
+                        <p><strong>🤔 Bram vraagt:</strong> Denk breed - niet alleen professionals, maar ook vrienden, familie, buren, of groepsactiviteiten.</p>
+                    </div>
+
+                    <div class="supporter-input">
+                        <input type="text" id="supporterName" placeholder="Naam (bijv. 'Mijn zus Lisa')" />
+                        
+                        <div class="supporter-type">
+                            <div class="type-chip" data-type="informeel" onclick="selectType('informeel')">🟢 Informeel</div>
+                            <div class="type-chip" data-type="collectief" onclick="selectType('collectief')">🔵 Collectief</div>
+                            <div class="type-chip" data-type="formeel" onclick="selectType('formeel')">🟠 Formeel</div>
+                        </div>
+
+                        <textarea id="supporterRole" placeholder="Hoe helpt deze persoon/organisatie? (bijv. 'Komt 2x per week langs')" rows="2"></textarea>
+
+                        <button class="btn btn-secondary" onclick="addSupporter()">+ Toevoegen</button>
+                    </div>
+
+                    <div class="supporter-list" id="supporterList">
+                        <!-- Gevuld door JS -->
+                    </div>
+                </div>
+
+                <!-- Stap 3: Wat moet er verschuiven? -->
+                <div id="step3" class="analysis-step" style="display: none;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 16px;">3️⃣ Wat moet er verschuiven?</h3>
+                    
+                    <div class="info-box">
+                        <p><strong>💬 Lisa vraagt:</strong> Wat zou jij graag anders willen? Meer steun, minder afhankelijkheid, of iets anders?</p>
+                    </div>
+
+                    <textarea id="movementGoal" placeholder="Wat wil je bereiken in dit gebied?" 
+                              style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; min-height: 100px; margin: 20px 0;"></textarea>
+
+                    <div class="info-box" style="background: #fef3c7; border-left-color: #f59e0b;">
+                        <p><strong>🏛️ Jan denkt mee:</strong> Welke beweging past bij het systeem? Kan dit binnen bestaande budgetten?</p>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="previousStep()" id="btnPrev" style="display: none;">
+                        ← Vorige
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()" id="btnNext">
+                        Volgende →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Uitbreiden? -->
+        <div class="screen" id="screen-expand">
+            <div class="card">
+                <h2>🔄 Hangen er andere gebieden aan?</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    Je hebt <strong id="completedDomain"></strong> geanalyseerd. Soms hangen problemen aan elkaar.
+                </p>
+
+                <div class="info-box">
+                    <p><strong>🏥 Suus waarschuwt:</strong> Bij multi-problematiek zijn gebieden vaak verweven. Schulden → Huisvesting → Gezondheid.</p>
+                </div>
+
+                <div id="relatedDomains" style="margin: 20px 0;">
+                    <p style="font-weight: 600; margin-bottom: 12px;">Herken je één van deze verbanden?</p>
+                    <!-- Gevuld door JS met suggesties -->
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="selectAnotherDomain()">
+                        + Nog een gebied toevoegen
+                    </button>
+                    <button class="btn btn-primary" onclick="goToSummary()">
+                        Nee, dit was het → Samenvatting
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Samenvatting -->
+        <div class="screen" id="screen-summary">
+            <div class="card">
+                <h2>📋 Wat hebben we afgesproken?</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    Overzicht van alle geanalyseerde gebieden en de voorgestelde bewegingen.
+                </p>
+
+                <div class="summary-grid" id="summaryGrid">
+                    <!-- Gevuld door JS -->
+                </div>
+
+                <div class="info-box" style="background: #dcfce7; border-left-color: #22c55e;">
+                    <p><strong>👥 Karin checkt:</strong> Past dit in je agenda? Zijn dit realistische stappen voor de komende weken?</p>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToScreen('expand')">
+                        ← Terug
+                    </button>
+                    <button class="btn btn-primary" onclick="exportSummary()">
+                        📄 Opslaan / Afdrukken
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let state = {
+            selectedDomain: null,
+            currentStep: 1,
+            analyzedDomains: [],
+            currentDomainData: {
+                level: null,
+                supporters: [],
+                movement: ''
+            }
+        };
+
+        // Domeinen
+        const domains = [
+            { id: 'financien', emoji: '💰', label: 'Financiën' },
+            { id: 'dagbesteding', emoji: '💼', label: 'Dagbesteding' },
+            { id: 'huisvesting', emoji: '🏠', label: 'Huisvesting' },
+            { id: 'relaties', emoji: '👨‍👩‍👧', label: 'Relaties' },
+            { id: 'ggz', emoji: '🧠', label: 'Mentale gezondheid' },
+            { id: 'gezondheid', emoji: '💪', label: 'Lichamelijke gezondheid' },
+            { id: 'sociaal', emoji: '👥', label: 'Sociaal netwerk' },
+            { id: 'participatie', emoji: '🤝', label: 'Participatie' }
+        ];
+
+        // Render domain select
+        function renderDomainSelect() {
+            const container = document.getElementById('domainSelect');
+            container.innerHTML = domains.map(d => `
+                <div class="domain-option" data-id="${d.id}" onclick="selectDomain('${d.id}')">
+                    <span class="domain-emoji">${d.emoji}</span>
+                    <div class="domain-label">${d.label}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectDomain(id) {
+            // Deselect all
+            document.querySelectorAll('.domain-option').forEach(el => el.classList.remove('selected'));
+            // Select clicked
+            document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+            state.selectedDomain = id;
+            document.getElementById('btnStart').disabled = false;
+        }
+
+        function startDomainAnalysis() {
+            const domain = domains.find(d => d.id === state.selectedDomain);
+            document.getElementById('domainTitle').textContent = `${domain.emoji} ${domain.label}`;
+            
+            // Render scale options
+            const scales = [
+                { level: 1, icon: '🔴', label: 'Probleem\nDirect actie nodig' },
+                { level: 2, icon: '🟡', label: 'Aandacht\nSteun wenselijk' },
+                { level: 3, icon: '🟢', label: 'Zelfstandig\nGaat goed' }
+            ];
+
+            document.getElementById('scaleOptions').innerHTML = scales.map(s => `
+                <div class="scale-option level-${s.level}" onclick="selectLevel(${s.level})">
+                    <span class="scale-icon">${s.icon}</span>
+                    <div class="scale-label">${s.label}</div>
+                </div>
+            `).join('');
+
+            goToScreen('analyze');
+        }
+
+        function selectLevel(level) {
+            document.querySelectorAll('.scale-option').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`.scale-option.level-${level}`).classList.add('selected');
+            state.currentDomainData.level = level;
+        }
+
+        let selectedType = null;
+        function selectType(type) {
+            document.querySelectorAll('.type-chip').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+            selectedType = type;
+        }
+
+        function addSupporter() {
+            const name = document.getElementById('supporterName').value.trim();
+            const role = document.getElementById('supporterRole').value.trim();
+            
+            if (!name || !selectedType) {
+                alert('Vul naam en type in');
+                return;
+            }
+
+            state.currentDomainData.supporters.push({
+                name,
+                type: selectedType,
+                role: role || 'Helpt in dit gebied'
+            });
+
+            renderSupporters();
+            
+            // Clear form
+            document.getElementById('supporterName').value = '';
+            document.getElementById('supporterRole').value = '';
+            document.querySelectorAll('.type-chip').forEach(el => el.classList.remove('selected'));
+            selectedType = null;
+        }
+
+        function renderSupporters() {
+            const list = document.getElementById('supporterList');
+            if (state.currentDomainData.supporters.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-light); font-style: italic;">Nog geen ondersteuners toegevoegd</p>';
+                return;
+            }
+
+            list.innerHTML = state.currentDomainData.supporters.map((s, i) => `
+                <div class="supporter-card">
+                    <strong>${s.name}</strong> <span style="margin-left: 8px;">${s.type === 'informeel' ? '🟢' : s.type === 'collectief' ? '🔵' : '🟠'} ${s.type}</span>
+                    <div class="supporter-meta">${s.role}</div>
+                </div>
+            `).join('');
+        }
+
+        function nextStep() {
+            if (state.currentStep === 1) {
+                if (!state.currentDomainData.level) {
+                    alert('Selecteer eerst een niveau');
+                    return;
+                }
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+                document.getElementById('btnPrev').style.display = 'inline-flex';
+                state.currentStep = 2;
+            } else if (state.currentStep === 2) {
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'block';
+                state.currentStep = 3;
+            } else if (state.currentStep === 3) {
+                state.currentDomainData.movement = document.getElementById('movementGoal').value.trim();
+                
+                // Save current domain
+                const domain = domains.find(d => d.id === state.selectedDomain);
+                state.analyzedDomains.push({
+                    ...domain,
+                    data: { ...state.currentDomainData }
+                });
+
+                // Render completed domain
+                document.getElementById('completedDomain').textContent = domain.label;
+                
+                // Suggest related domains
+                renderRelatedDomains();
+                
+                goToScreen('expand');
+            }
+        }
+
+        function previousStep() {
+            if (state.currentStep === 2) {
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step1').style.display = 'block';
+                document.getElementById('btnPrev').style.display = 'none';
+                state.currentStep = 1;
+            } else if (state.currentStep === 3) {
+                document.getElementById('step3').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+                state.currentStep = 2;
+            }
+        }
+
+        function renderRelatedDomains() {
+            // Eenvoudige logica: als financiën probleem → huisvesting vaak ook
+            const relations = {
+                'financien': ['huisvesting', 'dagbesteding'],
+                'ggz': ['sociaal', 'dagbesteding'],
+                'huisvesting': ['financien'],
+                'dagbesteding': ['sociaal', 'participatie']
+            };
+
+            const current = state.selectedDomain;
+            const related = relations[current] || [];
+            const notYetAnalyzed = related.filter(id => !state.analyzedDomains.find(d => d.id === id));
+
+            const container = document.getElementById('relatedDomains');
+            
+            if (notYetAnalyzed.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-light); font-style: italic;">Geen directe verbanden gevonden</p>';
+                return;
+            }
+
+            container.innerHTML += notYetAnalyzed.map(id => {
+                const domain = domains.find(d => d.id === id);
+                return `
+                    <div style="margin: 10px 0;">
+                        <button class="expand-btn" onclick="addRelatedDomain('${id}')">
+                            + ${domain.emoji} ${domain.label}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addRelatedDomain(id) {
+            state.selectedDomain = id;
+            state.currentDomainData = { level: null, supporters: [], movement: '' };
+            state.currentStep = 1;
+            
+            // Reset analyze screen
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('btnPrev').style.display = 'none';
+            
+            startDomainAnalysis();
+        }
+
+        function selectAnotherDomain() {
+            // Reset
+            state.selectedDomain = null;
+            state.currentDomainData = { level: null, supporters: [], movement: '' };
+            state.currentStep = 1;
+            
+            // Filter already analyzed
+            renderDomainSelect();
+            state.analyzedDomains.forEach(d => {
+                const el = document.querySelector(`[data-id="${d.id}"]`);
+                if (el) {
+                    el.style.opacity = '0.4';
+                    el.style.pointerEvents = 'none';
+                    el.innerHTML += '<br><span style="font-size: 0.75rem; color: #10b981;">✓ Voltooid</span>';
+                }
+            });
+            
+            document.getElementById('btnStart').disabled = true;
+            goToScreen('select');
+        }
+
+        function goToSummary() {
+            renderSummary();
+            goToScreen('summary');
+        }
+
+        function renderSummary() {
+            const grid = document.getElementById('summaryGrid');
+            grid.innerHTML = state.analyzedDomains.map(d => `
+                <div class="summary-domain">
+                    <h3>${d.emoji} ${d.label}</h3>
+                    <span class="status level-${d.data.level}">
+                        ${d.data.level === 1 ? '🔴 Probleem' : d.data.level === 2 ? '🟡 Aandacht' : '🟢 Zelfstandig'}
+                    </span>
+                    
+                    <p style="margin: 12px 0; font-weight: 600;">Ondersteuning:</p>
+                    ${d.data.supporters.length === 0 ? 
+                        '<p style="color: var(--text-light); font-style: italic;">Geen ondersteuners</p>' :
+                        d.data.supporters.map(s => `<p>• ${s.name} (${s.type}) - ${s.role}</p>`).join('')
+                    }
+                    
+                    ${d.data.movement ? `
+                        <p style="margin: 12px 0; font-weight: 600;">Doel:</p>
+                        <p>${d.data.movement}</p>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function exportSummary() {
+            alert('Exportfunctie nog niet geïmplementeerd - prototype fase');
+        }
+
+        function goToScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${id}`).classList.add('active');
+        }
+
+        // Initialize
+        renderDomainSelect();
+    </script>
+</body>
+</html>

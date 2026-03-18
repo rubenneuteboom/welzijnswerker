@@ -4231,19 +4231,43 @@
                     </div><!-- /padding wrapper -->
                     </details><!-- /instellingen details -->
 
-                    <!-- Gesprekstype -->
-                    <div style="margin-top:16px;margin-bottom:4px;">
-                        <p style="font-size:0.85rem;font-weight:600;color:#374151;margin:0 0 8px;">Welk gesprek is dit?</p>
-                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                            <button id="modus-volledig" onclick="setGespreksModus('volledig')"
-                                style="flex:1;min-width:140px;padding:10px 14px;border-radius:10px;font-size:0.88rem;font-weight:600;cursor:pointer;border:2px solid var(--primary);background:#f0fdf4;color:var(--primary);transition:all 0.2s;">
-                                🗂️ Volledig gesprek
-                                <div style="font-size:0.75rem;font-weight:400;color:#6b7280;margin-top:2px;">Alle stappen, 45–60 min</div>
+                    <!-- Track-keuze (Methodologie Summit consensus) -->
+                    <div style="margin-top:16px;margin-bottom:16px;">
+                        <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:10px;padding:14px 16px;margin-bottom:12px;">
+                            <p style="font-size:0.85rem;font-weight:700;color:#1e40af;margin:0 0 6px;">💡 Kies je aanpak</p>
+                            <p style="font-size:0.82rem;color:#1e3a8a;margin:0;line-height:1.5;">
+                                <strong>Track A (Hulpvraag):</strong> Start met jouw vraag, bekijk alleen relevante gebieden<br>
+                                <strong>Track B (Netwerk):</strong> Volledig netwerkbeeld, alle levensgebieden
+                            </p>
+                        </div>
+                        
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <button id="track-hulpvraag" onclick="selectTrack('hulpvraag')"
+                                style="padding:16px;border-radius:12px;border:3px solid #e5e7eb;background:white;cursor:pointer;text-align:left;transition:all 0.3s;">
+                                <div style="font-size:1.4rem;margin-bottom:8px;">🎯</div>
+                                <div style="font-size:0.95rem;font-weight:700;color:#374151;margin-bottom:6px;">Track A: Hulpvraag</div>
+                                <div style="font-size:0.8rem;color:#6b7280;line-height:1.4;margin-bottom:10px;">
+                                    Start met "Wat wil je bereiken?"<br>
+                                    Focus op 1-3 gebieden<br>
+                                    ⏱️ 20-30 minuten
+                                </div>
+                                <div style="font-size:0.75rem;color:#9ca3af;font-style:italic;">
+                                    💬 "Ik heb een concreet probleem"
+                                </div>
                             </button>
-                            <button id="modus-snel" onclick="setGespreksModus('snel')"
-                                style="flex:1;min-width:140px;padding:10px 14px;border-radius:10px;font-size:0.88rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">
-                                ⚡ Snelle check
-                                <div style="font-size:0.75rem;font-weight:400;color:#9ca3af;margin-top:2px;">Stoplicht + beweging + besluit, 20 min</div>
+                            
+                            <button id="track-netwerk" onclick="selectTrack('netwerk')"
+                                style="padding:16px;border-radius:12px;border:3px solid #e5e7eb;background:white;cursor:pointer;text-align:left;transition:all 0.3s;">
+                                <div style="font-size:1.4rem;margin-bottom:8px;">🕸️</div>
+                                <div style="font-size:0.95rem;font-weight:700;color:#374151;margin-bottom:6px;">Track B: Netwerk</div>
+                                <div style="font-size:0.8rem;color:#6b7280;line-height:1.4;margin-bottom:10px;">
+                                    Volledig netwerkbeeld<br>
+                                    Alle 11 levensgebieden<br>
+                                    ⏱️ 45-60 minuten
+                                </div>
+                                <div style="font-size:0.75rem;color:#9ca3af;font-style:italic;">
+                                    🔍 "Hoe staat mijn netwerk ervoor?"
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -4363,11 +4387,81 @@
             </div>
             -->
 
+            <!-- Screen 2.5: HULPVRAAG (Track A start - Methodologie Summit) -->
+            <div class="screen" id="screen-hulpvraag-focus">
+                <div class="card">
+                    <h2 style="font-size:1.6rem;margin-bottom:8px;">🎯 Waar wil je mee aan de slag?</h2>
+                    <p style="color:var(--text-light);margin-bottom:20px;font-size:0.95rem;">
+                        Laten we beginnen met jouw vraag. Wat zou je graag anders willen?
+                    </p>
+
+                    <div style="background:#dbeafe;border-left:4px solid #3b82f6;border-radius:10px;padding:14px 16px;margin-bottom:20px;">
+                        <p style="font-size:0.85rem;color:#1e40af;margin:0;line-height:1.5;">
+                            💡 <strong>Track A (Hulpvraag-gedreven):</strong> We focussen op wat JIJ wilt bereiken, en kijken alleen naar de gebieden die daarbij horen.
+                        </p>
+                    </div>
+
+                    <!-- Stap 1: Wat wil je bereiken? -->
+                    <div style="margin-bottom:24px;">
+                        <label style="font-size:1rem;font-weight:700;color:#374151;display:block;margin-bottom:10px;">
+                            1️⃣ Wat wil je bereiken?
+                        </label>
+                        <textarea id="hulpvraagFocus" placeholder="Bijv: 'Ik wil niet meer zo eenzaam zijn' of 'Ik wil mijn schulden onder controle krijgen'"
+                            style="width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:10px;font-size:0.95rem;min-height:100px;line-height:1.6;font-family:'Nunito',sans-serif;"
+                            onchange="state.hulpvraagFocus=this.value;saveState();"></textarea>
+                    </div>
+
+                    <!-- Stap 2: Welke gebieden horen hierbij? -->
+                    <div style="margin-bottom:24px;">
+                        <label style="font-size:1rem;font-weight:700;color:#374151;display:block;margin-bottom:10px;">
+                            2️⃣ Welke levensgebieden horen hierbij? <span style="font-size:0.85rem;font-weight:400;color:#9ca3af;">(kies 1-3)</span>
+                        </label>
+                        <div id="hulpvraagDomeinKeuze" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;">
+                            <!-- Gevuld door renderHulpvraagDomeinKeuze() -->
+                        </div>
+                    </div>
+
+                    <!-- Stap 3: Wie zou kunnen helpen? (eerste gedachte) -->
+                    <div style="margin-bottom:24px;">
+                        <label style="font-size:1rem;font-weight:700;color:#374151;display:block;margin-bottom:10px;">
+                            3️⃣ Wie zou je kunnen helpen? <span style="font-size:0.85rem;font-weight:400;color:#9ca3af;">(eerste gedachte)</span>
+                        </label>
+                        <input type="text" id="hulpvraagEersteGedachte" placeholder="Bijv: 'Mijn zus', 'Een buurtcentrum', 'Weet ik niet'"
+                            style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:0.95rem;font-family:'Nunito',sans-serif;"
+                            onchange="state.hulpvraagEersteGedachte=this.value;saveState();">
+                    </div>
+
+                    <div class="btn-group" style="margin-top:24px;">
+                        <button class="btn btn-secondary" 
+                                onclick="goToScreenById('start');" 
+                                style="z-index:10;position:relative;">
+                            ← Terug
+                        </button>
+                        <button class="btn btn-primary" 
+                                onclick="startHulpvraagTrack();" 
+                                id="btnStartHulpvraag" 
+                                style="z-index:10;position:relative;">
+                            Ga verder →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Screen 3: TRIAGE - Selecteer relevante domeinen (Prioriteit 1) -->
             <div class="screen" id="screen-triage">
                 <div class="card">
-                    <h2 style="font-size:1.6rem;margin-bottom:8px;">
+                    <h2 id="triageTitle" style="font-size:1.6rem;margin-bottom:8px;">
 🗺️ Waar staat het netwerk?</h2>
+
+                    <!-- Track A reminder -->
+                    <div id="trackAReminder" style="display:none;background:#dbeafe;border-left:4px solid #3b82f6;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
+                        <p style="margin:0;font-size:0.9rem;color:#1e40af;font-weight:600;">
+                            🎯 Je vraag: "<span id="hulpvraagReminder"></span>"
+                        </p>
+                        <p style="margin:4px 0 0;font-size:0.85rem;color:#1e3a8a;font-style:italic;">
+                            We kijken nu naar de <strong id="aantalDomeinen"></strong> die jij koos.
+                        </p>
+                    </div>
 
                     <!-- Uitnodiging -->
                     <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
@@ -4724,6 +4818,9 @@
                         </button>
                     </div>
 
+                    <!-- Track A: Gap-analyse (NIEUW) -->
+                    <div id="gapAnalyse" style="display:none;"></div>
+                    
                     <div id="samenvattingInhoud">
                         <!-- Wordt gevuld door renderSamenvatting() -->
                     </div>
@@ -6414,20 +6511,39 @@
         // Correcte volgorde: Start → Netwerk → Check (nu) → Plan (gewenst) → Hulp → Team → Besluit
         const screenConfigBase = [
             { id: 'start',            label: 'Kennismaking',   emoji: '🏠' },
+            { id: 'hulpvraag-focus',  label: 'Je vraag',       emoji: '🎯' }, // Track A start
             { id: 'triage',           label: 'Jouw mensen',    emoji: '👥' },
-            { id: 'reflectie',        label: 'Hoe gaat het?',  emoji: '📊' }, // Was Check, nu vóór Plan
-            { id: 'beweging',         label: 'Wat wil je?',    emoji: '🎯' }, // Was Plan, nu ná Check
-            { id: 'interventies',     label: 'Wat helpt?',     emoji: '💡' }, // Was Hulp, nu vóór Team
-            { id: 'team',             label: 'Wie vraag je?',  emoji: '🤝' }, // Was Team, verduidelijkt
+            { id: 'domains',          label: 'Wie helpt?',     emoji: '🤝' }, // Domein-analyse
+            { id: 'network',          label: 'Overzicht',      emoji: '📊' }, // Dashboard
+            { id: 'reflectie',        label: 'Hoe gaat het?',  emoji: '💭' },
+            { id: 'beweging',         label: 'Wat wil je?',    emoji: '🎯' },
+            { id: 'interventies',     label: 'Wat helpt?',     emoji: '💡' },
+            { id: 'team',             label: 'Wie vraag je?',  emoji: '🤝' },
             { id: 'samenvatting',     label: 'Besluit',        emoji: '📄' }
         ];
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Snelle modus: retourneer alleen triage, beweging, samenvatting
+            // Track A (hulpvraag-gedreven): hulpvraag-focus → triage → domains → beweging → samenvatting
+            if (state.selectedTrack === 'hulpvraag') {
+                return screenConfigBase.filter(s => 
+                    ['start', 'hulpvraag-focus', 'triage', 'domains', 'network', 'beweging', 'interventies', 'samenvatting'].includes(s.id)
+                );
+            }
+            
+            // Track B (netwerk-gedreven): volledig (bestaand)
+            if (state.selectedTrack === 'netwerk') {
+                return screenConfigBase.filter(s => 
+                    ['start', 'triage', 'domains', 'network', 'reflectie', 'beweging', 'interventies', 'team', 'samenvatting'].includes(s.id)
+                );
+            }
+            
+            // Snelle modus (legacy)
             if (state.snelleModusSchermen && state.snelleModusSchermen.length > 0) {
                 return screenConfigBase.filter(s => state.snelleModusSchermen.includes(s.id));
             }
+            
+            // Default: alle schermen
             return screenConfigBase;
         }
 
@@ -7159,6 +7275,139 @@ Antwoord in dit exacte JSON formaat:
             }
         }
 
+        // Track selectie (Methodologie Summit v5.0)
+        function selectTrack(track) {
+            state.selectedTrack = track;
+            saveState();
+            
+            const hulpvraagBtn = document.getElementById('track-hulpvraag');
+            const netwerkBtn = document.getElementById('track-netwerk');
+            
+            if (hulpvraagBtn && netwerkBtn) {
+                // Reset beide
+                [hulpvraagBtn, netwerkBtn].forEach(btn => {
+                    btn.style.border = '3px solid #e5e7eb';
+                    btn.style.background = 'white';
+                });
+                
+                // Activeer geselecteerde
+                const activeBtn = track === 'hulpvraag' ? hulpvraagBtn : netwerkBtn;
+                activeBtn.style.border = '3px solid var(--primary)';
+                activeBtn.style.background = 'var(--primary-light)';
+            }
+            
+            // Stel workflow in op basis van track
+            if (track === 'hulpvraag') {
+                // Track A: Start met hulpvraag-scherm (nieuw te bouwen)
+                state.workflowMode = 'hulpvraag-gedreven';
+            } else {
+                // Track B: Volledig netwerk (huidig)
+                state.workflowMode = 'netwerk-gedreven';
+            }
+        }
+
+        // Render domein-keuze voor hulpvraag-focus
+        function renderHulpvraagDomeinKeuze() {
+            const container = document.getElementById('hulpvraagDomeinKeuze');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            domains.forEach(d => {
+                const selected = state.hulpvraagSelectedDomains && state.hulpvraagSelectedDomains.includes(d.id);
+                
+                const domainCard = document.createElement('div');
+                domainCard.className = 'domain-option' + (selected ? ' selected' : '');
+                domainCard.style.cssText = `padding:12px;border:2px solid ${selected ? 'var(--primary)' : '#e5e7eb'};
+                    border-radius:10px;cursor:pointer;text-align:center;transition:all 0.2s;
+                    background:${selected ? 'var(--primary-light)' : 'white'};
+                    user-select:none;`;
+                domainCard.innerHTML = `
+                    <div style="font-size:1.8rem;margin-bottom:6px;">${d.emoji}</div>
+                    <div style="font-size:0.85rem;font-weight:600;color:var(--text);">${d.name}</div>
+                `;
+                
+                domainCard.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleHulpvraagDomain(d.id);
+                }, { capture: true });
+                
+                container.appendChild(domainCard);
+            });
+        }
+
+        // Toggle domein selectie (max 3)
+        function toggleHulpvraagDomain(domainId) {
+            if (!state.hulpvraagSelectedDomains) state.hulpvraagSelectedDomains = [];
+            
+            const index = state.hulpvraagSelectedDomains.indexOf(domainId);
+            if (index > -1) {
+                state.hulpvraagSelectedDomains.splice(index, 1);
+            } else {
+                if (state.hulpvraagSelectedDomains.length >= 3) {
+                    alert('Kies maximaal 3 gebieden om gefocust te blijven');
+                    return;
+                }
+                state.hulpvraagSelectedDomains.push(domainId);
+            }
+            
+            saveState();
+            renderHulpvraagDomeinKeuze();
+        }
+
+        // Start hulpvraag track
+        function startHulpvraagTrack() {
+            try {
+                // Haal waarden op
+                const hulpvraagInput = document.getElementById('hulpvraagFocus');
+                const hulpvraagValue = hulpvraagInput ? hulpvraagInput.value.trim() : '';
+                
+                // Validatie
+                if (!hulpvraagValue) {
+                    alert('Vul eerst in wat je wilt bereiken');
+                    if (hulpvraagInput) hulpvraagInput.focus();
+                    return;
+                }
+                
+                if (!state.hulpvraagSelectedDomains || state.hulpvraagSelectedDomains.length === 0) {
+                    alert('Kies minimaal 1 levensgebied');
+                    return;
+                }
+                
+                // Sla op
+                state.hulpvraagFocus = hulpvraagValue;
+                
+                const eersteGedachte = document.getElementById('hulpvraagEersteGedachte');
+                if (eersteGedachte) {
+                    state.hulpvraagEersteGedachte = eersteGedachte.value.trim();
+                }
+                
+                // Zet actieve domeinen
+                state.selectedDomains = [...state.hulpvraagSelectedDomains];
+                
+                // Pre-fill domainStatus
+                if (!state.domainStatus) state.domainStatus = {};
+                state.hulpvraagSelectedDomains.forEach(id => {
+                    if (!state.domainStatus[id]) {
+                        state.domainStatus[id] = null;
+                    }
+                });
+                
+                saveState();
+                
+                // Ga naar triage
+                const triageNumber = getScreenNumber('triage');
+                if (triageNumber > 0) {
+                    goToScreen(triageNumber);
+                } else {
+                    alert('Fout: Kan niet naar volgende scherm');
+                }
+                
+            } catch (error) {
+                alert('Er ging iets mis: ' + error.message);
+            }
+        }
+
         // Override startAssessment zodat snelle modus Domeinscan overslaat
         const _origStartAssessment = typeof startAssessment === 'function' ? startAssessment : null;
         function startAssessmentMet() {
@@ -7271,6 +7520,12 @@ Antwoord in dit exacte JSON formaat:
         }
 
         function startAssessment() {
+            // Valideer track-keuze
+            if (!state.selectedTrack) {
+                alert('Kies eerst Track A (Hulpvraag) of Track B (Netwerk)');
+                return;
+            }
+
             // Sla postcode op
             const postcodeInput = document.getElementById('postcodeStart');
             if (postcodeInput && postcodeInput.value) {
@@ -7283,14 +7538,15 @@ Antwoord in dit exacte JSON formaat:
             if (!state.mode) state.mode = 'professional';
             saveState();
 
-            // Snelle modus: sla Domeinscan over (triage → beweging → besluit)
-            if (state.gespreksModus === 'snel') {
-                state.snelleModusSchermen = ['triage', 'beweging', 'samenvatting'];
+            // Route op basis van track-keuze (Methodologie Summit v5.0)
+            if (state.selectedTrack === 'hulpvraag') {
+                // Track A: Start met hulpvraag-focus scherm
+                goToScreenById('hulpvraag-focus');
+                renderHulpvraagDomeinKeuze();
             } else {
-                state.snelleModusSchermen = null;
+                // Track B: Volledige netwerk-scan (bestaande flow)
+                goToScreenById('triage');
             }
-            saveState();
-            goToScreenById('triage');
         }
 
         // Save oriëntatie (stabilisatie-check)
@@ -7437,7 +7693,34 @@ Antwoord in dit exacte JSON formaat:
                 if (cn && state.clientNaam) cn.value = state.clientNaam;
             }
             if (screenId === 'hulpvraag') loadHulpvraagData();
-            if (screenId === 'triage') renderStoplichtGrid();
+            if (screenId === 'hulpvraag-focus') {
+                // Wacht even voor DOM is klaar
+                setTimeout(() => {
+                    renderHulpvraagDomeinKeuze();
+                    // Restore values
+                    const hv = document.getElementById('hulpvraagFocus');
+                    const eg = document.getElementById('hulpvraagEersteGedachte');
+                    if (hv && state.hulpvraagFocus) hv.value = state.hulpvraagFocus;
+                    if (eg && state.hulpvraagEersteGedachte) eg.value = state.hulpvraagEersteGedachte;
+                }, 50);
+            }
+            if (screenId === 'triage') {
+                renderStoplichtGrid();
+                
+                // Track A: toon hulpvraag reminder
+                if (state.selectedTrack === 'hulpvraag' && state.hulpvraagFocus) {
+                    const reminder = document.getElementById('trackAReminder');
+                    const hulpvraag = document.getElementById('hulpvraagReminder');
+                    const aantal = document.getElementById('aantalDomeinen');
+                    
+                    if (reminder && hulpvraag && aantal) {
+                        reminder.style.display = 'block';
+                        hulpvraag.textContent = state.hulpvraagFocus;
+                        const n = state.hulpvraagSelectedDomains?.length || 0;
+                        aantal.textContent = n + (n === 1 ? ' gebied' : ' gebieden');
+                    }
+                }
+            }
             if (screenId === 'netwerkoverzicht') renderKwadrantOverzicht();
             if (screenId === 'domains') renderDomains();
             if (screenId === 'network') { renderDashboard(); setTimeout(() => renderRPANetwerkkaartCompact2(), 100); }
@@ -8243,9 +8526,97 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // Render samenvatting (Medium flow eindscherm)
+        // Gap-analyse voor Track A (Methodologie Summit v5.0)
+        function renderGapAnalyse() {
+            const container = document.getElementById('gapAnalyse');
+            if (!container) return;
+            
+            // Alleen voor Track A
+            if (state.selectedTrack !== 'hulpvraag' || !state.hulpvraagFocus) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            
+            // Analyseer huidige situatie
+            const domeinen = state.hulpvraagSelectedDomains || [];
+            let totaalPersonen = 0;
+            let problematischeDomeinen = [];
+            let zwakkePosities = [];
+            
+            domeinen.forEach(domainId => {
+                const positie = state.domainNetwerkpositie?.[domainId];
+                const status = state.domainStatus?.[domainId];
+                const personen = state.domeinPersonen?.[domainId] || [];
+                const domain = domains.find(d => d.id === domainId);
+                
+                totaalPersonen += personen.length;
+                
+                if (status === 'steun-nodig' || positie?.positie === 'geen') {
+                    problematischeDomeinen.push(domain?.name || domainId);
+                }
+                
+                if (positie?.positie === '1-persoons') {
+                    zwakkePosities.push(domain?.name || domainId);
+                }
+            });
+            
+            // Genereer gap-analyse
+            let gap = '';
+            let advies = '';
+            
+            if (problematischeDomeinen.length > 0) {
+                gap = `Er is <strong>nog geen netwerk</strong> voor: ${problematischeDomeinen.join(', ')}`;
+                advies = 'Start met het opbouwen van informele contacten of zoek collectieve voorzieningen.';
+            } else if (zwakkePosities.length > 0) {
+                gap = `Het netwerk is <strong>kwetsbaar</strong> bij: ${zwakkePosities.join(', ')} (slechts 1 persoon)`;
+                advies = 'Breid uit naar meerdere contacten om overbelasting te voorkomen.';
+            } else if (totaalPersonen >= domeinen.length * 2) {
+                gap = 'Je hebt een <strong>stevig netwerk</strong> opgezet';
+                advies = 'Blijf dit onderhouden en let op signalen van overbelasting.';
+            } else {
+                gap = 'Je netwerk is <strong>in ontwikkeling</strong>';
+                advies = 'Voeg stap voor stap meer steun toe waar nodig.';
+            }
+            
+            container.innerHTML = `
+                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:16px;padding:24px;margin-bottom:24px;box-shadow:0 8px 24px rgba(102,126,234,0.3);">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                        <span style="font-size:2.5rem;">🎯</span>
+                        <div>
+                            <h3 style="margin:0;font-size:1.3rem;font-weight:800;">Je vraag</h3>
+                            <p style="margin:4px 0 0;font-size:1.1rem;opacity:0.95;">"${state.hulpvraagFocus}"</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:16px;margin-bottom:16px;">
+                        <div style="font-size:0.9rem;font-weight:600;margin-bottom:6px;opacity:0.9;">📊 Huidige situatie:</div>
+                        <div style="font-size:1rem;line-height:1.6;">${gap}</div>
+                    </div>
+                    
+                    <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:16px;">
+                        <div style="font-size:0.9rem;font-weight:600;margin-bottom:6px;opacity:0.9;">💡 Advies:</div>
+                        <div style="font-size:1rem;line-height:1.6;">${advies}</div>
+                    </div>
+                    
+                    ${state.hulpvraagEersteGedachte ? `
+                        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2);">
+                            <div style="font-size:0.85rem;opacity:0.9;">💭 Je eerste gedachte: "${state.hulpvraagEersteGedachte}"</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
         function renderSamenvatting() {
             const container = document.getElementById('samenvattingInhoud');
             if (!container) return;
+
+            // Track A: Render gap-analyse EERST
+            if (state.selectedTrack === 'hulpvraag') {
+                renderGapAnalyse();
+            }
 
             // Meta: naam + datum
             const meta = document.getElementById('besluitMeta');
@@ -16428,7 +16799,13 @@ END:VEVENT
             if (!state.domainStatus) state.domainStatus = {};
             if (!state.clientBeleving) state.clientBeleving = {};
             
-            container.innerHTML = domains.map(d => {
+            // Track A: Toon alleen geselecteerde domeinen
+            let domainsToShow = domains;
+            if (state.selectedTrack === 'hulpvraag' && state.hulpvraagSelectedDomains && state.hulpvraagSelectedDomains.length > 0) {
+                domainsToShow = domains.filter(d => state.hulpvraagSelectedDomains.includes(d.id));
+            }
+            
+            container.innerHTML = domainsToShow.map(d => {
                 const status = state.domainStatus[d.id] || null;
                 const beleving = state.clientBeleving[d.id] || null;
                 
@@ -16507,6 +16884,11 @@ END:VEVENT
                                         style="flex:1;min-width:110px;padding:10px;border:2px solid #3b82f6;background:white;color:#1e40af;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">
                                     ➕ 🔵 Professional
                                 </button>
+                            </div>
+                            
+                            <!-- Netwerkpositie badge -->
+                            <div id="netwerkpositie-badge-${d.id}" style="margin-bottom:12px;">
+                                ${renderNetwerkpositieBadge(d.id)}
                             </div>
                             
                             <!-- Toegevoegde personen lijst -->
@@ -16790,9 +17172,159 @@ END:VEVENT
                 state.scores[domainId] = 0; // Niet ingevuld
             }
             
+            // Bereken en toon netwerkpositie (Methodologie Summit fix)
+            calculateNetwerkpositie(domainId);
+            
             saveState();
             renderStoplichtGrid();
             updateStoplichtTeller();
+        }
+
+        // Bereken netwerkpositie per domein (Methodologie Summit v5.0)
+        function calculateNetwerkpositie(domainId) {
+            if (!state.domainNetwerkpositie) state.domainNetwerkpositie = {};
+            
+            const status = state.domainStatus[domainId];
+            const personen = state.domeinPersonen?.[domainId] || [];
+            
+            let positie = 'geen';
+            let emoji = '⚪';
+            let label = 'Geen netwerk';
+            let color = '#9ca3af';
+            
+            if (status === 'goed') {
+                positie = 'zelfstandig';
+                emoji = '✅';
+                label = 'Zelfstandig';
+                color = '#10b981';
+            } else if (personen.length === 0) {
+                positie = 'geen';
+                emoji = '⚪';
+                label = 'Geen netwerk';
+                color = '#9ca3af';
+            } else if (personen.length === 1) {
+                positie = '1-persoons';
+                emoji = '🟡';
+                label = '1-persoons netwerk';
+                color = '#f59e0b';
+            } else {
+                // Analyseer types
+                const types = personen.map(p => p.type);
+                const heeftInformeel = types.includes('informeel');
+                const heeftCollectief = types.includes('collectief');
+                const heeftFormeel = types.includes('formeel');
+                
+                const aantalTypes = [heeftInformeel, heeftCollectief, heeftFormeel].filter(Boolean).length;
+                
+                if (aantalTypes >= 2) {
+                    positie = 'gemengd';
+                    emoji = '🟣';
+                    label = 'Gemengd netwerk';
+                    color = '#a855f7';
+                } else if (heeftInformeel) {
+                    positie = 'informeel';
+                    emoji = '🟢';
+                    label = 'Informeel netwerk';
+                    color = '#22c55e';
+                } else if (heeftFormeel) {
+                    positie = 'formeel';
+                    emoji = '🔵';
+                    label = 'Formeel netwerk';
+                    color = '#3b82f6';
+                } else {
+                    positie = 'collectief';
+                    emoji = '🟣';
+                    label = 'Collectief netwerk';
+                    color = '#8b5cf6';
+                }
+            }
+            
+            state.domainNetwerkpositie[domainId] = {
+                positie,
+                emoji,
+                label,
+                color
+            };
+            
+            // Check matching (problematiek vs positie)
+            checkPositieMatching(domainId);
+        }
+
+        // Render netwerkpositie badge (visueel)
+        function renderNetwerkpositieBadge(domainId) {
+            const positie = state.domainNetwerkpositie?.[domainId];
+            const warning = state.domainMatchingWarnings?.[domainId];
+            
+            if (!positie) {
+                return '<div style="font-size:0.8rem;color:#9ca3af;font-style:italic;">Nog geen netwerkpositie bepaald</div>';
+            }
+            
+            let html = `
+                <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;
+                            background:${positie.color}15;border:2px solid ${positie.color};
+                            border-radius:20px;font-size:0.85rem;font-weight:600;">
+                    <span style="font-size:1.2rem;">${positie.emoji}</span>
+                    <span style="color:${positie.color};">${positie.label}</span>
+                </div>
+            `;
+            
+            // Toon waarschuwing als die er is
+            if (warning) {
+                const bgColor = warning.level === 'danger' ? '#fef2f2' : '#eff6ff';
+                const borderColor = warning.level === 'danger' ? '#fca5a5' : '#93c5fd';
+                const textColor = warning.level === 'danger' ? '#991b1b' : '#1e40af';
+                
+                html += `
+                    <div style="margin-top:8px;padding:8px 12px;background:${bgColor};
+                                border-left:3px solid ${borderColor};border-radius:6px;">
+                        <span style="font-size:0.85rem;color:${textColor};font-weight:600;">
+                            ${warning.icon} ${warning.text}
+                        </span>
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+
+        // Check of netwerkpositie past bij problematiek (Methodologie Summit validatie)
+        function checkPositieMatching(domainId) {
+            const status = state.domainStatus[domainId];
+            const netwerkpositie = state.domainNetwerkpositie?.[domainId];
+            
+            if (!netwerkpositie) return;
+            
+            let warning = null;
+            
+            // 🔴 Probleem + 🟢 Informeel = Risico overbelasting
+            if (status === 'steun-nodig' && netwerkpositie.positie === 'informeel') {
+                warning = {
+                    level: 'danger',
+                    icon: '⚠️',
+                    text: 'Risico overbelasting informeel netwerk'
+                };
+            }
+            
+            // 🟢 Zelfstandig + 🔵 Formeel = Mogelijk te zwaar ingezet
+            if (status === 'goed' && netwerkpositie.positie === 'formeel') {
+                warning = {
+                    level: 'info',
+                    icon: '💡',
+                    text: 'Check: Is professionele hulp nog nodig?'
+                };
+            }
+            
+            // 🔴 Probleem + ⚪ Geen = Urgent
+            if (status === 'steun-nodig' && netwerkpositie.positie === 'geen') {
+                warning = {
+                    level: 'danger',
+                    icon: '🚨',
+                    text: 'Urgent: Geen netwerk bij problematiek'
+                };
+            }
+            
+            if (!state.domainMatchingWarnings) state.domainMatchingWarnings = {};
+            state.domainMatchingWarnings[domainId] = warning;
         }
 
         function setClientBeleving(domainId, beleving) {
@@ -17512,12 +18044,29 @@ END:VEVENT
         
         function updateStoplichtTeller() {
             const s = state.domainStatus || {};
+            
+            // Track A: Tel alleen geselecteerde domeinen
+            let totaal = domains.length;
+            if (state.selectedTrack === 'hulpvraag' && state.hulpvraagSelectedDomains && state.hulpvraagSelectedDomains.length > 0) {
+                totaal = state.hulpvraagSelectedDomains.length;
+            }
+            
             const ingevuld = Object.keys(s).filter(k => s[k]).length;
             const probleem = Object.values(s).filter(v => v==='steun-nodig').length;
             const aandacht = Object.values(s).filter(v => v==='steun-aanwezig').length;
             const goed = Object.values(s).filter(v => v==='goed').length;
+            
             const el = id => document.getElementById(id);
-            if (el('triageCount')) el('triageCount').textContent = ingevuld;
+            if (el('triageCount')) {
+                el('triageCount').textContent = ingevuld;
+                // Update totaal dynamisch
+                const counterDiv = document.getElementById('triageCounter');
+                if (counterDiv) {
+                    const html = counterDiv.innerHTML;
+                    const newHtml = html.replace(/\/\d+/, '/' + totaal);
+                    counterDiv.innerHTML = newHtml;
+                }
+            }
             if (el('countProbleem')) el('countProbleem').textContent = probleem;
             if (el('countAandacht')) el('countAandacht').textContent = aandacht;
             if (el('countGoed')) el('countGoed').textContent = goed;
@@ -19197,16 +19746,33 @@ END:VEVENT
                 rollen: rol ? [rol] : []
             });
             
+            // Sync naar domeinPersonen voor netwerkpositie-berekening
+            if (!state.domeinPersonen) state.domeinPersonen = {};
+            if (!state.domeinPersonen[domeinId]) state.domeinPersonen[domeinId] = [];
+            state.domeinPersonen[domeinId].push({
+                name: naam,
+                type: type,
+                role: rol
+            });
+            
+            // Bereken netwerkpositie
+            calculateNetwerkpositie(domeinId);
+            
             saveState();
             
             // Sluit modal
             const modal = document.querySelector('div[style*="position:fixed"]');
             if (modal) modal.remove();
             
-            // Update alleen de lijst (niet hele grid)
+            // Update lijst EN netwerkpositie badge
             const container = document.getElementById(`personen-lijst-${domeinId}`);
             if (container) {
                 container.innerHTML = renderPersonenLijst(domeinId);
+            }
+            
+            const badgeContainer = document.getElementById(`netwerkpositie-badge-${domeinId}`);
+            if (badgeContainer) {
+                badgeContainer.innerHTML = renderNetwerkpositieBadge(domeinId);
             }
         }
         
@@ -19214,6 +19780,15 @@ END:VEVENT
             if (confirm('Deze persoon verwijderen?')) {
                 if (state.steunDetails && state.steunDetails[domeinId] && state.steunDetails[domeinId].personen) {
                     state.steunDetails[domeinId].personen.splice(persoonIndex, 1);
+                    
+                    // Sync naar domeinPersonen
+                    if (state.domeinPersonen && state.domeinPersonen[domeinId]) {
+                        state.domeinPersonen[domeinId].splice(persoonIndex, 1);
+                    }
+                    
+                    // Herbereken netwerkpositie
+                    calculateNetwerkpositie(domeinId);
+                    
                     saveState();
                     renderStoplichtGrid();
                 }
