@@ -2702,6 +2702,107 @@
             }
         };
 
+        // HERHAALMETING + TREND ANALYSE
+        function saveResultToHistory() {
+            const history = JSON.parse(localStorage.getItem('balansCheckHistory') || '[]');
+            
+            const result = {
+                timestamp: Date.now(),
+                date: new Date().toISOString(),
+                answers: { ...app.answers },
+                domainScores: {}
+            };
+            
+            // Bereken scores per domein
+            app.domains.forEach(domain => {
+                const answer = app.answers[domain.id];
+                let score = 0;
+                if (answer === 'goed') score = 3;
+                else if (answer === 'kan-beter') score = 2;
+                else if (answer === 'niet-goed') score = 1;
+                result.domainScores[domain.id] = score;
+            });
+            
+            history.push(result);
+            
+            // Bewaar max 10 metingen
+            if (history.length > 10) {
+                history.shift();
+            }
+            
+            localStorage.setItem('balansCheckHistory', JSON.stringify(history));
+        }
+        
+        function showTrendAnalysis() {
+            const history = JSON.parse(localStorage.getItem('balansCheckHistory') || '[]');
+            
+            if (history.length < 2) {
+                return ''; // Geen trend mogelijk met 1 meting
+            }
+            
+            const latest = history[history.length - 1];
+            const previous = history[history.length - 2];
+            
+            let improvements = [];
+            let declines = [];
+            
+            app.domains.forEach(domain => {
+                const latestScore = latest.domainScores[domain.id] || 0;
+                const previousScore = previous.domainScores[domain.id] || 0;
+                
+                if (latestScore > previousScore) {
+                    improvements.push(domain.emoji + ' ' + domain.title);
+                } else if (latestScore < previousScore) {
+                    declines.push(domain.emoji + ' ' + domain.title);
+                }
+            });
+            
+            let trendHTML = '<div style="margin-top: 24px; padding: 20px; background: #f0fdf4; border-radius: 12px; border-left: 4px solid #22c55e;">';
+            trendHTML += '<h3 style="margin-bottom: 12px; font-size: 1.2rem;">📈 Vergelijking met vorige keer</h3>';
+            trendHTML += `<p style="font-size: 0.9rem; color: #6b7280; margin-bottom: 12px;">Laatste meting: ${new Date(previous.timestamp).toLocaleDateString('nl-NL')}</p>`;
+            
+            if (improvements.length > 0) {
+                trendHTML += '<div style="margin-bottom: 12px;"><strong style="color: #166534;">✅ Verbeterd:</strong><br>';
+                trendHTML += improvements.join(', ') + '</div>';
+            }
+            
+            if (declines.length > 0) {
+                trendHTML += '<div style="margin-bottom: 12px;"><strong style="color: #dc2626;">⚠️ Verslechterd:</strong><br>';
+                trendHTML += declines.join(', ') + '</div>';
+            }
+            
+            if (improvements.length === 0 && declines.length === 0) {
+                trendHTML += '<p style="color: #6b7280;">🔄 Situatie is stabiel gebleven</p>';
+            }
+            
+            trendHTML += '</div>';
+            return trendHTML;
+        }
+        
+        // Hook into result rendering
+        const originalGoToScreen = app.goToScreen;
+        app.goToScreen = function(n) {
+            originalGoToScreen.call(app, n);
+            
+            // Als we naar resultaat scherm gaan (n=9)
+            if (n === 9) {
+                saveResultToHistory();
+                
+                // Voeg trend toe aan resultaat
+                setTimeout(() => {
+                    const resultContent = document.querySelector('#screen-9 .card');
+                    if (resultContent) {
+                        const trendHTML = showTrendAnalysis();
+                        if (trendHTML) {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = trendHTML;
+                            resultContent.appendChild(tempDiv.firstChild);
+                        }
+                    }
+                }, 500);
+            }
+        };
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             app.init();
