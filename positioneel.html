@@ -4448,7 +4448,18 @@
                             ← Terug
                         </button>
                         <button class="btn btn-primary" 
-                                onclick="goToQuickscan();" 
+                                onclick="
+                                    const inp = document.getElementById('hulpvraagFocus');
+                                    if (!inp || !inp.value.trim()) {
+                                        alert('Vul eerst in wat je wilt bereiken');
+                                        if (inp) inp.focus();
+                                        return;
+                                    }
+                                    state.hulpvraagFocus = inp.value.trim();
+                                    saveState();
+                                    goToScreenById('quickscan');
+                                    setTimeout(() => renderQuickscanGrid(), 100);
+                                " 
                                 id="btnStartHulpvraag" 
                                 style="z-index:10;position:relative;">
                             Ga verder →
@@ -7425,34 +7436,6 @@ Antwoord in dit exacte JSON formaat:
 
         // Start hulpvraag track
         // QUICK SCAN FUNCTIONS
-        window.goToQuickscan = function() {
-            try {
-                // Valideer hulpvraag eerst
-                const hulpvraagInput = document.getElementById('hulpvraagFocus');
-                const hulpvraagValue = hulpvraagInput ? hulpvraagInput.value.trim() : '';
-                
-                if (!hulpvraagValue) {
-                    alert('Vul eerst in wat je wilt bereiken');
-                    if (hulpvraagInput) hulpvraagInput.focus();
-                    return;
-                }
-                
-                state.hulpvraagFocus = hulpvraagValue;
-                saveState();
-                
-                // Ga naar quickscan
-                if (typeof goToScreenById === 'function') {
-                    goToScreenById('quickscan');
-                    setTimeout(() => renderQuickscanGrid(), 100);
-                } else {
-                    alert('Error: navigatie functie niet gevonden');
-                }
-            } catch (error) {
-                alert('Error bij navigatie: ' + error.message);
-                console.error('goToQuickscan error:', error);
-            }
-        };
-        
         function renderQuickscanGrid() {
             const container = document.getElementById('quickscanGrid');
             if (!container) return;
