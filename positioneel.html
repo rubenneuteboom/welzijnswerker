@@ -7572,11 +7572,27 @@ Antwoord in dit exacte JSON formaat:
                     }
                 });
                 saveState();
+                
+                // Ga direct door naar triage met gesuggereerde domeinen
+                state.selectedDomains = [...state.hulpvraagSelectedDomains];
+                
+                // Pre-fill domainStatus
+                if (!state.domainStatus) state.domainStatus = {};
+                state.hulpvraagSelectedDomains.forEach(id => {
+                    if (!state.domainStatus[id]) {
+                        state.domainStatus[id] = null;
+                    }
+                });
+                
+                saveState();
+                goToScreenById('triage');
+                
+            } else {
+                // Als er te veel of te weinig suggesties zijn, laat gebruiker kiezen
+                goToScreenById('hulpvraag-focus');
+                renderHulpvraagDomeinKeuze(); // Refresh de checkboxes
+                alert('Check de gesuggereerde domeinen en pas aan indien nodig, klik dan op "Ga verder"');
             }
-            
-            // Ga terug naar hulpvraag-focus (met pre-selectie)
-            goToScreenById('hulpvraag-focus');
-            renderHulpvraagDomeinKeuze(); // Refresh de checkboxes
         }
 
         function startHulpvraagTrack() {
