@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Familie Portal - Zorg Overzicht</title>
+    <title>Familie Portal Pro - Zorg Overzicht</title>
     
     <style>
         :root {
@@ -412,6 +412,123 @@
             font-size: 0.9rem;
         }
 
+        /* Document Card */
+        .document-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .document-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateX(4px);
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .document-icon {
+            font-size: 2rem;
+        }
+
+        .document-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .document-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        /* Notification Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .notification-item {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--border);
+        }
+
+        .notification-item.unread {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification-type {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .notification-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -434,7 +551,7 @@
             background: white;
             border-top: 1px solid var(--border);
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             padding: 8px 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
@@ -484,25 +601,24 @@
             animation: fadeIn 0.3s ease;
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
+        /* Import Section */
+        .import-section {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .spinner {
-            border: 3px solid var(--bg);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .import-section textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
         }
 
         /* Responsive */
@@ -518,6 +634,14 @@
             .contact-buttons {
                 grid-template-columns: 1fr;
             }
+
+            .bottom-nav {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .nav-item .label {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -525,7 +649,7 @@
     <!-- Login Screen -->
     <div id="loginScreen" class="login-screen">
         <div class="login-card fade-in">
-            <h2>👨‍👩‍👧 Familie Portal</h2>
+            <h2>👨‍👩‍👧 Familie Portal Pro</h2>
             <p>Veilige toegang tot het zorgnetwerk</p>
             
             <div class="input-group">
@@ -547,7 +671,7 @@
         <div class="header">
             <div class="header-content">
                 <div>
-                    <h1 id="headerTitle">Familie Portal</h1>
+                    <h1 id="headerTitle">Familie Portal Pro</h1>
                     <div class="header-subtitle" id="headerSubtitle">Laden...</div>
                 </div>
                 <div class="notification-badge" onclick="showNotifications()">
@@ -567,6 +691,17 @@
             <!-- Professionals View -->
             <div id="professionalsView" class="view hidden">
                 <div id="professionalsContent"></div>
+            </div>
+
+            <!-- Documents View -->
+            <div id="documentsView" class="view hidden">
+                <div class="card">
+                    <h3 style="margin-bottom: 16px;">📄 Documenten & Verslagen</h3>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">
+                        Alle belangrijke documenten op één plek
+                    </p>
+                </div>
+                <div id="documentsContent"></div>
             </div>
 
             <!-- Messages View -->
@@ -601,6 +736,18 @@
                             <span>Email notificaties ontvangen</span>
                         </label>
                     </div>
+
+                    <!-- RPA Import Section -->
+                    <div class="import-section">
+                        <h4 style="margin-bottom: 12px;">📥 Importeer Update</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 12px;">
+                            Ontvang je een update-code van je professional? Plak deze hieronder:
+                        </p>
+                        <textarea id="importInput" placeholder='{"timestamp": "2026-03-18...", "professionals": [...], ...}'></textarea>
+                        <button class="btn btn-primary" onclick="importUpdate()">
+                            📥 Importeer Update
+                        </button>
+                    </div>
                     
                     <button class="btn btn-primary" onclick="logout()" style="background: var(--danger);">
                         Uitloggen
@@ -619,6 +766,10 @@
                 <span class="icon">👥</span>
                 <span class="label">Professionals</span>
             </button>
+            <button class="nav-item" onclick="showView('documents')">
+                <span class="icon">📄</span>
+                <span class="label">Documenten</span>
+            </button>
             <button class="nav-item" onclick="showView('messages')">
                 <span class="icon">💬</span>
                 <span class="label">Berichten</span>
@@ -630,8 +781,22 @@
         </div>
     </div>
 
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔔 Notificaties</h3>
+                <span class="modal-close" onclick="closeNotifications()">✕</span>
+            </div>
+            <div id="notificationList"></div>
+            <button class="btn btn-primary" onclick="markAllRead()" style="margin-top: 12px;">
+                ✓ Markeer alles als gelezen
+            </button>
+        </div>
+    </div>
+
     <script>
-        // Demo Data (in productie: van server/API)
+        // Demo Data
         const DEMO_DATA = {
             'DEMO123': {
                 family: {
@@ -696,6 +861,52 @@
                         notes: 'Intake gepland voor sociaal-emotionele ondersteuning'
                     }
                 ],
+                documents: [
+                    {
+                        id: 1,
+                        title: 'GGZ Behandelplan Tim',
+                        type: 'behandelplan',
+                        professional: 'Jan Janssen',
+                        date: '2026-02-15',
+                        size: '245 KB',
+                        url: '#',
+                        description: 'Behandelplan depressie en autisme',
+                        icon: '📋'
+                    },
+                    {
+                        id: 2,
+                        title: 'MDO Verslag 15 februari',
+                        type: 'verslag',
+                        professional: 'Lisa de Vries',
+                        date: '2026-02-15',
+                        size: '180 KB',
+                        url: '#',
+                        description: 'Multidisciplinair overleg',
+                        icon: '📝'
+                    },
+                    {
+                        id: 3,
+                        title: 'Schoolrapport Q1',
+                        type: 'rapport',
+                        professional: 'Mw. Bakker',
+                        date: '2026-01-20',
+                        size: '120 KB',
+                        url: '#',
+                        description: 'Eerste kwartaal rapport',
+                        icon: '🎓'
+                    },
+                    {
+                        id: 4,
+                        title: 'Medicatie Overzicht',
+                        type: 'medisch',
+                        professional: 'Jan Janssen',
+                        date: '2026-03-01',
+                        size: '85 KB',
+                        url: '#',
+                        description: 'Actueel medicatie overzicht',
+                        icon: '💊'
+                    }
+                ],
                 mdo: {
                     date: '20 maart 2026, 10:00',
                     location: 'Jeugdzorgbureau, kamer 3',
@@ -732,7 +943,39 @@
                         timestamp: Date.now() - 43200000
                     }
                 ],
-                notifications: []
+                notifications: [
+                    {
+                        id: 1,
+                        type: 'message',
+                        icon: '💬',
+                        title: 'Nieuw bericht van Lisa',
+                        text: 'Lisa heeft gereageerd op je vraag',
+                        time: '2 uur geleden',
+                        read: false,
+                        action: () => showView('messages')
+                    },
+                    {
+                        id: 2,
+                        type: 'document',
+                        icon: '📄',
+                        title: 'Document toegevoegd',
+                        text: 'Jan Janssen: GGZ Behandelplan',
+                        time: '1 dag geleden',
+                        read: false,
+                        action: () => showView('documents')
+                    },
+                    {
+                        id: 3,
+                        type: 'appointment',
+                        icon: '📅',
+                        title: 'Afspraak herinnering',
+                        text: 'Morgen 14:00 - GGZ gesprek',
+                        time: '3 uur geleden',
+                        read: true,
+                        action: () => showView('dashboard')
+                    }
+                ],
+                lastSync: null
             }
         };
 
@@ -745,7 +988,7 @@
             const code = document.getElementById('loginCode').value.trim().toUpperCase();
             
             if (DEMO_DATA[code]) {
-                currentUser = DEMO_DATA[code];
+                currentUser = JSON.parse(JSON.stringify(DEMO_DATA[code])); // Deep copy
                 localStorage.setItem('familiePortalCode', code);
                 
                 document.getElementById('loginScreen').classList.add('hidden');
@@ -770,11 +1013,182 @@
             updateHeader();
             renderDashboard();
             renderProfessionals();
+            renderDocuments();
             renderMessages();
             updateSettings();
-            
-            // Check for notifications
             updateNotificationBadge();
+            checkMantelzorgbelasting();
+        }
+        
+        // MANTELZORGBELASTING CHECK
+        function checkMantelzorgbelasting() {
+            // Check laatste belasting check
+            const lastCheck = localStorage.getItem('lastMantelzorgCheck');
+            const now = Date.now();
+            const oneWeek = 7 * 24 * 60 * 60 * 1000;
+            
+            // Voor demo: check elke 24u (verander naar oneWeek in productie)
+            const checkInterval = 24 * 60 * 60 * 1000; // 1 dag
+            
+            if (!lastCheck || (now - parseInt(lastCheck)) > checkInterval) {
+                // Wacht 5 seconden na login, dan toon check
+                setTimeout(() => {
+                    showMantelzorgbelastingCheck();
+                }, 5000);
+            }
+        }
+        
+        function showMantelzorgbelastingCheck() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                padding: 20px;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 20px;
+                    padding: 32px;
+                    max-width: 500px;
+                    width: 100%;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                ">
+                    <h2 style="margin-bottom: 16px; color: #f59e0b;">🫂 Hoe gaat het met u?</h2>
+                    
+                    <p style="color: #6b7280; margin-bottom: 20px; line-height: 1.6;">
+                        Als mantelzorger is het belangrijk om ook naar uzelf te kijken. 
+                        Hoe voelt de zorg voor <strong>${currentUser.family.childName}</strong> op dit moment?
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                        <button onclick="saveMantelzorgbelasting('groen')" style="
+                            padding: 16px;
+                            background: #dcfce7;
+                            border: 2px solid #22c55e;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            text-align: left;
+                        ">
+                            <div style="font-size: 1.1rem; font-weight: 600; color: #166534; margin-bottom: 4px;">
+                                🟢 Prima - Ik voel me goed
+                            </div>
+                            <div style="font-size: 0.9rem; color: #15803d;">
+                                De zorg is goed te doen, ik heb voldoende energie
+                            </div>
+                        </button>
+                        
+                        <button onclick="saveMantelzorgbelasting('oranje')" style="
+                            padding: 16px;
+                            background: #fef3c7;
+                            border: 2px solid #f59e0b;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            text-align: left;
+                        ">
+                            <div style="font-size: 1.1rem; font-weight: 600; color: #92400e; margin-bottom: 4px;">
+                                🟡 Zwaar - Ik voel druk
+                            </div>
+                            <div style="font-size: 0.9rem; color: #78350f;">
+                                Het kost veel energie, soms vraag ik me af of ik het vol kan houden
+                            </div>
+                        </button>
+                        
+                        <button onclick="saveMantelzorgbelasting('rood')" style="
+                            padding: 16px;
+                            background: #fee2e2;
+                            border: 2px solid #dc2626;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            text-align: left;
+                        ">
+                            <div style="font-size: 1.1rem; font-weight: 600; color: #991b1b; margin-bottom: 4px;">
+                                🔴 Overbelast - Ik red het niet meer
+                            </div>
+                            <div style="font-size: 0.9rem; color: #7f1d1d;">
+                                Ik ben uitgeput, ik heb dringend hulp nodig
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <button onclick="closeMantelzorgbelastingCheck()" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: #e5e7eb;
+                        border: none;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        color: #1f2937;
+                    ">
+                        Overslaan (later invullen)
+                    </button>
+                </div>
+            `;
+            
+            modal.id = 'mantelzorgModal';
+            document.body.appendChild(modal);
+        }
+        
+        function saveMantelzorgbelasting(level) {
+            // Sla op
+            localStorage.setItem('lastMantelzorgCheck', Date.now().toString());
+            
+            if (!currentUser.mantelzorgHistory) {
+                currentUser.mantelzorgHistory = [];
+            }
+            
+            currentUser.mantelzorgHistory.push({
+                date: new Date().toISOString(),
+                level: level,
+                timestamp: Date.now()
+            });
+            
+            // Sluit modal
+            closeMantelzorgbelastingCheck();
+            
+            // Geef feedback
+            if (level === 'rood') {
+                alert('🔴 We zien dat je overbelast bent.\n\nWe sturen een bericht naar je regisseur om dit te bespreken in het volgende gesprek.');
+                
+                // Voeg notificatie toe voor professional (demo)
+                currentUser.notifications.unshift({
+                    id: Date.now(),
+                    type: 'alert',
+                    icon: '🚨',
+                    title: 'Mantelzorg overbelasting!',
+                    text: `${currentUser.family.name.split('(')[0].trim()} geeft aan overbelast te zijn`,
+                    time: 'Zojuist',
+                    read: false,
+                    action: () => showView('dashboard')
+                });
+                updateNotificationBadge();
+                
+            } else if (level === 'oranje') {
+                alert('🟡 Dank voor je eerlijkheid.\n\nHet is belangrijk om dit te blijven monitoren. Bespreek dit met je regisseur als het erger wordt.');
+                
+            } else {
+                alert('🟢 Fijn om te horen dat het goed gaat!\n\nBlijf goed voor jezelf zorgen.');
+            }
+        }
+        
+        function closeMantelzorgbelastingCheck() {
+            const modal = document.getElementById('mantelzorgModal');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         // Update Header
@@ -874,27 +1288,29 @@
                 </div>
             `;
             
-            // Recent Messages
-            const recentMessages = currentUser.messages.slice(-2).reverse();
+            // Recent Documents
+            const recentDocs = currentUser.documents.slice(-2).reverse();
             html += `
                 <div class="card fade-in" style="animation-delay: 0.3s;">
                     <div class="card-header">
-                        <span class="icon">💬</span>
-                        <h3>Recente Berichten</h3>
+                        <span class="icon">📄</span>
+                        <h3>Nieuwe Documenten</h3>
                     </div>
                     
-                    ${recentMessages.map(msg => `
-                        <div class="message ${msg.from === 'family' ? 'outgoing' : ''}">
-                            <div class="message-header">
-                                <span class="message-author">${msg.author}</span>
-                                <span class="message-time">${msg.time}</span>
+                    ${recentDocs.map(doc => `
+                        <div class="document-card" onclick="openDocument(${doc.id})">
+                            <div class="document-header">
+                                <div>
+                                    <div class="document-icon">${doc.icon}</div>
+                                    <div class="document-title">${doc.title}</div>
+                                    <div class="document-meta">${doc.professional} • ${doc.date}</div>
+                                </div>
                             </div>
-                            <div class="message-body">${msg.text}</div>
                         </div>
                     `).join('')}
                     
-                    <button class="btn btn-primary" onclick="showView('messages')" style="margin-top: 12px;">
-                        💬 Naar berichten →
+                    <button class="btn btn-primary" onclick="showView('documents')" style="margin-top: 12px;">
+                        📄 Alle documenten →
                     </button>
                 </div>
             `;
@@ -963,6 +1379,48 @@
             container.innerHTML = html;
         }
 
+        // Render Documents
+        function renderDocuments() {
+            const container = document.getElementById('documentsContent');
+            
+            if (currentUser.documents.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📄</div>
+                        <p>Nog geen documenten</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const sorted = [...currentUser.documents].sort((a, b) => 
+                new Date(b.date) - new Date(a.date)
+            );
+            
+            container.innerHTML = sorted.map((doc, index) => `
+                <div class="document-card fade-in" style="animation-delay: ${index * 0.05}s;" onclick="openDocument(${doc.id})">
+                    <div class="document-header">
+                        <div style="flex: 1;">
+                            <div class="document-icon">${doc.icon}</div>
+                            <div class="document-title">${doc.title}</div>
+                            <div class="document-meta">${doc.professional} • ${doc.date} • ${doc.size}</div>
+                            ${doc.description ? `<div style="font-size: 0.9rem; color: var(--text); margin-top: 4px;">${doc.description}</div>` : ''}
+                        </div>
+                        <div style="font-size: 1.5rem; color: var(--primary);">→</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Open Document
+        function openDocument(id) {
+            const doc = currentUser.documents.find(d => d.id === id);
+            if (!doc) return;
+            
+            alert(`📄 ${doc.title}\n\nIn een echte applicatie zou dit document nu worden geopend.\n\n` +
+                  `Professional: ${doc.professional}\nDatum: ${doc.date}\nGrootte: ${doc.size}`);
+        }
+
         // Render Messages
         function renderMessages() {
             const container = document.getElementById('messagesList');
@@ -989,7 +1447,6 @@
                 </div>
             `).join('');
             
-            // Scroll to bottom
             container.scrollTop = container.scrollHeight;
         }
 
@@ -1003,7 +1460,6 @@
                 return;
             }
             
-            // Add message
             currentUser.messages.push({
                 id: Date.now(),
                 from: 'family',
@@ -1013,13 +1469,10 @@
                 timestamp: Date.now()
             });
             
-            // Clear input
             input.value = '';
-            
-            // Re-render
             renderMessages();
             
-            // Simulate response (in productie: via API)
+            // Add notification for regisseur
             setTimeout(() => {
                 currentUser.messages.push({
                     id: Date.now(),
@@ -1030,6 +1483,18 @@
                     timestamp: Date.now()
                 });
                 renderMessages();
+                
+                // Add notification
+                currentUser.notifications.unshift({
+                    id: Date.now(),
+                    type: 'message',
+                    icon: '💬',
+                    title: `Reactie van ${currentUser.regisseur.name}`,
+                    text: 'Je bericht is ontvangen',
+                    time: 'Zojuist',
+                    read: false,
+                    action: () => showView('messages')
+                });
                 updateNotificationBadge();
             }, 2000);
         }
@@ -1048,6 +1513,20 @@
             if (item && item.trim()) {
                 currentUser.mdo.agenda.push(item.trim());
                 renderDashboard();
+                
+                // Add notification
+                currentUser.notifications.unshift({
+                    id: Date.now(),
+                    type: 'agenda',
+                    icon: '📅',
+                    title: 'Agendapunt toegevoegd',
+                    text: item.trim(),
+                    time: 'Zojuist',
+                    read: false,
+                    action: () => showView('dashboard')
+                });
+                updateNotificationBadge();
+                
                 alert('Agendapunt toegevoegd! Je regisseur ontvangt een notificatie.');
             }
         }
@@ -1056,32 +1535,98 @@
         function updateSettings() {
             document.getElementById('settingsName').textContent = currentUser.family.name;
             document.getElementById('settingsCode').textContent = `Code: ${localStorage.getItem('familiePortalCode')}`;
+            
+            if (currentUser.lastSync) {
+                const syncDate = new Date(currentUser.lastSync).toLocaleString('nl-NL');
+                document.getElementById('settingsCode').textContent += ` • Laatste sync: ${syncDate}`;
+            }
         }
 
         function toggleNotifications() {
             const enabled = document.getElementById('notificationToggle').checked;
-            // In productie: opslaan in backend
             alert(enabled ? 'Notificaties ingeschakeld' : 'Notificaties uitgeschakeld');
+        }
+
+        // RPA Import
+        function importUpdate() {
+            const input = document.getElementById('importInput');
+            const json = input.value.trim();
+            
+            if (!json) {
+                alert('Plak eerst de update-code van je professional');
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(json);
+                
+                // Validate structure
+                if (!data.timestamp || !data.regisseur) {
+                    throw new Error('Ongeldige data structuur');
+                }
+                
+                // Merge regisseur data
+                if (data.regisseur) {
+                    currentUser.regisseur = {
+                        ...currentUser.regisseur,
+                        ...data.regisseur
+                    };
+                }
+                
+                // Merge professionals
+                if (data.professionals && Array.isArray(data.professionals)) {
+                    currentUser.professionals = data.professionals;
+                }
+                
+                // Merge MDO data
+                if (data.mdo) {
+                    currentUser.mdo = data.mdo;
+                }
+                
+                // Update sync timestamp
+                currentUser.lastSync = data.timestamp;
+                
+                // Clear input
+                input.value = '';
+                
+                // Re-render all views
+                initializeApp();
+                
+                // Add notification
+                currentUser.notifications.unshift({
+                    id: Date.now(),
+                    type: 'sync',
+                    icon: '🔄',
+                    title: 'Update geïmporteerd',
+                    text: 'Data is succesvol bijgewerkt',
+                    time: 'Zojuist',
+                    read: false,
+                    action: () => showView('dashboard')
+                });
+                updateNotificationBadge();
+                
+                alert('✅ Update succesvol geïmporteerd!\n\nJe ziet nu de laatste informatie van je professional.');
+                
+            } catch (e) {
+                console.error('Import error:', e);
+                alert('❌ Ongeldige update-code.\n\nControleer of je de volledige code hebt geplakt en probeer opnieuw.');
+            }
         }
 
         // Navigation
         function showView(view) {
-            // Hide all views
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-            
-            // Show target view
             document.getElementById(view + 'View').classList.remove('hidden');
             
-            // Update nav
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             event.currentTarget.classList.add('active');
             
             currentView = view;
             
-            // Update header title
             const titles = {
                 'dashboard': 'Overzicht',
                 'professionals': 'Professionals',
+                'documents': 'Documenten',
                 'messages': 'Berichten',
                 'settings': 'Instellingen'
             };
@@ -1090,11 +1635,11 @@
 
         // Notifications
         function updateNotificationBadge() {
-            const count = currentUser.notifications.length;
+            const unread = currentUser.notifications.filter(n => !n.read).length;
             const badge = document.getElementById('notificationCount');
             
-            if (count > 0) {
-                badge.textContent = count;
+            if (unread > 0) {
+                badge.textContent = unread;
                 badge.classList.remove('hidden');
             } else {
                 badge.classList.add('hidden');
@@ -1103,20 +1648,61 @@
 
         function showNotifications() {
             if (currentUser.notifications.length === 0) {
-                alert('Geen nieuwe notificaties');
+                alert('Geen notificaties');
                 return;
             }
             
-            // Show notifications (in productie: modal of aparte view)
-            alert('Notificaties:\n\n' + currentUser.notifications.map(n => `• ${n.text}`).join('\n'));
+            const modal = document.getElementById('notificationModal');
+            const list = document.getElementById('notificationList');
+            
+            list.innerHTML = currentUser.notifications.map(notif => `
+                <div class="notification-item ${!notif.read ? 'unread' : ''}" onclick="handleNotificationClick(${notif.id})">
+                    <div class="notification-type">${notif.icon}</div>
+                    <div class="notification-title">${notif.title}</div>
+                    <div class="notification-text">${notif.text}</div>
+                    <div class="notification-time">${notif.time}</div>
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
         }
 
-        // Auto-login for demo
+        function closeNotifications() {
+            document.getElementById('notificationModal').classList.remove('active');
+        }
+
+        function handleNotificationClick(id) {
+            const notif = currentUser.notifications.find(n => n.id === id);
+            if (!notif) return;
+            
+            notif.read = true;
+            closeNotifications();
+            updateNotificationBadge();
+            
+            if (notif.action) {
+                notif.action();
+            }
+        }
+
+        function markAllRead() {
+            currentUser.notifications.forEach(n => n.read = true);
+            updateNotificationBadge();
+            closeNotifications();
+        }
+
+        // Auto-login
         window.addEventListener('DOMContentLoaded', () => {
             const savedCode = localStorage.getItem('familiePortalCode');
             if (savedCode && DEMO_DATA[savedCode]) {
                 document.getElementById('loginCode').value = savedCode;
                 login();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('notificationModal').addEventListener('click', (e) => {
+            if (e.target.id === 'notificationModal') {
+                closeNotifications();
             }
         });
     </script>
