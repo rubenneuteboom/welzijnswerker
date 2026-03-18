@@ -7425,24 +7425,33 @@ Antwoord in dit exacte JSON formaat:
 
         // Start hulpvraag track
         // QUICK SCAN FUNCTIONS
-        function goToQuickscan() {
-            // Valideer hulpvraag eerst
-            const hulpvraagInput = document.getElementById('hulpvraagFocus');
-            const hulpvraagValue = hulpvraagInput ? hulpvraagInput.value.trim() : '';
-            
-            if (!hulpvraagValue) {
-                alert('Vul eerst in wat je wilt bereiken');
-                if (hulpvraagInput) hulpvraagInput.focus();
-                return;
+        window.goToQuickscan = function() {
+            try {
+                // Valideer hulpvraag eerst
+                const hulpvraagInput = document.getElementById('hulpvraagFocus');
+                const hulpvraagValue = hulpvraagInput ? hulpvraagInput.value.trim() : '';
+                
+                if (!hulpvraagValue) {
+                    alert('Vul eerst in wat je wilt bereiken');
+                    if (hulpvraagInput) hulpvraagInput.focus();
+                    return;
+                }
+                
+                state.hulpvraagFocus = hulpvraagValue;
+                saveState();
+                
+                // Ga naar quickscan
+                if (typeof goToScreenById === 'function') {
+                    goToScreenById('quickscan');
+                    setTimeout(() => renderQuickscanGrid(), 100);
+                } else {
+                    alert('Error: navigatie functie niet gevonden');
+                }
+            } catch (error) {
+                alert('Error bij navigatie: ' + error.message);
+                console.error('goToQuickscan error:', error);
             }
-            
-            state.hulpvraagFocus = hulpvraagValue;
-            saveState();
-            
-            // Ga naar quickscan
-            goToScreenById('quickscan');
-            renderQuickscanGrid();
-        }
+        };
         
         function renderQuickscanGrid() {
             const container = document.getElementById('quickscanGrid');
