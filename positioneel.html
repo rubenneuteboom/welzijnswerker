@@ -4448,10 +4448,49 @@
                             ← Terug
                         </button>
                         <button class="btn btn-primary" 
-                                onclick="startHulpvraagTrack();" 
+                                onclick="goToQuickscan();" 
                                 id="btnStartHulpvraag" 
                                 style="z-index:10;position:relative;">
                             Ga verder →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2b: QUICK SCAN - Traffic Light alle 11 domeinen (Track A voorbereiding) -->
+            <div class="screen" id="screen-quickscan">
+                <div class="card">
+                    <h2 style="font-size:1.6rem;margin-bottom:8px;">
+                        🚦 Snelle Check - Alle Levensgebieden
+                    </h2>
+
+                    <p style="color:var(--text-light);margin-bottom:16px;line-height:1.6;">
+                        Voordat we inzoomen op jouw vraag, even een snel overzicht. Geef bij elk gebied aan: groen, oranje of rood?
+                    </p>
+
+                    <div style="background:#dbeafe;border-left:4px solid #3b82f6;padding:12px 16px;margin-bottom:20px;border-radius:8px;">
+                        <p style="margin:0;font-size:0.9rem;color:#1e40af;font-weight:600;">
+                            💡 Dit helpt om belangrijke gebieden niet te missen
+                        </p>
+                        <p style="margin:4px 0 0;font-size:0.85rem;color:#1e3a8a;">
+                            🟢 Prima | 🟡 Aandacht | 🔴 Urgent
+                        </p>
+                    </div>
+
+                    <!-- Quick scan grid -->
+                    <div id="quickscanGrid" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                        <!-- Gevuld door renderQuickscanGrid() -->
+                    </div>
+
+                    <!-- Samenvatting -->
+                    <div id="quickscanSummary" style="display:none;background:#f0fdf4;border-left:4px solid #22c55e;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
+                        <p style="margin:0;font-size:0.9rem;color:#166534;font-weight:600;" id="quickscanSummaryText"></p>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="goToScreenById('hulpvraag-focus')">← Terug</button>
+                        <button class="btn btn-primary" onclick="completeQuickscan()" id="btnCompleteQuickscan">
+                            Ga verder naar selectie →
                         </button>
                     </div>
                 </div>
@@ -4877,6 +4916,10 @@
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
                         <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
+                        <button class="btn" onclick="exportVoorFamiliePortal()"
+                            style="background:#667eea;color:white;border:none;font-size:0.82rem;font-weight:600;">
+                            📤 Deel met familie
+                        </button>
                         <button class="btn" onclick="exportVoorNiveau3()"
                             style="background:#f59e0b;color:white;border:none;font-size:0.82rem;font-weight:600;">
                             📊 Export voor niveau 3
@@ -7381,6 +7424,161 @@ Antwoord in dit exacte JSON formaat:
         }
 
         // Start hulpvraag track
+        // QUICK SCAN FUNCTIONS
+        function goToQuickscan() {
+            // Valideer hulpvraag eerst
+            const hulpvraagInput = document.getElementById('hulpvraagFocus');
+            const hulpvraagValue = hulpvraagInput ? hulpvraagInput.value.trim() : '';
+            
+            if (!hulpvraagValue) {
+                alert('Vul eerst in wat je wilt bereiken');
+                if (hulpvraagInput) hulpvraagInput.focus();
+                return;
+            }
+            
+            state.hulpvraagFocus = hulpvraagValue;
+            saveState();
+            
+            // Ga naar quickscan
+            goToScreenById('quickscan');
+            renderQuickscanGrid();
+        }
+        
+        function renderQuickscanGrid() {
+            const container = document.getElementById('quickscanGrid');
+            if (!container) return;
+            
+            // Initialiseer quickscan state
+            if (!state.quickscan) {
+                state.quickscan = {};
+            }
+            
+            container.innerHTML = domains.map(domain => {
+                const current = state.quickscan[domain.id] || '';
+                
+                return `
+                    <div style="background:white;border:2px solid #e5e7eb;border-radius:12px;padding:12px 16px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <span style="font-size:1.8rem;">${domain.icon}</span>
+                                <span style="font-weight:600;color:#374151;">${domain.name}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <button onclick="setQuickscan('${domain.id}', 'groen')" 
+                                    class="traffic-light-btn ${current === 'groen' ? 'active' : ''}"
+                                    style="flex:1;padding:8px;border:2px solid ${current === 'groen' ? '#22c55e' : '#e5e7eb'};
+                                           background:${current === 'groen' ? '#dcfce7' : 'white'};color:#166534;
+                                           border-radius:8px;font-size:1.2rem;cursor:pointer;transition:all 0.2s;">
+                                🟢
+                            </button>
+                            <button onclick="setQuickscan('${domain.id}', 'oranje')" 
+                                    class="traffic-light-btn ${current === 'oranje' ? 'active' : ''}"
+                                    style="flex:1;padding:8px;border:2px solid ${current === 'oranje' ? '#f59e0b' : '#e5e7eb'};
+                                           background:${current === 'oranje' ? '#fef3c7' : 'white'};color:#92400e;
+                                           border-radius:8px;font-size:1.2rem;cursor:pointer;transition:all 0.2s;">
+                                🟡
+                            </button>
+                            <button onclick="setQuickscan('${domain.id}', 'rood')" 
+                                    class="traffic-light-btn ${current === 'rood' ? 'active' : ''}"
+                                    style="flex:1;padding:8px;border:2px solid ${current === 'rood' ? '#dc2626' : '#e5e7eb'};
+                                           background:${current === 'rood' ? '#fee2e2' : 'white'};color:#991b1b;
+                                           border-radius:8px;font-size:1.2rem;cursor:pointer;transition:all 0.2s;">
+                                🔴
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            updateQuickscanSummary();
+        }
+        
+        function setQuickscan(domainId, color) {
+            if (!state.quickscan) state.quickscan = {};
+            state.quickscan[domainId] = color;
+            saveState();
+            renderQuickscanGrid();
+        }
+        
+        function updateQuickscanSummary() {
+            const summary = document.getElementById('quickscanSummary');
+            const summaryText = document.getElementById('quickscanSummaryText');
+            if (!summary || !summaryText) return;
+            
+            const counts = {
+                groen: 0,
+                oranje: 0,
+                rood: 0,
+                open: 0
+            };
+            
+            domains.forEach(domain => {
+                const color = state.quickscan?.[domain.id];
+                if (color) {
+                    counts[color]++;
+                } else {
+                    counts.open++;
+                }
+            });
+            
+            if (counts.open === 0) {
+                summary.style.display = 'block';
+                
+                let urgentDomains = domains.filter(d => state.quickscan[d.id] === 'rood');
+                let attentionDomains = domains.filter(d => state.quickscan[d.id] === 'oranje');
+                
+                if (urgentDomains.length > 0) {
+                    summaryText.innerHTML = `
+                        🔴 ${urgentDomains.length} urgent: ${urgentDomains.map(d => d.name).join(', ')}<br>
+                        🟡 ${counts.oranje} aandacht | 🟢 ${counts.groen} prima
+                    `;
+                } else if (attentionDomains.length > 0) {
+                    summaryText.innerHTML = `
+                        🟡 ${attentionDomains.length} aandacht: ${attentionDomains.map(d => d.name).join(', ')}<br>
+                        🟢 ${counts.groen} prima
+                    `;
+                } else {
+                    summaryText.innerHTML = `🟢 Alle ${counts.groen} gebieden prima!`;
+                }
+            } else {
+                summary.style.display = 'none';
+            }
+        }
+        
+        function completeQuickscan() {
+            // Check of alles is ingevuld
+            const counts = { open: 0 };
+            domains.forEach(domain => {
+                if (!state.quickscan?.[domain.id]) counts.open++;
+            });
+            
+            if (counts.open > 0) {
+                alert(`Er zijn nog ${counts.open} gebieden niet ingevuld. Geef alle gebieden een kleur (groen/oranje/rood).`);
+                return;
+            }
+            
+            // Suggestie: oranje + rode domeinen pre-selecteren voor hulpvraag
+            const suggested = domains.filter(d => 
+                state.quickscan[d.id] === 'rood' || state.quickscan[d.id] === 'oranje'
+            ).map(d => d.id);
+            
+            if (suggested.length > 0 && suggested.length <= 4) {
+                // Auto-select deze domeinen
+                if (!state.hulpvraagSelectedDomains) state.hulpvraagSelectedDomains = [];
+                suggested.forEach(id => {
+                    if (!state.hulpvraagSelectedDomains.includes(id)) {
+                        state.hulpvraagSelectedDomains.push(id);
+                    }
+                });
+                saveState();
+            }
+            
+            // Ga terug naar hulpvraag-focus (met pre-selectie)
+            goToScreenById('hulpvraag-focus');
+            renderHulpvraagDomeinKeuze(); // Refresh de checkboxes
+        }
+
         function startHulpvraagTrack() {
             try {
                 // Haal waarden op
@@ -9474,6 +9672,203 @@ Antwoord in dit exacte JSON formaat:
             URL.revokeObjectURL(url);
             
             alert('✅ Export voltooid!\n\nJSON bestand gedownload. Dit kun je importeren in Niveau 3 (Strategische Analyse) voor kosten- en impactanalyse.');
+        }
+        
+        // FAMILIE PORTAL EXPORT
+        function exportVoorFamiliePortal() {
+            // Verzamel professionals uit regie en team
+            const professionals = [];
+            
+            // Regiedragers
+            Object.keys(state.regiedragers || {}).forEach(domainId => {
+                const domain = domains.find(d => d.id === domainId);
+                const regiedrager = state.regiedragers[domainId];
+                
+                if (regiedrager && regiedrager !== 'nvt') {
+                    professionals.push({
+                        id: professionals.length + 1,
+                        name: regiedrager,
+                        role: 'Regiedrager',
+                        domain: domain?.name || domainId,
+                        emoji: domain?.icon || '👤',
+                        status: 'active',
+                        frequency: 'Zie behandelplan',
+                        notes: `Verantwoordelijk voor domein ${domain?.name || domainId}`
+                    });
+                }
+            });
+            
+            // Team leden
+            const teamMembers = state.teamBesluit?.teamMembers || [];
+            teamMembers.forEach(member => {
+                const domain = domains.find(d => d.id === member.domainId);
+                professionals.push({
+                    id: professionals.length + 1,
+                    name: member.name || 'Onbekend',
+                    role: member.role || 'Professional',
+                    domain: domain?.name || member.domainId,
+                    emoji: domain?.icon || '👤',
+                    status: 'active',
+                    frequency: 'Zie behandelplan',
+                    notes: member.notes || ''
+                });
+            });
+            
+            // MDO data
+            const mdo = {
+                date: state.teamBesluit?.mdoDate || 'Nog niet ingepland',
+                location: state.teamBesluit?.mdoLocation || 'Locatie nog niet bekend',
+                agenda: [
+                    'Evaluatie netwerkanalyse',
+                    'Bespreken positionele bewegingen',
+                    'Verdeling regiedragerschap',
+                    'Planning vervolgafspraken',
+                    ...(state.teamBesluit?.agendaPunten || [])
+                ]
+            };
+            
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                regisseur: {
+                    name: state.regisseurNaam || 'Professional',
+                    role: state.regisseurRole || 'Regisseur',
+                    phone: state.regisseurPhone || '06-12345678',
+                    email: state.regisseurEmail || 'regisseur@organisatie.nl'
+                },
+                professionals: professionals,
+                mdo: mdo,
+                client: {
+                    name: state.clientNaam || 'Cliënt',
+                    doelgroepen: state.doelgroepen || [],
+                    postcode: state.postcode || ''
+                }
+            };
+            
+            // Toon in modal met copy functionaliteit
+            showExportModal(exportData);
+        }
+        
+        function showExportModal(data) {
+            const json = JSON.stringify(data, null, 2);
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                padding: 20px;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 20px;
+                    padding: 32px;
+                    max-width: 600px;
+                    width: 100%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                ">
+                    <h2 style="margin-bottom: 16px; color: #667eea;">📤 Deel met Familie</h2>
+                    
+                    <p style="color: #6b7280; margin-bottom: 20px; line-height: 1.6;">
+                        Deze code kun je delen met familie/mantelzorgers. 
+                        Zij kunnen deze importeren in het <strong>Familie Portal</strong> om het netwerk te volgen.
+                    </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 8px; color: #1f2937;">Privacy & Toestemming</h4>
+                        <label style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #f9fafb; border-radius: 8px;">
+                            <input type="checkbox" id="privacyConsent" style="margin-top: 4px;">
+                            <span style="font-size: 0.9rem; color: #4b5563;">
+                                Ik heb toestemming van de cliënt/familie om deze informatie te delen
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <textarea id="exportCode" readonly style="
+                        width: 100%;
+                        min-height: 200px;
+                        padding: 12px;
+                        border: 2px solid #e5e7eb;
+                        border-radius: 12px;
+                        font-family: monospace;
+                        font-size: 0.85rem;
+                        margin-bottom: 16px;
+                        background: #f9fafb;
+                    ">${json}</textarea>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button onclick="copyExportCode()" style="
+                            padding: 14px;
+                            background: #667eea;
+                            color: white;
+                            border: none;
+                            border-radius: 12px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">
+                            📋 Kopieer code
+                        </button>
+                        <button onclick="closeExportModal()" style="
+                            padding: 14px;
+                            background: #e5e7eb;
+                            color: #1f2937;
+                            border: none;
+                            border-radius: 12px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">
+                            Sluiten
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 16px; background: #dbeafe; border-radius: 12px;">
+                        <h4 style="margin-bottom: 8px; color: #1e40af;">ℹ️ Hoe te gebruiken:</h4>
+                        <ol style="margin-left: 20px; font-size: 0.9rem; color: #1e3a8a; line-height: 1.8;">
+                            <li>Klik op "Kopieer code"</li>
+                            <li>Deel de code met familie (WhatsApp, email, etc.)</li>
+                            <li>Familie opent <strong>Familie Portal</strong></li>
+                            <li>Gaat naar Instellingen → "Importeer Update"</li>
+                            <li>Plakt de code en klikt op "Importeren"</li>
+                        </ol>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.onclick = (e) => {
+                if (e.target === modal) closeExportModal();
+            };
+        }
+        
+        function copyExportCode() {
+            const consent = document.getElementById('privacyConsent');
+            if (!consent || !consent.checked) {
+                alert('⚠️ Bevestig eerst dat je toestemming hebt om deze informatie te delen.');
+                return;
+            }
+            
+            const textarea = document.getElementById('exportCode');
+            textarea.select();
+            document.execCommand('copy');
+            
+            alert('✅ Code gekopieerd!\n\nJe kunt deze nu delen met familie/mantelzorgers via WhatsApp, email, etc.');
+        }
+        
+        function closeExportModal() {
+            const modal = document.querySelector('[style*="position: fixed"][style*="z-index: 10000"]');
+            if (modal) {
+                modal.remove();
+            }
         }
         
         // STRATEGISCHE ANALYSE — één klik, geen bestand
