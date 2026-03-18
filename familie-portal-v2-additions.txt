@@ -1,0 +1,47 @@
+FAMILIE PORTAL V2.0 - ADDITIONS
+
+=== FEATURE 1: DOCUMENTEN ===
+
+A) Bottom Nav - Add 5th Button:
+Voeg toe na messages nav-item:
+
+<button class="nav-item" onclick="showView('documents')">
+    <span class="icon">📄</span>
+    <span class="label">Documenten</span>
+</button>
+
+B) Demo Data - Add documents array:
+Na messages array in DEMO_DATA:
+
+documents: [
+    {
+        id: 1,
+        title: 'GGZ Behandelplan Tim',
+        type: 'behandelplan',
+        professional: 'Jan Janssen',
+        date: '2026-02-15',
+        size: '245 KB',
+        description: 'Behandelplan depressie en autisme-begeleiding'
+    },
+    {
+        id: 2,
+        title: 'MDO Verslag 15 februari',
+        type: 'verslag',
+        professional: 'Lisa de Vries',
+        date: '2026-02-15',
+        size: '180 KB',
+        description: 'Samenvatting MDO met afspraken'
+    },
+    {
+        id: 3,
+        title: 'Schoolrapport Q1',
+        type: 'rapport',
+        professional: 'Mw. Bakker',
+        date: '2026-01-20',
+        size: '120 KB',
+        description: 'Cijfers en gedrag Q1'
+    }
+]
+
+Alle features zijn te complex voor chat edits.
+Ik maak NIEUWE standalone file: familie-portal-pro.html

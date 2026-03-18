@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Familie Portal - Zorg Overzicht</title>
+    
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .notification-badge {
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .notification-badge .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .login-card p {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.3);
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--bg);
+        }
+
+        .card-header .icon {
+            font-size: 2rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Regisseur Card */
+        .regisseur-card {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border: 2px solid var(--primary);
+        }
+
+        .regisseur-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .regisseur-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .regisseur-details h4 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .regisseur-details p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .contact-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-contact {
+            padding: 10px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-contact:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Professional Card */
+        .professional-card {
+            border-left: 4px solid var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .professional-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .professional-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .professional-role {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-planned {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .professional-details {
+            display: grid;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Question Box */
+        .question-box {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--primary);
+        }
+
+        .question-box textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .question-box textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Messages */
+        .messages-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .message-body {
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .message.outgoing {
+            background: var(--primary);
+            color: white;
+            margin-left: 40px;
+        }
+
+        .message.outgoing .message-author,
+        .message.outgoing .message-time {
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* MDO Card */
+        .mdo-card {
+            background: linear-gradient(135deg, #fef3c715, #f59e0b15);
+            border: 2px solid var(--warning);
+        }
+
+        .mdo-date {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--warning);
+            margin-bottom: 8px;
+        }
+
+        .agenda-items {
+            margin-top: 12px;
+        }
+
+        .agenda-item {
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.2s;
+            border: none;
+            background: none;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item .icon {
+            font-size: 1.4rem;
+        }
+
+        .nav-item .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .pb-80 {
+            padding-bottom: 80px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 3px solid var(--bg);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header-content {
+                padding: 0 16px;
+            }
+            
+            .contact-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card fade-in">
+            <h2>👨‍👩‍👧 Familie Portal</h2>
+            <p>Veilige toegang tot het zorgnetwerk</p>
+            
+            <div class="input-group">
+                <label for="loginCode">Toegangscode</label>
+                <input type="text" id="loginCode" placeholder="Bijv: ABCD1234" autocomplete="off">
+            </div>
+            
+            <button class="btn btn-primary" onclick="login()">Inloggen</button>
+            
+            <p style="margin-top: 20px; font-size: 0.85rem;">
+                ℹ️ Je hebt deze code gekregen van je regisseur
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1 id="headerTitle">Familie Portal</h1>
+                    <div class="header-subtitle" id="headerSubtitle">Laden...</div>
+                </div>
+                <div class="notification-badge" onclick="showNotifications()">
+                    🔔
+                    <span class="badge hidden" id="notificationCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="container pb-80">
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="view">
+                <div id="dashboardContent"></div>
+            </div>
+
+            <!-- Professionals View -->
+            <div id="professionalsView" class="view hidden">
+                <div id="professionalsContent"></div>
+            </div>
+
+            <!-- Messages View -->
+            <div id="messagesView" class="view hidden">
+                <div class="question-box">
+                    <h3 style="margin-bottom: 12px;">💬 Stel een vraag</h3>
+                    <textarea id="messageInput" placeholder="Typ hier je vraag of ongerustheid..."></textarea>
+                    <button class="btn btn-primary" style="margin-top: 12px;" onclick="sendMessage()">Verstuur</button>
+                </div>
+                
+                <div class="card">
+                    <h3 style="margin-bottom: 16px;">Berichten</h3>
+                    <div class="messages-list" id="messagesList"></div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settingsView" class="view hidden">
+                <div class="card">
+                    <h3 style="margin-bottom: 16px;">⚙️ Instellingen</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 8px;">Account</h4>
+                        <p style="color: var(--text-light); margin-bottom: 12px;" id="settingsName">Laden...</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem;" id="settingsCode">Code: ****</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 8px;">Notificaties</h4>
+                        <label style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg); border-radius: 8px;">
+                            <input type="checkbox" id="notificationToggle" checked onchange="toggleNotifications()">
+                            <span>Email notificaties ontvangen</span>
+                        </label>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="logout()" style="background: var(--danger);">
+                        Uitloggen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="showView('dashboard')">
+                <span class="icon">🏠</span>
+                <span class="label">Overzicht</span>
+            </button>
+            <button class="nav-item" onclick="showView('professionals')">
+                <span class="icon">👥</span>
+                <span class="label">Professionals</span>
+            </button>
+            <button class="nav-item" onclick="showView('messages')">
+                <span class="icon">💬</span>
+                <span class="label">Berichten</span>
+            </button>
+            <button class="nav-item" onclick="showView('settings')">
+                <span class="icon">⚙️</span>
+                <span class="label">Instellingen</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Demo Data (in productie: van server/API)
+        const DEMO_DATA = {
+            'DEMO123': {
+                family: {
+                    name: 'Maria (moeder van Tim)',
+                    childName: 'Tim',
+                    childAge: 15
+                },
+                regisseur: {
+                    name: 'Lisa de Vries',
+                    role: 'Jeugdzorgwerker',
+                    phone: '06-12345678',
+                    email: 'lisa.devries@jeugdzorg.nl',
+                    avatar: 'LD'
+                },
+                professionals: [
+                    {
+                        id: 1,
+                        name: 'Jan Janssen',
+                        role: 'GGZ Behandelaar',
+                        domain: 'Mentale gezondheid',
+                        emoji: '🧠',
+                        status: 'active',
+                        lastContact: '2 dagen geleden',
+                        nextAppointment: '15 maart 2026, 14:00',
+                        frequency: '1x per 2 weken',
+                        notes: 'Behandeling depressie en autisme-begeleiding'
+                    },
+                    {
+                        id: 2,
+                        name: 'Peter de Wit',
+                        role: 'Verslavingszorg',
+                        domain: 'Verslaving',
+                        emoji: '🚭',
+                        status: 'active',
+                        lastContact: '5 dagen geleden',
+                        nextAppointment: '18 maart 2026, 10:30',
+                        frequency: '1x per week',
+                        notes: 'Behandelprogramma cannabis'
+                    },
+                    {
+                        id: 3,
+                        name: 'Mw. Bakker',
+                        role: 'Schoolmentor',
+                        domain: 'School',
+                        emoji: '🏫',
+                        status: 'active',
+                        lastContact: '1 week geleden',
+                        nextAppointment: null,
+                        frequency: 'Bij school-issues',
+                        notes: 'School loopt momenteel goed'
+                    },
+                    {
+                        id: 4,
+                        name: 'Sandra Visser',
+                        role: 'Maatschappelijk Werk',
+                        domain: 'Algemeen welzijn',
+                        emoji: '🤝',
+                        status: 'planned',
+                        lastContact: null,
+                        nextAppointment: '20 maart 2026, 11:00',
+                        frequency: 'Nieuw traject',
+                        notes: 'Intake gepland voor sociaal-emotionele ondersteuning'
+                    }
+                ],
+                mdo: {
+                    date: '20 maart 2026, 10:00',
+                    location: 'Jeugdzorgbureau, kamer 3',
+                    agenda: [
+                        'Evaluatie behandeling GGZ',
+                        'Update verslavingszorg',
+                        'Schoolsituatie bespreken',
+                        'Vragen van Maria'
+                    ]
+                },
+                messages: [
+                    {
+                        id: 1,
+                        from: 'regisseur',
+                        author: 'Lisa de Vries',
+                        text: 'Hoi Maria, het MDO is ingepland voor 20 maart. Heb je nog specifieke punten die je wilt bespreken?',
+                        time: '2 dagen geleden',
+                        timestamp: Date.now() - 172800000
+                    },
+                    {
+                        id: 2,
+                        from: 'family',
+                        author: 'Maria',
+                        text: 'Ja graag! Ik maak me zorgen over Tim\'s slaappatroon. Hij slaapt heel slecht de laatste weken.',
+                        time: '1 dag geleden',
+                        timestamp: Date.now() - 86400000
+                    },
+                    {
+                        id: 3,
+                        from: 'regisseur',
+                        author: 'Lisa de Vries',
+                        text: 'Goed dat je dit aangeeft. Ik zet het op de agenda. Ik check ook even met Jan (GGZ) of dit te maken kan hebben met de medicatie.',
+                        time: '12 uur geleden',
+                        timestamp: Date.now() - 43200000
+                    }
+                ],
+                notifications: []
+            }
+        };
+
+        // State
+        let currentUser = null;
+        let currentView = 'dashboard';
+
+        // Login
+        function login() {
+            const code = document.getElementById('loginCode').value.trim().toUpperCase();
+            
+            if (DEMO_DATA[code]) {
+                currentUser = DEMO_DATA[code];
+                localStorage.setItem('familiePortalCode', code);
+                
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                initializeApp();
+            } else {
+                alert('Ongeldige code. Probeer: DEMO123');
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+                localStorage.removeItem('familiePortalCode');
+                location.reload();
+            }
+        }
+
+        // Initialize App
+        function initializeApp() {
+            updateHeader();
+            renderDashboard();
+            renderProfessionals();
+            renderMessages();
+            updateSettings();
+            
+            // Check for notifications
+            updateNotificationBadge();
+        }
+
+        // Update Header
+        function updateHeader() {
+            document.getElementById('headerSubtitle').textContent = currentUser.family.name;
+        }
+
+        // Render Dashboard
+        function renderDashboard() {
+            const container = document.getElementById('dashboardContent');
+            
+            let html = '';
+            
+            // Regisseur Card
+            html += `
+                <div class="card regisseur-card fade-in">
+                    <div class="card-header">
+                        <span class="icon">🎯</span>
+                        <h3>Jouw Regisseur</h3>
+                    </div>
+                    
+                    <div class="regisseur-info">
+                        <div class="regisseur-avatar">${currentUser.regisseur.avatar}</div>
+                        <div class="regisseur-details">
+                            <h4>${currentUser.regisseur.name}</h4>
+                            <p>${currentUser.regisseur.role}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-buttons">
+                        <button class="btn-contact" onclick="callRegisseur()">
+                            📞 Bellen
+                        </button>
+                        <button class="btn-contact" onclick="emailRegisseur()">
+                            ✉️ Email
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // MDO Card
+            html += `
+                <div class="card mdo-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="card-header">
+                        <span class="icon">📅</span>
+                        <h3>Volgend Overleg (MDO)</h3>
+                    </div>
+                    
+                    <div class="mdo-date">${currentUser.mdo.date}</div>
+                    <p style="color: var(--text-light); margin-bottom: 12px;">📍 ${currentUser.mdo.location}</p>
+                    
+                    <div class="agenda-items">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--text-light);">Agenda:</h4>
+                        ${currentUser.mdo.agenda.map(item => `
+                            <div class="agenda-item">• ${item}</div>
+                        `).join('')}
+                    </div>
+                    
+                    <button class="btn btn-primary" style="margin-top: 16px; background: var(--warning);" onclick="addAgendaItem()">
+                        ➕ Voeg agendapunt toe
+                    </button>
+                </div>
+            `;
+            
+            // Professionals Summary
+            html += `
+                <div class="card fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-header">
+                        <span class="icon">👥</span>
+                        <h3>Betrokken Professionals (${currentUser.professionals.length})</h3>
+                    </div>
+                    
+                    ${currentUser.professionals.slice(0, 3).map(prof => `
+                        <div class="professional-card card" style="margin-bottom: 12px;">
+                            <div class="professional-header">
+                                <div>
+                                    <div style="font-size: 1.2rem; margin-bottom: 4px;">${prof.emoji}</div>
+                                    <div class="professional-name">${prof.name}</div>
+                                    <div class="professional-role">${prof.role}</div>
+                                </div>
+                                <span class="status-badge ${prof.status === 'active' ? 'status-active' : 'status-planned'}">
+                                    ${prof.status === 'active' ? '✅ Actief' : '📅 Gepland'}
+                                </span>
+                            </div>
+                            ${prof.nextAppointment ? `
+                                <div class="detail-row">
+                                    <span>📅</span>
+                                    <span>Volgende afspraak: ${prof.nextAppointment}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                    
+                    <button class="btn btn-primary" onclick="showView('professionals')" style="background: var(--primary);">
+                        Bekijk alle professionals →
+                    </button>
+                </div>
+            `;
+            
+            // Recent Messages
+            const recentMessages = currentUser.messages.slice(-2).reverse();
+            html += `
+                <div class="card fade-in" style="animation-delay: 0.3s;">
+                    <div class="card-header">
+                        <span class="icon">💬</span>
+                        <h3>Recente Berichten</h3>
+                    </div>
+                    
+                    ${recentMessages.map(msg => `
+                        <div class="message ${msg.from === 'family' ? 'outgoing' : ''}">
+                            <div class="message-header">
+                                <span class="message-author">${msg.author}</span>
+                                <span class="message-time">${msg.time}</span>
+                            </div>
+                            <div class="message-body">${msg.text}</div>
+                        </div>
+                    `).join('')}
+                    
+                    <button class="btn btn-primary" onclick="showView('messages')" style="margin-top: 12px;">
+                        💬 Naar berichten →
+                    </button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Render Professionals
+        function renderProfessionals() {
+            const container = document.getElementById('professionalsContent');
+            
+            let html = `
+                <div class="card fade-in">
+                    <h3 style="margin-bottom: 16px;">👥 Alle Professionals</h3>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">
+                        Overzicht van iedereen die betrokken is bij de zorg voor ${currentUser.family.childName}
+                    </p>
+                </div>
+            `;
+            
+            currentUser.professionals.forEach((prof, index) => {
+                html += `
+                    <div class="card professional-card fade-in" style="animation-delay: ${index * 0.1}s;">
+                        <div class="professional-header">
+                            <div>
+                                <div style="font-size: 1.5rem; margin-bottom: 8px;">${prof.emoji}</div>
+                                <div class="professional-name">${prof.name}</div>
+                                <div class="professional-role">${prof.role} - ${prof.domain}</div>
+                            </div>
+                            <span class="status-badge ${prof.status === 'active' ? 'status-active' : 'status-planned'}">
+                                ${prof.status === 'active' ? '✅ Actief' : '📅 Gepland'}
+                            </span>
+                        </div>
+                        
+                        <div class="professional-details">
+                            ${prof.lastContact ? `
+                                <div class="detail-row">
+                                    <span>📅</span>
+                                    <span>Laatst contact: ${prof.lastContact}</span>
+                                </div>
+                            ` : ''}
+                            
+                            ${prof.nextAppointment ? `
+                                <div class="detail-row">
+                                    <span>🔜</span>
+                                    <span>Volgende afspraak: ${prof.nextAppointment}</span>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="detail-row">
+                                <span>🔄</span>
+                                <span>Frequentie: ${prof.frequency}</span>
+                            </div>
+                            
+                            ${prof.notes ? `
+                                <div class="detail-row" style="margin-top: 8px;">
+                                    <span>ℹ️</span>
+                                    <span>${prof.notes}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Render Messages
+        function renderMessages() {
+            const container = document.getElementById('messagesList');
+            
+            if (currentUser.messages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">💬</div>
+                        <p>Nog geen berichten</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const sorted = [...currentUser.messages].sort((a, b) => a.timestamp - b.timestamp);
+            
+            container.innerHTML = sorted.map(msg => `
+                <div class="message ${msg.from === 'family' ? 'outgoing' : ''}">
+                    <div class="message-header">
+                        <span class="message-author">${msg.author}</span>
+                        <span class="message-time">${msg.time}</span>
+                    </div>
+                    <div class="message-body">${msg.text}</div>
+                </div>
+            `).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Send Message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Typ eerst een bericht');
+                return;
+            }
+            
+            // Add message
+            currentUser.messages.push({
+                id: Date.now(),
+                from: 'family',
+                author: currentUser.family.name.split('(')[0].trim(),
+                text: text,
+                time: 'Zojuist',
+                timestamp: Date.now()
+            });
+            
+            // Clear input
+            input.value = '';
+            
+            // Re-render
+            renderMessages();
+            
+            // Simulate response (in productie: via API)
+            setTimeout(() => {
+                currentUser.messages.push({
+                    id: Date.now(),
+                    from: 'regisseur',
+                    author: currentUser.regisseur.name,
+                    text: 'Bedankt voor je bericht. Ik neem dit mee en kom hier zo snel mogelijk op terug.',
+                    time: 'Zojuist',
+                    timestamp: Date.now()
+                });
+                renderMessages();
+                updateNotificationBadge();
+            }, 2000);
+        }
+
+        // Contact Functions
+        function callRegisseur() {
+            window.location.href = `tel:${currentUser.regisseur.phone}`;
+        }
+
+        function emailRegisseur() {
+            window.location.href = `mailto:${currentUser.regisseur.email}`;
+        }
+
+        function addAgendaItem() {
+            const item = prompt('Wat wil je bespreken tijdens het MDO?');
+            if (item && item.trim()) {
+                currentUser.mdo.agenda.push(item.trim());
+                renderDashboard();
+                alert('Agendapunt toegevoegd! Je regisseur ontvangt een notificatie.');
+            }
+        }
+
+        // Settings
+        function updateSettings() {
+            document.getElementById('settingsName').textContent = currentUser.family.name;
+            document.getElementById('settingsCode').textContent = `Code: ${localStorage.getItem('familiePortalCode')}`;
+        }
+
+        function toggleNotifications() {
+            const enabled = document.getElementById('notificationToggle').checked;
+            // In productie: opslaan in backend
+            alert(enabled ? 'Notificaties ingeschakeld' : 'Notificaties uitgeschakeld');
+        }
+
+        // Navigation
+        function showView(view) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            
+            // Show target view
+            document.getElementById(view + 'View').classList.remove('hidden');
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            currentView = view;
+            
+            // Update header title
+            const titles = {
+                'dashboard': 'Overzicht',
+                'professionals': 'Professionals',
+                'messages': 'Berichten',
+                'settings': 'Instellingen'
+            };
+            document.getElementById('headerTitle').textContent = titles[view];
+        }
+
+        // Notifications
+        function updateNotificationBadge() {
+            const count = currentUser.notifications.length;
+            const badge = document.getElementById('notificationCount');
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function showNotifications() {
+            if (currentUser.notifications.length === 0) {
+                alert('Geen nieuwe notificaties');
+                return;
+            }
+            
+            // Show notifications (in productie: modal of aparte view)
+            alert('Notificaties:\n\n' + currentUser.notifications.map(n => `• ${n.text}`).join('\n'));
+        }
+
+        // Auto-login for demo
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedCode = localStorage.getItem('familiePortalCode');
+            if (savedCode && DEMO_DATA[savedCode]) {
+                document.getElementById('loginCode').value = savedCode;
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
