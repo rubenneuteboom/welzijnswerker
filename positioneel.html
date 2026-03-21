@@ -4223,11 +4223,19 @@
                             onchange="state.clientNaam=this.value;saveState();">
                     </div>
 
-                    <!-- Wat past bij deze situatie? (ingeklapt) -->
+                    <!-- Instellingen (ingeklapt) -->
                     <details style="margin-bottom:16px;border:1px solid #e5e7eb;border-radius:10px;">
-                    <summary style="padding:10px 14px;cursor:pointer;font-size:0.85rem;font-weight:600;color:#6b7280;list-style:none;">⚙️ Doelgroep, toestemming & instellingen <span style="font-weight:400;">(optioneel)</span></summary>
+                    <summary style="padding:10px 14px;cursor:pointer;font-size:0.85rem;font-weight:600;color:#6b7280;list-style:none;">⚙️ Extra instellingen <span style="font-weight:400;">(optioneel)</span></summary>
                     <div style="padding:0 14px 14px;">
-                    <div style="margin-bottom:16px;">
+                    
+                    <!-- Doelgroep automatisch ingevuld op basis van organisatie -->
+                    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:12px;margin-bottom:16px;">
+                        <p style="font-size:0.85rem;color:#166534;margin:0;">
+                            ✓ Doelgroep: <strong id="autoDoelgroepLabel">Automatisch ingevuld</strong>
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom:16px;display:none;">
                         <p style="font-size:0.92rem;font-weight:700;color:#374151;margin:8px 0 4px;">Wat past bij deze situatie?</p>
                         <p style="font-size:0.82rem;color:#9ca3af;margin:0 0 12px;">Geeft betere vragen en tips tijdens het gesprek</p>
                         <div style="display:flex;flex-wrap:wrap;gap:8px;" id="doelgroepChips">
@@ -20691,7 +20699,21 @@ END:VEVENT
         function selectOrgAndStart(org) {
             console.log('✅ Organisatie gekozen:', org);
             state.organisatie = org;
-            state.mode = org; // Voor doelgroep auto-fill
+            state.mode = org;
+            
+            // Auto-fill doelgroep
+            const orgDoelgroepMap = {
+                'wijkteam': ['sociaalmaatschappelijk'],
+                'ggz': ['ggz'],
+                'mantelzorg': ['mantelzorgers'],
+                'schuldhulp': ['multiproblem'],
+                'ouderenzorg': ['ouderen'],
+                'opvang': ['multiproblem'],
+                'reclassering': ['multiproblem'],
+                'jeugdzorg': ['jongeren']
+            };
+            
+            state.doelgroepen = orgDoelgroepMap[org] || [];
             saveState();
             
             // Ga naar volgende screen (intro = screen 2)
