@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<!-- v5.3 CLEAN - 3-Screen: Org → Kennismaking (Naam+Doelgroep) → Je vraag (Hulpvraag+Aanpak) → Domeinen - Build 20260320-2145 DEBUG -->
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <title>RPA Positionele Analyse v4.1 STABLE - Relationeel-Positioneel Analysemodel</title>
+    <title>RPA Positionele Analyse v4.0 Clean - Relationeel-Positioneel Analysemodel</title>
     <style>body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }</style>
     <!-- Chart.js used for spider/radar chart in dashboard -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -50,16 +48,6 @@
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes slideOutRight {
-            from { opacity: 1; transform: translateX(0); }
-            to { opacity: 0; transform: translateX(20px); }
         }
 
         body {
@@ -3762,1539 +3750,87 @@
     </style>
 </head>
 <body>
-<!--
-    RPA Positionele Analyse v4.0 Clean
+    <!-- Top Navigation Bar -->
+    <nav style="background:#fff;border-bottom:2px solid #2ECC71;padding:12px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div style="max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            <a href="index.html" style="text-decoration:none;color:#1f2937;font-weight:700;font-size:1.1rem;margin-right:auto;">
+                🔄 RPA
+            </a>
+            <a href="netwerkanalyse.html" style="text-decoration:none;color:#4b5563;padding:8px 16px;border-radius:8px;font-size:0.9rem;transition:all 0.2s;" onmouseover="this.style.background='#E8F8F0'" onmouseout="this.style.background='transparent'">
+                📊 Niveau 1
+            </a>
+            <a href="positioneel.html" style="text-decoration:none;color:#2ECC71;padding:8px 16px;border-radius:8px;font-size:0.9rem;font-weight:600;background:#E8F8F0;">
+                🔄 Niveau 2
+            </a>
+            <a href="strategisch.html" style="text-decoration:none;color:#4b5563;padding:8px 16px;border-radius:8px;font-size:0.9rem;transition:all 0.2s;" onmouseover="this.style.background='#E8F8F0'" onmouseout="this.style.background='transparent'">
+                📈 Niveau 3
+            </a>
+            <span style="width:1px;height:24px;background:#e5e7eb;"></span>
+            <a href="familie-portal-pro.html" style="text-decoration:none;color:#4b5563;padding:8px 16px;border-radius:8px;font-size:0.9rem;transition:all 0.2s;" onmouseover="this.style.background='#E8F8F0'" onmouseout="this.style.background='transparent'">
+                👨‍👩‍👧 Familie
+            </a>
+            <a href="familie-portal-mdo.html" style="text-decoration:none;color:#4b5563;padding:8px 16px;border-radius:8px;font-size:0.9rem;transition:all 0.2s;" onmouseover="this.style.background='#E8F8F0'" onmouseout="this.style.background='transparent'">
+                👥 MDO
+            </a>
+        </div>
+    </nav>
 
-    Wijzigingen t.o.v. v3.0:
-    - Tekst: "Steun wenselijk" → "Steun aanwezig"
-    - Nieuw: Dropdown per domein bij "Steun aanwezig"
-      → Type: Professioneel / Collectief / Informeel
-      → Wie: Dropdown passend bij type
-      → Wat: Tekstveld voor rol/activiteit
 
-    Data opslag:
-    - state.steunDetails[domeinId].type (formeel/collectief/informeel)
-    - state.steunDetails[domeinId].wie (geselecteerde persoon/org)
-    - state.steunDetails[domeinId].wat (beschrijving activiteit)
-
-    Gebouwd: 2026-02-25 00:02
-    Met: Laura & Marie (team review feedback)
--->
-
-    <header style="padding:16px 24px;background:white;border-bottom:1px solid #e5e7eb;">
-        <h1 style="font-size:1.1rem;font-weight:500;color:#64748b;margin:0;">
-            Relationeel-Positioneel Analysemodel
-        </h1>
+    <header style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>
+                RPA Positionele Analyse
+                <span class="version-badge">v4.0 Clean</span>
+                <span id="modusBadge" style="display:none;background:rgba(255,255,255,0.25);padding:4px 12px;border-radius:20px;font-size:0.75rem;margin-left:6px;"></span>
+            </h1>
+            <p>Relationeel-Positioneel Analysemodel</p>
+        </div>
+        <!-- TODO: Later uitbreiden naar uitgebreidere RPA Methodiek slide -->
+        <!-- <button onclick="toonRPAMethodiek();" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+            <span>ℹ️</span>
+            <span>RPA Methodiek</span>
+        </button> -->
     </header>
 
-    <!-- VOORTGANGSBALK (compact) -->
-    <div id="progressBar" style="background:white;padding:10px 20px;margin:0 auto 12px;max-width:900px;display:none;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span id="progressText" style="font-size:0.8rem;font-weight:500;color:#64748b;">Stap 1 van 7</span>
-            <span id="progressPercent" style="font-size:0.75rem;color:#94a3b8;">0%</span>
+    <!-- VOORTGANGSBALK (Team feedback: Lisa) -->
+    <div id="progressBar" style="background:white;padding:16px 20px;margin:0 auto 20px;max-width:900px;border-radius:12px;box-shadow:var(--shadow);display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span id="progressText" style="font-size:0.9rem;font-weight:600;color:var(--text);">Stap 1 van 7</span>
+            <span id="progressPercent" style="font-size:0.85rem;color:var(--text-light);">0%</span>
         </div>
-        <div style="background:#f1f5f9;height:4px;border-radius:4px;overflow:hidden;">
-            <div id="progressFill" style="background:#2ECC71;height:100%;width:0%;transition:width 0.3s;border-radius:4px;"></div>
+        <div style="background:#e5e7eb;height:8px;border-radius:10px;overflow:hidden;">
+            <div id="progressFill" style="background:var(--primary);height:100%;width:0%;transition:width 0.3s;border-radius:10px;"></div>
         </div>
     </div>
 
     <div class="container">
+        <!-- View Tabs REMOVED for LEAN workflow -->
 
         <!-- Assessment View -->
         <div class="view-section active" id="view-assessment">
             <!-- Progress Bar - Dynamic Steps -->
             <!-- Voortgangsindicator (Lisa feedback) -->
-            <div id="voortgangsPercentage" style="background:#f8fafc;padding:8px 16px;text-align:center;border-bottom:1px solid #e2e8f0;display:none;">
-                <div style="font-size:0.75rem;font-weight:500;color:#64748b;margin-bottom:4px;">
-                    <span id="voortgangTekst">Stap 1 van 11</span> · <span id="voortgangPercentageTekst">9%</span>
+            <div id="voortgangsPercentage" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 12px 20px; text-align: center; border-bottom: 2px solid var(--primary); display: none;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px;">
+                    <span id="voortgangTekst">Stap 1 van 11: Intro</span> <span id="voortgangEmoji">🌈</span>
                 </div>
-                <div style="width:100%;max-width:300px;height:3px;background:#e2e8f0;border-radius:3px;margin:0 auto;overflow:hidden;">
-                    <div id="voortgangBalk" style="height:100%;background:#2ECC71;border-radius:3px;width:9%;transition:width 0.4s ease;"></div>
+                <div style="width: 100%; max-width: 400px; height: 8px; background: #d1fae5; border-radius: 10px; margin: 0 auto; overflow: hidden;">
+                    <div id="voortgangBalk" style="height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 10px; width: 9%; transition: width 0.4s ease;"></div>
+                </div>
+                <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
+                    <span id="voortgangPercentageTekst">9%</span> voltooid
                 </div>
             </div>
 
             <!-- Workflow bolletjes (zonder pijltjes) -->
-            <div id="workflowBolletjes" style="background:white;padding:8px 16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05);display:none;position:relative;z-index:100;">
+            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 12px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
                 <div id="workflowStepsDynamic" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
                     <!-- Dynamisch gegenereerd door renderWorkflowBolletjes() -->
                 </div>
             </div>
 
-            <!-- Screen 0: Toelichting methode (voor training / nieuwe gebruikers) -->
-            <div class="screen" id="screen-intro">
-                <div class="card" style="max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary); font-weight: 800;">🔄 RPA Niveau 2</h1>
-                        <p style="font-size: 1.2rem; color: #166534; font-weight: 700; margin-bottom: 5px;">Relationele Netwerkbeweging</p>
-                        <p style="font-size: 0.95rem; color: #4b5563; font-style: italic;">Voor professional + cliënt samen</p>
-                    </div>
 
-                    <!-- DOEL - Prominente box -->
-                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 3px solid #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 2.5rem;">🎯</span>
-                            <h3 style="font-size: 1.4rem; color: #1e40af; margin: 0; font-weight: 800;">DOEL</h3>
-                        </div>
-                        <p style="font-size: 1.1rem; line-height: 1.8; color: #1e3a8a; margin-bottom: 16px; font-weight: 600;">
-                            Het verminderen van de problematiek door een <strong>gerichte netwerkbeweging</strong>
-                            die de relationele positie versterkt en de regie herstelt.
-                        </p>
-                        <div style="background: rgba(255,255,255,0.6); padding: 16px; border-radius: 10px; border-left: 4px solid #3b82f6; margin-bottom: 16px;">
-                            <p style="font-size: 1rem; line-height: 1.7; color: #1e40af; margin-bottom: 12px;">
-                                In niveau 2 kijken we niet alleen <em>wat er misgaat</em>, maar vooral <strong>wat er moet VERSCHUIVEN</strong>:
-                            </p>
-                            <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 8px;">
-                                <li style="color: #1e40af; font-size: 0.95rem; padding-left: 20px; position: relative;">
-                                    <span style="position: absolute; left: 0;">•</span> Wie moet <strong>dichterbij</strong>?
-                                </li>
-                                <li style="color: #1e40af; font-size: 0.95rem; padding-left: 20px; position: relative;">
-                                    <span style="position: absolute; left: 0;">•</span> Wie moet <strong>begrensd</strong> worden?
-                                </li>
-                                <li style="color: #1e40af; font-size: 0.95rem; padding-left: 20px; position: relative;">
-                                    <span style="position: absolute; left: 0;">•</span> Waar moet <strong>opgeschaald</strong>?
-                                </li>
-                                <li style="color: #1e40af; font-size: 0.95rem; padding-left: 20px; position: relative;">
-                                    <span style="position: absolute; left: 0;">•</span> Waar juist <strong>afgeschaald</strong>?
-                                </li>
-                            </ul>
-                        </div>
-                        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 14px 18px; border-radius: 10px; border: 2px solid #f59e0b;">
-                            <p style="font-size: 1rem; line-height: 1.7; color: #92400e; margin: 0; font-weight: 600;">
-                                💡 <strong>Kort gezegd:</strong> We lossen het probleem op door de juiste <em>beweging in het netwerk</em>
-                                te organiseren — niet door meer hulp toe te voegen.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Hoe werkt het -->
-                    <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 16px; padding: 25px; margin-bottom: 25px; border: 3px solid #22c55e;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <span style="font-size: 2.5rem;">📋</span>
-                            <h3 style="font-size: 1.4rem; color: #166534; margin: 0; font-weight: 700;">Hoe werkt het?</h3>
-                        </div>
-                        <div style="display: grid; gap: 12px;">
-                            <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #22c55e;">
-                                <div style="font-size: 1.05rem; color: #166534; font-weight: 700; margin-bottom: 6px;">1️⃣ Inventarisatie</div>
-                                <div style="font-size: 0.95rem; color: #15803d; line-height: 1.6;">
-                                    Welke levensgebieden vragen aandacht? Wie helpt er nu? Hoe ervaart de cliënt dit?
-                                </div>
-                            </div>
-                            <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #22c55e;">
-                                <div style="font-size: 1.05rem; color: #166534; font-weight: 700; margin-bottom: 6px;">2️⃣ Netwerkpositie zichtbaar maken</div>
-                                <div style="font-size: 0.95rem; color: #15803d; line-height: 1.6;">
-                                    Waar staat het netwerk nu? Visueel overzicht van formeel, collectief, informeel en gaten.
-                                </div>
-                            </div>
-                            <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #22c55e;">
-                                <div style="font-size: 1.05rem; color: #166534; font-weight: 700; margin-bottom: 6px;">3️⃣ Beweging kiezen</div>
-                                <div style="font-size: 0.95rem; color: #15803d; line-height: 1.6;">
-                                    Samen besluiten: wat moet verschuiven? Welke richting past? Van abstract naar concrete acties.
-                                </div>
-                            </div>
-                            <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #22c55e;">
-                                <div style="font-size: 1.05rem; color: #166534; font-weight: 700; margin-bottom: 6px;">4️⃣ Voor & Na</div>
-                                <div style="font-size: 0.95rem; color: #15803d; line-height: 1.6;">
-                                    Zie de impact: hoe verandert het netwerk? Wat levert deze beweging op?
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Privacy & GDPR -->
-                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; padding: 18px; margin-bottom: 25px; border: 2px solid #f59e0b;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                            <span style="font-size: 2rem;">🔒</span>
-                            <h3 style="font-size: 1.1rem; color: #92400e; margin: 0; font-weight: 700;">Privacy & Veiligheid</h3>
-                        </div>
-                        <p style="font-size: 0.9rem; line-height: 1.6; color: #78350f; margin: 0;">
-                            ✓ <strong>AVG-compliant</strong> - Alle data blijft lokaal in je browser<br>
-                            ✓ <strong>Vertrouwelijk</strong> - Geen automatische verzending naar servers<br>
-                            ✓ <strong>Expliciete toestemming</strong> - Export naar niveau 3 alleen met akkoord cliënt<br>
-                            ✓ <strong>Geanonimiseerd</strong> - Bij export kunnen persoonsgegevens verwijderd worden
-                        </p>
-                    </div>
-
-                    <!-- Netwerkbeweging diagram -->
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 25px; margin: 25px 0;">
-                        <h3 style="font-size: 1.2rem; color: var(--text); margin-bottom: 8px; text-align: center; font-weight: 700;">
-                            Netwerkposities
-                        </h3>
-                        <p style="font-size: 0.95rem; color: var(--text-light); text-align: center; margin-bottom: 15px; line-height: 1.6;">
-                            Beweging tussen posities is altijd mogelijk. De vraag is: <strong>welke richting past nu?</strong>
-                        </p>
-
-                        <svg viewBox="0 0 700 350" style="width: 100%; max-width: 700px; height: auto; margin: 0 auto; display: block;">
-                            <!-- Pijlen (eerst tekenen zodat ze achter de boxen zitten) -->
-                            <defs>
-                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                                    <polygon points="0 0, 10 3, 0 6" fill="#9ca3af" />
-                                </marker>
-                            </defs>
-
-                            <!-- Pijlen tussen alle posities (dikker) -->
-
-                            <!-- Geen netwerk → Gemengd (horizontaal) -->
-                            <line x1="460" y1="87" x2="360" y2="87" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-
-                            <!-- Gemengd <-> Informeel (verticaal) -->
-                            <line x1="295" y1="115" x2="295" y2="235" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            <line x1="305" y1="235" x2="305" y2="115" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-
-                            <!-- 1-persoons → Gemengd (diagonaal, eenrichtingsverkeer) -->
-                            <line x1="160" y1="155" x2="240" y2="105" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-
-                            <!-- 1-persoons → Informeel (diagonaal, eenrichtingsverkeer) -->
-                            <line x1="160" y1="195" x2="240" y2="245" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-
-                            <!-- Informeel <-> Formeel (horizontaal) -->
-                            <line x1="360" y1="257" x2="460" y2="257" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-                            <line x1="460" y1="263" x2="360" y2="263" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-
-                            <!-- Gemengd <-> Formeel (diagonaal) -->
-                            <line x1="350" y1="110" x2="470" y2="240" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
-                            <line x1="470" y1="245" x2="350" y2="115" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
-
-                            <!-- Geen → Informeel (diagonaal) -->
-                            <line x1="470" y1="110" x2="350" y2="240" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.3"/>
-
-                            <!-- Geen → Formeel (verticaal) -->
-                            <line x1="520" y1="115" x2="520" y2="235" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowhead)" opacity="0.4"/>
-
-                            <!-- POSITIES -->
-
-                            <!-- GEMENGD NETWERK (middenboven, paars 🟣) -->
-                            <rect x="240" y="60" width="120" height="55" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="3"/>
-                            <text x="300" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">GEMENGD</text>
-                            <text x="300" y="101" text-anchor="middle" font-size="12" fill="#5b21b6">NETWERK</text>
-
-                            <!-- GEEN NETWERK (rechtsboven, wit/grijs) -->
-                            <rect x="460" y="60" width="120" height="55" rx="10" fill="#ffffff" stroke="#9ca3af" stroke-width="3"/>
-                            <text x="520" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#4b5563">GEEN</text>
-                            <text x="520" y="101" text-anchor="middle" font-size="12" fill="#6b7280">NETWERK</text>
-
-                            <!-- 1-PERSOONS NETWERK (links midden, tussen gemengd en informeel, geel) -->
-                            <rect x="40" y="147" width="120" height="55" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
-                            <text x="100" y="170" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">1-PERSOONS</text>
-                            <text x="100" y="188" text-anchor="middle" font-size="12" fill="#92400e">NETWERK</text>
-
-                            <!-- INFORMEEL NETWERK (midden beneden, precies onder GEMENGD, groen 🟢) -->
-                            <rect x="240" y="235" width="120" height="55" rx="10" fill="#d1fae5" stroke="#10b981" stroke-width="3"/>
-                            <text x="300" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">INFORMEEL</text>
-                            <text x="300" y="276" text-anchor="middle" font-size="12" fill="#065f46">NETWERK</text>
-
-                            <!-- FORMEEL NETWERK (rechtsonder, precies onder GEEN NETWERK, blauw 🔵) -->
-                            <rect x="460" y="235" width="120" height="55" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
-                            <text x="520" y="258" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">FORMEEL</text>
-                            <text x="520" y="276" text-anchor="middle" font-size="12" fill="#1e40af">NETWERK</text>
-                        </svg>
-
-                        <div style="background: #f0f9ff; padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #3b82f6;">
-                            <p style="font-size: 0.95rem; color: #0c4a6e; margin: 0; line-height: 1.7;">
-                                <strong>💡 Deze 5 netwerkposities zie je straks terug in de analyse.</strong><br>
-                                We bepalen samen: waar staat de cliënt nu? En welke beweging is passend?
-                                De pijlen tonen mogelijke richtingen — beweging is altijd mogelijk.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Praktisch -->
-                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: 20px; margin: 25px 0; border: 2px solid #0ea5e9;">
-                        <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
-                            <div style="text-align: center;">
-                                <div style="font-size: 1.8rem; margin-bottom: 5px;">⏱️</div>
-                                <div style="font-weight: 700; color: #075985; font-size: 0.9rem;">25-30 minuten</div>
-                                <div style="font-size: 0.8rem; color: #0c4a6e;">11 stappen</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 1.8rem; margin-bottom: 5px;">💾</div>
-                                <div style="font-weight: 700; color: #075985; font-size: 0.9rem;">Auto-save</div>
-                                <div style="font-size: 0.8rem; color: #0c4a6e;">Pauzeer wanneer je wilt</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 1.8rem; margin-bottom: 5px;">📊</div>
-                                <div style="font-weight: 700; color: #075985; font-size: 0.9rem;">Visuele output</div>
-                                <div style="font-size: 0.8rem; color: #0c4a6e;">Spider + positiekaart</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="btn-group" style="margin-top: 25px;">
-                        <button class="btn btn-primary" onclick="goToScreenById('triage')" style="font-size: 1.1rem; padding: 14px 28px;">Start gesprek →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 1: Start -->
-            <div class="screen active" id="screen-start">
-                <div class="card">
-                    <!-- Organisatie-keuze bovenaan -->
-                    <div id="organisatieKeuze" style="margin-bottom:30px;padding:25px;background:linear-gradient(135deg,#e0f2fe,#dbeafe);border-radius:16px;border:2px solid #3b82f6;">
-                        <h2 style="text-align:center;color:#1e40af;margin-bottom:20px;">🎯 Vanuit welke organisatie werkt u?</h2>
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;">
-                            <div class="mode-card" onclick="selectOrg('wijkteam')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">🏘️</div>
-                                <div style="font-weight:600;margin-top:8px;">Wijkteam</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('ggz')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">🧠</div>
-                                <div style="font-weight:600;margin-top:8px;">GGZ</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('mantelzorg')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">🫂</div>
-                                <div style="font-weight:600;margin-top:8px;">Mantelzorg</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('schuldhulp')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">💰</div>
-                                <div style="font-weight:600;margin-top:8px;">Schuldhulp</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('ouderenzorg')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">👴</div>
-                                <div style="font-weight:600;margin-top:8px;">Ouderenzorg</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('opvang')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">🏠</div>
-                                <div style="font-weight:600;margin-top:8px;">Opvang</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('reclassering')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">⚖️</div>
-                                <div style="font-weight:600;margin-top:8px;">Reclassering</div>
-                            </div>
-                            <div class="mode-card" onclick="selectOrg('jeugdzorg')" style="cursor:pointer;padding:20px;text-align:center;">
-                                <div style="font-size:2.5rem;">🧒</div>
-                                <div style="font-weight:600;margin-top:8px;">Jeugdzorg</div>
-                            </div>
-                        </div>
-                        <p style="text-align:center;color:#0369a1;margin-top:15px;font-size:0.9rem;">👆 Klik op uw organisatie</p>
-                    </div>
-
-                    <!-- Rest van intake (verborgen tot organisatie gekozen) -->
-                    <!-- Rest van intake (verborgen tot organisatie gekozen) -->
-                    <!-- SCHERM 2: Kennismaking (na organisatie keuze) -->
-                    <!-- SCHERM 2: Kennismaking - Naam + Optionele Gegevens -->
-                    <div id="naamScherm" style="display:none;">
-
-                        <div style="text-align:center;margin-bottom:32px;">
-                            <h1 style="font-size:1.6rem;margin-bottom:8px;font-weight:600;color:#1e293b;">
-                                Kennismaking
-                            </h1>
-                            <p style="font-size:0.95rem;color:#64748b;">
-                                Even voorstellen
-                            </p>
-                        </div>
-
-                        <!-- Naam cliënt (verplicht) -->
-                        <div style="margin-bottom:24px;">
-                            <label for="naamInput" style="display:block;font-weight:600;font-size:0.95rem;color:#1e293b;margin-bottom:8px;">
-                                Naam cliënt *
-                            </label>
-                            <input
-                                type="text"
-                                id="naamInput"
-                                placeholder="Vul naam in"
-                                required
-                                style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:1rem;font-family:inherit;transition:border 0.2s;"
-                                onfocus="this.style.borderColor='#2ECC71'"
-                                onblur="this.style.borderColor='#e2e8f0'"
-                                oninput="state.clientName=this.value;saveState();"
-                            >
-                        </div>
-
-                        <!-- Optionele gegevens (uitklapbaar) -->
-                        <div style="margin-bottom:28px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
-                            <button
-                                onclick="toggleOptionalFieldsNaam()"
-                                style="width:100%;padding:14px 16px;background:#f8fafc;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s;"
-                                onmouseover="this.style.background='#f1f5f9'"
-                                onmouseout="this.style.background='#f8fafc'"
-                            >
-                                <span style="font-size:0.9rem;font-weight:600;color:#475569;">
-                                    📋 Optionele gegevens <span style="font-weight:400;color:#94a3b8;">(later invullen is ook OK)</span>
-                                </span>
-                                <span id="optionalToggleIconNaam" style="font-size:1.2rem;color:#94a3b8;">▼</span>
-                            </button>
-
-                            <div id="optionalFieldsNaam" style="display:none;padding:20px;background:white;">
-                                <!-- Leeftijd -->
-                                <div style="margin-bottom:20px;">
-                                    <label for="clientLeeftijd" style="display:block;font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:6px;">
-                                        Leeftijd <span style="font-weight:400;color:#94a3b8;">(voor doelgroep-check)</span>
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="clientLeeftijd"
-                                        placeholder="Bijv. 28"
-                                        min="0"
-                                        max="120"
-                                        style="width:100px;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;"
-                                        oninput="state.leeftijd=this.value;saveState();"
-                                    >
-                                    <span style="font-size:0.85rem;color:#94a3b8;margin-left:8px;">jaar</span>
-                                </div>
-
-                                <!-- Postcode -->
-                                <div style="margin-bottom:20px;">
-                                    <label for="clientPostcode" style="display:block;font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:6px;">
-                                        Postcode <span style="font-weight:400;color:#94a3b8;">(voor lokale interventies)</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="clientPostcode"
-                                        placeholder="1012"
-                                        maxlength="4"
-                                        style="width:100px;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;text-transform:uppercase;"
-                                        oninput="state.postcode=this.value.replace(/[^0-9]/g,'').substring(0,4);this.value=state.postcode;saveState();"
-                                    >
-                                    <span style="font-size:0.75rem;color:#94a3b8;display:block;margin-top:4px;">
-                                        💡 Alleen eerste 4 cijfers
-                                    </span>
-                                </div>
-
-                                <!-- Contactpersoon -->
-                                <div style="border-top:1px solid #f1f5f9;padding-top:20px;margin-top:20px;">
-                                    <div style="font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:12px;">
-                                        👨‍👩‍👧 Contactpersoon (voor Familie Portal)
-                                    </div>
-
-                                    <div style="margin-bottom:12px;">
-                                        <label for="contactNaam" style="display:block;font-size:0.8rem;color:#64748b;margin-bottom:4px;">
-                                            Naam
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="contactNaam"
-                                            placeholder="Bijv. Maria Jansen"
-                                            style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;"
-                                            oninput="if(!state.contactpersoon)state.contactpersoon={};state.contactpersoon.naam=this.value;saveState();"
-                                        >
-                                    </div>
-
-                                    <div style="margin-bottom:12px;">
-                                        <label for="contactRelatie" style="display:block;font-size:0.8rem;color:#64748b;margin-bottom:4px;">
-                                            Relatie
-                                        </label>
-                                        <select
-                                            id="contactRelatie"
-                                            style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;background:white;"
-                                            onchange="if(!state.contactpersoon)state.contactpersoon={};state.contactpersoon.relatie=this.value;saveState();"
-                                        >
-                                            <option value="">Kies relatie...</option>
-                                            <option value="partner">Partner</option>
-                                            <option value="ouder">Ouder</option>
-                                            <option value="kind">Kind</option>
-                                            <option value="broer-zus">Broer/Zus</option>
-                                            <option value="vriend">Vriend/Vriendin</option>
-                                            <option value="mantelzorger">Mantelzorger</option>
-                                            <option value="anders">Anders</option>
-                                        </select>
-                                    </div>
-
-                                    <div style="margin-bottom:12px;">
-                                        <label for="contactTelEmail" style="display:block;font-size:0.8rem;color:#64748b;margin-bottom:4px;">
-                                            Telefoon of Email <span style="font-weight:400;color:#94a3b8;">(optioneel)</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="contactTelEmail"
-                                            placeholder="06-12345678 of email@example.nl"
-                                            style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;"
-                                            oninput="if(!state.contactpersoon)state.contactpersoon={};state.contactpersoon.contact=this.value;saveState();"
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Doelgroep (auto-filled, aanpasbaar) -->
-                        <div id="doelgroepSectionNaam" style="margin-bottom:24px;padding:14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
-                            <div style="font-size:0.85rem;color:#64748b;margin-bottom:8px;">
-                                ✓ Doelgroep: <strong id="doelgroepLabelNaam" style="color:#1e293b;">Automatisch ingevuld</strong>
-                            </div>
-                            <button
-                                onclick="document.getElementById('doelgroepDetailsNaam').style.display = document.getElementById('doelgroepDetailsNaam').style.display === 'none' ? 'block' : 'none'"
-                                style="background:none;border:none;color:#2ECC71;font-size:0.85rem;cursor:pointer;padding:0;text-decoration:underline;">
-                                Aanpassen
-                            </button>
-                            <div id="doelgroepDetailsNaam" style="display:none;margin-top:12px;">
-                                <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                                    <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
-                                        <input type="checkbox" id="doelgroep-ggz-naam" value="ggz" onchange="updateDoelgroepNaam()"> GGZ
-                                    </label>
-                                    <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
-                                        <input type="checkbox" id="doelgroep-jongeren-naam" value="jongeren" onchange="updateDoelgroepNaam()"> Jongeren
-                                    </label>
-                                    <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
-                                        <input type="checkbox" id="doelgroep-ouderen-naam" value="ouderen" onchange="updateDoelgroepNaam()"> Ouderen
-                                    </label>
-                                    <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
-                                        <input type="checkbox" id="doelgroep-lvb-naam" value="lvb" onchange="updateDoelgroepNaam()"> LVB
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Knoppen -->
-                        <div style="display:flex;gap:12px;">
-                            <button
-                                onclick="terugNaarOrganisatieVanuitNaam()"
-                                style="flex:1;padding:14px;background:white;color:#64748b;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;"
-                                onmouseover="this.style.borderColor='#cbd5e1'"
-                                onmouseout="this.style.borderColor='#e2e8f0'"
-                            >
-                                ← Terug
-                            </button>
-                            <button
-                                onclick="naarHulpvraagScherm()"
-                                style="flex:2;padding:14px;background:linear-gradient(135deg,#2ECC71,#27AE60);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(46,204,113,0.3);transition:all 0.2s;"
-                                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(46,204,113,0.4)'"
-                                onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(46,204,113,0.3)'"
-                            >
-                                Volgende →
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Einde naamScherm -->
-
-<script>
-function toggleOptionalFieldsNaam() {
-    const fields = document.getElementById('optionalFieldsNaam');
-    const icon = document.getElementById('optionalToggleIconNaam');
-
-    if (fields.style.display === 'none') {
-        fields.style.display = 'block';
-        icon.textContent = '▲';
-    } else {
-        fields.style.display = 'none';
-        icon.textContent = '▼';
-    }
-}
-
-function terugNaarOrganisatieVanuitNaam() {
-    document.getElementById('organisatieKeuze').style.display = 'block';
-    document.getElementById('naamScherm').style.display = 'none';
-
-    // Verberg workflow bolletjes
-    const workflowDiv = document.getElementById('workflowBolletjes');
-    if (workflowDiv) workflowDiv.style.display = 'none';
-}
-
-function updateDoelgroepNaam() {
-    const checkboxes = document.querySelectorAll('[id^="doelgroep-"][id$="-naam"]:checked');
-    state.doelgroepen = Array.from(checkboxes).map(cb => cb.value);
-    saveState();
-
-    const label = document.getElementById('doelgroepLabelNaam');
-    if (label) {
-        label.textContent = state.doelgroepen.length > 0 ? state.doelgroepen.join(', ') : 'Geen specifieke doelgroep';
-    }
-}
-
-function naarHulpvraagScherm() {
-    // Valideer naam
-    const naam = document.getElementById('naamInput')?.value.trim();
-    if (!naam) {
-        alert('Vul een naam in');
-        document.getElementById('naamInput')?.focus();
-        return;
-    }
-
-    state.clientName = naam;
-    saveState();
-
-    // Ga naar screen 2 (hulpvraag)
-    if (typeof goToScreen === 'function') {
-        goToScreen(2);
-    }
-}
-</script>
-
-                    <div id="kennismakingScherm" style="display:none;">
-
-                        <div style="text-align:center;margin-bottom:32px;">
-                            <h1 style="font-size:1.6rem;margin-bottom:8px;font-weight:600;color:#1e293b;">
-                                Waar wil je mee aan de slag?
-                            </h1>
-                            <p style="font-size:0.95rem;color:#64748b;">
-                                Laten we beginnen met jouw vraag
-                            </p>
-                        </div>
-
-                        <!-- Hulpvraag -->
-                        <div style="margin-bottom:28px;">
-                            <label style="display:block;font-weight:600;font-size:0.95rem;color:#475569;margin-bottom:8px;">
-                                Wat wil je bereiken?
-                            </label>
-                            <textarea
-                                id="kennismakingHulpvraag"
-                                placeholder="Bijv: Ik wil niet meer zo eenzaam zijn, of: Ik wil mijn schulden onder controle krijgen"
-                                style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;min-height:90px;line-height:1.5;font-family:inherit;transition:border 0.2s;resize:vertical;"
-                                onfocus="this.style.borderColor='#2ECC71'"
-                                onblur="this.style.borderColor='#e2e8f0'"
-                                oninput="state.hulpvraag=this.value;saveState();"
-                            ></textarea>
-                        </div>
-
-                        <!-- Welke levensgebieden? (optioneel) -->
-                        <div style="margin-bottom:32px;">
-                            <label style="display:block;font-weight:600;font-size:0.95rem;color:#475569;margin-bottom:8px;">
-                                Welke levensgebieden horen hierbij? <span style="font-weight:400;font-size:0.85rem;color:#94a3b8;">(optioneel)</span>
-                            </label>
-                            <div id="kennismakingDomeinen" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;">
-                                <!-- Gevuld door JavaScript -->
-                            </div>
-                        </div>
-
-                        <!-- Route keuze -->
-                        <div style="margin-bottom:32px;">
-                            <label style="display:block;font-weight:600;font-size:0.95rem;color:#475569;margin-bottom:12px;">
-                                Welke aanpak?
-                            </label>
-                            <div style="display:grid;gap:12px;">
-                                <label style="cursor:pointer;" onclick="selectRoute('volledig')">
-                                    <input type="radio" name="route" value="volledig" checked style="display:none;">
-                                    <div class="route-card route-volledig" style="border:2px solid #2ECC71;background:#f0fdf4;border-radius:10px;padding:16px;transition:all 0.2s;">
-                                        <div style="font-weight:600;color:#1e293b;margin-bottom:6px;font-size:1rem;">
-                                            📋 Volledig - Alle 11 levensgebieden
-                                        </div>
-                                        <div style="font-size:0.85rem;color:#475569;line-height:1.4;">
-                                            We kijken naar alle gebieden om het complete plaatje te zien
-                                        </div>
-                                    </div>
-                                </label>
-
-                                <label style="cursor:pointer;" onclick="selectRoute('quick')">
-                                    <input type="radio" name="route" value="quick" style="display:none;">
-                                    <div class="route-card route-quick" style="border:2px solid #e2e8f0;background:white;border-radius:10px;padding:16px;transition:all 0.2s;">
-                                        <div style="font-weight:600;color:#1e293b;margin-bottom:6px;font-size:1rem;">
-                                            ⚡ Quick Scan - Focus op jouw vraag
-                                        </div>
-                                        <div style="font-size:0.85rem;color:#64748b;line-height:1.4;">
-                                            We beginnen met de gebieden die jij koos en breiden uit waar nodig
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Knoppen -->
-                        <div style="display:flex;gap:12px;">
-                            <button
-                                onclick="terugNaarNaam()"
-                                style="flex:1;padding:14px;background:white;color:#64748b;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;"
-                                onmouseover="this.style.borderColor='#cbd5e1'"
-                                onmouseout="this.style.borderColor='#e2e8f0'"
-                            >
-                                ← Terug
-                            </button>
-                            <button
-                                onclick="startAnalyseVanuitKennismaking()"
-                                style="flex:2;padding:14px;background:linear-gradient(135deg,#2ECC71,#27AE60);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(46,204,113,0.3);transition:all 0.2s;"
-                                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(46,204,113,0.4)'"
-                                onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(46,204,113,0.3)'"
-                            >
-                                Start Analyse →
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Einde kennismakingScherm -->
-
-<style>
-input[name="route"]:checked + .route-card {
-    border-color: #2ECC71 !important;
-    background: #f0fdf4 !important;
-    box-shadow: 0 2px 8px rgba(46,204,113,0.15);
-}
-
-.route-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-</style>
-
-<script>
-// Render domein checkboxes voor kennismaking
-function renderKennismakingDomeinen() {
-    const container = document.getElementById('kennismakingDomeinen');
-    if (!container) return;
-
-    const domeinen = [
-        {id: 'financien', emoji: '💰', label: 'Financiën'},
-        {id: 'dagbesteding', emoji: '💼', label: 'Werk/School'},
-        {id: 'huisvesting', emoji: '🏠', label: 'Wonen'},
-        {id: 'huiselijk', emoji: '👨‍👩‍👧', label: 'Huiselijke relaties'},
-        {id: 'geestelijk', emoji: '🧠', label: 'Mentaal'},
-        {id: 'lichamelijk', emoji: '💪', label: 'Lichamelijk'},
-        {id: 'verslaving', emoji: '🚭', label: 'Verslaving'},
-        {id: 'adl', emoji: '🛁', label: 'Zelfzorg'},
-        {id: 'sociaal', emoji: '👥', label: 'Sociaal'},
-        {id: 'participatie', emoji: '🤝', label: 'Participatie'},
-        {id: 'justitie', emoji: '⚖️', label: 'Justitie'}
-    ];
-
-    container.innerHTML = domeinen.map(d => `
-        <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;"
-            onmouseover="this.style.borderColor='#2ECC71';this.style.background='#f0fdf4'"
-            onmouseout="this.style.borderColor='#e2e8f0';this.style.background='white'">
-            <input type="checkbox" value="${d.id}" onchange="updateKennismakingDomeinen()">
-            <span>${d.emoji}</span>
-            <span style="white-space:nowrap;">${d.label}</span>
-        </label>
-    `).join('');
-}
-
-function updateKennismakingDomeinen() {
-    const checkboxes = document.querySelectorAll('#kennismakingDomeinen input:checked');
-    state.gekozenDomeinen = Array.from(checkboxes).map(cb => cb.value);
-    saveState();
-}
-
-function selectRoute(route) {
-    const volledig = document.querySelector('.route-volledig');
-    const quick = document.querySelector('.route-quick');
-
-    if (route === 'volledig') {
-        volledig.style.borderColor = '#2ECC71';
-        volledig.style.background = '#f0fdf4';
-        quick.style.borderColor = '#e2e8f0';
-        quick.style.background = 'white';
-        document.querySelector('input[value="volledig"]').checked = true;
-    } else {
-        quick.style.borderColor = '#2ECC71';
-        quick.style.background = '#f0fdf4';
-        volledig.style.borderColor = '#e2e8f0';
-        volledig.style.background = 'white';
-        document.querySelector('input[value="quick"]').checked = true;
-    }
-
-    state.track = route;
-    saveState();
-}
-
-function terugNaarOrganisatie() {
-    document.getElementById('organisatieKeuze').style.display = 'block';
-    document.getElementById('naamScherm').style.display = 'none';
-    document.getElementById('kennismakingScherm').style.display = 'none';
-
-    // Verberg workflow bolletjes weer
-    const workflowDiv = document.getElementById('workflowBolletjes');
-    if (workflowDiv) {
-        workflowDiv.style.display = 'none';
-    }
-}
-
-function terugNaarNaam() {
-    // Ga terug naar screen 1 (kennismaking)
-    if (typeof goToScreen === 'function') {
-        goToScreen(1);
-    }
-}
-
-function navigeerNaarStap(stepNum) {
-    console.log('🔄 Navigeer naar stap:', stepNum);
-
-    // Custom navigatie voor onze nieuwe 3-screen flow
-    if (stepNum === 1) {
-        // Kennismaking = naamScherm
-        console.log('→ Toon naamScherm (Kennismaking)');
-
-        // Verberg andere custom schermen
-        const kennismaking = document.getElementById('kennismakingScherm');
-        if (kennismaking) kennismaking.style.display = 'none';
-
-        // Toon naam scherm
-        const naam = document.getElementById('naamScherm');
-        if (naam) {
-            naam.style.display = 'block';
-            console.log('✅ NaamScherm getoond');
-        }
-
-        state.currentScreen = 1;
-        saveState();
-
-        if (typeof updateWorkflowSteps === 'function') {
-            updateWorkflowSteps(1);
-        }
-
-    } else if (stepNum === 2) {
-        // Je vraag = kennismakingScherm
-        console.log('→ Toon kennismakingScherm (Je vraag)');
-
-        // Verberg andere custom schermen
-        const naam = document.getElementById('naamScherm');
-        if (naam) naam.style.display = 'none';
-
-        // Toon kennismaking scherm
-        const kennismaking = document.getElementById('kennismakingScherm');
-        if (kennismaking) {
-            kennismaking.style.display = 'block';
-            console.log('✅ KennismakingScherm getoond');
-        }
-
-        state.currentScreen = 2;
-        saveState();
-
-        if (typeof updateWorkflowSteps === 'function') {
-            updateWorkflowSteps(2);
-        }
-
-        // Render domeinen checkboxes
-        setTimeout(() => {
-            if (typeof renderKennismakingDomeinen === 'function') {
-                renderKennismakingDomeinen();
-            }
-        }, 100);
-
-    } else {
-        // Voor stap 3+ gebruik oude goToScreen
-        console.log('→ Gebruik goToScreen voor stap', stepNum);
-
-        // Verberg custom schermen
-        const naam = document.getElementById('naamScherm');
-        const kennismaking = document.getElementById('kennismakingScherm');
-        if (naam) naam.style.display = 'none';
-        if (kennismaking) kennismaking.style.display = 'none';
-
-        if (typeof goToScreen === 'function') {
-            goToScreen(stepNum);
-        }
-    }
-}
-
-function startAnalyseVanuitKennismaking() {
-    // Sla hulpvraag op
-    const hulpvraag = document.getElementById('kennismakingHulpvraag')?.value.trim();
-    if (hulpvraag) {
-        state.hulpvraag = hulpvraag;
-    }
-
-    // Sla route op
-    const route = document.querySelector('input[name="route"]:checked')?.value || 'volledig';
-    state.track = route;
-
-    // Metadata
-    state.createdAt = state.createdAt || new Date().toISOString();
-    state.updatedAt = new Date().toISOString();
-    state.clientId = state.clientId || 'client_' + Date.now();
-
-    saveState();
-
-    // Ga naar screen 3 (triage)
-    if (typeof goToScreen === 'function') {
-        goToScreen(3);
-    }
-}
-</script>
-
-<style>
-input[name="track"]:checked + .track-option {
-    border-color: #2ECC71 !important;
-    background: #f0fdf4 !important;
-}
-</style>
-
-<script>
-function updateDoelgroep() {
-    const checkboxes = document.querySelectorAll('[id^="doelgroep-"]');
-    state.doelgroepen = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-    saveState();
-
-    // Update label
-    const label = document.getElementById('doelgroepLabel');
-    if (label) {
-        label.textContent = state.doelgroepen.length > 0 ? state.doelgroepen.join(', ') : 'Geen specifieke doelgroep';
-    }
-}
-
-function validateAndStart() {
-    const naam = document.getElementById('clientNaam')?.value.trim();
-    if (!naam) {
-        alert('Vul een naam in voor de cliënt');
-        document.getElementById('clientNaam')?.focus();
-        return;
-    }
-
-    state.clientName = naam;
-    state.track = document.querySelector('input[name="track"]:checked')?.value || 'volledig';
-    state.createdAt = state.createdAt || new Date().toISOString();
-    state.updatedAt = new Date().toISOString();
-    state.clientId = state.clientId || 'client_' + Date.now();
-
-    saveState();
-    goToScreen(2); // Ga naar domeinen
-}
-
-function toggleOptionalFields() {
-    const fields = document.getElementById('optionalFields');
-    const icon = document.getElementById('optionalToggleIcon');
-
-    if (fields.style.display === 'none') {
-        fields.style.display = 'block';
-        icon.textContent = '▲';
-    } else {
-        fields.style.display = 'none';
-        icon.textContent = '▼';
-    }
-}
-
-function updateTrackVisual() {
-    const volledig = document.querySelector('.track-volledig');
-    const quick = document.querySelector('.track-quick');
-    const isVolledig = document.querySelector('input[name="track"]:checked')?.value === 'volledig';
-
-    if (isVolledig) {
-        volledig.style.borderColor = '#2ECC71';
-        volledig.style.background = '#f0fdf4';
-        quick.style.borderColor = '#e2e8f0';
-        quick.style.background = 'white';
-    } else {
-        quick.style.borderColor = '#2ECC71';
-        quick.style.background = '#f0fdf4';
-        volledig.style.borderColor = '#e2e8f0';
-        volledig.style.background = 'white';
-    }
-}
-
-function resetToOrgKeuze() {
-    document.getElementById('organisatieKeuze').style.display = 'block';
-    document.getElementById('restVanIntake').style.display = 'none';
-}
-</script>
-                </div>
-            </div>
-
-            <!-- Screen: Kennismaking (Naam + Optionele gegevens) -->
-            <div class="screen" id="screen-kennismaking">
-                <div class="card">
-                    <div style="text-align:center;margin-bottom:32px;">
-                        <h1 style="font-size:1.6rem;margin-bottom:8px;font-weight:600;color:#1e293b;">
-                            Kennismaking
-                        </h1>
-                        <p style="font-size:0.95rem;color:#64748b;">
-                            Even voorstellen
-                        </p>
-                    </div>
-
-                    <div id="kennismakingContent">
-                        <!-- Content wordt hier gekopieerd vanuit naamScherm -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen: Je vraag (Hulpvraag + Domeinkeuze) -->
-            <div class="screen" id="screen-hulpvraag">
-                <div class="card">
-                    <div style="text-align:center;margin-bottom:32px;">
-                        <h1 style="font-size:1.6rem;margin-bottom:8px;font-weight:600;color:#1e293b;">
-                            Waar wil je mee aan de slag?
-                        </h1>
-                        <p style="font-size:0.95rem;color:#64748b;">
-                            Laten we beginnen met jouw vraag
-                        </p>
-                    </div>
-
-                    <div id="hulpvraagContent">
-                        <!-- Content wordt hier gekopieerd vanuit kennismakingScherm -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 2: Oriëntatie - Het hier en nu -->
-                        <!--
-            <div class="screen" id="screen-hulpvraag">
-                <div class="card">
-                    <h2 style="font-size: 1.6rem; margin-bottom: 15px;">Hoe is het op dit moment?</h2>
-                    <p style="font-size: 1rem; line-height: 1.6; color: var(--text); margin-bottom: 30px;">
-                        Voor we de verschillende levensgebieden bekijken, eerst een algemene check.
-                    </p>
-
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Is er iets dat direct aandacht nodig heeft?</h3>
-                        <div style="display: flex; flex-direction: column; gap: 15px;">
-                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='#10b981'; this.style.background='#f0fdf4';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="stabilisatie" value="stabiel" style="width: 24px; height: 24px; margin-top: 2px;">
-                                <div>
-                                    <div style="font-size: 1.1rem; font-weight: 700; color: #10b981; margin-bottom: 6px;">🟢 Stabiel</div>
-                                    <div style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;">
-                                        Het gaat redelijk goed, geen acute situaties
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='#eab308'; this.style.background='#fefce8';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="stabilisatie" value="kwetsbaar" style="width: 24px; height: 24px; margin-top: 2px;">
-                                <div>
-                                    <div style="font-size: 1.1rem; font-weight: 700; color: #ca8a04; margin-bottom: 6px;">🟡 Kwetsbaar</div>
-                                    <div style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;">
-                                        Er zijn zorgen, het vraagt aandacht
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
-                                   onmouseover="this.style.borderColor='#dc2626'; this.style.background='#fef2f2';"
-                                   onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
-                                <input type="radio" name="stabilisatie" value="direct-actie" style="width: 24px; height: 24px; margin-top: 2px;">
-                                <div>
-                                    <div style="font-size: 1.1rem; font-weight: 700; color: #dc2626; margin-bottom: 6px;">🔴 Direct actie nodig</div>
-                                    <div style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;">
-                                        Er is nu direct hulp of steun nodig
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen(1)">← Terug naar Intro</button>
-                        <button class="btn btn-primary" onclick="saveOrientatie(); goToScreen(3)">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-            -->
-
-            <!-- Screen 2.5: HULPVRAAG (Track A start - Methodologie Summit) -->
-            <div class="screen" id="screen-hulpvraag-focus">
-                <div class="card">
-                    <h2 style="font-size:1.4rem;margin-bottom:24px;font-weight:600;color:#1e293b;">Waar wil je mee aan de slag?</h2>
-
-                    <!-- Stap 1: Wat wil je bereiken? -->
-                    <div style="margin-bottom:28px;">
-                        <label style="font-size:0.9rem;font-weight:600;color:#475569;display:block;margin-bottom:8px;">
-                            Wat wil je bereiken?
-                        </label>
-                        <textarea id="hulpvraagFocus" placeholder="Bijv: Ik wil niet meer zo eenzaam zijn"
-                            style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;min-height:90px;line-height:1.5;font-family:inherit;transition:border 0.2s;"
-                            onfocus="this.style.borderColor='#2ECC71'"
-                            onblur="this.style.borderColor='#e2e8f0'"
-                            onchange="state.hulpvraagFocus=this.value;saveState();"></textarea>
-                    </div>
-
-                    <!-- Stap 2: Welke gebieden horen hierbij? -->
-                    <div style="margin-bottom:28px;">
-                        <label style="font-size:0.9rem;font-weight:600;color:#475569;display:block;margin-bottom:8px;">
-                            Welke levensgebieden horen hierbij? <span style="font-size:0.8rem;font-weight:400;color:#94a3b8;">(kies 1-3)</span>
-                        </label>
-                        <div id="hulpvraagDomeinKeuze" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;">
-                            <!-- Gevuld door renderHulpvraagDomeinKeuze() -->
-                        </div>
-                    </div>
-
-                    <!-- Stap 3: Wie zou kunnen helpen? (optioneel) -->
-                    <div style="margin-bottom:28px;">
-                        <label style="font-size:0.9rem;font-weight:600;color:#475569;display:block;margin-bottom:8px;">
-                            Wie zou je kunnen helpen? <span style="font-size:0.8rem;font-weight:400;color:#94a3b8;">(optioneel)</span>
-                        </label>
-                        <input type="text" id="hulpvraagEersteGedachte" placeholder="Bijv: Mijn zus, een buurtcentrum..."
-                            style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;font-family:inherit;transition:border 0.2s;"
-                            onfocus="this.style.borderColor='#2ECC71'"
-                            onblur="this.style.borderColor='#e2e8f0'"
-                            onchange="state.hulpvraagEersteGedachte=this.value;saveState();">
-                    </div>
-
-                    <div class="btn-group" style="margin-top:24px;">
-                        <button class="btn btn-secondary"
-                                onclick="goToScreenById('start');"
-                                style="z-index:10;position:relative;">
-                            ← Terug
-                        </button>
-                        <button class="btn btn-primary"
-                                onclick="
-                                    const inp = document.getElementById('hulpvraagFocus');
-                                    if (!inp || !inp.value.trim()) {
-                                        alert('Vul eerst in wat je wilt bereiken');
-                                        if (inp) inp.focus();
-                                        return;
-                                    }
-                                    state.hulpvraagFocus = inp.value.trim();
-                                    saveState();
-                                    goToScreenById('quickscan');
-                                    setTimeout(() => renderQuickscanGrid(), 100);
-                                "
-                                id="btnStartHulpvraag"
-                                style="z-index:10;position:relative;">
-                            Ga verder →
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 2b: QUICK SCAN - Traffic Light alle 11 domeinen (Track A voorbereiding) -->
-            <div class="screen" id="screen-quickscan">
-                <div class="card">
-                    <h2 style="font-size:1.6rem;margin-bottom:8px;">
-                        🚦 Snelle Check - Alle Levensgebieden
-                    </h2>
-
-                    <p style="color:var(--text-light);margin-bottom:16px;line-height:1.6;">
-                        Voordat we inzoomen op jouw vraag, even een snel overzicht. Geef bij elk gebied aan: groen, oranje of rood?
-                    </p>
-
-                    <div style="background:#dbeafe;border-left:4px solid #3b82f6;padding:12px 16px;margin-bottom:20px;border-radius:8px;">
-                        <p style="margin:0;font-size:0.9rem;color:#1e40af;font-weight:600;">
-                            💡 Dit helpt om belangrijke gebieden niet te missen
-                        </p>
-                        <p style="margin:4px 0 0;font-size:0.85rem;color:#1e3a8a;">
-                            🟢 Prima | 🟡 Aandacht | 🔴 Urgent
-                        </p>
-                    </div>
-
-                    <!-- Quick scan grid -->
-                    <div id="quickscanGrid" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-                        <!-- Gevuld door renderQuickscanGrid() -->
-                    </div>
-
-                    <!-- Samenvatting -->
-                    <div id="quickscanSummary" style="display:none;background:#f0fdf4;border-left:4px solid #22c55e;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
-                        <p style="margin:0;font-size:0.9rem;color:#166534;font-weight:600;" id="quickscanSummaryText"></p>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreenById('hulpvraag-focus')">← Terug</button>
-                        <button class="btn btn-primary" onclick="completeQuickscan()" id="btnCompleteQuickscan">
-                            Ga verder naar selectie →
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 3: TRIAGE - Selecteer relevante domeinen (Prioriteit 1) -->
-            <div class="screen" id="screen-triage">
-                <div class="card">
-                    <h2 id="triageTitle" style="font-size:1.6rem;margin-bottom:8px;">
-🗺️ Waar staat het netwerk?</h2>
-
-                    <!-- Track A reminder -->
-                    <div id="trackAReminder" style="display:none;background:#dbeafe;border-left:4px solid #3b82f6;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
-                        <p style="margin:0;font-size:0.9rem;color:#1e40af;font-weight:600;">
-                            🎯 Je vraag: "<span id="hulpvraagReminder"></span>"
-                        </p>
-                        <p style="margin:4px 0 0;font-size:0.85rem;color:#1e3a8a;font-style:italic;">
-                            We kijken nu naar de <strong id="aantalDomeinen"></strong> die jij koos.
-                        </p>
-                    </div>
-
-                    <!-- Uitnodiging -->
-                    <div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:12px 16px;margin-bottom:16px;border-radius:8px;">
-                        <p style="margin:0;font-size:0.95rem;color:#166534;font-weight:600;">💬 Loop samen door de gebieden.</p>
-                        <p style="margin:4px 0 0;font-size:0.88rem;color:#15803d;font-style:italic;">"Gaat dit zelfstandig, of is er steun bij nodig?"</p>
-                    </div>
-
-                    <!-- Stoplicht grid -->
-                    <div id="stoplichtGrid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-                        <!-- Gevuld door renderStoplichtGrid() -->
-                    </div>
-
-                    <!-- Professioneel nootje -->
-                    <p style="font-size:0.75rem;color:#9ca3af;text-align:center;margin:4px 0 12px;font-style:italic;">
-                        🟢 Zelfstandig betekent niet altijd: alles is echt goed. Vraag door bij twijfel.
-                    </p>
-
-                    <!-- Teller (subtiel) -->
-                    <div id="triageCounter" style="padding:8px 16px;background:#f9fafb;border-radius:8px;margin-bottom:16px;font-size:0.8rem;color:#9ca3af;text-align:center;">
-                        <span id="triageCount">0</span>/11 &nbsp;·&nbsp;
-                        🔴 <span id="countProbleem">0</span> &nbsp;
-                        🟡 <span id="countAandacht">0</span> &nbsp;
-                        🟢 <span id="countGoed">0</span>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goBackToStart()">← Annuleren</button>
-                        <button class="btn btn-primary" id="btnTriageNext" onclick="saveTriageAndContinue()">
-                            Volgende →
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 4: Domains (Domeinscan) -->
-            <div class="screen" id="screen-domains">
-                <div class="card">
-                    <h2>🤝 Wie helpt er — en hoe?</h2>
-                    <p style="color:var(--text-light);font-size:0.95rem;margin-bottom:10px;">
-                        Je vulde al in bij het overzicht wie waar helpt. Laten we dat nu verder uitwerken: <strong>hoe</strong> helpt die persoon en <strong>werkt</strong> het?
-                    </p>
-                    <div style="background:#dbeafe;border-left:3px solid #3b82f6;border-radius:8px;padding:10px 14px;margin-bottom:20px;">
-                        <p style="font-size:0.82rem;color:#1e40af;margin:0;line-height:1.5;">
-                            💡 <strong>Focus op 3 vragen per domein:</strong><br>
-                            1️⃣ Wie helpt er? (naam + type: informeel/collectief/formeel)<br>
-                            2️⃣ Hoe helpt die persoon? (praktisch, emotioneel, financieel, etc.)<br>
-                            3️⃣ Werkt het? (helpend, neutraal, of belemmerend?)
-                        </p>
-                    </div>
-
-                    <!-- Wens reminder -->
-                    <div id="wensReminder" style="display: none;"></div>
-
-                    <!-- Risico-signalering -->
-                    <div id="riskAlert" style="display: none;"></div>
-
-                    <!-- Voortgangsindicator (Prioriteit 1 - Fase 2) -->
-                    <div id="domainProgress" style="margin-bottom: 25px;"></div>
-
-                    <!-- Domeinkaart: Uitklapbare kaarten per domein -->
-                    <div class="domeinkaart-accordion" id="domeinkaartAccordion"></div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="checkDomainsAndContinue()">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 5: Dashboard/Overzicht (hernummerd van 6) -->
-            <div class="screen" id="screen-network">
-                <div class="card">
-                    <h2>📊 Wat zien we samen?</h2>
-                    <p id="overzichtSubtitel" style="color:var(--text-light);font-size:0.95rem;margin-bottom:10px;">
-                        Je hebt het netwerk in kaart gebracht. Nu het totaalbeeld: <strong>hoe staat het netwerk ervoor?</strong>
-                    </p>
-                    <div style="background:#dcfce7;border-left:3px solid #16a34a;border-radius:8px;padding:10px 14px;margin-bottom:20px;">
-                        <p style="font-size:0.82rem;color:#166534;margin:0;">
-                            💡 Let op <strong>mantelzorg overbelasting</strong> (rood alarm) en de <strong>balans tussen netwerktypes</strong> (groen dashboard).
-                        </p>
-                    </div>
-
-                    <!-- 1. URGENT: Mantelzorg alarm (alleen als aanwezig) -->
-                    <div id="signaalPanel"></div>
-
-                    <!-- 2. VISUEEL: Spider diagram PROMINENT -->
-                    <div id="netwerkpositieInNetwork" style="background:#f0fdf4;border:2px solid #16a34a;border-radius:14px;padding:20px;margin-bottom:24px;box-shadow:0 4px 12px rgba(22,101,52,0.15);animation:fadeIn 0.5s ease-out;">
-                        <h3 style="font-size:1.25rem;color:#166534;margin:0 0 6px;font-weight:800;letter-spacing:-0.01em;">🕸️ Netwerkpositie</h3>
-                        <p style="font-size:0.88rem;color:#166534;margin:0 0 12px;line-height:1.5;">Het groene vlak toont hoe zelfstandig het gaat. Hoe groter, hoe meer eigen kracht.</p>
-                        <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.78rem;color:#166534;margin-bottom:16px;font-weight:600;">
-                            <span>🟢 <strong>Groot vlak</strong> = sterk</span>
-                            <span>🟡 <strong>Kleiner</strong> = aandacht nodig</span>
-                            <span>🔴 <strong>Ingetrokken</strong> = steun nodig</span>
-                        </div>
-                        <div id="sijnNetwerkkaartCompact2" style="animation:fadeIn 0.6s ease-out 0.2s both;"></div>
-                    </div>
-
-                    <!-- 3. DATA: Aggregatie + tabellen -->
-                    <div id="domainOverviewTable"></div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 7: Netwerkpositie (LEAN) - samengevoegd met screen-network -->
-            <div class="screen" id="screen-netwerkpositie" style="display:none!important">
-                <div class="card">
-                    <h2>🕸️ Netwerkpositie</h2>
-                    <p style="color: var(--text-light); margin-bottom: 20px;">
-                        Je zag in de intro de 5 netwerkposities (⚪ Geen • 🟡 1-persoons • 🟢 Informeel • 🔵 Formeel • 🟣 Gemengd).
-                    </p>
-                    <p style="color: var(--text); margin-bottom: 30px; font-weight: 600;">
-                        Op basis van jouw antwoorden lijkt de cliënt nu in deze positie te staan:
-                    </p>
-
-                    <!-- RPA NETWERKKAART (compact, geen interventies) -->
-                    <div id="sijnNetwerkkaartCompact">
-                        <!-- Wordt gevuld door renderRPANetwerkkaartCompact() -->
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 6: Beoogde Beweging (LEAN - DE KERN!) -->
-            <div class="screen" id="screen-beweging">
-                <div class="card">
-                    <h2>🎯 Wat Gaan We Doen?</h2>
-                    <p style="color: var(--text-light); margin-bottom: 12px; font-size: 0.95rem;">
-                        Voor elk aandachtspunt: <strong>wat wil je bereiken en hoe ga je dat doen?</strong>
-                    </p>
-                    <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:10px 14px;margin-bottom:16px;">
-                        <p style="font-size:0.82rem;color:#92400e;margin:0;line-height:1.5;">
-                            💡 <strong>Positionele beweging:</strong> Niet "meer zorg", maar <strong>wat moet verschuiven</strong> in het netwerk (🔵 ↔ 🟣 ↔ 🟢).
-                        </p>
-                    </div>
-
-                    <div id="bewegingPerDomein">
-                        <!-- Wordt gevuld door renderBewegingPerDomein() -->
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToScreen('triage')">← Terug</button>
-                        <button class="btn btn-primary" id="btnNaarReflectie" onclick="goToNext()">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 9: Strategische Reflectie (RPA Stap 3) -->
-            <div class="screen" id="screen-reflectie">
-                <div class="card">
-                    <h2>💭 Even terugkijken</h2>
-                    <p style="color: var(--text-light); margin-bottom: 12px; font-size: 0.95rem;">
-                        Je hebt samen afspraken gemaakt. Voordat we verder gaan: <strong>klopt dit plan?</strong>
-                    </p>
-                    <div style="background:#dbeafe;border-left:3px solid #3b82f6;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
-                        <p style="font-size:0.82rem;color:#1e40af;margin:0;line-height:1.5;">
-                            💡 <strong>Check per domein:</strong><br>
-                            • Is dit haalbaar? (rekening met draagkracht netwerk)<br>
-                            • Is dit veilig? (geen risico's over het hoofd gezien)<br>
-                            • Wanneer kijken we terug of het werkt?
-                        </p>
-                    </div>
-
-                    <div id="reflectieVragen" style="margin-bottom: 30px;">
-                        <!-- Wordt gevuld door renderReflectieVragen() -->
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="goToNext()">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 9.5: Multidisciplinair Team Besluit (NIEUW - Anti-regiediffusie) -->
-            <div class="screen" id="screen-team">
-                <div class="card">
-                    <h2>👥 Multidisciplinair Team Besluit</h2>
-                    <p style="color: var(--text-light); margin-bottom: 12px; font-size: 0.95rem;">
-                        Voor een gezamenlijke casus-bespreking: <strong>wie doet wat en wie draagt waar regie?</strong>
-                    </p>
-                    <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
-                        <p style="font-size:0.82rem;color:#92400e;margin:0;line-height:1.5;">
-                            💡 <strong>Doel:</strong> Regiediffusie voorkomen door <em>expliciete afspraken</em> per domein.
-                            Wie is primair verantwoordelijk? Wie ondersteunt?
-                        </p>
-                    </div>
-
-                    <!-- Aanwezige professionals -->
-                    <div style="margin-bottom:20px;">
-                        <label style="font-size:0.95rem;font-weight:700;color:#374151;display:block;margin-bottom:8px;">
-                            Wie zijn er bij dit overleg?
-                        </label>
-                        <input type="text" id="teamAanwezig"
-                               placeholder="Bijv: Karin (sociaal werker), Peter (GGZ), Lisa (cliënt)"
-                               style="width:100%;padding:10px 12px;border:2px solid #d1d5db;border-radius:8px;font-size:0.9rem;"
-                               value="${state.teamBesluit?.aanwezig?.join(', ') || ''}"
-                               onchange="saveTeamAanwezig(this.value)">
-                        <p style="font-size:0.75rem;color:#9ca3af;margin:4px 0 0;">Komma-gescheiden. Inclusief de cliënt zelf.</p>
-                    </div>
-
-                    <!-- Privacy Consent (Team feedback #6: Jan - GDPR) -->
-                    <div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:12px;padding:16px;margin-bottom:20px;">
-                        <div style="display:flex;align-items:start;gap:12px;">
-                            <input type="checkbox" id="privacyConsent"
-                                   ${state.teamBesluit?.privacyConsent ? 'checked' : ''}
-                                   onchange="savePrivacyConsent(this.checked)"
-                                   style="width:20px;height:20px;margin-top:2px;cursor:pointer;">
-                            <div style="flex:1;">
-                                <label for="privacyConsent" style="font-size:0.95rem;font-weight:700;color:#1e40af;cursor:pointer;">
-                                    🔒 Toestemming voor delen met team
-                                </label>
-                                <p style="font-size:0.85rem;color:#1e40af;margin:6px 0 0;line-height:1.5;">
-                                    Ik ga akkoord dat mijn gegevens (naam, situatie, afspraken) gedeeld worden met de hierboven genoemde teamleden.
-                                    Deze informatie wordt gebruikt voor begeleiding en blijft binnen dit team.
-                                </p>
-                                <details style="margin-top:8px;">
-                                    <summary style="font-size:0.8rem;color:#3b82f6;cursor:pointer;list-style:none;font-weight:600;">
-                                        ℹ️ Meer over privacy
-                                    </summary>
-                                    <div style="font-size:0.8rem;color:#6b7280;margin-top:8px;padding:10px;background:white;border-radius:6px;">
-                                        <strong>Wat delen we?</strong> Je naam, de besproken domeinen, afspraken en betrokkenen.<br>
-                                        <strong>Met wie?</strong> Alleen de personen die je hierboven hebt ingevuld.<br>
-                                        <strong>Hoelang?</strong> Tot het moment dat de begeleiding stopt of je toestemming intrekt.<br>
-                                        <strong>Je rechten:</strong> Je kunt altijd vragen welke gegevens we hebben, deze laten aanpassen of verwijderen.
-                                    </div>
-                                </details>
-                            </div>
-                        </div>
-                        ${!state.teamBesluit?.privacyConsent ? `
-                        <div style="background:#fef3c7;border-left:3px solid #f59e0b;padding:10px 12px;margin-top:12px;border-radius:6px;font-size:0.85rem;color:#92400e;">
-                            ⚠️ Zonder toestemming kunnen we deze afspraken niet vastleggen of delen met het team.
-                        </div>
-                        ` : ''}
-                    </div>
-
-                    <!-- Regieafspraken per domein -->
-                    <div id="teamRegieafspraken" style="margin-bottom:20px;${!state.teamBesluit?.privacyConsent ? 'opacity:0.4;pointer-events:none;' : ''}">
-                        <!-- Gevuld door renderTeamRegieafspraken() -->
-                    </div>
-
-                    <!-- Akkoord cliënt -->
-                    <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:16px;margin-bottom:20px;">
-                        <label style="font-size:0.95rem;font-weight:700;color:#166534;display:block;margin-bottom:10px;">
-                            ✅ Akkoord cliënt
-                        </label>
-                        <p style="font-size:0.85rem;color:#15803d;margin-bottom:10px;">
-                            Herkent de cliënt zich in deze afspraken? Voelt dit als <em>samen</em> besloten?
-                        </p>
-                        <div style="display:flex;gap:10px;">
-                            <label style="flex:1;padding:12px;border:2px solid ${state.teamBesluit?.akkoord === true ? '#16a34a' : '#d1d5db'};
-                                   background:${state.teamBesluit?.akkoord === true ? '#dcfce7' : 'white'};
-                                   border-radius:8px;cursor:pointer;text-align:center;font-weight:600;font-size:0.9rem;">
-                                <input type="radio" name="teamAkkoord" value="true"
-                                       ${state.teamBesluit?.akkoord === true ? 'checked' : ''}
-                                       onchange="saveTeamAkkoord(true)" style="display:none;">
-                                ✅ Ja, dit klopt
-                            </label>
-                            <label style="flex:1;padding:12px;border:2px solid ${state.teamBesluit?.akkoord === false ? '#dc2626' : '#d1d5db'};
-                                   background:${state.teamBesluit?.akkoord === false ? '#fee2e2' : 'white'};
-                                   border-radius:8px;cursor:pointer;text-align:center;font-weight:600;font-size:0.9rem;">
-                                <input type="radio" name="teamAkkoord" value="false"
-                                       ${state.teamBesluit?.akkoord === false ? 'checked' : ''}
-                                       onchange="saveTeamAkkoord(false)" style="display:none;">
-                                ❌ Nee, dit voelt niet goed
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="finalizeTeamBesluit(); goToNext()">
-                            Afronden & Verder →
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 10: Interventies (LEAN) -->
-            <div class="screen" id="screen-interventies">
-                <div class="card">
-                    <h2>🔧 Concrete Hulp</h2>
-                    <p style="color: var(--text-light); margin-bottom: 12px; font-size:0.95rem;">
-                        Passend bij de afspraken die je net maakte: <strong>wat zijn concrete mogelijkheden?</strong>
-                    </p>
-                    <div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:8px;padding:12px 14px;margin-bottom:20px;">
-                        <p style="font-size:0.82rem;color:#92400e;margin:0;line-height:1.5;">
-                            💡 <strong>Let op:</strong> Dit zijn suggesties, geen verplichtingen. Kies alleen wat past bij de cliënt en het netwerk.
-                        </p>
-                    </div>
-
-                    <!-- Postcode filter — compact -->
-                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                        <span style="font-size:1rem;">📍</span>
-                        <span style="font-size:0.88rem;color:#374151;font-weight:600;">Buurt:</span>
-                        <input type="text" id="postcodeFilter" placeholder="Postcode"
-                               maxlength="6"
-                               style="width:110px;padding:7px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:0.88rem;text-transform:uppercase;"
-                               oninput="this.value=this.value.toUpperCase()">
-                        <button onclick="filterInterventiesByPostcode()"
-                                style="background:var(--primary);color:white;border:none;padding:7px 14px;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;">
-                            Zoek →
-                        </button>
-                        <span style="font-size:0.78rem;color:#9ca3af;font-style:italic;">Momenteel alleen Amsterdam (10xx–13xx)</span>
-                    </div>
-
-                    <!-- Lokale voorzieningen overzicht (verschijnt na filteren) -->
-                    <div id="lokaleVoorzieningenOverzicht"></div>
-
-                    <div id="interventiesVoorBeweging">
-                        <!-- Wordt gevuld door renderInterventiesVoorBeweging() -->
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="renderSamenvatting(); goToNext()">Volgende →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Screen 8: SAMENVATTING (LEAN workflow) -->
-            <div class="screen" id="screen-samenvatting">
-                <div class="card">
-                    <h2 style="font-size: 1.8rem; margin-bottom: 6px;">📄 Wat spreken we af?</h2>
-                    <div id="besluitMeta" style="font-size:0.85rem;color:#6b7280;margin-bottom:12px;"></div>
-
-                    <!-- Uitleg twee lagen -->
-                    <div style="background:#f0f9ff;border-left:3px solid #3b82f6;border-radius:8px;padding:12px 14px;margin-bottom:16px;">
-                        <p style="font-size:0.82rem;color:#1e40af;margin:0;line-height:1.5;">
-                            💡 Je kunt twee versies van deze samenvatting bekijken:<br>
-                            <strong>👤 Overzicht cliënt:</strong> Begrijpelijk, zonder jargon - om te delen met de cliënt<br>
-                            <strong>📋 Professionele details:</strong> Technisch, voor overdracht aan collega's en dossier
-                        </p>
-                    </div>
-
-                    <!-- Twee-lagen toggle -->
-                    <div style="display:flex;background:#f3f4f6;border-radius:10px;padding:4px;gap:4px;margin-bottom:16px;width:fit-content;">
-                        <button id="laag-client" onclick="setBesluitLaag('client')"
-                            style="padding:7px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;background:#667eea;color:white;transition:all 0.2s;">
-                            👤 Overzicht cliënt
-                        </button>
-                        <button id="laag-pro" onclick="setBesluitLaag('pro')"
-                            style="padding:7px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;background:transparent;color:#6b7280;transition:all 0.2s;">
-                            📋 Professionele details
-                        </button>
-                    </div>
-
-                    <!-- Track A: Gap-analyse (NIEUW) -->
-                    <div id="gapAnalyse" style="display:none;margin-bottom:28px;"></div>
-
-                    <!-- Track A: Compact overzicht -->
-                    <div id="compactOverzicht" style="display:none;margin-bottom:28px;">
-                        <!-- Gevuld door renderCompactOverzicht() -->
-                    </div>
-
-                    <!-- Details (accordion voor Track A) -->
-                    <details id="detailsAccordion" style="margin-bottom:28px;">
-                        <summary style="cursor:pointer;padding:16px 20px;background:white;border:2px solid #e5e7eb;border-radius:12px;font-weight:700;color:#374151;list-style:none;display:flex;align-items:center;gap:10px;transition:all 0.2s;">
-                            <span style="font-size:1.1rem;transition:transform 0.2s;">▼</span>
-                            <span style="font-size:1.05rem;">📋 Bekijk details per domein</span>
-                            <span style="margin-left:auto;font-size:0.85rem;font-weight:600;color:#667eea;background:#ede9fe;padding:4px 12px;border-radius:20px;" id="aantalDomeinenDetails"></span>
-                        </summary>
-                        <div style="padding:16px 0;">
-                            <div id="samenvattingInhoud">
-                                <!-- Wordt gevuld door renderSamenvatting() -->
-                            </div>
-                        </div>
-                    </details>
-
-                    <!-- Creatieve / maatwerkoplossing -->
-                    <!-- Creatieve oplossing: wordt gevuld door renderSamenvatting() via #creatiefBlok -->
-                    <div id="creatiefBlok"></div>
-
-                    <!-- Outcome Meting Info (Team feedback #7: Peter) -->
-                    <div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:12px;padding:16px;margin:20px 0;">
-                        <div style="display:flex;align-items:start;gap:12px;">
-                            <span style="font-size:2rem;">📈</span>
-                            <div style="flex:1;">
-                                <h3 style="font-size:1rem;font-weight:700;color:#1e40af;margin:0 0 8px;">Meet je vooruitgang</h3>
-                                <p style="font-size:0.85rem;color:#1e40af;margin:0 0 12px;line-height:1.5;">
-                                    Wil je over 6-8 weken zien of de afspraken geholpen hebben? Gebruik de BalansCheck om je eigen vooruitgang te meten.
-                                </p>
-                                <a href="netwerkanalyse.html" target="_blank"
-                                   style="display:inline-block;background:#3b82f6;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">
-                                    🔗 Open BalansCheck (N1)
-                                </a>
-                                <p style="font-size:0.75rem;color:#6b7280;margin:10px 0 0;font-style:italic;">
-                                    💡 Tip: Bewaar de link na het invullen. Je krijgt automatisch een herinnering na 6 weken om opnieuw in te vullen.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="goToPrevious()">← Terug</button>
-                        <button class="btn btn-primary" onclick="exportSamenvatting()">📄 Opslaan / afdrukken</button>
-                        <button class="btn" onclick="exportVoorFamiliePortal()"
-                            style="background:#667eea;color:white;border:none;font-size:0.82rem;font-weight:600;">
-                            📤 Deel met familie
-                        </button>
-                        <button class="btn" onclick="exportVoorNiveau3()"
-                            style="background:#f59e0b;color:white;border:none;font-size:0.82rem;font-weight:600;">
-                            📊 Export voor niveau 3
-                        </button>
-                        <button class="btn" onclick="naarStrategischeAnalyse()"
-                            style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;font-size:0.82rem;">
-                            📊 Naar strategische analyse →
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-                        <div class="screen" id="screen-advies">
+            <div class="screen" id="screen-advies">
                 <div class="card">
                     <h2>🤖 Persoonlijk Advies</h2>
                     <p>Op basis van de RPA-methodiek en uw resultaten</p>
@@ -6939,8 +5475,8 @@ function resetToOrgKeuze() {
         // Screen configuration - FIXED FLOW (team feedback)
         // Correcte volgorde: Start → Netwerk → Check (nu) → Plan (gewenst) → Hulp → Team → Besluit
         const screenConfigBase = [
-            { id: 'kennismaking',     label: 'Kennismaking',   emoji: '👋' }, // NIEUW: Naam + optionele gegevens
-            { id: 'hulpvraag',        label: 'Je vraag',       emoji: '🎯' }, // NIEUW: Hulpvraag + domein keuze
+            { id: 'start',            label: 'Kennismaking',   emoji: '🏠' },
+            { id: 'hulpvraag-focus',  label: 'Je vraag',       emoji: '🎯' }, // Track A start
             { id: 'triage',           label: 'Jouw mensen',    emoji: '👥' },
             { id: 'domains',          label: 'Wie helpt?',     emoji: '🤝' }, // Domein-analyse
             { id: 'network',          label: 'Overzicht',      emoji: '📊' }, // Dashboard
@@ -6953,17 +5489,17 @@ function resetToOrgKeuze() {
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Track A (hulpvraag-gedreven): hulpvraag → triage → domains → beweging → samenvatting
+            // Track A (hulpvraag-gedreven): hulpvraag-focus → triage → domains → beweging → samenvatting
             if (state.selectedTrack === 'hulpvraag') {
                 return screenConfigBase.filter(s =>
-                    ['kennismaking', 'hulpvraag', 'triage', 'domains', 'network', 'beweging', 'interventies', 'samenvatting'].includes(s.id)
+                    ['start', 'hulpvraag-focus', 'triage', 'domains', 'network', 'beweging', 'interventies', 'samenvatting'].includes(s.id)
                 );
             }
 
             // Track B (netwerk-gedreven): volledig (bestaand)
             if (state.selectedTrack === 'netwerk') {
                 return screenConfigBase.filter(s =>
-                    ['kennismaking', 'hulpvraag', 'triage', 'domains', 'network', 'reflectie', 'beweging', 'interventies', 'team', 'samenvatting'].includes(s.id)
+                    ['start', 'triage', 'domains', 'network', 'reflectie', 'beweging', 'interventies', 'team', 'samenvatting'].includes(s.id)
                 );
             }
 
@@ -6972,7 +5508,7 @@ function resetToOrgKeuze() {
                 return screenConfigBase.filter(s => state.snelleModusSchermen.includes(s.id));
             }
 
-            // Default: alle schermen (volledige flow)
+            // Default: alle schermen
             return screenConfigBase;
         }
 
@@ -6983,43 +5519,10 @@ function resetToOrgKeuze() {
             return index + 1;
         }
 
-        // Smart Suggestions Database
-        const smartSuggestions = {
-            patterns: {
-                'autisme': {
-                    domeinen: {
-                        'ggz': { positie: 'formeel', wie: 'GGZ-behandeling', confidence: 0.92 },
-                        'school': { positie: 'collectief', wie: 'Schoolmaatschappelijk werk + Passend onderwijs', confidence: 0.85 },
-                        'sociaal': { positie: 'informeel', wie: 'Familie', confidence: 0.78 }
-                    }
-                },
-                'depressie': {
-                    domeinen: {
-                        'ggz': { positie: 'formeel', wie: 'GGZ-behandeling', confidence: 0.95 },
-                        'sociaal': { positie: 'informeel', wie: 'Familie + vrienden', confidence: 0.82 }
-                    }
-                },
-                'verslaving': {
-                    domeinen: {
-                        'verslaving': { positie: 'formeel', wie: 'Verslavingszorg', confidence: 0.94 },
-                        'ggz': { positie: 'formeel', wie: 'GGZ (comorbiditeit)', confidence: 0.87 }
-                    }
-                },
-                'jongeren': {
-                    domeinen: {
-                        'school': { positie: 'collectief', wie: 'School', confidence: 0.90 },
-                        'sociaal': { positie: 'informeel', wie: 'Familie + vrienden', confidence: 0.85 }
-                    }
-                }
-            },
-            userPatterns: {}, // Wordt gevuld met professional's eigen patronen
-            feedback: {} // User feedback voor verbetering
-        };
-
         // State - Extended datamodel for historical tracking (v2.4+)
         let state = {
             // Metadata
-            version: '3.1-smart',
+            version: '3.0',
             clientId: null,
             createdAt: null,
             updatedAt: null,
@@ -7611,92 +6114,6 @@ Antwoord in dit exacte JSON formaat:
         // Mode selection
         function selectMode(mode) {
             state.mode = mode;
-
-            // Auto-fill doelgroep based on organisatie
-            const organisatieDoelgroepMap = {
-                'jeugdzorg': ['jongeren'],
-                'ggz': ['ggz'],
-                'ouderenzorg': ['ouderen'],
-                'schuldhulp': ['financiele-problemen'],
-                'reclassering': ['justitie'],
-                'verslavingszorg': ['verslaving'],
-                'lvb': ['lvb'],
-                'opvang': ['dak-thuisloos'],
-                'mantelzorg': [], // Mantelzorg werkt met alle groepen
-                'wijkteam': [] // Wijkteam werkt met alle groepen
-            };
-
-            // Set doelgroep if not already set
-            if (!state.doelgroepen || state.doelgroepen.length === 0) {
-                const suggestedDoelgroep = organisatieDoelgroepMap[mode];
-                if (suggestedDoelgroep && suggestedDoelgroep.length > 0) {
-                    state.doelgroepen = suggestedDoelgroep;
-                    state.doelgroepAutoFilled = true; // Mark as auto-filled
-                    console.log('✨ Auto-filled doelgroep:', suggestedDoelgroep, 'based on', mode);
-
-                    // Show subtle notification
-                    setTimeout(() => {
-                        const notification = document.createElement('div');
-                        notification.style.cssText = `
-                            position: fixed;
-                            top: 80px;
-                            right: 20px;
-                            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-                            border: 2px solid #3b82f6;
-                            color: #1e40af;
-                            padding: 14px 18px;
-                            border-radius: 12px;
-                            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-                            z-index: 10000;
-                            font-size: 0.9rem;
-                            max-width: 300px;
-                            animation: slideInRight 0.3s ease;
-                        `;
-
-                        const modeLabels = {
-                            'jeugdzorg': 'Jeugdzorg',
-                            'ggz': 'GGZ',
-                            'ouderenzorg': 'Ouderenzorg',
-                            'schuldhulp': 'Schuldhulp',
-                            'reclassering': 'Reclassering',
-                            'verslavingszorg': 'Verslavingszorg',
-                            'lvb': 'LVB',
-                            'opvang': 'Opvang'
-                        };
-
-                        const doelgroepLabels = {
-                            'jongeren': 'Jongeren',
-                            'ggz': 'GGZ',
-                            'ouderen': 'Ouderen',
-                            'financiele-problemen': 'Financiële problematiek',
-                            'justitie': 'Justitie',
-                            'verslaving': 'Verslaving',
-                            'lvb': 'LVB',
-                            'dak-thuisloos': 'Dak- en thuisloos'
-                        };
-
-                        notification.innerHTML = `
-                            <strong style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                💡 Doelgroep vooringevuld
-                            </strong>
-                            <div style="font-size: 0.85rem;">
-                                Op basis van <strong>${modeLabels[mode] || mode}</strong> hebben we <strong>${doelgroepLabels[suggestedDoelgroep[0]] || suggestedDoelgroep[0]}</strong> geselecteerd.
-                                <br><br>
-                                Je kunt dit altijd aanpassen in de volgende stap.
-                            </div>
-                        `;
-
-                        document.body.appendChild(notification);
-
-                        // Auto-remove after 5 seconds
-                        setTimeout(() => {
-                            notification.style.animation = 'slideOutRight 0.3s ease';
-                            setTimeout(() => notification.remove(), 300);
-                        }, 5000);
-                    }, 800);
-                }
-            }
-
             saveState();
             console.log('Mode geselecteerd:', mode);
         }
@@ -8342,7 +6759,6 @@ Antwoord in dit exacte JSON formaat:
             }
 
             // Hide ALL screens first
-            console.log('👁️ Verberg alle screens...');
             const allScreens = document.querySelectorAll('.screen');
             console.log('Aantal screens gevonden:', allScreens.length);
             allScreens.forEach(s => {
@@ -8378,45 +6794,7 @@ Antwoord in dit exacte JSON formaat:
 
             // Load content for each screen (LEAN workflow + Prioriteit 1)
             const screenId = screenConfig ? screenConfig.id : '';
-
-            // Kennismaking & Hulpvraag screens (nu echte .screen elements)
-            if (screenId === 'kennismaking') {
-                // Kopieer content van naamScherm naar screen-kennismaking
-                const naamScherm = document.getElementById('naamScherm');
-                const kennismakingContent = document.getElementById('kennismakingContent');
-                if (naamScherm && kennismakingContent && kennismakingContent.children.length === 0) {
-                    kennismakingContent.innerHTML = naamScherm.innerHTML;
-                }
-
-                // Herstel velden
-                const naamInput = document.getElementById('naamInput');
-                const leeftijdInput = document.getElementById('clientLeeftijd');
-                const postcodeInput = document.getElementById('clientPostcode');
-                if (naamInput && state.clientName) naamInput.value = state.clientName;
-                if (leeftijdInput && state.leeftijd) leeftijdInput.value = state.leeftijd;
-                if (postcodeInput && state.postcode) postcodeInput.value = state.postcode;
-            }
-            else if (screenId === 'hulpvraag') {
-                // Kopieer content van kennismakingScherm naar screen-hulpvraag
-                const kennismakingScherm = document.getElementById('kennismakingScherm');
-                const hulpvraagContent = document.getElementById('hulpvraagContent');
-                if (kennismakingScherm && hulpvraagContent && hulpvraagContent.children.length === 0) {
-                    hulpvraagContent.innerHTML = kennismakingScherm.innerHTML;
-                }
-
-                // Herstel velden
-                const hulpvraagInput = document.getElementById('kennismakingHulpvraag');
-                if (hulpvraagInput && state.hulpvraag) hulpvraagInput.value = state.hulpvraag;
-
-                // Render domeinen checkboxes
-                setTimeout(() => {
-                    if (typeof renderKennismakingDomeinen === 'function') {
-                        renderKennismakingDomeinen();
-                    }
-                }, 100);
-            }
-            else if (screenId === 'start') {
-                // LEGACY: oude start scherm (voor backwards compatibility)
+            if (screenId === 'start') {
                 renderToestemmingKnoppen();
                 laadCaseloadN2();
                 renderDoelgroepChips();
@@ -8431,6 +6809,17 @@ Antwoord in dit exacte JSON formaat:
                 if (cn && state.clientNaam) cn.value = state.clientNaam;
             }
             if (screenId === 'hulpvraag') loadHulpvraagData();
+            if (screenId === 'hulpvraag-focus') {
+                // Wacht even voor DOM is klaar
+                setTimeout(() => {
+                    renderHulpvraagDomeinKeuze();
+                    // Restore values
+                    const hv = document.getElementById('hulpvraagFocus');
+                    const eg = document.getElementById('hulpvraagEersteGedachte');
+                    if (hv && state.hulpvraagFocus) hv.value = state.hulpvraagFocus;
+                    if (eg && state.hulpvraagEersteGedachte) eg.value = state.hulpvraagEersteGedachte;
+                }, 50);
+            }
             if (screenId === 'triage') {
                 renderStoplichtGrid();
 
@@ -8534,7 +6923,6 @@ Antwoord in dit exacte JSON formaat:
         }
 
         function goBackToStart() {
-            console.log('🏠 Terug naar startscherm');
             // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             // Show start screen
@@ -8558,17 +6946,14 @@ Antwoord in dit exacte JSON formaat:
         }
 
         function renderWorkflowBolletjes() {
-            // Alleen tonen vanaf kennismaking (niet bij organisatie keuze)
-            const workflowDiv = document.getElementById('workflowBolletjes');
-            if (!workflowDiv) return;
             const container = document.getElementById('workflowStepsDynamic');
             if (!container) return;
             const config = getScreenConfig();
             container.innerHTML = config.map((step, i) => {
                 const stepNum = i + 1;
                 return `<div class="workflow-step" data-step="${stepNum}" tabindex="0"
-                    onclick="navigeerNaarStap(${stepNum});"
-                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigeerNaarStap(${stepNum});}"
+                    onclick="goToScreen(${stepNum});"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToScreen(${stepNum});}"
                     style="text-align:center;cursor:pointer;padding:6px 8px;border-radius:12px;transition:all 0.3s;outline:none;"
                     onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'"
                     onfocus="this.style.outline='2px dashed var(--primary)'" onblur="this.style.outline='none'">
@@ -11326,22 +9711,6 @@ Antwoord in dit exacte JSON formaat:
                 { name: '', type: 'informal', relation: '', frequency: '', roles: [], effect: '', note: '' };
 
             const isEdit = supporterIndex !== null;
-
-            // Get domain key for smart suggestions
-            const domainKeys = {
-                'mentaal': 'ggz',
-                'fysiek': 'fysiek',
-                'adl': 'adl',
-                'verslaving': 'verslaving',
-                'financien': 'financien',
-                'wonen': 'wonen',
-                'dagbesteding': 'school',
-                'huiselijk': 'huiselijk',
-                'sociaal': 'sociaal',
-                'maatschappelijk': 'maatschappelijk',
-                'justitie': 'justitie'
-            };
-            const domainKey = domainKeys[domainId] || domainId;
 
             // Create modal HTML
             const modalHTML = `
@@ -15225,7 +13594,6 @@ Antwoord in dit exacte JSON formaat:
         function getInterventiesVoorDomein(domeinId) {
             console.log('📦 getInterventiesVoorDomein:', domeinId);
             const result = interventiesDatabasePerDomein[domeinId] || [];
-            console.log('   → gevonden:', result.length, 'interventies');
             return result;
         }
 
@@ -15303,8 +13671,6 @@ Antwoord in dit exacte JSON formaat:
         // Render evidence-based interventies per focusgebied
 
 function renderInterventiesPerDomein() {
-    console.log('🎯 renderInterventiesPerDomein - ACTIEPLAN versie');
-
     // Vind domeinen met beweging (waar "anders" gekozen is)
     const domeinenMetBeweging = domains.filter(d => {
         const bewegingData = state.beweging?.[d.id];
@@ -15552,20 +13918,15 @@ function renderInterventiesPerDomein() {
         function renderInterventiesVoorBeweging() {
             const container = document.getElementById('interventiesVoorBeweging');
             if (!container) return;
-
-            console.log('🔧 renderInterventiesVoorBeweging aangeroepen');
-
             // NIEUW: Toon ALLEEN evidence-based interventies per domein (geen postcode filtering)
             const perDomeinHTML = renderInterventiesPerDomein();
 
             if (perDomeinHTML) {
-                console.log('✅ Evidence-based interventies HTML gegenereerd');
                 container.innerHTML = perDomeinHTML;
                 return; // STOP hier - geen oude logica meer
             }
 
             // Als geen interventies: toon friendly message
-            console.log('⚠️ Geen evidence-based interventies gevonden');
             container.innerHTML = `
                 <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:20px;text-align:center;">
                     <p style="font-size:1.1rem;margin:0 0 10px;font-weight:700;color:#92400e;">🎯 Geen focusgebieden geselecteerd</p>
@@ -15816,77 +14177,6 @@ function renderInterventiesPerDomein() {
         }
 
         // Helper: Selecteer beweging
-        function selectBeweging(naar, index) {
-            state.beoogdeBeweging = naar;
-            saveState();
-            document.getElementById('btnNaarInterventies').disabled = false;
-            renderNetwerkBewegingDiagram(); // Update diagram met gekozen beweging
-        }
-
-        // Filter interventies op basis van postcode
-        function filterInterventiesByPostcode() {
-            const postcodeInput = document.getElementById('postcodeFilter');
-            const postcode = postcodeInput.value.trim().toUpperCase();
-
-            if (!postcode) {
-                alert('⚠️ Vul eerst een postcode in (bijv. 1234AB)');
-                return;
-            }
-
-            // Valideer postcode format (4 cijfers + 2 letters)
-            const postcodeRegex = /^[0-9]{4}[A-Z]{2}$/;
-            if (!postcodeRegex.test(postcode)) {
-                alert('⚠️ Ongeldige postcode. Gebruik format: 1234AB');
-                return;
-            }
-
-            // Sla postcode op in state (voor Strategische Analyse analyse)
-            state.postcode = postcode;
-            saveState();
-
-            // Haal regio (eerste 4 cijfers)
-            const regio = postcode.substring(0, 4);
-
-            // Haal lokale interventies
-            const lokaal = lokaleInterventies[regio] || lokaleInterventies['default'];
-
-            // Bepaal regio naam
-            const regioNamen = {
-                '1000': 'Amsterdam',
-                '3000': 'Rotterdam',
-                '2000': 'Haarlem'
-            };
-            const regioNaam = regioNamen[regio] || 'jouw regio';
-
-            // Toon lokale voorzieningen overzicht
-            const overzichtContainer = document.getElementById('lokaleVoorzieningenOverzicht');
-            if (overzichtContainer) {
-                // Doelgroep config voor labels en kleuren
-                const doelgroepConfig = {
-                    ggz: { emoji: '🧠', label: 'GGZ', color: '#3b82f6', bg: '#dbeafe' },
-                    jongeren: { emoji: '👤', label: 'Jongeren', color: '#8b5cf6', bg: '#ede9fe' },
-                    mantelzorgers: { emoji: '🤝', label: 'Mantelzorgers', color: '#ec4899', bg: '#fce7f3' },
-                    ouderen: { emoji: '👴', label: 'Ouderen', color: '#f59e0b', bg: '#fef3c7' },
-                    multiproblem: { emoji: '🔄', label: 'Multi-problematiek', color: '#ef4444', bg: '#fee2e2' },
-                    sociaalmaatschappelijk: { emoji: '🏘️', label: 'Sociaal-maatschappelijk', color: '#10b981', bg: '#d1fae5' }
-                };
-
-                let html = `
-                    <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <span style="font-size: 1.3rem;">✅</span>
-                            <h3 style="font-size: 1.1rem; font-weight: 700; color: #065f46; margin: 0;">Lokale voorzieningen in ${regioNaam} (${postcode})</h3>
-                        </div>
-
-                        <!-- Algemene voorzieningen -->
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <span>🤝</span> Collectieve voorzieningen (buurthuizen, vrijwilligers)
-                            </h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
-                                ${lokaal.collectief.map(voorziening => `
-                                    <div style="background: white; border: 2px solid #86efac; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 1.1rem;">📍</span>
                                         <span style="font-size: 0.9rem; font-weight: 600; color: #065f46;">${voorziening}</span>
                                     </div>
                                 `).join('')}
@@ -15956,6 +14246,7 @@ function renderInterventiesPerDomein() {
 
         // Render concrete voorzieningen op basis van ondersteuningsstructuur
         function renderConcreteVoorzieningen() {
+            // DISABLED - Oude postcode-based voorzieningen vervangen door evidence-based interventies per domein
             return;
             const container = document.getElementById('lokaleVoorzieningenOverzicht');
             if (!container) return;
@@ -17765,33 +16056,35 @@ END:VEVENT
         loadState();
         renderProgressSteps();
 
-        // Herstel doelgroep-checkboxes en label
+        // Herstel doelgroep-checkboxes
         if (state.doelgroepen && state.doelgroepen.length > 0) {
-            // Update label in intake (oude schermen)
-            const doelgroepLabel = document.getElementById('doelgroepLabel');
-            if (doelgroepLabel) {
-                doelgroepLabel.textContent = state.doelgroepen.join(', ');
-            }
-
-            // Update label in naam scherm
-            const doelgroepLabelNaam = document.getElementById('doelgroepLabelNaam');
-            if (doelgroepLabelNaam) {
-                doelgroepLabelNaam.textContent = state.doelgroepen.join(', ');
-            }
-
             state.doelgroepen.forEach(doelgroep => {
-                // Oude checkboxes
                 const checkbox = document.getElementById(`doelgroep-${doelgroep}`);
                 if (checkbox) {
                     checkbox.checked = true;
                 }
-
-                // Naam scherm checkboxes
-                const checkboxNaam = document.getElementById(`doelgroep-${doelgroep}-naam`);
-                if (checkboxNaam) {
-                    checkboxNaam.checked = true;
-                }
             });
+        }
+
+        // Start op INTRO scherm (scherm 1)
+        if (state.currentScreen && state.currentScreen >= 1) {
+            // Hervat waar je was
+            goToScreen(state.currentScreen);
+        } else {
+            // Begin bij intro (scherm 1)
+            goToScreen(1);
+        }
+
+        // Herstel mode keuze
+        if (state.mode) {
+            const modeRadio = document.querySelector(`input[name="modus"][value="${state.mode}"]`);
+            if (modeRadio) {
+                modeRadio.checked = true;
+            }
+            if (state.mode === 'professional') {
+                document.getElementById('professionalFields').style.display = 'block';
+                document.getElementById('professionalName').value = state.professionalName || '';
+            }
         }
 
         // Herstel doel van vandaag
@@ -20442,57 +18735,6 @@ END:VEVENT
         };
 
         // Reset all
-        function resetAll() {
-            if (confirm('Weet je zeker dat je opnieuw wilt beginnen? Alle gegevens worden gewist.')) {
-                localStorage.removeItem('welzijnswerker_v2');
-                state = {
-                    version: '3.0',
-                    clientId: 'client_' + Date.now(),
-                    createdAt: new Date().toISOString(),
-                    updatedAt: null,
-                    mode: null,
-                    professionalName: '',
-                    postcode: '',
-                    clientName: '',
-                    clientBirthdate: '',
-                    hulpvraag: '',
-                    wens: '',
-                    scores: {},
-                    notes: {},
-                    domainDetails: {},
-                    network: [],
-                    ratings: {},
-                    ratingNotes: {},
-                    currentScreen: 1,
-                    currentView: 'assessment',
-                    kanbanCards: [],
-                    gptAdviceInterventions: [],
-                    activities: [],
-                    selectedActivities: [],
-                    agendaActivities: [],
-                    agendaMonth: new Date().getMonth(),
-                    agendaYear: new Date().getFullYear(),
-                    cachedProAdvice: null,
-                    cachedClientAdvice: null,
-                    history: {
-                        assessments: [],
-                        networkChanges: [],
-                        adviceLog: [],
-                        activityLog: [],
-                        kanbanLog: []
-                    },
-                    ondersteuningsstructuur: {},
-                    strategischeReflectie: {}
-                };
-                document.querySelectorAll('input[name="modus"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[name="doelVandaag"]').forEach(r => r.checked = false);
-                document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-                document.getElementById('professionalFields').style.display = 'none';
-                if (document.getElementById('postcodeFilter')) document.getElementById('postcodeFilter').value = '';
-                if (document.getElementById('professionalName')) document.getElementById('professionalName').value = '';
-                goToScreen(1);
-            }
-        }
 
         // Initialize (main)
         loadState();
@@ -20506,61 +18748,16 @@ END:VEVENT
                 const checkbox = document.getElementById(`doelgroep-${doelgroep}`);
                 if (checkbox) {
                     checkbox.checked = true;
-
-                    // Add visual indicator if auto-filled
-                    if (state.doelgroepAutoFilled) {
-                        const label = checkbox.closest('label') || checkbox.parentElement;
-                        if (label && !label.querySelector('.auto-fill-badge')) {
-                            const badge = document.createElement('span');
-                            badge.className = 'auto-fill-badge';
-                            badge.style.cssText = `
-                                display: inline-block;
-                                margin-left: 6px;
-                                padding: 2px 6px;
-                                background: #dbeafe;
-                                color: #1e40af;
-                                border-radius: 4px;
-                                font-size: 0.7rem;
-                                font-weight: 600;
-                            `;
-                            badge.textContent = '✨ Auto';
-                            badge.title = 'Automatisch vooringevuld op basis van je organisatie';
-                            label.appendChild(badge);
-
-                            // Remove badge after 10 seconds
-                            setTimeout(() => {
-                                badge.style.transition = 'opacity 0.5s';
-                                badge.style.opacity = '0';
-                                setTimeout(() => badge.remove(), 500);
-                            }, 10000);
-                        }
-                    }
                 }
             });
         }
 
-        // Start logica
-        if (!state.startpunt) {
-            // Eerste keer: toon organisatie keuze (VOORAFGAAND aan workflow)
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const startScreen = document.getElementById('screen-start');
-            if (startScreen) startScreen.classList.add('active');
-
-            document.getElementById('organisatieKeuze').style.display = 'block';
-            document.getElementById('naamScherm').style.display = 'none';
-            document.getElementById('kennismakingScherm').style.display = 'none';
-
-            // Verberg workflow bolletjes
-            const workflowDiv = document.getElementById('workflowBolletjes');
-            if (workflowDiv) workflowDiv.style.display = 'none';
-
-            state.currentScreen = 0;
-            saveState();
-        } else if (state.currentScreen && state.currentScreen >= 1) {
+        // Start op INTRO scherm (scherm 1)
+        if (state.currentScreen && state.currentScreen >= 1) {
             // Hervat waar je was
             goToScreen(state.currentScreen);
         } else {
-            // Organisatie gekozen maar geen screen: begin bij kennismaking (screen 1)
+            // Begin bij intro (scherm 1)
             goToScreen(1);
         }
 
@@ -20583,260 +18780,7 @@ END:VEVENT
                 doelRadio.checked = true;
             }
         }
-
-        // Herstel optionele velden
-        if (state.leeftijd) {
-            const leeftijdInput = document.getElementById('clientLeeftijd');
-            if (leeftijdInput) leeftijdInput.value = state.leeftijd;
-        }
-        if (state.postcode) {
-            const postcodeInput = document.getElementById('clientPostcode');
-            if (postcodeInput) postcodeInput.value = state.postcode;
-        }
-        if (state.contactpersoon) {
-            const contactNaam = document.getElementById('contactNaam');
-            const contactRelatie = document.getElementById('contactRelatie');
-            const contactTelEmail = document.getElementById('contactTelEmail');
-            if (contactNaam && state.contactpersoon.naam) contactNaam.value = state.contactpersoon.naam;
-            if (contactRelatie && state.contactpersoon.relatie) contactRelatie.value = state.contactpersoon.relatie;
-            if (contactTelEmail && state.contactpersoon.contact) contactTelEmail.value = state.contactpersoon.contact;
-        }
-        if (state.reminderOptionalFields) {
-            const reminderCb = document.getElementById('reminderCheckbox');
-            if (reminderCb) reminderCb.checked = true;
-        }
         // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
-
-        // ==========================================
-        // SMART SUGGESTIONS SYSTEM - Week 1
-        // ==========================================
-
-        // Load user patterns from localStorage
-        function loadUserPatterns() {
-            const saved = localStorage.getItem('rpa_smart_patterns');
-            if (saved) {
-                try {
-                    smartSuggestions.userPatterns = JSON.parse(saved);
-                } catch(e) {
-                    console.warn('Could not load user patterns:', e);
-                }
-            }
-        }
-
-        // Get smart suggestion for a domain
-        function getSmartSuggestion(domeinKey, doelgroepen) {
-            if (!doelgroepen || doelgroepen.length === 0) return null;
-
-            let suggestions = [];
-
-            // Check patterns for each doelgroep
-            doelgroepen.forEach(dg => {
-                const dgLower = dg.toLowerCase();
-                const pattern = smartSuggestions.patterns[dgLower];
-                if (pattern && pattern.domeinen[domeinKey]) {
-                    suggestions.push({
-                        ...pattern.domeinen[domeinKey],
-                        source: dgLower
-                    });
-                }
-            });
-
-            // Check user's own patterns (highest priority)
-            const contextKey = `${domeinKey}_${doelgroepen.sort().join('_').toLowerCase()}`;
-            const userPattern = smartSuggestions.userPatterns[contextKey];
-            if (userPattern) {
-                suggestions.unshift({
-                    ...userPattern,
-                    source: 'jouw-patroon',
-                    confidence: Math.min(0.99, userPattern.confidence || 0.95)
-                });
-            }
-
-            // Return highest confidence
-            return suggestions.sort((a,b) => b.confidence - a.confidence)[0] || null;
-        }
-
-        // Apply ghost text to input field
-        function applySmartSuggestion(inputEl, suggestion, domeinKey) {
-            if (!inputEl || !suggestion) return;
-
-            const confidencePercent = Math.round(suggestion.confidence * 100);
-            const sourceLabel = suggestion.source === 'jouw-patroon' ? 'Jij gebruikt vaak' : `Vaak bij ${suggestion.source}`;
-
-            // Set placeholder with suggestion
-            inputEl.placeholder = `${suggestion.wie} · ${sourceLabel} (${confidencePercent}%)`;
-            inputEl.dataset.suggestion = suggestion.wie;
-            inputEl.dataset.suggestionContext = domeinKey;
-
-            // Visual styling for ghost text
-            inputEl.style.fontStyle = 'italic';
-            inputEl.style.color = '#9ca3af';
-
-            // Tab to accept
-            const tabHandler = (e) => {
-                if (e.key === 'Tab' && !inputEl.value.trim() && inputEl.dataset.suggestion) {
-                    e.preventDefault();
-                    inputEl.value = inputEl.dataset.suggestion;
-                    inputEl.style.fontStyle = 'normal';
-                    inputEl.style.color = '#1f2937';
-                    recordSuggestionAccepted(domeinKey, suggestion);
-                    inputEl.removeEventListener('keydown', tabHandler);
-                }
-            };
-
-            // Type to override
-            const inputHandler = () => {
-                if (inputEl.value) {
-                    inputEl.style.fontStyle = 'normal';
-                    inputEl.style.color = '#1f2937';
-                    inputEl.removeEventListener('input', inputHandler);
-                }
-            };
-
-            inputEl.addEventListener('keydown', tabHandler);
-            inputEl.addEventListener('input', inputHandler);
-        }
-
-        // Record when user accepts a suggestion
-        function recordSuggestionAccepted(domeinKey, suggestion) {
-            const doelgroepen = state.doelgroepen || [];
-            if (doelgroepen.length === 0) return;
-
-            const contextKey = `${domeinKey}_${doelgroepen.sort().join('_').toLowerCase()}`;
-
-            if (!smartSuggestions.userPatterns[contextKey]) {
-                smartSuggestions.userPatterns[contextKey] = {
-                    positie: suggestion.positie,
-                    wie: suggestion.wie,
-                    confidence: 0.85,
-                    count: 1,
-                    lastUsed: new Date().toISOString()
-                };
-            } else {
-                const pattern = smartSuggestions.userPatterns[contextKey];
-                pattern.count = (pattern.count || 0) + 1;
-                pattern.confidence = Math.min(0.99, 0.85 + (pattern.count * 0.02));
-                pattern.lastUsed = new Date().toISOString();
-            }
-
-            // Save to localStorage
-            try {
-                localStorage.setItem('rpa_smart_patterns', JSON.stringify(smartSuggestions.userPatterns));
-                console.log('✅ Smart pattern learned:', contextKey);
-            } catch(e) {
-                console.warn('Could not save pattern:', e);
-            }
-        }
-
-        // Initialize smart suggestions on supporter input
-        function initSmartSuggestionsForSupporter(inputEl, domeinKey) {
-            if (!inputEl || !state.doelgroepen || state.doelgroepen.length === 0) return;
-
-            const suggestion = getSmartSuggestion(domeinKey, state.doelgroepen);
-            if (suggestion) {
-                applySmartSuggestion(inputEl, suggestion, domeinKey);
-            }
-        }
-
-        // Add visual indicator for smart suggestions
-        function addSmartSuggestionIndicator(containerEl) {
-            if (!containerEl) return;
-
-            const indicator = document.createElement('div');
-            indicator.style.cssText = `
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-                padding: 4px 8px;
-                background: linear-gradient(135deg, #dbeafe, #e0f2fe);
-                border: 1px solid #3b82f6;
-                border-radius: 6px;
-                font-size: 0.75rem;
-                color: #1e40af;
-                margin-top: 6px;
-            `;
-            indicator.innerHTML = '💡 <strong>Slim:</strong> Druk Tab om suggestie te accepteren';
-
-            containerEl.appendChild(indicator);
-        }
-
-        // Load patterns on page load
-        loadUserPatterns();
-
-        // Watch for supporter input fields and apply smart suggestions
-        const smartSuggestionsObserver = new MutationObserver((mutations) => {
-            const nameInput = document.getElementById('supporterName');
-            if (nameInput && !nameInput.dataset.smartInitialized) {
-                nameInput.dataset.smartInitialized = 'true';
-
-                // Determine domain from modal context
-                const modal = nameInput.closest('[id*="Modal"], [style*="position: fixed"]');
-                if (modal && state.doelgroepen && state.doelgroepen.length > 0) {
-                    // Try to infer domain from context
-                    const domainHints = {
-                        'mentale': 'ggz',
-                        'geestelijke': 'ggz',
-                        'depressie': 'ggz',
-                        'angst': 'ggz',
-                        'school': 'school',
-                        'onderwijs': 'school',
-                        'werk': 'school',
-                        'verslaving': 'verslaving',
-                        'middelen': 'verslaving',
-                        'sociaal': 'sociaal',
-                        'vrienden': 'sociaal',
-                        'familie': 'sociaal'
-                    };
-
-                    // Smart default based on most common
-                    let suggestedDomain = 'ggz'; // Most common in target group
-
-                    // Check if we can infer from page content
-                    const pageText = document.body.textContent.toLowerCase();
-                    for (const [hint, domain] of Object.entries(domainHints)) {
-                        if (pageText.includes(hint)) {
-                            suggestedDomain = domain;
-                            break;
-                        }
-                    }
-
-                    const suggestion = getSmartSuggestion(suggestedDomain, state.doelgroepen);
-                    if (suggestion) {
-                        applySmartSuggestion(nameInput, suggestion, suggestedDomain);
-
-                        // Add indicator
-                        const formGroup = nameInput.closest('.form-group') || nameInput.parentElement;
-                        if (formGroup && !formGroup.querySelector('.smart-indicator')) {
-                            const indicator = document.createElement('div');
-                            indicator.className = 'smart-indicator';
-                            indicator.style.cssText = `
-                                display: inline-flex;
-                                align-items: center;
-                                gap: 4px;
-                                padding: 4px 8px;
-                                background: linear-gradient(135deg, #dbeafe, #e0f2fe);
-                                border: 1px solid #3b82f6;
-                                border-radius: 6px;
-                                font-size: 0.75rem;
-                                color: #1e40af;
-                                margin-top: 6px;
-                            `;
-                            indicator.innerHTML = '💡 <strong>Tip:</strong> Druk Tab om suggestie te accepteren';
-                            formGroup.appendChild(indicator);
-                        }
-                    }
-                }
-            }
-        });
-
-        // Start observing
-        smartSuggestionsObserver.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        console.log('✅ Smart Suggestions System loaded');
-        console.log('📊 User patterns:', Object.keys(smartSuggestions.userPatterns).length);
 
     </script>
 
@@ -20898,8 +18842,6 @@ END:VEVENT
 
         // TOEGANGSCODE CHECK (N2 — professionals only)
         (function checkToegang() {
-            return;
-
             // URL param ?code= of sessie al vrijgegeven
             const params = new URLSearchParams(window.location.search);
             const urlCode = params.get('code');
@@ -20940,6 +18882,7 @@ END:VEVENT
                 document.getElementById('toegangsInput').style.borderColor = '#dc2626';
             }
         }
+
 
 
         /* ========================================
@@ -20985,6 +18928,8 @@ END:VEVENT
 
             console.log('Steun type opgeslagen:', select.value);
         }
+
+
 
 
         // Toggle dropdown based on type
@@ -21353,6 +19298,8 @@ END:VEVENT
         }
 
 
+
+
         // Toon/verberg "Anders" tekstveld bij rol
         document.addEventListener('change', function(e) {
             if (e.target.id && e.target.id.startsWith('rol-')) {
@@ -21363,6 +19310,8 @@ END:VEVENT
                 }
             }
         });
+
+
 
 
         // Simpele type selectie functies
@@ -21427,42 +19376,5 @@ END:VEVENT
         style="position:fixed;bottom:20px;right:20px;background:#667eea;color:white;border:none;border-radius:50%;width:48px;height:48px;
         font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(102,126,234,0.4);z-index:8999;"
         title="Begrippen uitleg">📖</button>
-
-<script>
-// Organisatie-selectie functie (simpel - verberg na klik)
-function selectOrg(type) {
-    console.log('✅ Organisatie gekozen:', type);
-    if (typeof state !== 'undefined') {
-        state.startpunt = type;
-        state.mode = type; // Voor auto-fill doelgroep
-
-        // Auto-fill doelgroep
-        const orgDoelgroepMap = {
-            'jeugdzorg': ['jongeren'],
-            'ggz': ['ggz'],
-            'ouderenzorg': ['ouderen'],
-            'schuldhulp': ['financiele-problemen'],
-            'reclassering': ['justitie'],
-            'verslavingszorg': ['verslaving'],
-            'opvang': ['dak-thuisloos']
-        };
-        if (!state.doelgroepen || state.doelgroepen.length === 0) {
-            const suggestedDoelgroep = orgDoelgroepMap[type];
-            if (suggestedDoelgroep) {
-                state.doelgroepen = suggestedDoelgroep;
-                state.doelgroepAutoFilled = true;
-            }
-        }
-
-        if (typeof saveState === 'function') saveState();
-    }
-
-    // Ga naar screen 1 (kennismaking)
-    if (typeof goToScreen === 'function') {
-        goToScreen(1);
-    }
-}
-</script>
-
 </body>
 </html>
