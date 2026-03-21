@@ -3863,8 +3863,8 @@
             </div>
 
             <!-- Screen 0: Toelichting methode (voor training / nieuwe gebruikers) -->
-            <!-- Screen 0: Organisatie Keuze -->
-            <div class="screen active" id="screen-organisatie">
+            <!-- Screen 1: Organisatie Keuze -->
+            <div class="screen" id="screen-organisatie">
                 <div class="card" style="max-width: 800px; margin: 0 auto;">
                     <div style="text-align:center;margin-bottom:var(--spacing-xl);">
                         <h1 style="font-size:2rem;margin-bottom:var(--spacing-sm);color:var(--text);">
@@ -3912,7 +3912,8 @@
                 </div>
             </div>
 
-            <div class="screen" id="screen-intro" style="display:none;">
+            <!-- Screen 2: Intro/Uitleg -->
+            <div class="screen" id="screen-intro">
                 <div class="card" style="max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);">
                     <div style="text-align: center; margin-bottom: 30px;">
                         <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary); font-weight: 800;">🔄 RPA Niveau 2</h1>
@@ -6678,11 +6679,13 @@
         // Screen configuration - FIXED FLOW (team feedback)
         // Correcte volgorde: Start → Netwerk → Check (nu) → Plan (gewenst) → Hulp → Team → Besluit
         const screenConfigBase = [
+            { id: 'organisatie',      label: 'Start',          emoji: '🏢' }, // NIEUW: Organisatie keuze
+            { id: 'intro',            label: 'Uitleg',         emoji: 'ℹ️' }, // Methodologie uitleg
             { id: 'start',            label: 'Kennismaking',   emoji: '🏠' },
-            { id: 'hulpvraag-focus',  label: 'Je vraag',       emoji: '🎯' }, // Track A start
+            { id: 'hulpvraag-focus',  label: 'Je vraag',       emoji: '🎯' },
             { id: 'triage',           label: 'Jouw mensen',    emoji: '👥' },
-            { id: 'domains',          label: 'Wie helpt?',     emoji: '🤝' }, // Domein-analyse
-            { id: 'network',          label: 'Overzicht',      emoji: '📊' }, // Dashboard
+            { id: 'domains',          label: 'Wie helpt?',     emoji: '🤝' },
+            { id: 'network',          label: 'Overzicht',      emoji: '📊' },
             { id: 'reflectie',        label: 'Hoe gaat het?',  emoji: '💭' },
             { id: 'beweging',         label: 'Wat wil je?',    emoji: '🎯' },
             { id: 'interventies',     label: 'Wat helpt?',     emoji: '💡' },
@@ -6692,17 +6695,17 @@
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Track A (hulpvraag-gedreven): hulpvraag-focus → triage → domains → beweging → samenvatting
+            // Track A (hulpvraag-gedreven)
             if (state.selectedTrack === 'hulpvraag') {
                 return screenConfigBase.filter(s => 
-                    ['start', 'hulpvraag-focus', 'triage', 'domains', 'network', 'beweging', 'interventies', 'samenvatting'].includes(s.id)
+                    ['organisatie', 'intro', 'start', 'hulpvraag-focus', 'triage', 'domains', 'network', 'beweging', 'interventies', 'samenvatting'].includes(s.id)
                 );
             }
             
-            // Track B (netwerk-gedreven): volledig (bestaand)
+            // Track B (netwerk-gedreven)
             if (state.selectedTrack === 'netwerk') {
                 return screenConfigBase.filter(s => 
-                    ['start', 'triage', 'domains', 'network', 'reflectie', 'beweging', 'interventies', 'team', 'samenvatting'].includes(s.id)
+                    ['organisatie', 'intro', 'start', 'triage', 'domains', 'network', 'reflectie', 'beweging', 'interventies', 'team', 'samenvatting'].includes(s.id)
                 );
             }
             
@@ -20691,8 +20694,8 @@ END:VEVENT
             state.mode = org; // Voor doelgroep auto-fill
             saveState();
             
-            // Ga naar intro (uitleg methodologie)
-            goToScreenById('intro');
+            // Ga naar volgende screen (intro = screen 2)
+            goToScreen(2);
         }
 
     </script>
