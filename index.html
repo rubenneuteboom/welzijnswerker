@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>RPA Instrumenten - Relationeel-Positioneel Analysemodel</title>
     <style>
         :root {
@@ -26,10 +29,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            padding-bottom: 3rem;
         }
 
         /* Header met navigatie */
@@ -45,93 +46,81 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 2rem;
+            align-items: center;
         }
 
         h1 {
             color: var(--text);
             font-size: 1.5rem;
             font-weight: 600;
+            text-align: center;
         }
 
         .subtitle {
             color: var(--text-light);
             font-size: 0.95rem;
+            text-align: center;
         }
 
         /* Navigatie knoppen */
         nav {
             display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 500px;
         }
 
         .nav-btn {
             background: var(--white);
-            border: 2px solid var(--primary-light);
+            border: 2px solid #e5e7eb;
+            border-left: 4px solid #e5e7eb;
             color: var(--text);
-            padding: 0.875rem 1.5rem;
-            border-radius: var(--radius);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
             font-size: 0.95rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
+            align-items: center;
+            gap: 0.75rem;
             text-align: left;
-            min-width: 280px;
         }
 
         .nav-btn:hover {
             background: var(--primary-light);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+            border-left-color: var(--primary);
+            transform: translateX(4px);
         }
 
         .nav-btn.active {
-            background: var(--primary);
-            color: var(--white);
-            border-color: var(--primary);
+            background: var(--primary-light);
+            border-left-color: var(--primary);
+            border-left-width: 6px;
+            font-weight: 700;
         }
 
-        .nav-btn-title {
-            font-weight: 600;
-            font-size: 1rem;
+        .nav-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
 
-        .nav-btn-desc {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        /* iFrame container */
-        .iframe-container {
+        .nav-text {
             flex: 1;
-            background: var(--white);
-            margin: 1rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            position: relative;
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .nav-badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        /* Loading state */
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
+
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -143,13 +132,12 @@
                 font-size: 1.25rem;
             }
 
-            .nav-btn {
-                min-width: 100%;
+            nav {
+                max-width: 100%;
             }
 
-            .iframe-container {
-                margin: 0.5rem;
-                border-radius: 12px;
+            .nav-icon {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -162,61 +150,47 @@
                 <p class="subtitle">Relationeel-Positioneel Analysemodel</p>
             </div>
             <nav>
+                <!-- RPA METHODIEK -->
                 <button class="nav-btn" data-page="netwerkanalyse.html">
-                    <span class="nav-btn-title">N1 - Balanscheck</span>
-                    <span class="nav-btn-desc">Voor iedereen: cliënt, familie, professional</span>
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Niveau 1 - Balanscheck</span>
                 </button>
+                
                 <button class="nav-btn" data-page="positioneel.html">
-                    <span class="nav-btn-title">N2 - Positionele analyse</span>
-                    <span class="nav-btn-desc">Professional met cliënt in gesprek</span>
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-text">Niveau 2 - Positionele Analyse</span>
                 </button>
+                
                 <button class="nav-btn" data-page="strategisch.html">
-                    <span class="nav-btn-title">N3 - Strategische netwerk impact analyse</span>
-                    <span class="nav-btn-desc">Voor beleidsmakers en zorgmanagers</span>
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Niveau 3 - Strategische Analyse</span>
                 </button>
-                <button class="nav-btn" data-page="familie-portal.html" style="border-color: #667eea; background: linear-gradient(135deg, #667eea15, #764ba215);">
-                    <span class="nav-btn-title">👨‍👩‍👧 Familie Portal</span>
-                    <span class="nav-btn-desc">Voor ouders & mantelzorgers - 24/7 overzicht zorgnetwerk</span>
+                
+                <!-- PORTALEN -->
+                <button class="nav-btn" data-page="familie-portal-pro.html">
+                    <span class="nav-icon">👨‍👩‍👧</span>
+                    <span class="nav-text">Familie Portal</span>
+                </button>
+                
+                <button class="nav-btn" data-page="familie-portal-mdo.html">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">MDO Portal</span>
                 </button>
             </nav>
         </div>
     </header>
 
-    <div class="iframe-container">
-        <div class="loading">Selecteer een instrument om te beginnen</div>
-        <iframe id="content-frame" style="display: none;"></iframe>
-    </div>
-
     <script>
         const buttons = document.querySelectorAll('.nav-btn');
-        const iframe = document.getElementById('content-frame');
-        const loading = document.querySelector('.loading');
 
         buttons.forEach(button => {
             button.addEventListener('click', () => {
                 const page = button.getAttribute('data-page');
                 
-                // Update active state
-                buttons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                // Show loading
-                loading.style.display = 'block';
-                iframe.style.display = 'none';
-                
-                // Load page
-                iframe.src = page;
-                
-                // Hide loading when loaded
-                iframe.onload = () => {
-                    loading.style.display = 'none';
-                    iframe.style.display = 'block';
-                };
+                // Navigate to the page (full window)
+                window.location.href = page;
             });
         });
-
-        // Auto-load N2 bij start
-        buttons[1].click();
     </script>
 </body>
 </html>
