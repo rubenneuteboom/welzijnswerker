@@ -4110,8 +4110,9 @@
                         </div>
                     </div>
 
-                    <div class="btn-group" style="margin-top: 25px;">
-                        <button class="btn btn-primary" onclick="goToScreenById('triage')" style="font-size: 1.1rem; padding: 14px 28px;">Start gesprek →</button>
+                    <div class="btn-group" style="margin-top: 25px;display:flex;gap:12px;">
+                        <button class="btn btn-secondary" onclick="goToScreen(1)" style="font-size: 1rem; padding: 12px 24px;">← Terug</button>
+                        <button class="btn btn-primary" onclick="goToScreenById('start')" style="font-size: 1.1rem; padding: 14px 28px;flex:1;">Start gesprek →</button>
                     </div>
                 </div>
             </div>
@@ -7948,6 +7949,11 @@ Antwoord in dit exacte JSON formaat:
             
             state.currentScreen = screenNum;
             saveState();
+            
+            // Update browser history (prevent leaving app on back button)
+            if (typeof history !== 'undefined' && history.pushState) {
+                history.pushState({screen: screenNum}, '', '#screen-' + screenNum);
+            }
             
             // Update voortgangsbalk (Team feedback: Lisa)
             updateProgressBar(screenNum, config.length);
@@ -20127,6 +20133,15 @@ END:VEVENT
             }
         }
         // Note: postcodeFilter restoration moved to earlier in file (after state restoration)
+        
+        // Browser back button handler - stay within app
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.screen) {
+                goToScreen(event.state.screen);
+            } else if (state.currentScreen > 1) {
+                goToScreen(state.currentScreen - 1);
+            }
+        });
         
     </script>
 
