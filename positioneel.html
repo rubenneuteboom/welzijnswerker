@@ -9,18 +9,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #2ECC71;
-            --primary-light: #E8F8F0;
-            --primary-dark: #27AE60;
-            --secondary: #6FCF97;
-            --warning: #F2994A;
-            --danger: #EB5757;
+            --primary: #22A65E;
+            --primary-light: #E8F5EE;
+            --primary-dark: #1E8E50;
+            --secondary: #5BB98C;
+            --warning: #E89347;
+            --danger: #DC4C4C;
             --text: #1f2937;
-            --text-light: #4b5563;
-            --bg: #F0FFF4;
+            --text-light: #6b7280;
+            --bg: #F9FAFB;
             --white: #fff;
-            --shadow: 0 4px 20px rgba(46, 204, 113, 0.15);
-            --radius: 16px;
+            --shadow: 0 2px 12px rgba(34, 166, 94, 0.08);
+            --radius: 12px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
         }
 
         * {
@@ -79,14 +84,14 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: var(--spacing-lg);
         }
 
         /* Header */
         header {
             text-align: center;
             padding: 30px 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
             border-radius: 0 0 30px 30px;
             margin-bottom: 30px;
@@ -140,6 +145,16 @@
             background: none;
             padding: 0;
         }
+        
+        .view-tab:focus,
+        button:focus,
+        a:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
 
         .view-tab-circle {
             width: 60px;
@@ -184,7 +199,7 @@
             background: var(--white);
             border-radius: var(--radius);
             padding: 15px 10px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             box-shadow: var(--shadow);
             overflow-x: auto;
         }
@@ -281,9 +296,9 @@
         .card {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing-xl);
             transition: box-shadow 0.3s ease;
         }
         
@@ -305,7 +320,7 @@
             color: var(--primary);
             font-size: 1.75rem;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -358,7 +373,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
         }
 
@@ -521,7 +536,7 @@
 
         /* Form elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
 
         .form-group label {
@@ -768,7 +783,7 @@
         }
 
         .domain-card-body {
-            padding: 20px;
+            padding: var(--spacing-lg);
         }
 
         /* Dashboard Layout */
@@ -788,7 +803,7 @@
         .dashboard-chart-section {
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             border-radius: 16px;
-            padding: 20px;
+            padding: var(--spacing-lg);
         }
 
         .spider-container {
@@ -833,7 +848,7 @@
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 16px;
-            padding: 20px;
+            padding: var(--spacing-lg);
             min-height: 200px;
             transition: all 0.3s;
         }
@@ -971,7 +986,7 @@
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 16px;
-            padding: 20px 15px;
+            padding: var(--spacing-lg) 15px;
             text-align: center;
             transition: all 0.2s;
         }
@@ -1004,7 +1019,7 @@
             background: #fef2f2;
             border: 2px solid #fecaca;
             border-radius: 16px;
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin: 20px 0;
         }
 
@@ -1094,7 +1109,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
 
         .active-domain-header .domain-icon {
@@ -1163,7 +1178,7 @@
         .scale-option-3 {
             flex: 1;
             min-width: 120px;
-            padding: 20px 15px;
+            padding: var(--spacing-lg) 15px;
             border: 3px solid #e0e0e0;
             border-radius: 15px;
             cursor: pointer;
@@ -1209,7 +1224,7 @@
             background: #f8fdf9;
             border: 2px solid #d4edda;
             border-radius: 12px;
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin: 20px 0;
         }
 
@@ -1422,7 +1437,7 @@
             border-left: 6px solid #22c55e;
             border-radius: 12px;
             padding: 18px 22px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             display: flex;
             align-items: flex-start;
             gap: 15px;
@@ -1459,7 +1474,7 @@
             border: 2px solid #dc2626;
             border-radius: 12px;
             padding: 15px 20px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             display: flex;
             align-items: flex-start;
             gap: 12px;
@@ -1741,7 +1756,7 @@
             position: relative;
             background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin: 20px 0;
             min-height: 400px;
         }
@@ -1776,8 +1791,8 @@
         .person-form {
             background: var(--primary-light);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
         }
 
         .person-form h3 {
@@ -1881,7 +1896,7 @@
         /* Network type indicator */
         .network-type {
             text-align: center;
-            padding: 20px;
+            padding: var(--spacing-lg);
             background: var(--white);
             border-radius: var(--radius);
             margin: 20px 0;
@@ -1923,7 +1938,7 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             flex-wrap: wrap;
         }
         .network-state {
@@ -1952,7 +1967,7 @@
             border-left: 4px solid var(--primary);
             padding: 15px 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
         .growth-reason p {
             margin: 0 0 10px 0;
@@ -1972,7 +1987,7 @@
         .growth-actions {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: var(--spacing-lg);
         }
         .growth-actions h4 {
             margin: 15px 0 10px 0;
@@ -2014,7 +2029,7 @@
             background: #FFF5F5;
             border: 2px solid #FC8181;
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin: 20px 0;
         }
 
@@ -2058,7 +2073,7 @@
 
         .advice-box h3 {
             color: var(--primary-dark);
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -2108,7 +2123,7 @@
 
         .pro-advice-box h3 {
             color: #C05621;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -2139,7 +2154,7 @@
         .rating-card {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin-bottom: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-left: 4px solid var(--primary);
@@ -2211,7 +2226,7 @@
         .average-rating {
             background: var(--primary-light);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             text-align: center;
             margin: 20px 0;
         }
@@ -2230,7 +2245,7 @@
         .chart-container {
             max-width: 500px;
             margin: 0 auto;
-            padding: 20px;
+            padding: var(--spacing-lg);
         }
 
         .score-summary {
@@ -2388,7 +2403,7 @@
             background: var(--primary-light);
             border-radius: 10px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -2404,7 +2419,7 @@
         .activity-item {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin-bottom: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
@@ -2486,7 +2501,7 @@
         .agenda-container {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin: 20px 0;
         }
 
@@ -2494,7 +2509,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
 
         .agenda-month {
@@ -2607,7 +2622,7 @@
         .agenda-activity-detail {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: var(--spacing-lg);
             margin-bottom: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-left: 4px solid var(--primary);
@@ -2868,8 +2883,8 @@
         .kanban-add-form {
             background: var(--primary-light);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
         }
 
         .kanban-add-form h3 {
@@ -2948,7 +2963,7 @@
         .summary-section {
             border-bottom: 2px solid var(--primary-light);
             padding-bottom: 20px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
 
         .summary-section:last-child {
@@ -3042,7 +3057,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-light);
         }
@@ -3069,7 +3084,7 @@
         }
 
         .modal-body .form-group {
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
 
         .modal-body .form-group label {
@@ -3219,7 +3234,7 @@
             }
 
             .card {
-                padding: 20px;
+                padding: var(--spacing-lg);
             }
 
             .mode-cards {
@@ -3328,7 +3343,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
         }
 
         .activiteit-card {
@@ -3841,7 +3856,7 @@
             </div>
 
             <!-- Workflow bolletjes (zonder pijltjes) -->
-            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 12px 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
+            <div id="workflowBolletjes" style="background: white; border-radius: 0 0 20px 20px; padding: 12px 20px; margin-bottom: var(--spacing-lg); box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15); display: block; position: relative; z-index: 100;">
                 <div id="workflowStepsDynamic" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
                     <!-- Dynamisch gegenereerd door renderWorkflowBolletjes() -->
                 </div>
@@ -4025,7 +4040,7 @@
                     </div>
 
                     <!-- Praktisch -->
-                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: 20px; margin: 25px 0; border: 2px solid #0ea5e9;">
+                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: var(--spacing-lg); margin: 25px 0; border: 2px solid #0ea5e9;">
                         <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
                             <div style="text-align: center;">
                                 <div style="font-size: 1.8rem; margin-bottom: 5px;">⏱️</div>
@@ -4376,7 +4391,7 @@
                     <div style="margin-bottom: 30px;">
                         <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Is er iets dat direct aandacht nodig heeft?</h3>
                         <div style="display: flex; flex-direction: column; gap: 15px;">
-                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: var(--spacing-lg); border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
                                    onmouseover="this.style.borderColor='#10b981'; this.style.background='#f0fdf4';"
                                    onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
                                 <input type="radio" name="stabilisatie" value="stabiel" style="width: 24px; height: 24px; margin-top: 2px;">
@@ -4388,7 +4403,7 @@
                                 </div>
                             </label>
                             
-                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: var(--spacing-lg); border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
                                    onmouseover="this.style.borderColor='#eab308'; this.style.background='#fefce8';"
                                    onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
                                 <input type="radio" name="stabilisatie" value="kwetsbaar" style="width: 24px; height: 24px; margin-top: 2px;">
@@ -4400,7 +4415,7 @@
                                 </div>
                             </label>
                             
-                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+                            <label style="display: flex; align-items: flex-start; gap: 15px; padding: var(--spacing-lg); border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
                                    onmouseover="this.style.borderColor='#dc2626'; this.style.background='#fef2f2';"
                                    onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
                                 <input type="radio" name="stabilisatie" value="direct-actie" style="width: 24px; height: 24px; margin-top: 2px;">
@@ -4660,7 +4675,7 @@
             <div class="screen" id="screen-netwerkpositie" style="display:none!important">
                 <div class="card">
                     <h2>🕸️ Netwerkpositie</h2>
-                    <p style="color: var(--text-light); margin-bottom: 20px;">
+                    <p style="color: var(--text-light); margin-bottom: var(--spacing-lg);">
                         Je zag in de intro de 5 netwerkposities (⚪ Geen • 🟡 1-persoons • 🟢 Informeel • 🔵 Formeel • 🟣 Gemengd).
                     </p>
                     <p style="color: var(--text); margin-bottom: 30px; font-weight: 600;">
@@ -7079,7 +7094,7 @@ Antwoord in dit exacte JSON formaat:
                 // Geen doelen ingevuld
                 html += `
                     <div style="text-align: center; padding: 60px 20px; color: var(--text-light);">
-                        <div style="font-size: 4rem; margin-bottom: 20px;">🎯</div>
+                        <div style="font-size: 4rem; margin-bottom: var(--spacing-lg);">🎯</div>
                         <h3 style="color: var(--text); margin-bottom: 10px;">Nog geen doelen ingevuld</h3>
                         <p>Vul je algemene wens in bij de hulpvraag en/of specifieke doelen per domein in de domeinkaart.</p>
                     </div>
@@ -8260,7 +8275,7 @@ Antwoord in dit exacte JSON formaat:
             const progressContainer = document.getElementById('domainProgress');
             if (progressContainer) {
                 progressContainer.innerHTML = `
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px;">
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: var(--spacing-lg);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <span style="font-weight: 600; color: var(--text);">Voortgang</span>
                             <span style="font-weight: 700; color: var(--primary);">${completedCount} / ${domainsToShow.length} domeinen ingevuld</span>
@@ -8606,7 +8621,7 @@ Antwoord in dit exacte JSON formaat:
                 const uniqueId = `${doelgroep}-${domainId}`;
                 
                 html += `
-                    <div style="margin-top: 25px; margin-bottom: 25px; padding: 20px; background: ${config.gradient}; border-left: 4px solid ${config.color}; border-radius: 10px;">
+                    <div style="margin-top: 25px; margin-bottom: 25px; padding: var(--spacing-lg); background: ${config.gradient}; border-left: 4px solid ${config.color}; border-radius: 10px;">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer;"
                              onclick="document.getElementById('${uniqueId}').classList.toggle('hidden')">
                             <span style="font-size: 1.3rem;">${config.emoji}</span>
@@ -9400,7 +9415,7 @@ Antwoord in dit exacte JSON formaat:
                                style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: var(--spacing-lg);">
                         <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--text);">Notitie</label>
                         <textarea id="afspraakNotitie" placeholder="Extra opmerkingen..."
                                   style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 80px;"></textarea>
@@ -9801,7 +9816,7 @@ Antwoord in dit exacte JSON formaat:
                 align-items: center;
                 justify-content: center;
                 z-index: 10000;
-                padding: 20px;
+                padding: var(--spacing-lg);
             `;
             
             modal.innerHTML = `
@@ -9817,12 +9832,12 @@ Antwoord in dit exacte JSON formaat:
                 ">
                     <h2 style="margin-bottom: 16px; color: #667eea;">📤 Deel met Familie</h2>
                     
-                    <p style="color: #6b7280; margin-bottom: 20px; line-height: 1.6;">
+                    <p style="color: #6b7280; margin-bottom: var(--spacing-lg); line-height: 1.6;">
                         Deze code kun je delen met familie/mantelzorgers. 
                         Zij kunnen deze importeren in het <strong>Familie Portal</strong> om het netwerk te volgen.
                     </p>
                     
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: var(--spacing-lg);">
                         <h4 style="margin-bottom: 8px; color: #1f2937;">Privacy & Toestemming</h4>
                         <label style="display: flex; align-items: start; gap: 12px; padding: 12px; background: #f9fafb; border-radius: 8px;">
                             <input type="checkbox" id="privacyConsent" style="margin-top: 4px;">
@@ -10260,8 +10275,8 @@ Antwoord in dit exacte JSON formaat:
             const vervolgActie = details.vervolgActie || '';
             
             return `
-                <div class="network-block" style="background: #fef9f3; border: 3px solid #f59e0b; border-radius: 12px; padding: 20px;">
-                    <div style="background: #fff7ed; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f59e0b;">
+                <div class="network-block" style="background: #fef9f3; border: 3px solid #f59e0b; border-radius: 12px; padding: var(--spacing-lg);">
+                    <div style="background: #fff7ed; padding: 12px; border-radius: 8px; margin-bottom: var(--spacing-lg); border-left: 4px solid #f59e0b;">
                         <strong style="color: #c2410c;">ℹ️ Dit domein is anders</strong>
                         <p style="font-size: 0.9rem; color: #9a3412; margin: 8px 0 0 0; line-height: 1.5;">
                             <strong>Sociaal netwerk</strong> gaat over <em>verbondenheid en relaties</em>, niet over praktische steun.<br>
@@ -11241,7 +11256,7 @@ Antwoord in dit exacte JSON formaat:
             
             // Toon samenvatting
             return `
-                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 25px;">
                     <div style="font-size: 1rem; font-weight: 600; color: #166534; margin-bottom: 12px;">
                         👥 Wie helpt nu?
                     </div>
@@ -12616,7 +12631,7 @@ Antwoord in dit exacte JSON formaat:
             }).join('');
             
             container.innerHTML = `
-                <div style="background: ${totaalKleur}; border: 2px solid ${totaalIndruk.includes('🔴') ? '#dc2626' : totaalIndruk.includes('🟡') ? '#eab308' : totaalIndruk.includes('🟢') ? '#10b981' : '#d1d5db'}; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="background: ${totaalKleur}; border: 2px solid ${totaalIndruk.includes('🔴') ? '#dc2626' : totaalIndruk.includes('🟡') ? '#eab308' : totaalIndruk.includes('🟢') ? '#10b981' : '#d1d5db'}; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 25px;">
                     <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-light); margin-bottom: 8px;">Algemene indruk</div>
                     <div style="font-size: 1.3rem; font-weight: 700; color: var(--text);">${totaalIndruk}</div>
                 </div>
@@ -12682,7 +12697,7 @@ Antwoord in dit exacte JSON formaat:
             
             return `
                 <div style="padding: 25px; background: white; border-top: 3px solid var(--primary);">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: var(--spacing-lg);">
                         <span style="font-size: 1.5rem;">${domain.emoji}</span>
                         <h3 style="margin: 0; color: var(--text);">Ondersteuningsstructuur: ${domain.name}</h3>
                     </div>
@@ -12722,7 +12737,7 @@ Antwoord in dit exacte JSON formaat:
                     
                     <!-- Collectief specificatie -->
                     ${draaglagen.includes('collectief') ? `
-                    <div style="margin-bottom: 25px; padding: 20px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid var(--secondary);">
+                    <div style="margin-bottom: 25px; padding: var(--spacing-lg); background: #f0fdf4; border-radius: 8px; border-left: 4px solid var(--secondary);">
                         <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
                             Collectieve ondersteuning - wat precies?
                         </label>
@@ -12742,7 +12757,7 @@ Antwoord in dit exacte JSON formaat:
                     
                     <!-- Formeel specificatie -->
                     ${draaglagen.includes('formeel') ? `
-                    <div style="margin-bottom: 25px; padding: 20px; background: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <div style="margin-bottom: 25px; padding: var(--spacing-lg); background: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
                         <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
                             Formele zorg - welke typen?
                         </label>
@@ -12761,7 +12776,7 @@ Antwoord in dit exacte JSON formaat:
                     ` : ''}
                     
                     <!-- Bewegingsrichting -->
-                    <div style="margin-bottom: 20px; padding: 20px; background: #fefce8; border-radius: 8px; border-left: 4px solid #eab308;">
+                    <div style="margin-bottom: var(--spacing-lg); padding: var(--spacing-lg); background: #fefce8; border-radius: 8px; border-left: 4px solid #eab308;">
                         <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text);">
                             🔄 Gewenste beweging voor dit domein
                         </label>
@@ -13228,7 +13243,7 @@ Antwoord in dit exacte JSON formaat:
         function renderPersonList() {
             const container = document.getElementById('personList');
             if (state.network.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">Nog geen personen toegevoegd</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: var(--spacing-lg);">Nog geen personen toegevoegd</p>';
                 return;
             }
 
@@ -13428,7 +13443,7 @@ Antwoord in dit exacte JSON formaat:
         // Oude modal functie (niet meer gebruikt, maar behouden voor legacy)
         function toonIntroductie() {
             const modal = document.createElement('div');
-            modal.style = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px;';
+            modal.style = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: var(--spacing-lg);';
             modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
             
             modal.innerHTML = `
@@ -13546,12 +13561,12 @@ Antwoord in dit exacte JSON formaat:
                 <div style="background: white; border-radius: 16px; padding: 30px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
                     <h3 style="margin: 0 0 20px 0; font-size: 1.5rem; color: var(--text);">${uitleg.titel}</h3>
                     
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: var(--spacing-lg);">
                         <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 10px;">Wat betekent dit?</h4>
                         <p style="font-size: 1rem; line-height: 1.6; color: var(--text);">${uitleg.betekenis}</p>
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: var(--spacing-lg);">
                         <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 10px;">Wat zie je vaak?</h4>
                         <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
                             ${uitleg.watZieJe.map(item => `<li style="color: var(--text);">${item}</li>`).join('')}
@@ -13939,7 +13954,7 @@ Antwoord in dit exacte JSON formaat:
             const container = document.getElementById('ratingsList');
             
             if (state.network.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">U heeft nog geen personen toegevoegd aan uw netwerk. Ga terug om personen toe te voegen.</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: var(--spacing-lg);">U heeft nog geen personen toegevoegd aan uw netwerk. Ga terug om personen toe te voegen.</p>';
                 document.getElementById('averageRatingBox').style.display = 'none';
                 return;
             }
@@ -14018,7 +14033,7 @@ Antwoord in dit exacte JSON formaat:
                 </div>
                 
                 <!-- BEVESTIGINGSVRAAG -->
-                <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 25px;">
                     <h3 style="margin: 0 0 15px 0; color: #1e40af; font-size: 1.1rem;">Voelt dit passend?</h3>
                     <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px; line-height: 1.5;">
                         Is deze manier van steun organiseren passend bij de situatie, of vraagt het om aanpassing?
@@ -14068,7 +14083,7 @@ Antwoord in dit exacte JSON formaat:
                             const kleur = positieKleuren[pos];
                             
                             return `
-                                <div style="flex: 1; min-width: 120px; text-align: center; padding: 20px 15px; border-radius: 10px; 
+                                <div style="flex: 1; min-width: 120px; text-align: center; padding: var(--spacing-lg) 15px; border-radius: 10px; 
                                             ${isHuidig ? `background: ${kleur.bg}; border: 3px solid ${kleur.border}; box-shadow: 0 4px 12px ${kleur.shadow};` : `background: ${kleur.bg}; border: 2px solid ${kleur.border}; opacity: 0.4;`}
                                             transition: all 0.3s; cursor: pointer;"
                                      onclick="toonNetwerkUitleg('${pos}')"
@@ -14099,7 +14114,7 @@ Antwoord in dit exacte JSON formaat:
                 <!-- BLOK 3: Mogelijke richtingen -->
                 <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: 25px; margin-bottom: 25px;">
                     <h3 style="margin: 0 0 10px 0; color: #1e40af; font-size: 1.2rem;">Waar kan beweging helpend zijn?</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; line-height: 1.5;">
+                    <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: var(--spacing-lg); line-height: 1.5;">
                         Dit zijn geen doelen, maar opties die kunnen passen bij deze situatie.
                     </p>
                     ${richtingen.length > 0 ? `
@@ -14216,7 +14231,7 @@ Antwoord in dit exacte JSON formaat:
                 </div>
                 
                 <!-- Bevestiging -->
-                <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="background: white; border: 2px solid #3b82f6; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 25px;">
                     <h3 style="margin: 0 0 10px 0; color: #1e40af;">Klopt dit?</h3>
                     <div style="display: flex; gap: 15px;">
                         <label style="flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;"
@@ -14272,7 +14287,7 @@ Antwoord in dit exacte JSON formaat:
                     <!-- LINKS: Huidige positie -->
                     <div>
                         <h3 style="text-align: center; font-size: 1rem; color: var(--text-light); margin-bottom: 15px;">📍 Je bent hier</h3>
-                        <div style="background: white; border: 3px solid #3b82f6; border-radius: 12px; padding: 20px;">
+                        <div style="background: white; border: 3px solid #3b82f6; border-radius: 12px; padding: var(--spacing-lg);">
                             ${renderNetwerkDiagramSVG(huidigPositie, null)}
                         </div>
                         <div style="text-align: center; margin-top: 10px; font-weight: 600; color: #1e40af;">
@@ -14299,7 +14314,7 @@ Antwoord in dit exacte JSON formaat:
                     <!-- RECHTS: Klikbare opties -->
                     <div>
                         <h3 style="text-align: center; font-size: 1rem; color: var(--text-light); margin-bottom: 15px;">🎯 Kies richting</h3>
-                        <div style="background: white; border: 3px solid ${gekozenBeweging ? '#10b981' : '#e5e7eb'}; border-radius: 12px; padding: 20px; transition: all 0.3s;">
+                        <div style="background: white; border: 3px solid ${gekozenBeweging ? '#10b981' : '#e5e7eb'}; border-radius: 12px; padding: var(--spacing-lg); transition: all 0.3s;">
                             ${renderNetwerkDiagramSVG(huidigPositie, gekozenBeweging)}
                         </div>
                         ${gekozenBeweging ? `
@@ -14400,7 +14415,7 @@ Antwoord in dit exacte JSON formaat:
             const richtingen = getMogelijkeRichtingen(netwerkInfo.positie);
             
             let html = `
-                <div style="background: #e0f2fe; border: 2px solid #0284c7; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="background: #e0f2fe; border: 2px solid #0284c7; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 25px;">
                     <div style="font-size: 0.95rem; color: #075985; line-height: 1.6;">
                         <strong>📍 Huidige positie:</strong> ${netwerkInfo.label}<br>
                         <strong>🎯 Kies eerstvolgende stap:</strong> Welke netwerkbeweging is nu het meest helpend?
@@ -14411,7 +14426,7 @@ Antwoord in dit exacte JSON formaat:
                 
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     ${richtingen.map((richting, index) => `
-                        <label style="display: block; padding: 20px; border: 3px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s; background: white;"
+                        <label style="display: block; padding: var(--spacing-lg); border: 3px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s; background: white;"
                                onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#eff6ff';"
                                onmouseout="if(!this.querySelector('input').checked) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }"
                                onclick="selectBeweging('${richting.naar}', ${index});">
@@ -15178,7 +15193,7 @@ function renderInterventiesPerDomein() {
             });
 
             let html = `
-                <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: var(--spacing-lg);">
                     <div style="font-weight: 700; color: #1e40af; margin-bottom: 8px;">Gekozen beweging:</div>
                     <div style="font-size: 1.05rem; color: var(--text);">${richting.label}</div>
                 </div>
@@ -15271,7 +15286,7 @@ function renderInterventiesPerDomein() {
                 </div>
                 
                 <!-- Handmatige toevoeging -->
-                <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border: 2px dashed #f59e0b; border-radius: 12px;">
+                <div style="margin-top: 30px; padding: var(--spacing-lg); background: #fef3c7; border: 2px dashed #f59e0b; border-radius: 12px;">
                     <h4 style="font-size: 1rem; font-weight: 600; color: #92400e; margin: 0 0 12px 0;">
                         ➕ Eigen interventie toevoegen
                     </h4>
@@ -15382,14 +15397,14 @@ function renderInterventiesPerDomein() {
                 };
                 
                 let html = `
-                    <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                    <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 30px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: var(--spacing-lg);">
                             <span style="font-size: 1.3rem;">✅</span>
                             <h3 style="font-size: 1.1rem; font-weight: 700; color: #065f46; margin: 0;">Lokale voorzieningen in ${regioNaam} (${postcode})</h3>
                         </div>
                         
                         <!-- Algemene voorzieningen -->
-                        <div style="margin-bottom: 20px;">
+                        <div style="margin-bottom: var(--spacing-lg);">
                             <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                                 <span>🤝</span> Collectieve voorzieningen (buurthuizen, vrijwilligers)
                             </h4>
@@ -15403,7 +15418,7 @@ function renderInterventiesPerDomein() {
                             </div>
                         </div>
                         
-                        <div style="margin-bottom: 20px;">
+                        <div style="margin-bottom: var(--spacing-lg);">
                             <h4 style="font-size: 1rem; font-weight: 600; color: #047857; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                                 <span>🏥</span> Formele voorzieningen (professionals, wijkteams)
                             </h4>
@@ -15474,7 +15489,7 @@ function renderInterventiesPerDomein() {
             // Check of postcode is ingevuld
             if (!state.postcode) {
                 container.innerHTML = `
-                    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 30px;">
                         <p style="margin: 0; color: #92400e;">
                             ⚠️ <strong>Vul eerst een postcode in</strong> om concrete voorzieningen te zien die passen bij je ondersteuningsstructuur.
                         </p>
@@ -15502,7 +15517,7 @@ function renderInterventiesPerDomein() {
             
             if (domeinenMetOndersteuning.length === 0) {
                 container.innerHTML = `
-                    <div style="background: #e0e7ff; border: 2px solid #6366f1; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                    <div style="background: #e0e7ff; border: 2px solid #6366f1; border-radius: 12px; padding: var(--spacing-lg); margin-bottom: 30px;">
                         <p style="margin: 0; color: #3730a3;">
                             💡 <strong>Nog geen ondersteuningsstructuur ingevuld</strong><br>
                             Ga naar het OVERZICHT-scherm en klik op 🔧 bij de domeinen om de ondersteuningsstructuur in te vullen.
@@ -15515,7 +15530,7 @@ function renderInterventiesPerDomein() {
             // Render voorzieningen per domein
             let html = `
                 <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 3px solid #10b981; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: var(--spacing-lg);">
                         <span style="font-size: 1.5rem;">📍</span>
                         <div>
                             <h3 style="font-size: 1.2rem; font-weight: 700; color: #065f46; margin: 0;">Concrete voorzieningen in ${regioNaam}</h3>
@@ -15531,7 +15546,7 @@ function renderInterventiesPerDomein() {
                 const formeelDetail = ondersteuning.formeelDetail || [];
                 
                 html += `
-                    <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; border-left: 5px solid var(--primary);">
+                    <div style="background: white; border-radius: 10px; padding: var(--spacing-lg); margin-bottom: var(--spacing-lg); border-left: 5px solid var(--primary);">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <span style="font-size: 1.3rem;">${domain.emoji}</span>
                             <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h4>
@@ -16652,7 +16667,7 @@ Geef advies SPECIFIEK voor de PROFESSIONAL (niet voor de cliënt) in dit HTML-fo
                 
                 if (results.length === 0) {
                     resultsList.innerHTML = `
-                        <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                        <div style="text-align: center; padding: var(--spacing-lg); color: var(--text-light);">
                             <p>Geen resultaten gevonden voor "${searchTerms}"</p>
                         </div>
                     `;
@@ -18120,7 +18135,7 @@ END:VEVENT
                 align-items: center;
                 justify-content: center;
                 z-index: 10000;
-                padding: 20px;
+                padding: var(--spacing-lg);
             `;
             
             const patronenHTML = patronen.map((label, index) => {
@@ -18185,7 +18200,7 @@ END:VEVENT
                 ">
                     <h2 style="margin-bottom: 16px; color: #f59e0b;">🔍 Herken je deze patronen?</h2>
                     
-                    <p style="color: #6b7280; margin-bottom: 20px; line-height: 1.6;">
+                    <p style="color: #6b7280; margin-bottom: var(--spacing-lg); line-height: 1.6;">
                         We hebben automatisch ${patronen.length} netwerkpatroon${patronen.length > 1 ? 'en' : ''} gedetecteerd. 
                         Herken je deze in de situatie van de cliënt?
                     </p>
@@ -19122,8 +19137,8 @@ END:VEVENT
                 const draaglagen = huidigeSteun.draaglagen || [];
                 
                 return `
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin-bottom: 20px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 25px; margin-bottom: var(--spacing-lg);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: var(--spacing-lg);">
                             <span style="font-size: 2rem;">${domain.emoji}</span>
                             <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h3>
                         </div>
@@ -19782,7 +19797,7 @@ END:VEVENT
                     <h3 style="margin: 0 0 20px 0; color: #92400e; font-size: 1.3rem;">
                         🔄 Positionele Beslissingen
                     </h3>
-                    <p style="font-size: 0.95rem; color: #78350f; margin-bottom: 20px; line-height: 1.6;">
+                    <p style="font-size: 0.95rem; color: #78350f; margin-bottom: var(--spacing-lg); line-height: 1.6;">
                         <strong>Dit zijn de afgesproken netwerkbewegingen:</strong> niet méér zorg, maar anders gepositioneerd.
                     </p>
             `;
@@ -19793,7 +19808,7 @@ END:VEVENT
                 const beweging = gewenst.bewegingsrichting;
                 
                 html += `
-                    <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 5px solid #f59e0b;">
+                    <div style="background: white; border-radius: 10px; padding: var(--spacing-lg); margin-bottom: 15px; border-left: 5px solid #f59e0b;">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
                             <span style="font-size: 1.8rem;">${domain.emoji}</span>
                             <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0;">${domain.name}</h4>
