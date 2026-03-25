@@ -1,0 +1,183 @@
+<!-- VOEG DIT TOE ALS EERSTE SCREEN VOOR INTRO (screen-startpunt) -->
+
+<div class="screen" id="screen-startpunt">
+    <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <h2>🎯 Vanuit welke organisatie werkt u?</h2>
+        <p style="font-size: 1.05rem; color: var(--text-light); margin-bottom: 25px; line-height: 1.7;">
+            Kies uw startpunt. Dit bepaalt welke levensgebieden direct relevant zijn voor uw intake.
+        </p>
+
+        <div class="mode-cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            
+            <!-- Wijkteam -->
+            <div class="mode-card" onclick="app.selectStartpunt('wijkteam')">
+                <div class="mode-icon">🏘️</div>
+                <h3>Wijkteam</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Brede intake, alle domeinen mogelijk</p>
+                <div class="badge badge-info" style="margin-top: 10px;">Generalistisch</div>
+            </div>
+
+            <!-- GGZ -->
+            <div class="mode-card" onclick="app.selectStartpunt('ggz')">
+                <div class="mode-icon">🧠</div>
+                <h3>GGZ-instelling</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: mentale gezondheid + aanpalend</p>
+                <div class="badge badge-warning" style="margin-top: 10px;">Specialistisch</div>
+            </div>
+
+            <!-- Mantelzorg -->
+            <div class="mode-card" onclick="app.selectStartpunt('mantelzorg')">
+                <div class="mode-icon">🫂</div>
+                <h3>Mantelzorg&shy;organisatie</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: mantelzorg + werk-zorg balans</p>
+                <div class="badge badge-success" style="margin-top: 10px;">Ondersteuning</div>
+            </div>
+
+            <!-- Schuldhulp -->
+            <div class="mode-card" onclick="app.selectStartpunt('schuldhulp')">
+                <div class="mode-icon">💰</div>
+                <h3>Schuldhulp&shy;verlening</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: financiën + werk + wonen</p>
+                <div class="badge badge-danger" style="margin-top: 10px;">Financieel</div>
+            </div>
+
+            <!-- Ouderenzorg -->
+            <div class="mode-card" onclick="app.selectStartpunt('ouderenzorg')">
+                <div class="mode-icon">👴</div>
+                <h3>Ouderenzorg / Wijk&shy;verpleging</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: lichamelijk + wonen + eenzaamheid</p>
+                <div class="badge badge-info" style="margin-top: 10px;">Zorg</div>
+            </div>
+
+            <!-- Maatschappelijke opvang -->
+            <div class="mode-card" onclick="app.selectStartpunt('opvang')">
+                <div class="mode-icon">🏠</div>
+                <h3>Maatschappelijke opvang</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: wonen + financiën + GGZ</p>
+                <div class="badge badge-warning" style="margin-top: 10px;">Crisis</div>
+            </div>
+
+            <!-- Reclassering -->
+            <div class="mode-card" onclick="app.selectStartpunt('reclassering')">
+                <div class="mode-icon">⚖️</div>
+                <h3>Reclassering / Justitie</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: justitie + werk + financiën</p>
+                <div class="badge badge-danger" style="margin-top: 10px;">Re-integratie</div>
+            </div>
+
+            <!-- Jeugdzorg -->
+            <div class="mode-card" onclick="app.selectStartpunt('jeugdzorg')">
+                <div class="mode-icon">🧒</div>
+                <h3>Jeugdzorg (CJG)</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Focus: gezin + school + GGZ</p>
+                <div class="badge badge-success" style="margin-top: 10px;">Jeugd</div>
+            </div>
+
+        </div>
+
+        <div style="background: var(--primary-light); padding: 16px; border-radius: 12px; margin-top: 25px; border-left: 4px solid var(--primary);">
+            <p style="font-size: 0.9rem; color: var(--primary-dark); margin: 0; line-height: 1.6;">
+                💡 <strong>Waarom dit kiezen?</strong> Hiermee selecteren we vooraf de relevante levensgebieden. 
+                Dat maakt het gesprek gerichter en minder overweldigend voor de cliënt.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT TOEVOEGING (voeg toe aan app object) -->
+<script>
+// Voeg toe aan app-object
+app.startpunt = null;
+
+app.startpuntConfig = {
+    wijkteam: {
+        naam: 'Wijkteam',
+        emoji: '🏘️',
+        domeinen: 'all', // Alle 11 domeinen
+        prioriteit: []
+    },
+    ggz: {
+        naam: 'GGZ-instelling',
+        emoji: '🧠',
+        domeinen: ['ggz', 'dagbesteding', 'wonen', 'sociaal', 'huiselijk', 'financien'], // 6 domeinen
+        prioriteit: ['ggz'] // GGZ als eerste
+    },
+    mantelzorg: {
+        naam: 'Mantelzorgorganisatie',
+        emoji: '🫂',
+        domeinen: ['mantelzorg', 'huiselijk', 'dagbesteding', 'ggz', 'lichamelijk'], // 5 domeinen
+        prioriteit: ['mantelzorg']
+    },
+    schuldhulp: {
+        naam: 'Schuldhulpverlening',
+        emoji: '💰',
+        domeinen: ['financien', 'dagbesteding', 'wonen', 'ggz'], // 4 domeinen
+        prioriteit: ['financien']
+    },
+    ouderenzorg: {
+        naam: 'Ouderenzorg / Wijkverpleging',
+        emoji: '👴',
+        domeinen: ['lichamelijk', 'adl', 'wonen', 'sociaal', 'ggz', 'mantelzorg'], // 6 domeinen
+        prioriteit: ['lichamelijk', 'adl']
+    },
+    opvang: {
+        naam: 'Maatschappelijke opvang',
+        emoji: '🏠',
+        domeinen: ['wonen', 'financien', 'ggz', 'verslaving', 'dagbesteding'], // 5 domeinen
+        prioriteit: ['wonen']
+    },
+    reclassering: {
+        naam: 'Reclassering / Justitie',
+        emoji: '⚖️',
+        domeinen: ['justitie', 'dagbesteding', 'financien', 'verslaving', 'wonen'], // 5 domeinen
+        prioriteit: ['justitie']
+    },
+    jeugdzorg: {
+        naam: 'Jeugdzorg (CJG)',
+        emoji: '🧒',
+        domeinen: ['huiselijk', 'ggz', 'dagbesteding', 'sociaal', 'financien'], // 5 domeinen
+        prioriteit: ['huiselijk', 'ggz']
+    }
+};
+
+app.selectStartpunt = function(type) {
+    this.startpunt = type;
+    this.filterDomainsByStartpunt(type);
+    this.goToScreen('intro'); // Ga naar bestaande intro-screen
+    this.saveData();
+};
+
+app.filterDomainsByStartpunt = function(type) {
+    const config = this.startpuntConfig[type];
+    
+    if (config.domeinen === 'all') {
+        // Alle domeinen actief (wijkteam)
+        this.domains.forEach(d => d.geselecteerd = true);
+    } else {
+        // Alleen geselecteerde domeinen
+        this.domains.forEach(d => {
+            d.geselecteerd = config.domeinen.includes(d.id);
+        });
+    }
+    
+    // Update progress/workflow
+    this.updateProgressSteps();
+};
+
+// Update de goToScreen functie om startpunt als eerste te tonen
+const originalGoToScreen = app.goToScreen;
+app.goToScreen = function(screenId) {
+    // Als we naar 'intro' gaan maar nog geen startpunt hebben, ga eerst naar startpunt
+    if (screenId === 'intro' && !this.startpunt) {
+        screenId = 'startpunt';
+    }
+    originalGoToScreen.call(this, screenId);
+};
+
+// Bij laden: check of we direct naar intro kunnen (als startpunt al gekozen)
+document.addEventListener('DOMContentLoaded', () => {
+    if (!app.startpunt) {
+        app.goToScreen('startpunt');
+    }
+});
+</script>

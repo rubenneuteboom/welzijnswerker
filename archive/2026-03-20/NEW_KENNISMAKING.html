@@ -1,0 +1,190 @@
+                    <!-- SCHERM 2: Kennismaking (na organisatie keuze) -->
+                    <div id="kennismakingScherm" style="display:none;">
+                        
+                        <div style="text-align:center;margin-bottom:32px;">
+                            <h1 style="font-size:1.6rem;margin-bottom:8px;font-weight:600;color:#1e293b;">
+                                Waar wil je mee aan de slag?
+                            </h1>
+                            <p style="font-size:0.95rem;color:#64748b;">
+                                Laten we beginnen met jouw vraag
+                            </p>
+                        </div>
+
+                        <!-- Hulpvraag -->
+                        <div style="margin-bottom:28px;">
+                            <label style="display:block;font-weight:600;font-size:0.95rem;color:#475569;margin-bottom:8px;">
+                                Wat wil je bereiken?
+                            </label>
+                            <textarea 
+                                id="kennismakingHulpvraag" 
+                                placeholder="Bijv: Ik wil niet meer zo eenzaam zijn, of: Ik wil mijn schulden onder controle krijgen"
+                                style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;min-height:90px;line-height:1.5;font-family:inherit;transition:border 0.2s;resize:vertical;"
+                                onfocus="this.style.borderColor='#2ECC71'"
+                                onblur="this.style.borderColor='#e2e8f0'"
+                                oninput="state.hulpvraag=this.value;saveState();"
+                            ></textarea>
+                        </div>
+
+                        <!-- Welke levensgebieden? (optioneel) -->
+                        <div style="margin-bottom:32px;">
+                            <label style="display:block;font-weight:600;font-size:0.95rem;color:#475569;margin-bottom:8px;">
+                                Welke levensgebieden horen hierbij? <span style="font-weight:400;font-size:0.85rem;color:#94a3b8;">(optioneel)</span>
+                            </label>
+                            <div id="kennismakingDomeinen" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;">
+                                <!-- Gevuld door JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Route keuze -->
+                        <div style="margin-bottom:32px;">
+                            <label style="display:block;font-weight:600;font-size:0.95rem;color:#475569;margin-bottom:12px;">
+                                Welke aanpak?
+                            </label>
+                            <div style="display:grid;gap:12px;">
+                                <label style="cursor:pointer;" onclick="selectRoute('volledig')">
+                                    <input type="radio" name="route" value="volledig" checked style="display:none;">
+                                    <div class="route-card route-volledig" style="border:2px solid #2ECC71;background:#f0fdf4;border-radius:10px;padding:16px;transition:all 0.2s;">
+                                        <div style="font-weight:600;color:#1e293b;margin-bottom:6px;font-size:1rem;">
+                                            📋 Volledig - Alle 11 levensgebieden
+                                        </div>
+                                        <div style="font-size:0.85rem;color:#475569;line-height:1.4;">
+                                            We kijken naar alle gebieden om het complete plaatje te zien
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label style="cursor:pointer;" onclick="selectRoute('quick')">
+                                    <input type="radio" name="route" value="quick" style="display:none;">
+                                    <div class="route-card route-quick" style="border:2px solid #e2e8f0;background:white;border-radius:10px;padding:16px;transition:all 0.2s;">
+                                        <div style="font-weight:600;color:#1e293b;margin-bottom:6px;font-size:1rem;">
+                                            ⚡ Quick Scan - Focus op jouw vraag
+                                        </div>
+                                        <div style="font-size:0.85rem;color:#64748b;line-height:1.4;">
+                                            We beginnen met de gebieden die jij koos en breiden uit waar nodig
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Knoppen -->
+                        <div style="display:flex;gap:12px;">
+                            <button 
+                                onclick="terugNaarOrganisatie()"
+                                style="flex:1;padding:14px;background:white;color:#64748b;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;"
+                                onmouseover="this.style.borderColor='#cbd5e1'"
+                                onmouseout="this.style.borderColor='#e2e8f0'"
+                            >
+                                ← Terug
+                            </button>
+                            <button 
+                                onclick="startAnalyseVanuitKennismaking()"
+                                style="flex:2;padding:14px;background:linear-gradient(135deg,#2ECC71,#27AE60);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(46,204,113,0.3);transition:all 0.2s;"
+                                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(46,204,113,0.4)'"
+                                onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(46,204,113,0.3)'"
+                            >
+                                Start Analyse →
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Einde kennismakingScherm -->
+
+<style>
+input[name="route"]:checked + .route-card {
+    border-color: #2ECC71 !important;
+    background: #f0fdf4 !important;
+    box-shadow: 0 2px 8px rgba(46,204,113,0.15);
+}
+
+.route-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+</style>
+
+<script>
+// Render domein checkboxes voor kennismaking
+function renderKennismakingDomeinen() {
+    const container = document.getElementById('kennismakingDomeinen');
+    if (!container) return;
+    
+    const domeinen = [
+        {id: 'financien', emoji: '💰', label: 'Financiën'},
+        {id: 'dagbesteding', emoji: '💼', label: 'Werk/School'},
+        {id: 'huisvesting', emoji: '🏠', label: 'Wonen'},
+        {id: 'huiselijk', emoji: '👨‍👩‍👧', label: 'Familie'},
+        {id: 'geestelijk', emoji: '🧠', label: 'Mentaal'},
+        {id: 'lichamelijk', emoji: '💪', label: 'Lichamelijk'},
+        {id: 'verslaving', emoji: '🚭', label: 'Verslaving'},
+        {id: 'adl', emoji: '🛁', label: 'Zelfzorg'},
+        {id: 'sociaal', emoji: '👥', label: 'Sociaal'},
+        {id: 'participatie', emoji: '🤝', label: 'Participatie'},
+        {id: 'justitie', emoji: '⚖️', label: 'Justitie'}
+    ];
+    
+    container.innerHTML = domeinen.map(d => `
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;"
+            onmouseover="this.style.borderColor='#2ECC71';this.style.background='#f0fdf4'"
+            onmouseout="this.style.borderColor='#e2e8f0';this.style.background='white'">
+            <input type="checkbox" value="${d.id}" onchange="updateKennismakingDomeinen()">
+            <span>${d.emoji}</span>
+            <span style="white-space:nowrap;">${d.label}</span>
+        </label>
+    `).join('');
+}
+
+function updateKennismakingDomeinen() {
+    const checkboxes = document.querySelectorAll('#kennismakingDomeinen input:checked');
+    state.gekozenDomeinen = Array.from(checkboxes).map(cb => cb.value);
+    saveState();
+}
+
+function selectRoute(route) {
+    const volledig = document.querySelector('.route-volledig');
+    const quick = document.querySelector('.route-quick');
+    
+    if (route === 'volledig') {
+        volledig.style.borderColor = '#2ECC71';
+        volledig.style.background = '#f0fdf4';
+        quick.style.borderColor = '#e2e8f0';
+        quick.style.background = 'white';
+        document.querySelector('input[value="volledig"]').checked = true;
+    } else {
+        quick.style.borderColor = '#2ECC71';
+        quick.style.background = '#f0fdf4';
+        volledig.style.borderColor = '#e2e8f0';
+        volledig.style.background = 'white';
+        document.querySelector('input[value="quick"]').checked = true;
+    }
+    
+    state.track = route;
+    saveState();
+}
+
+function terugNaarOrganisatie() {
+    document.getElementById('organisatieKeuze').style.display = 'block';
+    document.getElementById('kennismakingScherm').style.display = 'none';
+}
+
+function startAnalyseVanuitKennismaking() {
+    // Sla hulpvraag op
+    const hulpvraag = document.getElementById('kennismakingHulpvraag')?.value.trim();
+    if (hulpvraag) {
+        state.hulpvraag = hulpvraag;
+    }
+    
+    // Sla route op
+    const route = document.querySelector('input[name="route"]:checked')?.value || 'volledig';
+    state.track = route;
+    
+    // Metadata
+    state.createdAt = state.createdAt || new Date().toISOString();
+    state.updatedAt = new Date().toISOString();
+    state.clientId = state.clientId || 'client_' + Date.now();
+    
+    saveState();
+    
+    // Ga naar domeinen (screen 2 in oude nummering, nu gewoon domains)
+    goToScreen(2);
+}
+</script>

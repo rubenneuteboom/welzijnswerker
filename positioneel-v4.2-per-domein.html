@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA v4.2 - Per Domein Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #22A65E;
+            --primary-light: #E8F5EE;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #F9FAFB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(34, 166, 94, 0.08);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 32px;
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .form-section h3 {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-group-inline {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-choice {
+            flex: 1;
+            min-width: 120px;
+            padding: 14px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-choice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-choice.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .spinnenweb-preview {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .spinnenweb-preview h3 {
+            font-size: 1.1rem;
+            color: #166534;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 166, 94, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="progress-indicator" id="progressIndicator">
+            Domein <span id="currentDomain">1</span> van 11
+        </div>
+
+        <h1 id="domainTitle">💰 Financiën</h1>
+        <p class="subtitle" id="domainDesc">Inkomen, schulden, budgetbeheer</p>
+
+        <!-- 1. Hoe gaat dit? -->
+        <div class="form-section">
+            <h3>😊 Hoe gaat dit voor jou?</h3>
+            <div class="btn-group-inline">
+                <button class="btn-choice" data-feeling="prima" onclick="setFeeling('prima')">
+                    😊 Prima
+                </button>
+                <button class="btn-choice" data-feeling="gaat-wel" onclick="setFeeling('gaat-wel')">
+                    😐 Gaat wel
+                </button>
+                <button class="btn-choice" data-feeling="zwaar" onclick="setFeeling('zwaar')">
+                    😟 Zwaar
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Is er steun? -->
+        <div class="form-section">
+            <h3>🤝 Is er steun?</h3>
+            <div class="btn-group-inline">
+                <button class="btn-choice" data-support="zelfstandig" onclick="setSupport('zelfstandig')">
+                    🟢 Zelfstandig
+                </button>
+                <button class="btn-choice" data-support="aanwezig" onclick="setSupport('aanwezig')">
+                    🟡 Steun aanwezig
+                </button>
+                <button class="btn-choice" data-support="nodig" onclick="setSupport('nodig')">
+                    🔴 Steun nodig
+                </button>
+                <button class="btn-choice" data-support="urgent" onclick="setSupport('urgent')">
+                    ⚠️ Urgent
+                </button>
+            </div>
+            <button onclick="testToonDetails()" style="margin-top:10px;padding:8px 16px;background:#dc2626;color:white;border:none;border-radius:8px;cursor:pointer;">
+                🔍 TEST: Toon details
+            </button>
+            <button onclick="testRolDropdown()" style="margin-top:10px;padding:8px 16px;background:#2563eb;color:white;border:none;border-radius:8px;cursor:pointer;">
+                🧪 TEST: Vul rol dropdown
+            </button>
+        </div>
+
+        <!-- 3-6. Details (ALTIJD ZICHTBAAR VOOR TEST) -->
+        <div id="steunDetails" style="display:block;">
+            <!-- 3. Type steun (via RADIO ipv buttons) -->
+            <div class="form-section">
+                <h3>👤 Type steun</h3>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <label style="display:flex;align-items:center;gap:10px;padding:12px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;">
+                        <input type="radio" name="supportType" value="informeel" onchange="document.getElementById('rolInformeel').style.display='block'; document.getElementById('rolCollectief').style.display='none'; document.getElementById('rolProfessioneel').style.display='none'; document.getElementById('rolPlaceholder').style.display='none';">
+                        <span style="font-size:1.1rem;">🟢 Informeel</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:10px;padding:12px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;">
+                        <input type="radio" name="supportType" value="collectief" onchange="document.getElementById('rolInformeel').style.display='none'; document.getElementById('rolCollectief').style.display='block'; document.getElementById('rolProfessioneel').style.display='none'; document.getElementById('rolPlaceholder').style.display='none';">
+                        <span style="font-size:1.1rem;">🟣 Collectief</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:10px;padding:12px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;">
+                        <input type="radio" name="supportType" value="professioneel" onchange="document.getElementById('rolInformeel').style.display='none'; document.getElementById('rolCollectief').style.display='none'; document.getElementById('rolPlaceholder').style.display='none'; showProfRollen(); document.getElementById('rolProfessioneel').style.display='block';">
+                        <span style="font-size:1.1rem;">🔵 Professioneel</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 4. Rol (3 aparte dropdowns, show/hide via display) -->
+            <div class="form-group">
+                <label>🏷️ Rol</label>
+                
+                <select id="rolInformeel" style="display:none;background:#d1fae5;" class="rol-dropdown">
+                    <option value="">🟢 INFORMEEL - Kies een rol...</option>
+                    <option value="Partner">Partner</option>
+                    <option value="Familie (ouder)">Familie (ouder)</option>
+                    <option value="Familie (kind)">Familie (kind)</option>
+                    <option value="Familie (broer/zus)">Familie (broer/zus)</option>
+                    <option value="Vriend">Vriend</option>
+                    <option value="Buur">Buur</option>
+                    <option value="Collega">Collega</option>
+                    <option value="Anders">Anders</option>
+                </select>
+                
+                <select id="rolCollectief" style="display:none;background:#e9d5ff;" class="rol-dropdown">
+                    <option value="">🟣 COLLECTIEF - Kies een rol...</option>
+                    <option value="Vrijwilligersorganisatie">Vrijwilligersorganisatie</option>
+                    <option value="Kerk/geloof">Kerk/geloof</option>
+                    <option value="Buurtcentrum">Buurtcentrum</option>
+                    <option value="Sportclub">Sportclub</option>
+                    <option value="Hobbyvereniging">Hobbyvereniging</option>
+                    <option value="Anders">Anders</option>
+                </select>
+                
+                <select id="rolProfessioneel" style="display:none;background:#bfdbfe;" class="rol-dropdown">
+                    <option value="">🔵 PROFESSIONEEL - Kies een rol...</option>
+                </select>
+                
+                <div id="rolPlaceholder" style="padding:12px;background:#f9fafb;border:2px solid #e5e7eb;border-radius:10px;color:#9ca3af;">
+                    👆 Kies eerst een Type steun hierboven
+                </div>
+            </div>
+
+            <!-- 5. Wie? -->
+            <div class="form-group">
+                <label>📝 Wie precies? (naam)</label>
+                <input type="text" id="wieNaam" placeholder="Bijv. Zus Marie">
+            </div>
+
+            <!-- 6. Wat doet deze persoon? -->
+            <div class="form-group">
+                <label>🛠️ Wat doet deze persoon?</label>
+                <select id="actieDropdown" onchange="handleActieChange()">
+                    <option value="">Kies een actie...</option>
+                    <option value="Administratie voeren">Administratie voeren</option>
+                    <option value="Belastingaangifte helpen">Belastingaangifte helpen</option>
+                    <option value="Budgetplan maken">Budgetplan maken</option>
+                    <option value="Betalen rekeningen">Betalen rekeningen</option>
+                    <option value="Schuldbemiddeling">Schuldbemiddeling</option>
+                    <option value="Aanvragen toeslagen">Aanvragen toeslagen</option>
+                    <option value="Anders">Anders (beschrijf hieronder)</option>
+                </select>
+                <textarea id="actieVrij" rows="2" placeholder="Beschrijf hier wat deze persoon doet..." style="margin-top:8px;"></textarea>
+            </div>
+        </div>
+
+        <!-- 7. Live spinnenweb -->
+        <div class="spinnenweb-preview" style="margin-top: 32px;">
+            <h3>🕸️ Je netwerk tot nu toe</h3>
+            <canvas id="spinnenweb" width="300" height="300" style="max-width:300px;margin:0 auto;display:block;"></canvas>
+            <div class="stats">
+                <span>🔴 <span id="urgentCount">0</span> urgent</span>
+                <span>🟡 <span id="aandachtCount">0</span> aandacht</span>
+                <span>🟢 <span id="goedCount">0</span> goed</span>
+            </div>
+        </div>
+
+        <!-- Navigatie -->
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="vorigDomein()" id="btnVorig">← Vorige</button>
+            <button class="btn btn-primary" onclick="volgendDomein()" id="btnVolgende">Volgende →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== DATA STRUCTURES =====
+
+const DOMAINS = [
+    { id: 'financien', emoji: '💰', naam: 'Financiën', desc: 'Inkomen, schulden, budgetbeheer' },
+    { id: 'dagbesteding', emoji: '💼', naam: 'Dagbesteding', desc: 'Werk, opleiding, zinvolle activiteit' },
+    { id: 'huisvesting', emoji: '🏠', naam: 'Huisvesting', desc: 'Woning, woonomgeving, veiligheid' },
+    { id: 'huiselijkerelaties', emoji: '👨👩👧', naam: 'Huiselijke relaties', desc: 'Gezin, partnerschap, opvoeding' },
+    { id: 'ggz', emoji: '🧠', naam: 'Geestelijke gezondheid', desc: 'Psychisch welzijn, behandeling' },
+    { id: 'lgz', emoji: '💪', naam: 'Lichamelijke gezondheid', desc: 'Fysieke gezondheid, medische zorg' },
+    { id: 'verslaving', emoji: '🚭', naam: 'Verslaving', desc: 'Middelen, gokken, gedragsverslaving' },
+    { id: 'adl', emoji: '🛁', naam: 'ADL-vaardigheden', desc: 'Zelfzorg, persoonlijke hygiëne' },
+    { id: 'sociaalnetwerk', emoji: '👥', naam: 'Sociaal netwerk', desc: 'Familie, vrienden, kennissen' },
+    { id: 'participatie', emoji: '🤝', naam: 'Maatschappelijke participatie', desc: 'Sociale activiteiten, vrijwilligerswerk' },
+    { id: 'justitie', emoji: '⚖️', naam: 'Justitie', desc: 'Juridische problemen, reclassering' }
+];
+
+const ROLLEN = {
+    informeel: ['Partner', 'Familie (ouder)', 'Familie (kind)', 'Familie (broer/zus)', 'Vriend', 'Buur', 'Collega', 'Anders'],
+    collectief: ['Vrijwilligersorganisatie', 'Kerk/geloof', 'Buurtcentrum', 'Sportclub', 'Hobbyvereniging', 'Anders'],
+    professioneel: [] // Per domein verschillend
+};
+
+const PROF_ROLLEN_PER_DOMEIN = {
+    financien: ['Bewindvoerder', 'Budgetcoach', 'Schuldhulpverlening', 'Financieel adviseur', 'Sociale dienst', 'Anders'],
+    huisvesting: ['Woningcorporatie', 'Maatschappelijk werk', 'Huisbaas', 'Woningbemiddeling', 'Anders'],
+    ggz: ['Psycholoog', 'Psychiater', 'POH-GGZ', 'FACT-team', 'Casemanager GGZ', 'Ervaringsdeskundige', 'Anders'],
+    lgz: ['Huisarts', 'Specialist', 'Wijkverpleging', 'Fysiotherapeut', 'Thuiszorg', 'Anders'],
+    dagbesteding: ['Jobcoach', 'UWV', 'Re-integratie', 'Werkgever', 'Vrijwilligerswerk begeleider', 'Anders'],
+    verslaving: ['Verslavingszorg', 'Huisarts', 'GGZ', 'Zelfhulpgroep begeleider', 'Anders'],
+    adl: ['Thuiszorg', 'Wijkverpleging', 'Ergotherapeut', 'Persoonlijk begeleider', 'Anders'],
+    sociaalnetwerk: ['Maatschappelijk werk', 'Welzijnswerk', 'Buurtteam', 'Outreachend werk', 'Anders'],
+    participatie: ['Welzijnswerk', 'Vrijwilligerscentrale', 'Buurtcentrum', 'Maatschappelijk werk', 'Anders'],
+    huiselijkerelaties: ['Gezinscoach', 'Relatietherapie', 'Jeugdzorg', 'Veilig Thuis', 'Opvoedondersteuning', 'Anders'],
+    justitie: ['Reclassering', 'Advocaat', 'Schuldhulp + Juridisch', 'Maatschappelijk werk', 'Anders']
+};
+
+const ACTIES_PER_DOMEIN = {
+    financien: ['Administratie voeren', 'Belastingaangifte helpen', 'Budgetplan maken', 'Betalen rekeningen', 'Schuldbemiddeling', 'Aanvragen toeslagen', 'Anders'],
+    huisvesting: ['Huur regelen', 'Onderhoud coördineren', 'Woningzoeken', 'Conflict bemiddeling', 'Verhuizing regelen', 'Anders'],
+    ggz: ['Gesprekken voeren', 'Medicatie begeleiden', 'Crisisinterventie', 'Herstelondersteuning', 'Dagbesteding GGZ', 'Anders'],
+    lgz: ['Medische zorg coördineren', 'Afspraken maken', 'Medicatie beheer', 'Thuiszorg', 'Begeleiding ziekenhuis', 'Anders'],
+    dagbesteding: ['Solliciteren helpen', 'CV maken', 'Werk zoeken', 'Vrijwilligerswerk zoeken', 'Opleiding zoeken', 'Anders'],
+    verslaving: ['Verslavingszorg begeleiden', 'Afspraken maken', 'Terugvalpreventie', 'Zelfhulpgroep', 'Anders'],
+    adl: ['Wassen/douchen helpen', 'Aankleden helpen', 'Medicatie innemen', 'Structuur aanbrengen', 'Anders'],
+    sociaalnetwerk: ['Contact faciliteren', 'Sociale activiteiten organiseren', 'Gesprekken voeren', 'Netwerk uitbreiden', 'Anders'],
+    participatie: ['Vrijwilligerswerk zoeken', 'Hobby's vinden', 'Activiteiten organiseren', 'Sociale contacten', 'Anders'],
+    huiselijkerelaties: ['Gezinsgesprekken', 'Conflictbemiddeling', 'Opvoedingsondersteuning', 'Veiligheidsplan', 'Anders'],
+    justitie: ['Reclasseringscontact', 'Juridisch advies', 'Voorwaarden nakomen', 'Schuldbemiddeling', 'Anders']
+};
+
+// ===== STATE =====
+
+let currentDomainIndex = 0;
+let domainData = {};
+
+// Init state
+DOMAINS.forEach(d => {
+    domainData[d.id] = {
+        feeling: null,
+        support: null,
+        type: null,
+        rol: null,
+        wie: '',
+        actie: '',
+        actieVrij: ''
+    };
+});
+
+// ===== UI FUNCTIES =====
+
+function renderDomain() {
+    const domain = DOMAINS[currentDomainIndex];
+    const data = domainData[domain.id];
+    
+    // Update header
+    document.getElementById('currentDomain').textContent = currentDomainIndex + 1;
+    document.getElementById('domainTitle').textContent = `${domain.emoji} ${domain.naam}`;
+    document.getElementById('domainDesc').textContent = domain.desc;
+    
+    // Restore choices
+    document.querySelectorAll('.btn-choice').forEach(btn => btn.classList.remove('active'));
+    
+    if (data.feeling) {
+        const feelBtn = document.querySelector(`[data-feeling="${data.feeling}"]`);
+        if (feelBtn) feelBtn.classList.add('active');
+    }
+    
+    if (data.support) {
+        const supBtn = document.querySelector(`[data-support="${data.support}"]`);
+        if (supBtn) supBtn.classList.add('active');
+    }
+    
+    // Restore type radio buttons
+    document.querySelectorAll('input[name="supportType"]').forEach(radio => {
+        radio.checked = (radio.value === data.type);
+    });
+    
+    // Show/hide details
+    if (data.support === 'aanwezig') {
+        document.getElementById('steunDetails').style.display = 'block';
+    } else {
+        document.getElementById('steunDetails').style.display = 'none';
+    }
+    
+    // Update professioneel dropdown voor dit domein (altijd, ook als niet geselecteerd)
+    showProfRollen();
+    
+    // Update actie dropdown
+    updateActieDropdown();
+    
+    // Show correct rol dropdown based on type
+    if (data.type === 'informeel') {
+        document.getElementById('rolInformeel').style.display = 'block';
+        document.getElementById('rolCollectief').style.display = 'none';
+        document.getElementById('rolProfessioneel').style.display = 'none';
+        document.getElementById('rolPlaceholder').style.display = 'none';
+    } else if (data.type === 'collectief') {
+        document.getElementById('rolInformeel').style.display = 'none';
+        document.getElementById('rolCollectief').style.display = 'block';
+        document.getElementById('rolProfessioneel').style.display = 'none';
+        document.getElementById('rolPlaceholder').style.display = 'none';
+    } else if (data.type === 'professioneel') {
+        document.getElementById('rolInformeel').style.display = 'none';
+        document.getElementById('rolCollectief').style.display = 'none';
+        document.getElementById('rolProfessioneel').style.display = 'block';
+        document.getElementById('rolPlaceholder').style.display = 'none';
+    } else {
+        document.getElementById('rolInformeel').style.display = 'none';
+        document.getElementById('rolCollectief').style.display = 'none';
+        document.getElementById('rolProfessioneel').style.display = 'none';
+        document.getElementById('rolPlaceholder').style.display = 'block';
+    }
+    
+    // Restore fields
+    document.getElementById('wieNaam').value = data.wie || '';
+    
+    // Buttons
+    document.getElementById('btnVorig').disabled = currentDomainIndex === 0;
+    document.getElementById('btnVolgende').textContent = currentDomainIndex === DOMAINS.length - 1 ? 'Naar samenvatting →' : 'Volgende →';
+    
+    updateSpinnenweb();
+}
+
+function showProfRollen() {
+    // Get current domain
+    const domain = DOMAINS[currentDomainIndex];
+    const rollen = PROF_ROLLEN_PER_DOMEIN[domain.id] || ['Anders'];
+    
+    // Fill dropdown
+    const dd = document.getElementById('rolProfessioneel');
+    
+    // Clear completely first
+    while (dd.firstChild) {
+        dd.removeChild(dd.firstChild);
+    }
+    
+    // Add placeholder with domain name for debugging
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '🔵 ' + domain.naam + ' - Kies rol...';
+    dd.appendChild(placeholder);
+    
+    // Add all options
+    rollen.forEach(function(rol) {
+        const opt = document.createElement('option');
+        opt.value = rol;
+        opt.textContent = rol;
+        dd.appendChild(opt);
+    });
+}
+
+function updateRolOptions() {
+    // Hide all
+    document.getElementById('rolInformeel').style.display = 'none';
+    document.getElementById('rolCollectief').style.display = 'none';
+    document.getElementById('rolProfessioneel').style.display = 'none';
+    document.getElementById('rolPlaceholder').style.display = 'none';
+    
+    // Show selected
+    const selected = document.querySelector('input[name="supportType"]:checked');
+    if (selected) {
+        const value = selected.value;
+        if (value === 'informeel') {
+            document.getElementById('rolInformeel').style.display = 'block';
+        } else if (value === 'collectief') {
+            document.getElementById('rolCollectief').style.display = 'block';
+        } else if (value === 'professioneel') {
+            // Update professioneel dropdown voor huidige domein
+            updateProfessioneelRollen();
+            document.getElementById('rolProfessioneel').style.display = 'block';
+        }
+    } else {
+        document.getElementById('rolPlaceholder').style.display = 'block';
+    }
+}
+
+function updateProfessioneelRollen() {
+    const domain = DOMAINS[currentDomainIndex];
+    const dropdown = document.getElementById('rolProfessioneel');
+    const rollen = PROF_ROLLEN_PER_DOMEIN[domain.id] || ['Anders'];
+    
+    // TEST: Add domain name to first option
+    dropdown.innerHTML = '<option value="">Kies een rol... (' + domain.naam + ')</option>';
+    
+    rollen.forEach(rol => {
+        const opt = document.createElement('option');
+        opt.value = rol;
+        opt.textContent = rol;
+        dropdown.appendChild(opt);
+    });
+}
+
+function setFeeling(feeling) {
+    const domain = DOMAINS[currentDomainIndex];
+    domainData[domain.id].feeling = feeling;
+    
+    document.querySelectorAll('[data-feeling]').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-feeling="${feeling}"]`).classList.add('active');
+    
+    saveState();
+}
+
+function setSupport(support) {
+    console.log('setSupport called with:', support);
+    const domain = DOMAINS[currentDomainIndex];
+    domainData[domain.id].support = support;
+    
+    document.querySelectorAll('[data-support]').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-support="${support}"]`).classList.add('active');
+    
+    // Show/hide details
+    const detailsEl = document.getElementById('steunDetails');
+    console.log('steunDetails element:', detailsEl);
+    
+    if (support === 'aanwezig') {
+        console.log('Showing details...');
+        detailsEl.style.display = 'block';
+        console.log('Details display after:', detailsEl.style.display);
+    } else {
+        console.log('Hiding details...');
+        detailsEl.style.display = 'none';
+    }
+    
+    updateSpinnenweb();
+    saveState();
+}
+
+function setSupportType(type) {
+    console.log('setSupportType:', type);
+    const domain = DOMAINS[currentDomainIndex];
+    domainData[domain.id].type = type;
+    
+    // Visual feedback
+    document.querySelectorAll('[data-type]').forEach(btn => btn.classList.remove('active'));
+    const selectedBtn = document.querySelector(`[data-type="${type}"]`);
+    if (selectedBtn) {
+        selectedBtn.classList.add('active');
+    }
+    
+    // Update dropdown
+    console.log('Calling updateRolDropdown...');
+    updateRolDropdown();
+    
+    saveState();
+}
+
+function updateRolDropdown() {
+    const domain = DOMAINS[currentDomainIndex];
+    const data = domainData[domain.id];
+    const dropdown = document.getElementById('rolDropdown');
+    
+    // Clear eerst
+    dropdown.innerHTML = '';
+    
+    if (!data.type) {
+        dropdown.innerHTML = '<option value="">Eerst: kies hierboven Type steun</option>';
+        return;
+    }
+    
+    // Add placeholder
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Kies een rol...';
+    dropdown.appendChild(placeholder);
+    
+    // Get rollen based on type
+    let rollen = [];
+    if (data.type === 'professioneel') {
+        rollen = PROF_ROLLEN_PER_DOMEIN[domain.id] || ['Bewindvoerder', 'Budgetcoach', 'Schuldhulpverlening', 'Anders'];
+    } else if (data.type === 'informeel') {
+        rollen = ROLLEN.informeel || ['Partner', 'Familie', 'Vriend', 'Buur', 'Anders'];
+    } else if (data.type === 'collectief') {
+        rollen = ROLLEN.collectief || ['Vrijwilligersorganisatie', 'Kerk/geloof', 'Buurtcentrum', 'Anders'];
+    }
+    
+    // Add options
+    rollen.forEach(rol => {
+        const opt = document.createElement('option');
+        opt.value = rol;
+        opt.textContent = rol;
+        if (rol === data.rol) opt.selected = true;
+        dropdown.appendChild(opt);
+    });
+    
+    // Update actie dropdown
+    updateActieDropdown();
+}
+
+function handleRolChange() {
+    const domain = DOMAINS[currentDomainIndex];
+    domainData[domain.id].rol = document.getElementById('rolDropdown').value;
+    saveState();
+}
+
+function updateActieDropdown() {
+    const domain = DOMAINS[currentDomainIndex];
+    const data = domainData[domain.id];
+    const dropdown = document.getElementById('actieDropdown');
+    
+    dropdown.innerHTML = '<option value="">Kies een actie...</option>';
+    
+    const acties = ACTIES_PER_DOMEIN[domain.id] || ['Anders'];
+    
+    acties.forEach(actie => {
+        const opt = document.createElement('option');
+        opt.value = actie;
+        opt.textContent = actie;
+        if (actie === data.actie) opt.selected = true;
+        dropdown.appendChild(opt);
+    });
+}
+
+function handleActieChange() {
+    const domain = DOMAINS[currentDomainIndex];
+    const val = document.getElementById('actieDropdown').value;
+    domainData[domain.id].actie = val;
+    
+    if (val === 'Anders') {
+        document.getElementById('actieVrij').style.display = 'block';
+    } else {
+        document.getElementById('actieVrij').style.display = 'none';
+    }
+    
+    saveState();
+}
+
+function updateSpinnenweb() {
+    let urgent = 0, aandacht = 0, goed = 0;
+    
+    DOMAINS.forEach(d => {
+        const data = domainData[d.id];
+        if (data.support === 'urgent') urgent++;
+        else if (data.support === 'nodig') aandacht++;
+        else if (data.support === 'aanwezig' || data.support === 'zelfstandig') goed++;
+    });
+    
+    document.getElementById('urgentCount').textContent = urgent;
+    document.getElementById('aandachtCount').textContent = aandacht;
+    document.getElementById('goedCount').textContent = goed;
+    
+    // TODO: Render actual spider chart with Chart.js
+}
+
+function vorigDomein() {
+    if (currentDomainIndex > 0) {
+        saveDomainFields();
+        currentDomainIndex--;
+        renderDomain();
+        window.scrollTo(0, 0);
+    }
+}
+
+function volgendDomein() {
+    alert('Volgende knop geklikt!');
+    saveDomainFields();
+    
+    if (currentDomainIndex < DOMAINS.length - 1) {
+        currentDomainIndex++;
+        alert('Ga naar domein ' + (currentDomainIndex + 1));
+        renderDomain();
+        window.scrollTo(0, 0);
+    } else {
+        // Go to summary
+        alert('🎉 Alle domeinen ingevuld! Naar samenvatting...');
+        // TODO: Navigate to summary page
+    }
+}
+
+function saveDomainFields() {
+    const domain = DOMAINS[currentDomainIndex];
+    const data = domainData[domain.id];
+    
+    data.wie = document.getElementById('wieNaam').value;
+    data.actieVrij = document.getElementById('actieVrij').value;
+    
+    saveState();
+}
+
+function saveState() {
+    localStorage.setItem('rpa-v4.2-state', JSON.stringify({
+        currentDomainIndex,
+        domainData
+    }));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('rpa-v4.2-state');
+    if (saved) {
+        const state = JSON.parse(saved);
+        currentDomainIndex = state.currentDomainIndex || 0;
+        domainData = state.domainData || domainData;
+    }
+}
+
+// ===== INIT =====
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadState();
+    renderDomain();
+});
+
+</script>
+
+</body>
+</html>

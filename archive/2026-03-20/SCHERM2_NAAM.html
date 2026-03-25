@@ -1,0 +1,196 @@
+                    <!-- SCHERM 2: Kennismaking - Naam + Optionele Gegevens -->
+                    <div id="naamScherm" style="display:none;">
+                        
+                        <div style="text-align:center;margin-bottom:32px;">
+                            <h1 style="font-size:1.6rem;margin-bottom:8px;font-weight:600;color:#1e293b;">
+                                Kennismaking
+                            </h1>
+                            <p style="font-size:0.95rem;color:#64748b;">
+                                Even voorstellen
+                            </p>
+                        </div>
+
+                        <!-- Naam cliënt (verplicht) -->
+                        <div style="margin-bottom:24px;">
+                            <label for="naamInput" style="display:block;font-weight:600;font-size:0.95rem;color:#1e293b;margin-bottom:8px;">
+                                Naam cliënt *
+                            </label>
+                            <input 
+                                type="text" 
+                                id="naamInput" 
+                                placeholder="Vul naam in" 
+                                required
+                                style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:1rem;font-family:inherit;transition:border 0.2s;"
+                                onfocus="this.style.borderColor='#2ECC71'"
+                                onblur="this.style.borderColor='#e2e8f0'"
+                                oninput="state.clientName=this.value;saveState();"
+                            >
+                        </div>
+
+                        <!-- Optionele gegevens (uitklapbaar) -->
+                        <div style="margin-bottom:28px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+                            <button 
+                                onclick="toggleOptionalFieldsNaam()"
+                                style="width:100%;padding:14px 16px;background:#f8fafc;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s;"
+                                onmouseover="this.style.background='#f1f5f9'"
+                                onmouseout="this.style.background='#f8fafc'"
+                            >
+                                <span style="font-size:0.9rem;font-weight:600;color:#475569;">
+                                    📋 Optionele gegevens <span style="font-weight:400;color:#94a3b8;">(later invullen is ook OK)</span>
+                                </span>
+                                <span id="optionalToggleIconNaam" style="font-size:1.2rem;color:#94a3b8;">▼</span>
+                            </button>
+                            
+                            <div id="optionalFieldsNaam" style="display:none;padding:20px;background:white;">
+                                <!-- Leeftijd -->
+                                <div style="margin-bottom:20px;">
+                                    <label for="clientLeeftijd" style="display:block;font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:6px;">
+                                        Leeftijd <span style="font-weight:400;color:#94a3b8;">(voor doelgroep-check)</span>
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="clientLeeftijd" 
+                                        placeholder="Bijv. 28"
+                                        min="0"
+                                        max="120"
+                                        style="width:100px;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;"
+                                        oninput="state.leeftijd=this.value;saveState();"
+                                    >
+                                    <span style="font-size:0.85rem;color:#94a3b8;margin-left:8px;">jaar</span>
+                                </div>
+
+                                <!-- Postcode -->
+                                <div style="margin-bottom:20px;">
+                                    <label for="clientPostcode" style="display:block;font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:6px;">
+                                        Postcode <span style="font-weight:400;color:#94a3b8;">(voor lokale interventies)</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="clientPostcode" 
+                                        placeholder="1012"
+                                        maxlength="4"
+                                        style="width:100px;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;text-transform:uppercase;"
+                                        oninput="state.postcode=this.value.replace(/[^0-9]/g,'').substring(0,4);this.value=state.postcode;saveState();"
+                                    >
+                                    <span style="font-size:0.75rem;color:#94a3b8;display:block;margin-top:4px;">
+                                        💡 Alleen eerste 4 cijfers
+                                    </span>
+                                </div>
+
+                                <!-- Contactpersoon -->
+                                <div style="border-top:1px solid #f1f5f9;padding-top:20px;margin-top:20px;">
+                                    <div style="font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:12px;">
+                                        👨‍👩‍👧 Contactpersoon (voor Familie Portal)
+                                    </div>
+                                    
+                                    <div style="margin-bottom:12px;">
+                                        <label for="contactNaam" style="display:block;font-size:0.8rem;color:#64748b;margin-bottom:4px;">
+                                            Naam
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="contactNaam" 
+                                            placeholder="Bijv. Maria Jansen"
+                                            style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;"
+                                            oninput="if(!state.contactpersoon)state.contactpersoon={};state.contactpersoon.naam=this.value;saveState();"
+                                        >
+                                    </div>
+
+                                    <div style="margin-bottom:12px;">
+                                        <label for="contactRelatie" style="display:block;font-size:0.8rem;color:#64748b;margin-bottom:4px;">
+                                            Relatie
+                                        </label>
+                                        <select 
+                                            id="contactRelatie"
+                                            style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;background:white;"
+                                            onchange="if(!state.contactpersoon)state.contactpersoon={};state.contactpersoon.relatie=this.value;saveState();"
+                                        >
+                                            <option value="">Kies relatie...</option>
+                                            <option value="partner">Partner</option>
+                                            <option value="ouder">Ouder</option>
+                                            <option value="kind">Kind</option>
+                                            <option value="broer-zus">Broer/Zus</option>
+                                            <option value="vriend">Vriend/Vriendin</option>
+                                            <option value="mantelzorger">Mantelzorger</option>
+                                            <option value="anders">Anders</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="margin-bottom:12px;">
+                                        <label for="contactTelEmail" style="display:block;font-size:0.8rem;color:#64748b;margin-bottom:4px;">
+                                            Telefoon of Email <span style="font-weight:400;color:#94a3b8;">(optioneel)</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="contactTelEmail" 
+                                            placeholder="06-12345678 of email@example.nl"
+                                            style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:6px;font-size:0.9rem;"
+                                            oninput="if(!state.contactpersoon)state.contactpersoon={};state.contactpersoon.contact=this.value;saveState();"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Knoppen -->
+                        <div style="display:flex;gap:12px;">
+                            <button 
+                                onclick="terugNaarOrganisatieVanuitNaam()"
+                                style="flex:1;padding:14px;background:white;color:#64748b;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;"
+                                onmouseover="this.style.borderColor='#cbd5e1'"
+                                onmouseout="this.style.borderColor='#e2e8f0'"
+                            >
+                                ← Terug
+                            </button>
+                            <button 
+                                onclick="naarHulpvraagScherm()"
+                                style="flex:2;padding:14px;background:linear-gradient(135deg,#2ECC71,#27AE60);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(46,204,113,0.3);transition:all 0.2s;"
+                                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(46,204,113,0.4)'"
+                                onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(46,204,113,0.3)'"
+                            >
+                                Volgende →
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Einde naamScherm -->
+
+<script>
+function toggleOptionalFieldsNaam() {
+    const fields = document.getElementById('optionalFieldsNaam');
+    const icon = document.getElementById('optionalToggleIconNaam');
+    
+    if (fields.style.display === 'none') {
+        fields.style.display = 'block';
+        icon.textContent = '▲';
+    } else {
+        fields.style.display = 'none';
+        icon.textContent = '▼';
+    }
+}
+
+function terugNaarOrganisatieVanuitNaam() {
+    document.getElementById('organisatieKeuze').style.display = 'block';
+    document.getElementById('naamScherm').style.display = 'none';
+    
+    // Verberg workflow bolletjes
+    const workflowDiv = document.getElementById('workflowBolletjes');
+    if (workflowDiv) workflowDiv.style.display = 'none';
+}
+
+function naarHulpvraagScherm() {
+    // Valideer naam
+    const naam = document.getElementById('naamInput')?.value.trim();
+    if (!naam) {
+        alert('Vul een naam in');
+        document.getElementById('naamInput')?.focus();
+        return;
+    }
+    
+    state.clientName = naam;
+    saveState();
+    
+    // Ga naar hulpvraag scherm
+    document.getElementById('naamScherm').style.display = 'none';
+    document.getElementById('kennismakingScherm').style.display = 'block';
+}
+</script>

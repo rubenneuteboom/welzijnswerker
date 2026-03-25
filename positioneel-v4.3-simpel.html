@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA v4.3 - Per Domein (Simpel)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F9FAFB;
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 { font-size: 2rem; margin-bottom: 8px; }
+        .subtitle { color: #6b7280; margin-bottom: 32px; }
+        .progress { text-align: center; color: #6b7280; margin-bottom: 24px; }
+        
+        .section {
+            margin-bottom: 32px;
+            padding: 24px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: #374151;
+        }
+        
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .radio-group label:hover {
+            background: #f9fafb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .radio-group input[type="radio"]:checked ~ * {
+            font-weight: 700;
+        }
+        
+        .radio-group label:has(input:checked) {
+            border-color: #22A65E;
+            background: #E8F5EE;
+        }
+        
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #22A65E;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 166, 94, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #E8F5EE;
+            color: #22A65E;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+        
+        .netwerkbalans {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .netwerkbalans h3 {
+            font-size: 1rem;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        
+        .balans-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .balans-waarschuwing {
+            margin-top: 12px;
+            padding: 12px;
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #92400e;
+        }
+        
+        .balans-waarschuwing.error {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        .balans-waarschuwing.success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* Samenvatting styles */
+        .samenvatting-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .domein-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .domein-card.heeft-steun {
+            border-left: 4px solid #22A65E;
+        }
+        
+        .domein-card.geen-steun {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .domein-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .domein-header h4 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .domein-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-prima { background: #d1fae5; color: #065f46; }
+        .status-gaat-wel { background: #fef3c7; color: #92400e; }
+        .status-zwaar { background: #fee2e2; color: #7f1d1d; }
+        
+        .steun-info {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 12px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+        
+        .steun-info strong {
+            color: #1f2937;
+        }
+        
+        .samenvatting-acties {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        
+        .diagnose-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 3px solid #f59e0b;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .diagnose-box.geen-netwerk {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-color: #ef4444;
+        }
+        
+        .diagnose-box.een-persoon {
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+            border-color: #f97316;
+        }
+        
+        .diagnose-box.gevarieerd {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: #10b981;
+        }
+        
+        .diagnose-box h2 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .diagnose-box p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        .diagnose-box strong {
+            font-weight: 700;
+        }
+        
+        .toggle-details {
+            margin: 24px 0;
+            text-align: center;
+        }
+        
+        .toggle-details button {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #22A65E;
+            border-radius: 10px;
+            color: #22A65E;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .toggle-details button:hover {
+            background: #E8F5EE;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="domeinContainer">
+    <div class="progress">Domein <span id="domainNum">1</span> van 11</div>
+    
+    <!-- Live netwerkbalans -->
+    <div class="netwerkbalans">
+        <h3>🕸️ Je netwerk tot nu toe</h3>
+        <div class="balans-stats">
+            <span>🟢 <span id="countInformeel">0</span> informeel</span>
+            <span>🟣 <span id="countCollectief">0</span> collectief</span>
+            <span>🔵 <span id="countProfessioneel">0</span> professioneel</span>
+        </div>
+        <div id="balansWaarschuwing" class="hidden"></div>
+    </div>
+    
+    <h1 id="domainTitle">💰 Financiën</h1>
+    <p class="subtitle" id="domainDesc">Inkomen, schulden, budgetbeheer</p>
+    
+    <!-- 1. Hoe gaat dit? -->
+    <div class="section">
+        <h3>😊 Hoe gaat dit voor jou?</h3>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="feeling" value="prima">
+                <span>😊 Prima</span>
+            </label>
+            <label>
+                <input type="radio" name="feeling" value="gaat-wel">
+                <span>😐 Gaat wel</span>
+            </label>
+            <label>
+                <input type="radio" name="feeling" value="zwaar">
+                <span>😟 Zwaar</span>
+            </label>
+        </div>
+    </div>
+    
+    <!-- 2. Is er steun? -->
+    <div class="section">
+        <h3>🤝 Is er steun?</h3>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="support" value="zelfstandig" onchange="document.getElementById('steunDetails').classList.add('hidden')">
+                <span>🟢 Zelfstandig</span>
+            </label>
+            <label>
+                <input type="radio" name="support" value="aanwezig" onchange="document.getElementById('steunDetails').classList.remove('hidden')">
+                <span>🟡 Steun aanwezig</span>
+            </label>
+            <label>
+                <input type="radio" name="support" value="nodig" onchange="document.getElementById('steunDetails').classList.add('hidden')">
+                <span>🔴 Steun nodig</span>
+            </label>
+            <label>
+                <input type="radio" name="support" value="urgent" onchange="document.getElementById('steunDetails').classList.add('hidden')">
+                <span>⚠️ Urgent</span>
+            </label>
+        </div>
+    </div>
+    
+    <!-- 3-6. Details (verschijnt bij "Steun aanwezig") -->
+    <div id="steunDetails" class="hidden">
+        <!-- 3. Type -->
+        <div class="section">
+            <h3>👤 Type steun</h3>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="type" value="informeel" onchange="toonRol('informeel')">
+                    <span>🟢 Informeel</span>
+                </label>
+                <label>
+                    <input type="radio" name="type" value="collectief" onchange="toonRol('collectief')">
+                    <span>🟣 Collectief</span>
+                </label>
+                <label>
+                    <input type="radio" name="type" value="professioneel" onchange="toonRol('professioneel')">
+                    <span>🔵 Professioneel</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Wie? -->
+        <div class="form-group">
+            <label>📝 Wie helpt hierbij?</label>
+            <input type="text" id="wieNaam" placeholder="Bijv. Zus Marie">
+        </div>
+        
+        <!-- Rij: Rol + Actie -->
+        <div class="form-row">
+            <div class="form-group">
+                <label>🏷️ Rol</label>
+                <select id="rolDropdown">
+                    <option>Kies eerst een Type hierboven</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>🛠️ Wat doet deze persoon?</label>
+                <select id="actieDropdown" onchange="if(this.value==='anders') document.getElementById('actieVrij').classList.remove('hidden'); else document.getElementById('actieVrij').classList.add('hidden');">
+                    <option>Kies eerst een Type hierboven</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Vrij tekstveld voor "Anders" -->
+        <div class="form-group">
+            <textarea id="actieVrij" class="hidden" rows="2" placeholder="Beschrijf wat deze persoon doet..."></textarea>
+        </div>
+    </div>
+    
+    <!-- Navigatie -->
+    <div class="btn-group">
+        <button class="btn btn-secondary" onclick="vorige()" id="btnVorig">← Vorige</button>
+        <button class="btn btn-primary" onclick="volgende()" id="btnVolgende">Volgende →</button>
+    </div>
+</div>
+
+<!-- Samenvatting pagina (hidden initially) -->
+<div class="container hidden" id="samenvattingContainer">
+    <h1>📊 Netwerkanalyse Compleet</h1>
+    <p class="subtitle">Diagnose en overzicht</p>
+    
+    <!-- DIAGNOSE BOX -->
+    <div id="diagnoseBox" class="diagnose-box">
+        <!-- Wordt gevuld door JavaScript -->
+    </div>
+    
+    <!-- Netwerkbalans totaal -->
+    <div class="netwerkbalans">
+        <h3>🕸️ Jouw netwerk</h3>
+        <div class="balans-stats">
+            <span>🟢 <span id="totalInformeel">0</span> informeel</span>
+            <span>🟣 <span id="totalCollectief">0</span> collectief</span>
+            <span>🔵 <span id="totalProfessioneel">0</span> professioneel</span>
+        </div>
+    </div>
+    
+    <!-- Toggle details knop -->
+    <div class="toggle-details">
+        <button onclick="toggleDomeinDetails()" id="toggleBtn">
+            📋 Toon details per domein
+        </button>
+    </div>
+    
+    <!-- Domeinen overzicht (uitklapbaar) -->
+    <div class="samenvatting-grid hidden" id="samenvattingGrid"></div>
+    
+    <!-- Acties -->
+    <div class="samenvatting-acties">
+        <button class="btn btn-secondary" onclick="terugNaarDomeinen()">← Aanpassen</button>
+        <button class="btn btn-primary" onclick="exportData()">💾 Opslaan & Exporteren</button>
+    </div>
+</div>
+
+<script>
+// Data
+const DOMAINS = [
+    { emoji: '💰', naam: 'Financiën', desc: 'Inkomen, schulden, budgetbeheer' },
+    { emoji: '💼', naam: 'Dagbesteding', desc: 'Werk, opleiding, zinvolle activiteit' },
+    { emoji: '🏠', naam: 'Huisvesting', desc: 'Woning, woonomgeving, veiligheid' },
+    { emoji: '👨👩👧', naam: 'Huiselijke relaties', desc: 'Gezin, partnerschap, opvoeding' },
+    { emoji: '🧠', naam: 'GGZ', desc: 'Psychisch welzijn, behandeling' },
+    { emoji: '💪', naam: 'Lichamelijke gezondheid', desc: 'Fysieke gezondheid, medische zorg' },
+    { emoji: '🚭', naam: 'Verslaving', desc: 'Middelen, gokken, gedragsverslaving' },
+    { emoji: '🛁', naam: 'ADL-vaardigheden', desc: 'Zelfzorg, persoonlijke hygiëne' },
+    { emoji: '👥', naam: 'Sociaal netwerk', desc: 'Familie, vrienden, kennissen' },
+    { emoji: '🤝', naam: 'Maatschappelijke participatie', desc: 'Sociale activiteiten, vrijwilligerswerk' },
+    { emoji: '⚖️', naam: 'Justitie', desc: 'Juridische problemen, reclassering' }
+];
+
+const ROLLEN = {
+    informeel: ['Partner', 'Familie (ouder)', 'Familie (kind)', 'Vriend', 'Buur', 'Anders'],
+    collectief: ['Vrijwilligersorganisatie', 'Kerk/geloof', 'Buurtcentrum', 'Sportclub', 'Anders'],
+    professioneel: {
+        0: ['Bewindvoerder', 'Budgetcoach', 'Schuldhulpverlening', 'Financieel adviseur', 'Anders'],
+        1: ['Jobcoach', 'UWV', 'Re-integratie', 'Werkgever', 'Anders'],
+        2: ['Woningcorporatie', 'Maatschappelijk werk', 'Huisbaas', 'Anders'],
+        3: ['Gezinscoach', 'Relatietherapie', 'Jeugdzorg', 'Anders'],
+        4: ['Psycholoog', 'Psychiater', 'POH-GGZ', 'FACT-team', 'Anders'],
+        5: ['Huisarts', 'Specialist', 'Wijkverpleging', 'Thuiszorg', 'Anders'],
+        6: ['Verslavingszorg', 'GGZ', 'Zelfhulpgroep begeleider', 'Anders'],
+        7: ['Thuiszorg', 'Wijkverpleging', 'Ergotherapeut', 'Anders'],
+        8: ['Maatschappelijk werk', 'Welzijnswerk', 'Buurtteam', 'Anders'],
+        9: ['Welzijnswerk', 'Vrijwilligerscentrale', 'Buurtcentrum', 'Anders'],
+        10: ['Reclassering', 'Advocaat', 'Maatschappelijk werk', 'Anders']
+    }
+};
+
+const ACTIES = {
+    informeel: ['Emotionele steun', 'Praktische hulp', 'Gezelschap', 'Advies geven', 'Anders'],
+    collectief: ['Activiteiten organiseren', 'Netwerk bieden', 'Informatie verstrekken', 'Ontmoetingen', 'Anders'],
+    professioneel: {
+        0: ['Administratie voeren', 'Belastingaangifte helpen', 'Budgetplan maken', 'Schuldbemiddeling', 'Anders'], // Financiën
+        1: ['Solliciteren helpen', 'CV maken', 'Werk zoeken', 'Vrijwilligerswerk zoeken', 'Anders'], // Dagbesteding
+        2: ['Huur regelen', 'Onderhoud coördineren', 'Woningzoeken', 'Conflict bemiddeling', 'Anders'], // Huisvesting
+        3: ['Gezinsgesprekken', 'Conflictbemiddeling', 'Opvoedingsondersteuning', 'Veiligheidsplan', 'Anders'], // Huiselijke relaties
+        4: ['Gesprekken voeren', 'Medicatie begeleiden', 'Crisisinterventie', 'Herstelondersteuning', 'Anders'], // GGZ
+        5: ['Medische zorg coördineren', 'Afspraken maken', 'Medicatie beheer', 'Thuiszorg', 'Anders'], // LGZ
+        6: ['Verslavingszorg begeleiden', 'Afspraken maken', 'Terugvalpreventie', 'Zelfhulpgroep', 'Anders'], // Verslaving
+        7: ['Wassen/douchen helpen', 'Aankleden helpen', 'Medicatie innemen', 'Structuur aanbrengen', 'Anders'], // ADL
+        8: ['Contact faciliteren', 'Sociale activiteiten', 'Gesprekken voeren', 'Netwerk uitbreiden', 'Anders'], // Sociaal netwerk
+        9: ['Vrijwilligerswerk zoeken', 'Hobbys vinden', 'Activiteiten organiseren', 'Sociale contacten', 'Anders'], // Participatie
+        10: ['Reclasseringscontact', 'Juridisch advies', 'Voorwaarden nakomen', 'Schuldbemiddeling', 'Anders'] // Justitie
+    }
+};
+
+let huidigDomein = 0;
+let domeinData = []; // Store data per domain
+
+// Initialize data
+for (let i = 0; i < 11; i++) {
+    domeinData.push({
+        feeling: null,
+        support: null,
+        type: null,
+        wie: '',
+        rol: '',
+        actie: ''
+    });
+}
+
+// Functies
+function toonRol(type) {
+    // Update rol dropdown
+    const rolDD = document.getElementById('rolDropdown');
+    rolDD.innerHTML = '<option value="">Kies een rol...</option>';
+    
+    let rolOpties = [];
+    if (type === 'professioneel') {
+        rolOpties = ROLLEN.professioneel[huidigDomein] || ['Anders'];
+    } else {
+        rolOpties = ROLLEN[type] || [];
+    }
+    
+    rolOpties.forEach(rol => {
+        const opt = document.createElement('option');
+        opt.value = rol.toLowerCase();
+        opt.textContent = rol;
+        rolDD.appendChild(opt);
+    });
+    
+    // Update actie dropdown
+    const actieDD = document.getElementById('actieDropdown');
+    actieDD.innerHTML = '<option value="">Kies een actie...</option>';
+    
+    let actieOpties = [];
+    if (type === 'professioneel') {
+        actieOpties = ACTIES.professioneel[huidigDomein] || ['Anders'];
+    } else {
+        actieOpties = ACTIES[type] || [];
+    }
+    
+    actieOpties.forEach(actie => {
+        const opt = document.createElement('option');
+        opt.value = actie.toLowerCase();
+        opt.textContent = actie;
+        actieDD.appendChild(opt);
+    });
+}
+
+function opslaanDomein() {
+    const data = domeinData[huidigDomein];
+    
+    // Save form values
+    const feelingRadio = document.querySelector('input[name="feeling"]:checked');
+    data.feeling = feelingRadio ? feelingRadio.value : null;
+    
+    const supportRadio = document.querySelector('input[name="support"]:checked');
+    data.support = supportRadio ? supportRadio.value : null;
+    
+    const typeRadio = document.querySelector('input[name="type"]:checked');
+    data.type = typeRadio ? typeRadio.value : null;
+    
+    data.wie = document.getElementById('wieNaam').value;
+    data.rol = document.getElementById('rolDropdown').value;
+    data.actie = document.getElementById('actieDropdown').value;
+}
+
+function updateNetwerkbalans() {
+    let informeel = 0, collectief = 0, professioneel = 0;
+    const namenTeller = {};
+    
+    domeinData.forEach(d => {
+        if (d.support === 'aanwezig' && d.type) {
+            if (d.type === 'informeel') informeel++;
+            if (d.type === 'collectief') collectief++;
+            if (d.type === 'professioneel') professioneel++;
+            
+            // Tel namen
+            if (d.wie && d.wie.trim()) {
+                const naam = d.wie.trim().toLowerCase();
+                namenTeller[naam] = (namenTeller[naam] || 0) + 1;
+            }
+        }
+    });
+    
+    // Update counters
+    document.getElementById('countInformeel').textContent = informeel;
+    document.getElementById('countCollectief').textContent = collectief;
+    document.getElementById('countProfessioneel').textContent = professioneel;
+    
+    // Waarschuwingen
+    const waarschuwingEl = document.getElementById('balansWaarschuwing');
+    waarschuwingEl.className = 'balans-waarschuwing';
+    
+    // Check voor overbelasting (1 persoon >3x)
+    let overbelast = null;
+    for (const [naam, aantal] of Object.entries(namenTeller)) {
+        if (aantal >= 3) {
+            overbelast = { naam, aantal };
+            break;
+        }
+    }
+    
+    const totaal = informeel + collectief + professioneel;
+    
+    if (totaal === 0) {
+        waarschuwingEl.classList.add('hidden');
+    } else if (overbelast) {
+        waarschuwingEl.classList.remove('hidden');
+        waarschuwingEl.classList.add('error');
+        waarschuwingEl.innerHTML = `⚠️ <strong>${overbelast.naam}</strong> helpt bij ${overbelast.aantal} domeinen. Risico op overbelasting - overweeg steun te spreiden.`;
+    } else if (professioneel >= 6 && informeel === 0) {
+        waarschuwingEl.classList.remove('hidden');
+        waarschuwingEl.innerHTML = `💡 Overwegend professioneel netwerk. Overweeg informele steun te activeren voor duurzame zelfredzaamheid.`;
+    } else if (informeel >= 3 && professioneel === 0 && collectief === 0) {
+        waarschuwingEl.classList.remove('hidden');
+        waarschuwingEl.classList.add('success');
+        waarschuwingEl.innerHTML = `✅ Sterk informeel netwerk! Goed voor duurzaamheid.`;
+    } else if (totaal >= 3) {
+        waarschuwingEl.classList.remove('hidden');
+        waarschuwingEl.classList.add('success');
+        waarschuwingEl.innerHTML = `✅ Gevarieerd netwerk - goede mix van informeel, collectief en professioneel.`;
+    } else {
+        waarschuwingEl.classList.add('hidden');
+    }
+}
+
+function vorige() {
+    opslaanDomein();
+    if (huidigDomein > 0) {
+        huidigDomein--;
+        laadDomein();
+    }
+    updateNetwerkbalans();
+}
+
+function volgende() {
+    opslaanDomein();
+    updateNetwerkbalans();
+    
+    if (huidigDomein < DOMAINS.length - 1) {
+        huidigDomein++;
+        laadDomein();
+    } else {
+        try {
+            toonSamenvatting();
+        } catch(e) {
+            alert('Error bij samenvatting: ' + e.message);
+            console.error(e);
+        }
+    }
+}
+
+function toonSamenvatting() {
+    // Hide domein view
+    const domeinCont = document.getElementById('domeinContainer');
+    const samenvattingCont = document.getElementById('samenvattingContainer');
+    
+    if (!domeinCont || !samenvattingCont) {
+        alert('Error: containers niet gevonden');
+        return;
+    }
+    
+    domeinCont.classList.add('hidden');
+    samenvattingCont.classList.remove('hidden');
+    
+    // Analyse data
+    let informeel = 0, collectief = 0, professioneel = 0;
+    let metSteun = 0, steunNodig = 0, urgent = 0, zelfstandig = 0;
+    const namenTeller = {};
+    
+    domeinData.forEach(d => {
+        // Tel support types
+        if (d.support === 'aanwezig') {
+            metSteun++;
+            if (d.type === 'informeel') informeel++;
+            if (d.type === 'collectief') collectief++;
+            if (d.type === 'professioneel') professioneel++;
+            
+            // Tel namen
+            if (d.wie && d.wie.trim()) {
+                const naam = d.wie.trim();
+                namenTeller[naam] = (namenTeller[naam] || 0) + 1;
+            }
+        } else if (d.support === 'zelfstandig') {
+            zelfstandig++;
+        } else if (d.support === 'nodig') {
+            steunNodig++;
+        } else if (d.support === 'urgent') {
+            urgent++;
+        }
+    });
+    
+    document.getElementById('totalInformeel').textContent = informeel;
+    document.getElementById('totalCollectief').textContent = collectief;
+    document.getElementById('totalProfessioneel').textContent = professioneel;
+    
+    // DIAGNOSE BEPALEN
+    const diagnoseBox = document.getElementById('diagnoseBox');
+    let diagnoseType = '';
+    let diagnoseHTML = '';
+    
+    // Check voor dominante persoon
+    let dominantePersoon = null;
+    for (const [naam, aantal] of Object.entries(namenTeller)) {
+        if (aantal >= 5) {
+            dominantePersoon = { naam, aantal };
+            break;
+        }
+    }
+    
+    // DIAGNOSE LOGICA
+    if (metSteun === 0 && steunNodig >= 3) {
+        // GEEN NETWERK
+        diagnoseType = 'geen-netwerk';
+        diagnoseHTML = `
+            <h2>🔴 Geen netwerk</h2>
+            <p><strong>Bevinding:</strong> Er is bij ${steunNodig} domeinen behoefte aan steun, maar er is geen actief netwerk beschikbaar.</p>
+            <p><strong>Risico:</strong> Volledig afhankelijk van professionele zorg. Kwetsbaar bij uitval.</p>
+            <p><strong>Advies:</strong> Start met het activeren van informele contacten (familie, buren, vrienden). Overweeg collectieve voorzieningen voor sociale verbinding.</p>
+        `;
+    } else if (dominantePersoon) {
+        // 1-PERSOONS NETWERK
+        diagnoseType = 'een-persoon';
+        diagnoseHTML = `
+            <h2>🟠 Eén-persoons netwerk</h2>
+            <p><strong>Bevinding:</strong> Het netwerk rust voornamelijk op <strong>${dominantePersoon.naam}</strong> (${dominantePersoon.aantal} van 11 domeinen).</p>
+            <p><strong>Risico:</strong> Overbelasting mantelzorger. Kwetsbaar bij uitval van deze persoon.</p>
+            <p><strong>Advies:</strong> Verbreed het netwerk door taken te spreiden over meerdere personen. Activeer collectieve voorzieningen ter ontlasting.</p>
+        `;
+    } else if (professioneel >= 7 && informeel <= 1) {
+        // OVERWEGEND PROFESSIONEEL
+        diagnoseType = 'een-persoon'; // Gebruik oranje
+        diagnoseHTML = `
+            <h2>🔵 Overwegend professioneel netwerk</h2>
+            <p><strong>Bevinding:</strong> ${professioneel} van ${metSteun} steunbronnen zijn professioneel. Weinig informele basis.</p>
+            <p><strong>Risico:</strong> Kostbaar en kwetsbaar bij bezuinigingen. Geen duurzame zelfredzaamheid.</p>
+            <p><strong>Advies:</strong> Versterk informeel netwerk (familie, vrienden) en activeer collectieve voorzieningen voor sociale basis.</p>
+        `;
+    } else if (informeel >= 3 && collectief >= 1 && professioneel >= 1) {
+        // GEVARIEERD NETWERK
+        diagnoseType = 'gevarieerd';
+        diagnoseHTML = `
+            <h2>🟢 Gevarieerd netwerk</h2>
+            <p><strong>Bevinding:</strong> Een gezonde mix van informeel (${informeel}), collectief (${collectief}) en professioneel (${professioneel}).</p>
+            <p><strong>Kracht:</strong> Duurzaam en veerkrachtig. Verschillende steunbronnen versterken elkaar.</p>
+            <p><strong>Advies:</strong> Behoud deze balans. Monitor of informele helpers voldoende ontlast worden.</p>
+        `;
+    } else if (informeel >= 4 && professioneel === 0) {
+        // INFORMEEL GEMENGD
+        diagnoseType = 'gevarieerd'; // Groen maar met kanttekening
+        diagnoseHTML = `
+            <h2>🟢 Informeel gemengd netwerk</h2>
+            <p><strong>Bevinding:</strong> Het netwerk bestaat uit ${informeel} informele contacten, verspreid over meerdere domeinen.</p>
+            <p><strong>Kracht:</strong> Informeel netwerk is actief en betrokken.</p>
+            <p><strong>Aandachtspunt:</strong> Check of informele helpers niet overbelast raken. Collectieve voorzieningen kunnen ontlasten.</p>
+        `;
+    } else {
+        // GEMENGD (geen duidelijk patroon)
+        diagnoseType = '';
+        diagnoseHTML = `
+            <h2>🔍 Gemengd netwerk</h2>
+            <p><strong>Bevinding:</strong> Het netwerk bestaat uit ${informeel} informeel, ${collectief} collectief en ${professioneel} professioneel.</p>
+            <p><strong>Advies:</strong> Bekijk per domein of de juiste steun op de juiste plek zit. Zijn er mogelijkheden voor verschuiving naar informeel of collectief?</p>
+        `;
+    }
+    
+    diagnoseBox.className = 'diagnose-box ' + diagnoseType;
+    diagnoseBox.innerHTML = diagnoseHTML;
+    
+    // Build domain cards
+    const grid = document.getElementById('samenvattingGrid');
+    grid.innerHTML = '';
+    
+    DOMAINS.forEach((domain, idx) => {
+        const data = domeinData[idx];
+        const card = document.createElement('div');
+        card.className = 'domein-card';
+        
+        if (data.support === 'aanwezig') {
+            card.classList.add('heeft-steun');
+        } else if (data.support === 'nodig' || data.support === 'urgent') {
+            card.classList.add('geen-steun');
+        }
+        
+        let statusClass = '';
+        let statusText = '';
+        if (data.feeling === 'prima') {
+            statusClass = 'status-prima';
+            statusText = '😊 Prima';
+        } else if (data.feeling === 'gaat-wel') {
+            statusClass = 'status-gaat-wel';
+            statusText = '😐 Gaat wel';
+        } else if (data.feeling === 'zwaar') {
+            statusClass = 'status-zwaar';
+            statusText = '😟 Zwaar';
+        }
+        
+        let steunHTML = '';
+        if (data.support === 'aanwezig' && data.wie) {
+            const typeEmoji = data.type === 'informeel' ? '🟢' : data.type === 'collectief' ? '🟣' : '🔵';
+            const typeLabel = data.type === 'informeel' ? 'Informeel' : data.type === 'collectief' ? 'Collectief' : 'Professioneel';
+            
+            steunHTML = `
+                <div class="steun-info">
+                    <strong>Wie:</strong> <span>${data.wie}</span>
+                    <strong>Type:</strong> <span>${typeEmoji} ${typeLabel}</span>
+                    ${data.rol ? `<strong>Rol:</strong> <span>${data.rol}</span>` : ''}
+                    ${data.actie ? `<strong>Doet:</strong> <span>${data.actie}</span>` : ''}
+                </div>
+            `;
+        } else if (data.support === 'zelfstandig') {
+            steunHTML = '<p style="color:#059669;font-weight:600;">🟢 Zelfstandig</p>';
+        } else if (data.support === 'nodig') {
+            steunHTML = '<p style="color:#dc2626;font-weight:600;">🔴 Steun nodig</p>';
+        } else if (data.support === 'urgent') {
+            steunHTML = '<p style="color:#dc2626;font-weight:600;">⚠️ Urgent</p>';
+        } else {
+            steunHTML = '<p style="color:#9ca3af;">Geen informatie</p>';
+        }
+        
+        card.innerHTML = `
+            <div class="domein-header">
+                <h4>${domain.emoji} ${domain.naam}</h4>
+                ${statusText ? `<span class="domein-status ${statusClass}">${statusText}</span>` : ''}
+            </div>
+            ${steunHTML}
+        `;
+        
+        grid.appendChild(card);
+    });
+    
+    window.scrollTo(0, 0);
+}
+
+function terugNaarDomeinen() {
+    document.getElementById('samenvattingContainer').classList.add('hidden');
+    document.getElementById('domeinContainer').classList.remove('hidden');
+    huidigDomein = 10; // Ga terug naar laatste domein
+    laadDomein();
+}
+
+function toggleDomeinDetails() {
+    const grid = document.getElementById('samenvattingGrid');
+    const btn = document.getElementById('toggleBtn');
+    
+    if (grid.classList.contains('hidden')) {
+        grid.classList.remove('hidden');
+        btn.textContent = '▲ Verberg details';
+    } else {
+        grid.classList.add('hidden');
+        btn.textContent = '📋 Toon details per domein';
+    }
+}
+
+function exportData() {
+    const exportObj = {
+        timestamp: new Date().toISOString(),
+        domeinen: DOMAINS.map((domain, idx) => ({
+            id: idx,
+            naam: domain.naam,
+            emoji: domain.emoji,
+            ...domeinData[idx]
+        }))
+    };
+    
+    const json = JSON.stringify(exportObj, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'netwerkanalyse-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    
+    alert('✅ Data geëxporteerd!');
+}
+
+function laadDomein() {
+    const d = DOMAINS[huidigDomein];
+    const data = domeinData[huidigDomein];
+    
+    document.getElementById('domainNum').textContent = huidigDomein + 1;
+    document.getElementById('domainTitle').textContent = d.emoji + ' ' + d.naam;
+    document.getElementById('domainDesc').textContent = d.desc;
+    
+    // Restore saved data
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    
+    if (data.feeling) {
+        const feelRadio = document.querySelector(`input[name="feeling"][value="${data.feeling}"]`);
+        if (feelRadio) feelRadio.checked = true;
+    }
+    
+    if (data.support) {
+        const supRadio = document.querySelector(`input[name="support"][value="${data.support}"]`);
+        if (supRadio) supRadio.checked = true;
+        if (data.support === 'aanwezig') {
+            document.getElementById('steunDetails').classList.remove('hidden');
+        } else {
+            document.getElementById('steunDetails').classList.add('hidden');
+        }
+    } else {
+        document.getElementById('steunDetails').classList.add('hidden');
+    }
+    
+    if (data.type) {
+        const typeRadio = document.querySelector(`input[name="type"][value="${data.type}"]`);
+        if (typeRadio) typeRadio.checked = true;
+        toonRol(data.type);
+    } else {
+        document.getElementById('rolDropdown').innerHTML = '<option>Kies eerst een Type hierboven</option>';
+        document.getElementById('actieDropdown').innerHTML = '<option>Kies eerst een Type hierboven</option>';
+    }
+    
+    document.getElementById('wieNaam').value = data.wie || '';
+    document.getElementById('actieVrij').value = '';
+    document.getElementById('actieVrij').classList.add('hidden');
+    
+    // Buttons
+    document.getElementById('btnVorig').disabled = (huidigDomein === 0);
+    document.getElementById('btnVolgende').textContent = (huidigDomein === DOMAINS.length - 1) ? 'Afronden →' : 'Volgende →';
+    
+    window.scrollTo(0, 0);
+}
+
+// Init
+laadDomein();
+updateNetwerkbalans();
+</script>
+
+</body>
+</html>

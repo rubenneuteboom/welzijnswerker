@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Clear Storage</title></head>
+<body>
+<h1>Storage Clearer</h1>
+<button onclick="doClear()" style="padding:20px;font-size:18px;">Clear All Storage</button>
+<div id="status"></div>
+<script>
+function doClear() {
+    localStorage.clear();
+    sessionStorage.clear();
+    document.getElementById('status').innerHTML = '<p style="color:green;font-size:20px;">✅ Cleared! <a href="positioneel.html">Open positioneel.html</a></p>';
+}
+</script>
+</body>
+</html>

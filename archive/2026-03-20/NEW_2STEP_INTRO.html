@@ -1,0 +1,252 @@
+            <!-- STAP 1: Organisatie Kiezer -->
+            <div class="screen" id="screen-organisatie">
+                <div class="card" style="max-width: 800px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <h1 style="font-size: 2rem; margin-bottom: 8px; color: var(--primary); font-weight: 700;">
+                            🏢 Vanuit welke organisatie werk je?
+                        </h1>
+                        <p style="font-size: 1rem; color: #6b7280;">
+                            Kies je organisatie om te starten
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                        <button class="org-card" onclick="selectOrganisatie('wijkteam')" data-org="wijkteam">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">🏘️</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Wijkteam</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('ggz')" data-org="ggz">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">🧠</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">GGZ</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('mantelzorg')" data-org="mantelzorg">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">🫂</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Mantelzorg</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('schuldhulp')" data-org="schuldhulp">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">💰</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Schuldhulp</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('ouderenzorg')" data-org="ouderenzorg">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">👴</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Ouderenzorg</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('opvang')" data-org="opvang">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">🏠</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Opvang</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('reclassering')" data-org="reclassering">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">⚖️</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Reclassering</div>
+                        </button>
+                        
+                        <button class="org-card" onclick="selectOrganisatie('verslavingszorg')" data-org="verslavingszorg">
+                            <div style="font-size: 3rem; margin-bottom: 12px;">🚭</div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">Verslavingszorg</div>
+                        </button>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 24px;">
+                        <a href="index.html" style="color: #6b7280; font-size: 0.9rem; text-decoration: none;">
+                            ← Terug naar overzicht
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAP 2: Naam + Track -->
+            <div class="screen" id="screen-naam-track">
+                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <h1 style="font-size: 2rem; margin-bottom: 8px; color: var(--primary); font-weight: 700;">
+                            📋 Startgegevens
+                        </h1>
+                        <p style="font-size: 1rem; color: #6b7280;" id="organisatieLabel">
+                            <!-- Dynamisch: "Je werkt vanuit: [Organisatie]" -->
+                        </p>
+                    </div>
+
+                    <!-- Naam invoer -->
+                    <div style="margin-bottom: 28px;">
+                        <label for="clientNaam" style="display: block; font-weight: 600; font-size: 1rem; color: #1e293b; margin-bottom: 8px;">
+                            Naam cliënt *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="clientNaam" 
+                            placeholder="Bijv. Tim Jansen of T.J." 
+                            style="width: 100%; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; font-family: inherit;"
+                            oninput="state.clientName = this.value; saveState();"
+                        >
+                        <p style="font-size: 0.85rem; color: #6b7280; margin-top: 6px;">
+                            ℹ️ Voor jouw administratie. Bij export wordt dit geanonimiseerd.
+                        </p>
+                    </div>
+
+                    <!-- Track keuze -->
+                    <div style="margin-bottom: 32px;">
+                        <label style="display: block; font-weight: 600; font-size: 1rem; color: #1e293b; margin-bottom: 12px;">
+                            Welke aanpak kies je?
+                        </label>
+                        <div style="display: grid; gap: 12px;">
+                            <label class="track-option" style="cursor: pointer;">
+                                <input type="radio" name="track" value="volledig" checked onchange="state.track = 'volledig'; saveState();" style="display: none;">
+                                <div class="track-card track-card-active" style="border: 2px solid #2ECC71; background: #E8F8F0; border-radius: 10px; padding: 16px; transition: all 0.2s;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="font-size: 2rem;">📋</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">Volledig</div>
+                                            <div style="font-size: 0.85rem; color: #4b5563;">Alle 11 domeinen + positionering + interventies</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <label class="track-option" style="cursor: pointer;">
+                                <input type="radio" name="track" value="quick" onchange="state.track = 'quick'; saveState();" style="display: none;">
+                                <div class="track-card" style="border: 2px solid #e5e7eb; background: white; border-radius: 10px; padding: 16px; transition: all 0.2s;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="font-size: 2rem;">⚡</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">Quick Scan</div>
+                                            <div style="font-size: 0.85rem; color: #6b7280;">Alleen urgente domeinen</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Knoppen -->
+                    <div style="display: flex; gap: 12px;">
+                        <button 
+                            onclick="goToScreenById('screen-organisatie')"
+                            style="flex: 1; padding: 14px; background: white; color: #4b5563; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;"
+                        >
+                            ← Terug
+                        </button>
+                        <button 
+                            onclick="startAnalyseFromNaamTrack()"
+                            style="flex: 2; padding: 14px; background: linear-gradient(135deg, #2ECC71, #27AE60); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);"
+                        >
+                            Start Analyse →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+<style>
+.org-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.org-card:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(46, 204, 113, 0.2);
+}
+
+.track-option input:checked + .track-card {
+    border-color: var(--primary) !important;
+    background: var(--primary-light) !important;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+
+.track-option:hover .track-card {
+    border-color: var(--primary);
+    transform: translateX(4px);
+}
+</style>
+
+<script>
+function selectOrganisatie(org) {
+    // Sla organisatie op
+    state.mode = org;
+    
+    // Auto-fill doelgroep
+    const orgDoelgroepMap = {
+        'jeugdzorg': ['jongeren'],
+        'ggz': ['ggz'],
+        'ouderenzorg': ['ouderen'],
+        'schuldhulp': ['financiele-problemen'],
+        'reclassering': ['justitie'],
+        'verslavingszorg': ['verslaving'],
+        'lvb': ['lvb'],
+        'opvang': ['dak-thuisloos'],
+        'mantelzorg': [],
+        'wijkteam': []
+    };
+    
+    if (!state.doelgroepen || state.doelgroepen.length === 0) {
+        const suggestedDoelgroep = orgDoelgroepMap[org];
+        if (suggestedDoelgroep && suggestedDoelgroep.length > 0) {
+            state.doelgroepen = suggestedDoelgroep;
+            state.doelgroepAutoFilled = true;
+        }
+    }
+    
+    saveState();
+    
+    // Update label
+    const orgLabels = {
+        'wijkteam': 'Wijkteam',
+        'ggz': 'GGZ',
+        'mantelzorg': 'Mantelzorg',
+        'schuldhulp': 'Schuldhulp',
+        'ouderenzorg': 'Ouderenzorg',
+        'opvang': 'Opvang',
+        'reclassering': 'Reclassering',
+        'verslavingszorg': 'Verslavingszorg'
+    };
+    
+    const label = document.getElementById('organisatieLabel');
+    if (label) {
+        label.textContent = `Je werkt vanuit: ${orgLabels[org]}`;
+    }
+    
+    // Ga naar naam/track scherm
+    goToScreenById('screen-naam-track');
+}
+
+function startAnalyseFromNaamTrack() {
+    // Validatie
+    if (!state.mode) {
+        alert('Er ging iets mis. Ga terug en kies opnieuw je organisatie.');
+        goToScreenById('screen-organisatie');
+        return;
+    }
+    
+    const naam = document.getElementById('clientNaam')?.value.trim();
+    if (!naam) {
+        alert('Vul een naam in voor de cliënt');
+        document.getElementById('clientNaam')?.focus();
+        return;
+    }
+    
+    state.clientName = naam;
+    
+    // Set defaults
+    if (!state.track) state.track = 'volledig';
+    state.createdAt = state.createdAt || new Date().toISOString();
+    state.updatedAt = new Date().toISOString();
+    state.clientId = state.clientId || 'client_' + Date.now();
+    
+    saveState();
+    
+    // Ga naar domeinen
+    goToScreenById('domains');
+}
+</script>

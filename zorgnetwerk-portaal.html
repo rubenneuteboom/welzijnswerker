@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Familieportaal - RPA Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 30px 0 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+        }
+
+        .tab {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        .professional-card {
+            background: #f8f9ff;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .professional-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .professional-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .professional-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .professional-icon {
+            font-size: 32px;
+        }
+
+        .professional-details h3 {
+            font-size: 18px;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .professional-details p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .goal-count {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .general-question {
+            background: #fff7ed;
+            border: 2px solid #fed7aa;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 30px;
+        }
+
+        .general-question h3 {
+            font-size: 18px;
+            color: #9a3412;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .general-question textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 2px solid #fed7aa;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .general-question button {
+            margin-top: 12px;
+            background: #ea580c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .general-question button:hover {
+            background: #c2410c;
+        }
+
+        /* Detail view */
+        .goal-card {
+            background: white;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .goal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .goal-header h4 {
+            font-size: 18px;
+            color: #1e293b;
+        }
+
+        .goal-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .goal-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .goal-update {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .comments-section {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+        }
+
+        .comment {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+
+        .add-comment {
+            margin-top: 12px;
+        }
+
+        .add-comment textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 10px;
+            border: 2px solid #e0e7ff;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .add-comment button {
+            margin-top: 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-comment button:hover {
+            background: #5568d3;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-starting {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .overlap-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .mdo-section {
+            background: #ecfdf5;
+            border: 2px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .mdo-section h3 {
+            color: #065f46;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mdo-button {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .mdo-button:hover {
+            background: #047857;
+        }
+
+        .professional-notes {
+            background: #fef3c7;
+            border-left: 4px solid #fbbf24;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .professional-notes strong {
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Zorgnetwerk Portaal</h1>
+            <p>Samen werken aan ondersteuning</p>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('family')">👨‍👩‍👧 Familie/Informeel Netwerk</button>
+                <button class="tab" onclick="switchTab('mdo')">👥 MDO-portaal</button>
+            </div>
+        </header>
+
+        <!-- Overview Screen -->
+        <div id="overview-screen" class="content">
+            <h2 style="margin-bottom: 24px; color: #1e293b;">Wie werkt mee?</h2>
+
+            <div class="professional-card" onclick="showDetail('ggz')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🧠</div>
+                        <div class="professional-details">
+                            <h3>GGZ-behandelaar</h3>
+                            <p>Sarah van de Berg</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">2 doelen</div>
+                </div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('school')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🏫</div>
+                        <div class="professional-details">
+                            <h3>Schoolmaatschappelijk werker</h3>
+                            <p>Jan Vermeulen</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">1 doel</div>
+                </div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('verslaving')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🚭</div>
+                        <div class="professional-details">
+                            <h3>Verslavingsconsulent</h3>
+                            <p>Mira Yilmaz</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">1 doel</div>
+                </div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('moeder')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">👨‍👩‍👧</div>
+                        <div class="professional-details">
+                            <h3>Moeder</h3>
+                            <p>Informele ondersteuning</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">3 doelen</div>
+                </div>
+            </div>
+
+            <div class="general-question">
+                <h3><span>💬</span> Stel een algemene vraag</h3>
+                <p style="margin-bottom: 12px; color: #78350f; font-size: 14px;">
+                    Heb je een vraag die niet bij een specifiek doel hoort? Stel 'm hier.
+                </p>
+                <textarea placeholder="Bijvoorbeeld: Wie regelt het vervoer naar de GGZ? Of: Mag ik bij de volgende afspraak aanwezig zijn?"></textarea>
+                <button>Vraag versturen</button>
+            </div>
+        </div>
+
+        <!-- Detail Screen - GGZ -->
+        <div id="detail-ggz" class="content hidden">
+            <a class="back-button" onclick="showOverview()">← Terug naar overzicht</a>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <div class="professional-icon">🧠</div>
+                <div>
+                    <h2 style="color: #1e293b;">GGZ-behandelaar</h2>
+                    <p style="color: #64748b;">Sarah van de Berg</p>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Angst verminderen</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: februari 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Sarah):</strong> "We oefenen ademhalingstechnieken, ze past het thuis toe"
+                </div>
+                <div class="comments-section">
+                    <div class="comment">
+                        <div class="comment-author">Moeder</div>
+                        <div>Ik zie dat ze 's avonds rustiger is!</div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-author">Sarah</div>
+                        <div>Fijn om te horen, dat is een goed teken.</div>
+                    </div>
+                    <div class="add-comment">
+                        <textarea placeholder="Stel een vraag of voeg een opmerking toe..."></textarea>
+                        <button>Versturen</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Sociaal netwerk uitbreiden</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-starting">Start fase</span></span>
+                    <span>⏱️ Sinds: maart 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Sarah):</strong> "We verkennen waar ze zich veilig voelt"
+                </div>
+                <div class="comments-section">
+                    <p style="color: #64748b; font-size: 14px; font-style: italic;">Nog geen opmerkingen</p>
+                    <div class="add-comment">
+                        <textarea placeholder="Stel een vraag of voeg een opmerking toe..."></textarea>
+                        <button>Versturen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MDO Portal Screen -->
+        <div id="mdo-screen" class="content hidden">
+            <h2 style="margin-bottom: 24px; color: #1e293b;">MDO-overzicht - Wie werkt mee?</h2>
+
+            <div class="professional-card" onclick="showDetail('ggz')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🧠</div>
+                        <div class="professional-details">
+                            <h3>GGZ-behandelaar</h3>
+                            <p>Sarah van de Berg</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">2 doelen</div>
+                </div>
+                <div class="overlap-badge">⚠️ Raakvlak met School (angst beïnvloedt schoolgang)</div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('school')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🏫</div>
+                        <div class="professional-details">
+                            <h3>Schoolmaatschappelijk werker</h3>
+                            <p>Jan Vermeulen</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">1 doel</div>
+                </div>
+                <div class="overlap-badge">⚠️ Raakvlak met GGZ + Buurthuis</div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('verslaving')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🚭</div>
+                        <div class="professional-details">
+                            <h3>Verslavingsconsulent</h3>
+                            <p>Mira Yilmaz</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">1 doel</div>
+                </div>
+                <div class="overlap-badge">⚠️ Raakvlak met GGZ (comorbiditeit)</div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('woningbouw')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🏠</div>
+                        <div class="professional-details">
+                            <h3>Woningbouwcorporatie</h3>
+                            <p>Petra de Vries</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">1 doel</div>
+                </div>
+                <div class="professional-notes">
+                    <strong>💬 Professionele notitie:</strong> Wachttijd 6 maanden voor aangepaste woning. Impact op andere doelen? Mogelijk interim-oplossing nodig.
+                </div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('buurthuis')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">🏘️</div>
+                        <div class="professional-details">
+                            <h3>Buurthuis De Stoep</h3>
+                            <p>Ahmed El Amrani</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">1 doel</div>
+                </div>
+                <div class="overlap-badge">⚠️ Raakvlak met School (sociale activiteiten)</div>
+            </div>
+
+            <div class="professional-card" onclick="showDetail('moeder')">
+                <div class="professional-header">
+                    <div class="professional-info">
+                        <div class="professional-icon">👨‍👩‍👧</div>
+                        <div class="professional-details">
+                            <h3>Moeder</h3>
+                            <p>Informele ondersteuning</p>
+                        </div>
+                    </div>
+                    <div class="goal-count">3 doelen</div>
+                </div>
+            </div>
+
+            <div class="mdo-section">
+                <h3><span>📅</span> Multidisciplinair Overleg</h3>
+                <p style="margin-bottom: 16px; color: #065f46; font-size: 14px;">
+                    Plan een gezamenlijk overleg met alle betrokken professionals en bespreek raakvlakken.
+                </p>
+                <button class="mdo-button">📅 Plan MDO</button>
+                <button class="mdo-button" style="background: #3b82f6;">📊 Vorige MDO's bekijken</button>
+            </div>
+
+            <div class="general-question">
+                <h3><span>💬</span> Professionele vraag/afstemming</h3>
+                <p style="margin-bottom: 12px; color: #78350f; font-size: 14px;">
+                    Stel een vraag of deel informatie met collega's. Alleen voor professionals zichtbaar.
+                </p>
+                <textarea placeholder="Bijvoorbeeld: Wie kan het gesprek met de woningbouw coördineren? Of: Ik zie achteruitgang in schoolprestaties sinds medicatiewijziging, kunnen GGZ en School dit samen bespreken?"></textarea>
+                <button>Vraag delen met team</button>
+            </div>
+        </div>
+
+        <!-- Detail Screen - School -->
+        <div id="detail-school" class="content hidden">
+            <a class="back-button" onclick="showOverview()">← Terug naar overzicht</a>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <div class="professional-icon">🏫</div>
+                <div>
+                    <h2 style="color: #1e293b;">Schoolmaatschappelijk werker</h2>
+                    <p style="color: #64748b;">Jan Vermeulen</p>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Schoolgang stabiliseren</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: januari 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Jan):</strong> "We hebben een persoonlijk leerplan gemaakt met flexibele tijden. Ze komt nu 3 van de 5 dagen."
+                </div>
+                <div class="comments-section">
+                    <div class="comment">
+                        <div class="comment-author">Moeder</div>
+                        <div>De flexibele tijden helpen echt! Ze voelt zich minder gestrest.</div>
+                    </div>
+                    <div class="add-comment">
+                        <textarea placeholder="Stel een vraag of voeg een opmerking toe..."></textarea>
+                        <button>Versturen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Screen - Verslaving -->
+        <div id="detail-verslaving" class="content hidden">
+            <a class="back-button" onclick="showOverview()">← Terug naar overzicht</a>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <div class="professional-icon">🚭</div>
+                <div>
+                    <h2 style="color: #1e293b;">Verslavingsconsulent</h2>
+                    <p style="color: #64748b;">Mira Yilmaz</p>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Middelengebruik verminderen</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: december 2025</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Mira):</strong> "We werken aan herkennen van triggers. Ze houdt nu een dagboek bij."
+                </div>
+                <div class="comments-section">
+                    <p style="color: #64748b; font-size: 14px; font-style: italic;">Nog geen opmerkingen</p>
+                    <div class="add-comment">
+                        <textarea placeholder="Stel een vraag of voeg een opmerking toe..."></textarea>
+                        <button>Versturen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Screen - Woningbouw -->
+        <div id="detail-woningbouw" class="content hidden">
+            <a class="back-button" onclick="showOverview()">← Terug naar overzicht</a>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <div class="professional-icon">🏠</div>
+                <div>
+                    <h2 style="color: #1e293b;">Woningbouwcorporatie</h2>
+                    <p style="color: #64748b;">Petra de Vries</p>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Zelfstandig wonen mogelijk maken</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-starting">Wachtlijst</span></span>
+                    <span>⏱️ Sinds: maart 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Petra):</strong> "Aanvraag voor begeleide woonvorm is ingediend. Wachttijd circa 6 maanden."
+                </div>
+                <div class="comments-section">
+                    <div class="comment">
+                        <div class="comment-author">Moeder</div>
+                        <div>6 maanden is lang... kan er iets tussentijds geregeld worden?</div>
+                    </div>
+                    <div class="add-comment">
+                        <textarea placeholder="Stel een vraag of voeg een opmerking toe..."></textarea>
+                        <button>Versturen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Screen - Buurthuis -->
+        <div id="detail-buurthuis" class="content hidden">
+            <a class="back-button" onclick="showOverview()">← Terug naar overzicht</a>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <div class="professional-icon">🏘️</div>
+                <div>
+                    <h2 style="color: #1e293b;">Buurthuis De Stoep</h2>
+                    <p style="color: #64748b;">Ahmed El Amrani</p>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Sociale contacten opbouwen</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: februari 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Ahmed):</strong> "Ze komt naar de wekelijkse game-avond. Voorzichtige start, maar ze voelt zich welkom."
+                </div>
+                <div class="comments-section">
+                    <div class="comment">
+                        <div class="comment-author">Moeder</div>
+                        <div>Ze vertelde enthousiast over de game-avond! Dank je wel.</div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-author">Ahmed</div>
+                        <div>Fijn om te horen! We merken dat ze steeds meer opent.</div>
+                    </div>
+                    <div class="add-comment">
+                        <textarea placeholder="Stel een vraag of voeg een opmerking toe..."></textarea>
+                        <button>Versturen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Screen - Moeder -->
+        <div id="detail-moeder" class="content hidden">
+            <a class="back-button" onclick="showOverview()">← Terug naar overzicht</a>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <div class="professional-icon">👨‍👩‍👧</div>
+                <div>
+                    <h2 style="color: #1e293b;">Moeder</h2>
+                    <p style="color: #64748b;">Informele ondersteuning</p>
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Dagelijkse structuur ondersteunen</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: januari 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Moeder):</strong> "We hebben vaste tijden afgesproken voor opstaan, eten en slapen. Werkt steeds beter."
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Thuisomgeving stabiel houden</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: december 2025</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Moeder):</strong> "Probeer een veilige, rustige omgeving te bieden. Soms moeilijk als ze niet wil praten."
+                </div>
+            </div>
+
+            <div class="goal-card">
+                <div class="goal-header">
+                    <h4>📌 Contact houden met professionals</h4>
+                </div>
+                <div class="goal-meta">
+                    <span>📊 Status: <span class="status-badge status-active">Bezig</span></span>
+                    <span>⏱️ Sinds: januari 2026</span>
+                </div>
+                <div class="goal-update">
+                    <strong>Laatste update (Moeder):</strong> "Via dit portaal voel ik me meer betrokken en weet ik wat er speelt."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'family';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide screens
+            if (tab === 'family') {
+                document.getElementById('overview-screen').classList.remove('hidden');
+                document.getElementById('mdo-screen').classList.add('hidden');
+                document.getElementById('detail-ggz').classList.add('hidden');
+            } else {
+                document.getElementById('overview-screen').classList.add('hidden');
+                document.getElementById('mdo-screen').classList.remove('hidden');
+                document.getElementById('detail-ggz').classList.add('hidden');
+            }
+        }
+
+        function showOverview() {
+            // Hide all detail screens
+            document.getElementById('detail-ggz').classList.add('hidden');
+            document.getElementById('detail-school').classList.add('hidden');
+            document.getElementById('detail-verslaving').classList.add('hidden');
+            document.getElementById('detail-woningbouw').classList.add('hidden');
+            document.getElementById('detail-buurthuis').classList.add('hidden');
+            document.getElementById('detail-moeder').classList.add('hidden');
+            
+            // Show correct overview based on current tab
+            if (currentTab === 'family') {
+                document.getElementById('overview-screen').classList.remove('hidden');
+            } else {
+                document.getElementById('mdo-screen').classList.remove('hidden');
+            }
+        }
+
+        function showDetail(type) {
+            // Hide overview screens
+            document.getElementById('overview-screen').classList.add('hidden');
+            document.getElementById('mdo-screen').classList.add('hidden');
+            
+            // Hide all detail screens first
+            document.getElementById('detail-ggz').classList.add('hidden');
+            document.getElementById('detail-school').classList.add('hidden');
+            document.getElementById('detail-verslaving').classList.add('hidden');
+            document.getElementById('detail-woningbouw').classList.add('hidden');
+            document.getElementById('detail-buurthuis').classList.add('hidden');
+            document.getElementById('detail-moeder').classList.add('hidden');
+            
+            // Show selected detail screen
+            const detailMap = {
+                'ggz': 'detail-ggz',
+                'school': 'detail-school',
+                'verslaving': 'detail-verslaving',
+                'woningbouw': 'detail-woningbouw',
+                'buurthuis': 'detail-buurthuis',
+                'moeder': 'detail-moeder'
+            };
+            
+            if (detailMap[type]) {
+                document.getElementById(detailMap[type]).classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

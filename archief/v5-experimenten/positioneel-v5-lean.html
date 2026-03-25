@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA Positionele Analyse v5.0 LEAN - 8 schermen flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #22A65E;
+            --primary-light: #E8F5EE;
+            --primary-dark: #1E8E50;
+            --secondary: #5BB98C;
+            --warning: #E89347;
+            --danger: #DC4C4C;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #F9FAFB;
+            --white: #fff;
+            --shadow: 0 2px 12px rgba(34, 166, 94, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Top Navigation */
+        nav {
+            background: #fff;
+            border-bottom: 2px solid var(--primary);
+            padding: 10px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        nav .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6b7280;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        nav a:hover {
+            background: #f3f4f6;
+        }
+
+        nav a.active {
+            color: var(--primary);
+            background: var(--primary-light);
+            font-weight: 600;
+        }
+
+        /* Version badge */
+        .version-badge {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+        }
+
+        /* Screen management */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #d4e9f9;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Organisatie grid */
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .org-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .org-card:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .org-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        .org-icon {
+            font-size: 2.5rem;
+        }
+
+        .org-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Button choice group (toestemming) */
+        .btn-group-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-choice {
+            padding: 10px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-choice:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .btn-choice.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Demo trigger */
+        .demo-trigger {
+            text-align: center;
+            margin: 20px 0;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Details/summary styling */
+        details {
+            margin-bottom: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        details summary {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #6b7280;
+            list-style: none;
+        }
+
+        details summary:hover {
+            background: #f9fafb;
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        details > div {
+            padding: 16px;
+        }
+
+        /* Demo watermark */
+        #demo-watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            padding: 8px 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 10000;
+            border-bottom: 2px solid #f59e0b;
+        }
+
+        /* ===== SCHERM 2: DOMEINEN SCAN (ACCORDION) ===== */
+
+        /* Sticky header met overzicht */
+        .scan-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .scan-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .overview-chart {
+            max-width: 200px;
+        }
+
+        .overview-stats {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        /* Scroll progress bar */
+        .scroll-progress {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Doelgroep hint */
+        .doelgroep-hint {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 0.88rem;
+            color: #166534;
+        }
+
+        /* Domeinen accordion */
+        .domeinen-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .domein-item {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .domein-item.expanded {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.15);
+        }
+
+        .domein-item.urgent {
+            border-left: 4px solid #dc2626;
+        }
+
+        .domein-item.aandacht {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .domein-item.goed {
+            border-left: 4px solid #10b981;
+        }
+
+        .domein-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+            transition: all 0.2s;
+        }
+
+        .domein-header:hover {
+            background: linear-gradient(to bottom, #fff 0%, #f5f5f5 100%);
+        }
+
+        .domein-item.expanded .domein-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .domein-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .domein-naam {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .domein-status {
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .domein-item.expanded .domein-status {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .domein-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .domein-item.expanded .domein-toggle {
+            transform: rotate(180deg);
+        }
+
+        .domein-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .domein-item.expanded .domein-content {
+            max-height: 2000px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        .domein-body {
+            padding: 20px;
+            background: white;
+        }
+
+        /* Status knoppen */
+        .status-knoppen {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .status-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .status-btn.active.status-urgent {
+            border-color: #dc2626;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-btn.active.status-aandacht {
+            border-color: #f59e0b;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-btn.active.status-goed {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Steun knoppen */
+        .steun-knoppen {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .steun-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .steun-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .steun-btn.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* Steun details (conditionally visible) */
+        .steun-details {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        /* Cross-domein tips */
+        .domein-tips {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: #1e40af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scan-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .org-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-group-inline {
+                flex-direction: column;
+            }
+
+            .btn-choice {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav>
+    <div class="nav-inner">
+        <a href="netwerkanalyse.html">📊 Niveau 1</a>
+        <a href="positioneel.html">🔄 Niveau 2 (v4)</a>
+        <a href="positioneel-v5-lean.html" class="active">✨ Niveau 2 (v5 LEAN)</a>
+        <a href="strategisch.html">📈 Niveau 3</a>
+        <span style="width:1px;height:20px;background:#e5e7eb;"></span>
+        <a href="familie-portal-pro.html">👨‍👩‍👧 Familie</a>
+        <a href="familie-portal-mdo.html">👥 MDO</a>
+    </div>
+</nav>
+
+<!-- Version badge -->
+<div class="version-badge">v5.0 LEAN ✨ 8 schermen</div>
+
+<div class="container">
+
+    <!-- ===== SCHERM 1: START & CONTEXT ===== -->
+    <div class="screen active" id="screen-start">
+        <div class="card">
+            <div style="text-align:center;margin-bottom:24px;">
+                <div style="display:inline-block;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);padding:8px 16px;border-radius:20px;margin-bottom:12px;">
+                    <span style="font-size:0.75rem;color:white;font-weight:700;letter-spacing:0.05em;">NIVEAU 2</span>
+                </div>
+                <h1 style="font-size:2.2rem;margin-bottom:8px;color:#0f172a;font-weight:800;">Positionele Analyse</h1>
+                <p style="font-size:1rem;color:#64748b;margin-bottom:4px;font-weight:500;">Relationeel-Positioneel Analysemodel</p>
+                <p style="font-size:0.85rem;color:#94a3b8;font-style:italic;">Voor professional en cliënt samen</p>
+            </div>
+
+            <!-- Organisatie keuze -->
+            <section id="organisatie-keuze">
+                <h2 style="font-size:1.2rem;color:var(--text);margin-bottom:16px;">🏘️ Vanuit welke organisatie werk je?</h2>
+                <div class="org-grid" id="orgGrid">
+                    <div class="org-card" data-org="wijkteam" onclick="selectOrg('wijkteam')">
+                        <span class="org-icon">🏘️</span>
+                        <span class="org-label">Wijkteam</span>
+                    </div>
+                    <div class="org-card" data-org="ggz" onclick="selectOrg('ggz')">
+                        <span class="org-icon">🧠</span>
+                        <span class="org-label">GGZ</span>
+                    </div>
+                    <div class="org-card" data-org="mantelzorg" onclick="selectOrg('mantelzorg')">
+                        <span class="org-icon">🫂</span>
+                        <span class="org-label">Mantelzorg</span>
+                    </div>
+                    <div class="org-card" data-org="schuldhulp" onclick="selectOrg('schuldhulp')">
+                        <span class="org-icon">💰</span>
+                        <span class="org-label">Schuldhulp</span>
+                    </div>
+                    <div class="org-card" data-org="ouderenzorg" onclick="selectOrg('ouderenzorg')">
+                        <span class="org-icon">👴</span>
+                        <span class="org-label">Ouderenzorg</span>
+                    </div>
+                    <div class="org-card" data-org="opvang" onclick="selectOrg('opvang')">
+                        <span class="org-icon">🏠</span>
+                        <span class="org-label">Opvang</span>
+                    </div>
+                    <div class="org-card" data-org="reclassering" onclick="selectOrg('reclassering')">
+                        <span class="org-icon">⚖️</span>
+                        <span class="org-label">Reclassering</span>
+                    </div>
+                    <div class="org-card" data-org="jeugdzorg" onclick="selectOrg('jeugdzorg')">
+                        <span class="org-icon">🧒</span>
+                        <span class="org-label">Jeugdzorg</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Uitleg (inklapbaar) -->
+            <details id="toelichting-pro">
+                <summary>ℹ️ Voor professionals - Wat is positionele analyse?</summary>
+                <div style="font-size:0.85rem;line-height:1.7;color:#4b5563;">
+                    <p style="margin-bottom:10px;"><strong>Positionele analyse</strong> helpt je bewuste keuzes te maken over waar verantwoordelijkheid ligt in het netwerk.</p>
+                    <p style="margin-bottom:10px;">Het gaat niet om <em>meer</em> zorg, maar om <em>anders georganiseerde</em> steun.</p>
+                    <p style="margin:0;"><strong>⏱️ Duur:</strong> 25-30 minuten | <strong>💾</strong> Auto-save | <strong>🔒</strong> Privacy: lokaal in browser</p>
+                </div>
+            </details>
+
+            <!-- Gesprek start -->
+            <section id="gesprek-start" style="margin-top:32px;">
+                <h2 style="font-size:1.2rem;color:var(--text);margin-bottom:16px;">💬 Netwerkgesprek</h2>
+                
+                <div class="form-group">
+                    <label>👤 Naam cliënt (optioneel)</label>
+                    <input type="text" id="clientNaam" placeholder="Bijv. Emma">
+                </div>
+
+                <div class="form-group">
+                    <label>📋 Toestemming informatie-uitwisseling</label>
+                    <div class="btn-group-inline">
+                        <button class="btn-choice" data-choice="ja" onclick="setToestemming('ja')">
+                            ✅ Ja, akkoord
+                        </button>
+                        <button class="btn-choice" data-choice="nee" onclick="setToestemming('nee')">
+                            🔒 Nee, alleen voor mijzelf
+                        </button>
+                        <button class="btn-choice" data-choice="later" onclick="setToestemming('later')">
+                            💬 Bespreken we later
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>🎯 Wat zou je graag anders willen?</label>
+                    <textarea id="hulpvraag" placeholder="Vertel in eigen woorden wat er speelt...
+
+💡 Denk aan: werk, wonen, financiën, gezondheid, relaties, dagbesteding..."></textarea>
+                </div>
+
+                <!-- Extra instellingen (inklapbaar) -->
+                <details id="extra-instellingen">
+                    <summary>⚙️ Extra instellingen (optioneel)</summary>
+                    <div class="form-group">
+                        <label>📍 Postcode</label>
+                        <input type="text" id="postcode" placeholder="1012AB" maxlength="6" style="text-transform:uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label>🔄 Vervolggesprek?</label>
+                        <input type="date" id="vorigGesprekDatum" style="margin-bottom:8px;">
+                        <input type="text" id="vorigGesprekNotitie" placeholder="Kort: hoe stond het er toen voor?">
+                    </div>
+                </details>
+            </section>
+
+            <!-- Demo knop -->
+            <div class="demo-trigger">
+                <button onclick="loadDemo()" class="btn btn-secondary">
+                    💡 Demo met voorbeeldcliënt
+                </button>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="goToScreenById('domeinen-scan')" class="btn btn-primary" id="btnStart">
+                    Start gesprek →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 2: DOMEINEN SCAN (ACCORDION) ===== -->
+    <div class="screen" id="screen-domeinen-scan">
+        <div class="card">
+            <!-- Sticky header met overzicht -->
+            <div class="scan-header">
+                <div class="scan-overview">
+                    <div class="overview-chart">
+                        <canvas id="spiderChartScan" width="200" height="200"></canvas>
+                    </div>
+                    <div class="overview-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">🔴</span>
+                            <span class="stat-value" id="urgentCount">0</span>
+                            <span class="stat-label">Urgent</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🟡</span>
+                            <span class="stat-value" id="aandachtCount">0</span>
+                            <span class="stat-label">Aandacht</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🟢</span>
+                            <span class="stat-value" id="goedCount">0</span>
+                            <span class="stat-label">Gaat goed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-progress">
+                    <div class="progress-bar" id="scanProgress"></div>
+                </div>
+            </div>
+
+            <!-- Doelgroep hint -->
+            <div class="doelgroep-hint" id="doelgroepHint" style="display:none;">
+                💡 <span id="doelgroepHintText"></span>
+            </div>
+
+            <!-- Domeinen accordion -->
+            <div class="domeinen-accordion" id="domeinenAccordion">
+                <!-- Dynamisch gegenereerd via JavaScript -->
+            </div>
+
+            <div class="btn-group">
+                <button onclick="goToScreenById('start')" class="btn btn-secondary">← Terug</button>
+                <button onclick="goToScreenById('netwerkpositie')" class="btn btn-primary" id="btnVolgende" disabled>
+                    Ga door →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 3: NETWERKPOSITIE (placeholder) ===== -->
+    <div class="screen" id="screen-netwerkpositie">
+        <div class="card">
+            <h2>🕸️ Netwerkpositie</h2>
+            <p>Dit scherm wordt nog gebouwd...</p>
+            <div class="btn-group">
+                <button onclick="goToScreenById('domeinen-scan')" class="btn btn-secondary">← Terug</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ===== STATE MANAGEMENT =====
+let state = {
+    start: {
+        organisatie: null,
+        clientNaam: '',
+        toestemming: null,
+        hulpvraag: '',
+        postcode: '',
+        vorigGesprek: {
+            datum: null,
+            notitie: ''
+        }
+    },
+    domeinen: {},
+    isDemoMode: false
+};
+
+// Domein definities (11 SIJN domeinen)
+const DOMAINS = [
+    { id: 'financien', icon: '💰', naam: 'Financiën', hint: 'Inkomen, schulden, budgetbeheer' },
+    { id: 'dagbesteding', icon: '💼', naam: 'Dagbesteding', hint: 'Werk, opleiding, zinvolle activiteit' },
+    { id: 'huisvesting', icon: '🏠', naam: 'Huisvesting', hint: 'Woning, woonomgeving, veiligheid' },
+    { id: 'huiselijkerelaties', icon: '👨‍👩‍👧', naam: 'Huiselijke relaties', hint: 'Gezin, partnerschap, opvoeding' },
+    { id: 'ggz', icon: '🧠', naam: 'Geestelijke gezondheid', hint: 'Psychisch welzijn, behandeling' },
+    { id: 'lgz', icon: '💪', naam: 'Lichamelijke gezondheid', hint: 'Fysieke gezondheid, medische zorg' },
+    { id: 'verslaving', icon: '🚭', naam: 'Verslaving', hint: 'Middelen, gokken, gedragsverslaving' },
+    { id: 'adl', icon: '🛁', naam: 'ADL-vaardigheden', hint: 'Zelfzorg, persoonlijke hygiëne' },
+    { id: 'sociaalnetwerk', icon: '👥', naam: 'Sociaal netwerk', hint: 'Familie, vrienden, kennissen' },
+    { id: 'participatie', icon: '🤝', naam: 'Maatschappelijke participatie', hint: 'Sociale activiteiten, vrijwilligerswerk' },
+    { id: 'justitie', icon: '⚖️', naam: 'Justitie', hint: 'Juridische problemen, reclassering' }
+];
+
+// Doelgroep-mapping (organisatie → vaak voorkomende domeinen)
+const DOELGROEP_HINTS = {
+    'wijkteam': {
+        top: ['financien', 'dagbesteding', 'sociaalnetwerk'],
+        tekst: 'Vaak speelt bij wijkteam: financiën, dagbesteding en sociaal netwerk'
+    },
+    'ggz': {
+        top: ['ggz', 'verslaving', 'huiselijkerelaties'],
+        tekst: 'Vaak speelt bij GGZ: geestelijke gezondheid, verslaving en huiselijke relaties'
+    },
+    'mantelzorg': {
+        top: ['ggz', 'sociaalnetwerk', 'adl'],
+        tekst: 'Vaak speelt bij mantelzorgers: overbelasting (ggz), sociaal netwerk en ADL-ondersteuning'
+    },
+    'schuldhulp': {
+        top: ['financien', 'huisvesting', 'dagbesteding'],
+        tekst: 'Vaak speelt bij schuldhulp: financiën, huisvesting en dagbesteding'
+    },
+    'ouderenzorg': {
+        top: ['lgz', 'adl', 'sociaalnetwerk'],
+        tekst: 'Vaak speelt bij ouderenzorg: lichamelijke gezondheid, ADL en sociaal netwerk'
+    },
+    'opvang': {
+        top: ['huisvesting', 'financien', 'verslaving'],
+        tekst: 'Vaak speelt bij opvang: huisvesting, financiën en verslaving'
+    },
+    'reclassering': {
+        top: ['justitie', 'dagbesteding', 'verslaving'],
+        tekst: 'Vaak speelt bij reclassering: justitie, dagbesteding en verslaving'
+    },
+    'jeugdzorg': {
+        top: ['huiselijkerelaties', 'ggz', 'dagbesteding'],
+        tekst: 'Vaak speelt bij jeugdzorg: huiselijke relaties, GGZ en dagbesteding'
+    }
+};
+
+// Initialiseer domeinen state
+function initDomeinen() {
+    const domeinen = {};
+    DOMAINS.forEach(d => {
+        domeinen[d.id] = {
+            status: null,
+            notitie: '',
+            steun: null,
+            steunDetails: null
+        };
+    });
+    return domeinen;
+}
+
+state.domeinen = initDomeinen();
+
+// ===== SCHERM 1 FUNCTIES =====
+
+function selectOrg(org) {
+    state.start.organisatie = org;
+    
+    // Visual feedback
+    document.querySelectorAll('.org-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    document.querySelector(`.org-card[data-org="${org}"]`).classList.add('selected');
+    
+    saveState();
+}
+
+function setToestemming(keuze) {
+    state.start.toestemming = keuze;
+    
+    // Visual feedback
+    document.querySelectorAll('.btn-choice[data-choice]').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    document.querySelector(`.btn-choice[data-choice="${keuze}"]`).classList.add('selected');
+    
+    saveState();
+}
+
+function goToScreenById(screenId) {
+    // Validatie voor Scherm 1 → 2
+    if (screenId === 'domeinen-scan') {
+        if (!state.start.organisatie) {
+            alert('❌ Kies eerst je organisatie');
+            document.getElementById('organisatie-keuze').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+        
+        if (!state.start.toestemming) {
+            alert('❌ Bespreek toestemming voor informatie-uitwisseling');
+            return;
+        }
+        
+        // Save data
+        state.start.hulpvraag = document.getElementById('hulpvraag').value;
+        state.start.clientNaam = document.getElementById('clientNaam').value;
+        state.start.postcode = document.getElementById('postcode').value.toUpperCase();
+        
+        if (document.getElementById('vorigGesprekDatum').value) {
+            state.start.vorigGesprek.datum = document.getElementById('vorigGesprekDatum').value;
+            state.start.vorigGesprek.notitie = document.getElementById('vorigGesprekNotitie').value;
+        }
+        
+        saveState();
+        
+        // Render domeinen accordion
+        renderDomeinenAccordion();
+        showDoelgroepHint();
+    }
+    
+    // Switch screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + screenId).classList.add('active');
+    
+    window.scrollTo(0, 0);
+}
+
+// ===== SCHERM 2 FUNCTIES =====
+
+function renderDomeinenAccordion() {
+    const accordion = document.getElementById('domeinenAccordion');
+    accordion.innerHTML = '';
+    
+    // Sort: top domeinen eerst (o.b.v. organisatie)
+    const topDomeinen = state.start.organisatie ? 
+        (DOELGROEP_HINTS[state.start.organisatie]?.top || []) : [];
+    
+    const sortedDomains = [...DOMAINS].sort((a, b) => {
+        const aTop = topDomeinen.includes(a.id);
+        const bTop = topDomeinen.includes(b.id);
+        if (aTop && !bTop) return -1;
+        if (!aTop && bTop) return 1;
+        return 0;
+    });
+    
+    sortedDomains.forEach(domein => {
+        const item = document.createElement('div');
+        item.className = 'domein-item';
+        item.dataset.domein = domein.id;
+        
+        const currentData = state.domeinen[domein.id];
+        const statusText = currentData.status ? 
+            (currentData.status === 'urgent' ? '🔴 Urgent' :
+             currentData.status === 'aandacht' ? '🟡 Aandacht' :
+             '🟢 Gaat goed') : '⚪ Nog niet';
+        
+        // Add class for border color
+        if (currentData.status) {
+            item.classList.add(currentData.status);
+        }
+        
+        const isTop = topDomeinen.includes(domein.id);
+        const topBadge = isTop ? '<span style="background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:8px;">⭐ Vaak</span>' : '';
+        
+        item.innerHTML = `
+            <div class="domein-header" onclick="toggleDomein('${domein.id}')">
+                <span class="domein-icon">${domein.icon}</span>
+                <span class="domein-naam">${domein.naam}${topBadge}</span>
+                <span class="domein-status" id="status-${domein.id}">${statusText}</span>
+                <span class="domein-toggle">▼</span>
+            </div>
+            <div class="domein-content" id="content-${domein.id}">
+                <div class="domein-body">
+                    <div class="form-group">
+                        <label>Hoe gaat het met ${domein.naam.toLowerCase()}?</label>
+                        <p style="font-size:0.8rem;color:#6b7280;margin:4px 0 10px;">${domein.hint}</p>
+                        <div class="status-knoppen">
+                            <button onclick="setDomeinStatus('${domein.id}', 'urgent')" 
+                                    class="status-btn status-urgent ${currentData.status === 'urgent' ? 'active' : ''}" 
+                                    data-status="urgent">
+                                🔴 Urgent
+                            </button>
+                            <button onclick="setDomeinStatus('${domein.id}', 'aandacht')" 
+                                    class="status-btn status-aandacht ${currentData.status === 'aandacht' ? 'active' : ''}" 
+                                    data-status="aandacht">
+                                🟡 Aandacht
+                            </button>
+                            <button onclick="setDomeinStatus('${domein.id}', 'goed')" 
+                                    class="status-btn status-goed ${currentData.status === 'goed' ? 'active' : ''}" 
+                                    data-status="goed">
+                                🟢 Gaat goed
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🤔 Waar denk je aan?</label>
+                        <input type="text" id="notitie-${domein.id}" 
+                               placeholder="Bijv. ${domein.hint.toLowerCase()}..." 
+                               value="${currentData.notitie || ''}"
+                               oninput="saveDomeinNotitie('${domein.id}', this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Is er steun aanwezig?</label>
+                        <div class="steun-knoppen">
+                            <button onclick="setDomeinSteun('${domein.id}', 'zelfstandig')" 
+                                    class="steun-btn ${currentData.steun === 'zelfstandig' ? 'active' : ''}" 
+                                    data-steun="zelfstandig">
+                                🟢 Zelfstandig
+                            </button>
+                            <button onclick="setDomeinSteun('${domein.id}', 'aanwezig')" 
+                                    class="steun-btn ${currentData.steun === 'aanwezig' ? 'active' : ''}" 
+                                    data-steun="aanwezig">
+                                🟡 Aanwezig
+                            </button>
+                            <button onclick="setDomeinSteun('${domein.id}', 'nodig')" 
+                                    class="steun-btn ${currentData.steun === 'nodig' ? 'active' : ''}" 
+                                    data-steun="nodig">
+                                🔴 Nodig
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="steun-details" id="steun-details-${domein.id}" style="display:${currentData.steun === 'aanwezig' ? 'block' : 'none'};">
+                        <div class="form-group">
+                            <label>Type steun</label>
+                            <select id="steun-type-${domein.id}" onchange="saveSteunDetails('${domein.id}')">
+                                <option value="">Kies...</option>
+                                <option value="professioneel" ${currentData.steunDetails?.type === 'professioneel' ? 'selected' : ''}>🔵 Professioneel</option>
+                                <option value="collectief" ${currentData.steunDetails?.type === 'collectief' ? 'selected' : ''}>🟣 Collectief</option>
+                                <option value="informeel" ${currentData.steunDetails?.type === 'informeel' ? 'selected' : ''}>🟢 Informeel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Wie helpt?</label>
+                            <input type="text" id="steun-wie-${domein.id}" 
+                                   placeholder="Bijv. Schuldhulpverlener Jan" 
+                                   value="${currentData.steunDetails?.wie || ''}"
+                                   oninput="saveSteunDetails('${domein.id}')">
+                        </div>
+                        <div class="form-group">
+                            <label>Wat doet deze persoon/organisatie?</label>
+                            <input type="text" id="steun-wat-${domein.id}" 
+                                   placeholder="Bijv. Budgetbeheer + schuldsanering" 
+                                   value="${currentData.steunDetails?.wat || ''}"
+                                   oninput="saveSteunDetails('${domein.id}')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        accordion.appendChild(item);
+    });
+    
+    updateSpiderChart();
+    updateScanProgress();
+    checkVolgendeEnabled();
+}
+
+function toggleDomein(domeinId) {
+    const item = document.querySelector(`.domein-item[data-domein="${domeinId}"]`);
+    item.classList.toggle('expanded');
+}
+
+function setDomeinStatus(domeinId, status) {
+    state.domeinen[domeinId].status = status;
+    
+    // Visual feedback
+    const buttons = document.querySelectorAll(`.domein-item[data-domein="${domeinId}"] .status-btn`);
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.domein-item[data-domein="${domeinId}"] .status-btn[data-status="${status}"]`).classList.add('active');
+    
+    // Update header status
+    const statusEl = document.getElementById(`status-${domeinId}`);
+    statusEl.textContent = status === 'urgent' ? '🔴 Urgent' :
+                           status === 'aandacht' ? '🟡 Aandacht' :
+                           '🟢 Gaat goed';
+    
+    // Update border
+    const item = document.querySelector(`.domein-item[data-domein="${domeinId}"]`);
+    item.classList.remove('urgent', 'aandacht', 'goed');
+    item.classList.add(status);
+    
+    saveState();
+    updateSpiderChart();
+    updateScanProgress();
+    checkVolgendeEnabled();
+}
+
+function saveDomeinNotitie(domeinId, notitie) {
+    state.domeinen[domeinId].notitie = notitie;
+    saveState();
+}
+
+function setDomeinSteun(domeinId, steun) {
+    state.domeinen[domeinId].steun = steun;
+    
+    // Visual feedback
+    const buttons = document.querySelectorAll(`.domein-item[data-domein="${domeinId}"] .steun-btn`);
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.domein-item[data-domein="${domeinId}"] .steun-btn[data-steun="${steun}"]`).classList.add('active');
+    
+    // Show/hide steun details
+    const detailsEl = document.getElementById(`steun-details-${domeinId}`);
+    if (steun === 'aanwezig') {
+        detailsEl.style.display = 'block';
+        if (!state.domeinen[domeinId].steunDetails) {
+            state.domeinen[domeinId].steunDetails = { type: '', wie: '', wat: '' };
+        }
+    } else {
+        detailsEl.style.display = 'none';
+        state.domeinen[domeinId].steunDetails = null;
+    }
+    
+    saveState();
+}
+
+function saveSteunDetails(domeinId) {
+    const type = document.getElementById(`steun-type-${domeinId}`).value;
+    const wie = document.getElementById(`steun-wie-${domeinId}`).value;
+    const wat = document.getElementById(`steun-wat-${domeinId}`).value;
+    
+    state.domeinen[domeinId].steunDetails = { type, wie, wat };
+    saveState();
+}
+
+function updateSpiderChart() {
+    const canvas = document.getElementById('spiderChartScan');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Count stats
+    let urgent = 0, aandacht = 0, goed = 0;
+    DOMAINS.forEach(d => {
+        const status = state.domeinen[d.id].status;
+        if (status === 'urgent') urgent++;
+        else if (status === 'aandacht') aandacht++;
+        else if (status === 'goed') goed++;
+    });
+    
+    document.getElementById('urgentCount').textContent = urgent;
+    document.getElementById('aandachtCount').textContent = aandacht;
+    document.getElementById('goedCount').textContent = goed;
+    
+    // Simple spider chart (voor nu: placeholder)
+    // In volledige versie: gebruik Chart.js zoals in oude versie
+    ctx.clearRect(0, 0, 200, 200);
+    ctx.fillStyle = '#e5e7eb';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Spider chart', 100, 100);
+    ctx.fillText('(live update)', 100, 120);
+}
+
+function updateScanProgress() {
+    const total = DOMAINS.length;
+    const filled = DOMAINS.filter(d => state.domeinen[d.id].status !== null).length;
+    const percentage = Math.round((filled / total) * 100);
+    
+    document.getElementById('scanProgress').style.width = percentage + '%';
+}
+
+function checkVolgendeEnabled() {
+    // Enable "Ga door" als minimaal 1 domein ingevuld
+    const anyFilled = DOMAINS.some(d => state.domeinen[d.id].status !== null);
+    document.getElementById('btnVolgende').disabled = !anyFilled;
+}
+
+function showDoelgroepHint() {
+    if (!state.start.organisatie) return;
+    
+    const hint = DOELGROEP_HINTS[state.start.organisatie];
+    if (hint) {
+        document.getElementById('doelgroepHint').style.display = 'block';
+        document.getElementById('doelgroepHintText').textContent = hint.tekst;
+    }
+}
+
+// ===== DEMO MODUS =====
+
+function loadDemo() {
+    const DEMO_DATA = {
+        start: {
+            organisatie: 'wijkteam',
+            clientNaam: 'Emma de Vries (voorbeeld)',
+            toestemming: 'ja',
+            hulpvraag: 'Mijn zus Marie doet alles voor me (boodschappen, dokter, financiën). Maar ze heeft zelf ook een baan en kinderen. Ik zie dat ze moe is en ik wil haar niet zo belasten.',
+            postcode: '1012AB',
+            vorigGesprek: { datum: null, notitie: '' }
+        },
+        domeinen: {
+            financien: {
+                status: 'urgent',
+                notitie: 'Schulden opgelopen, brief van deurwaarder ontvangen vorige week',
+                steun: 'aanwezig',
+                steunDetails: {
+                    type: 'informeel',
+                    wie: 'Zus Marie',
+                    wat: 'Regelt alle financiën, komt elke week langs om post te sorteren'
+                }
+            },
+            ggz: {
+                status: 'aandacht',
+                notitie: 'Angstig, slaapt slecht sinds schuldenbrief',
+                steun: 'nodig',
+                steunDetails: null
+            },
+            sociaalnetwerk: {
+                status: 'urgent',
+                notitie: 'Alleen contact met zus, rest van familie woont ver weg',
+                steun: 'aanwezig',
+                steunDetails: {
+                    type: 'informeel',
+                    wie: 'Zus Marie',
+                    wat: 'Enige contact, belt dagelijks'
+                }
+            },
+            huisvesting: {
+                status: 'goed',
+                notitie: 'Huurwoning, maar wel achterstallige huur i.v.m. schulden',
+                steun: 'zelfstandig',
+                steunDetails: null
+            },
+            dagbesteding: {
+                status: 'aandacht',
+                notitie: 'Werkloos sinds 6 maanden, zoekt naar vrijwilligerswerk',
+                steun: 'nodig',
+                steunDetails: null
+            }
+        },
+        isDemoMode: true
+    };
+    
+    Object.keys(DEMO_DATA.domeinen).forEach(key => {
+        if (!state.domeinen[key]) {
+            state.domeinen[key] = { status: null, notitie: '', steun: null, steunDetails: null };
+        }
+        state.domeinen[key] = DEMO_DATA.domeinen[key];
+    });
+    
+    state = { ...state, ...DEMO_DATA };
+    saveState();
+    
+    // Toon watermerk
+    const watermark = document.createElement('div');
+    watermark.id = 'demo-watermark';
+    watermark.textContent = '🧪 DEMO MODUS - Dit is een voorbeeldcliënt';
+    document.body.prepend(watermark);
+    
+    // Spring naar domeinen scan
+    goToScreenById('domeinen-scan');
+}
+
+// ===== STATE PERSISTENCE =====
+
+function saveState() {
+    localStorage.setItem('rpa-v5-state', JSON.stringify(state));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('rpa-v5-state');
+    if (saved) {
+        state = JSON.parse(saved);
+    }
+}
+
+// ===== INIT =====
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadState();
+    
+    // Restore UI state
+    if (state.start.organisatie) {
+        const orgCard = document.querySelector(`.org-card[data-org="${state.start.organisatie}"]`);
+        if (orgCard) orgCard.classList.add('selected');
+    }
+    
+    if (state.start.toestemming) {
+        const toestBtn = document.querySelector(`.btn-choice[data-choice="${state.start.toestemming}"]`);
+        if (toestBtn) toestBtn.classList.add('selected');
+    }
+    
+    document.getElementById('clientNaam').value = state.start.clientNaam || '';
+    document.getElementById('hulpvraag').value = state.start.hulpvraag || '';
+    document.getElementById('postcode').value = state.start.postcode || '';
+    
+    if (state.start.vorigGesprek.datum) {
+        document.getElementById('vorigGesprekDatum').value = state.start.vorigGesprek.datum;
+        document.getElementById('vorigGesprekNotitie').value = state.start.vorigGesprek.notitie;
+    }
+    
+    // Demo watermerk als demo mode actief
+    if (state.isDemoMode) {
+        const watermark = document.createElement('div');
+        watermark.id = 'demo-watermark';
+        watermark.textContent = '🧪 DEMO MODUS - Dit is een voorbeeldcliënt';
+        document.body.prepend(watermark);
+    }
+});
+
+</script>
+
+</body>
+</html>

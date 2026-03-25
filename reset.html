@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reset RPA</title>
+</head>
+<body style="font-family: Arial; text-align: center; padding: 50px;">
+    <h1>🔄 Resetting...</h1>
+    <p id="status">Clearing storage...</p>
+    
+    <script>
+        // Clear storage
+        localStorage.removeItem('welzijnswerker_v2');
+        sessionStorage.clear();
+        
+        document.getElementById('status').innerHTML = '✅ Storage cleared!<br><br>Redirecting...';
+        
+        // Redirect na 1 seconde
+        setTimeout(() => {
+            window.location.href = 'positioneel.html';
+        }, 1000);
+    </script>
+</body>
+</html>

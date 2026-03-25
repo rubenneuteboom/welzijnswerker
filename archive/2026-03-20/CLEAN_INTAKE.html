@@ -1,0 +1,139 @@
+                    <!-- Rest van intake (verborgen tot organisatie gekozen) -->
+                    <div id="restVanIntake" style="display:none;">
+                    
+                    <!-- Simpele header -->
+                    <div style="text-align:center;margin-bottom:32px;">
+                        <h1 style="font-size:1.8rem;margin-bottom:8px;color:#1e293b;font-weight:600;">Startgegevens</h1>
+                        <p style="font-size:0.95rem;color:#64748b;">Vul de basisgegevens in om te starten</p>
+                    </div>
+
+                    <!-- Naam cliënt (verplicht) -->
+                    <div style="margin-bottom:24px;">
+                        <label for="clientNaam" style="display:block;font-weight:600;font-size:0.95rem;color:#1e293b;margin-bottom:8px;">
+                            Naam cliënt *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="clientNaam" 
+                            placeholder="Vul naam in" 
+                            required
+                            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:1rem;font-family:inherit;transition:border 0.2s;"
+                            onfocus="this.style.borderColor='#2ECC71'"
+                            onblur="this.style.borderColor='#e2e8f0'"
+                        >
+                    </div>
+
+                    <!-- Doelgroep (optioneel tonen, auto-filled) -->
+                    <div id="doelgroepSection" style="margin-bottom:24px;padding:14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+                        <div style="font-size:0.85rem;color:#64748b;margin-bottom:8px;">
+                            ✓ Doelgroep: <strong id="doelgroepLabel" style="color:#1e293b;">Automatisch ingevuld</strong>
+                        </div>
+                        <button 
+                            onclick="document.getElementById('doelgroepDetails').style.display = document.getElementById('doelgroepDetails').style.display === 'none' ? 'block' : 'none'"
+                            style="background:none;border:none;color:#2ECC71;font-size:0.85rem;cursor:pointer;padding:0;text-decoration:underline;">
+                            Aanpassen
+                        </button>
+                        <div id="doelgroepDetails" style="display:none;margin-top:12px;">
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
+                                    <input type="checkbox" id="doelgroep-ggz" value="ggz" onchange="updateDoelgroep()"> GGZ
+                                </label>
+                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
+                                    <input type="checkbox" id="doelgroep-jongeren" value="jongeren" onchange="updateDoelgroep()"> Jongeren
+                                </label>
+                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
+                                    <input type="checkbox" id="doelgroep-ouderen" value="ouderen" onchange="updateDoelgroep()"> Ouderen
+                                </label>
+                                <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.85rem;">
+                                    <input type="checkbox" id="doelgroep-lvb" value="lvb" onchange="updateDoelgroep()"> LVB
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Track keuze -->
+                    <div style="margin-bottom:32px;">
+                        <label style="display:block;font-weight:600;font-size:0.95rem;color:#1e293b;margin-bottom:12px;">
+                            Aanpak
+                        </label>
+                        <div style="display:grid;gap:10px;">
+                            <label style="cursor:pointer;">
+                                <input type="radio" name="track" value="volledig" checked style="display:none;">
+                                <div class="track-option" style="border:2px solid #2ECC71;background:#f0fdf4;border-radius:8px;padding:14px;transition:all 0.2s;">
+                                    <div style="font-weight:600;color:#1e293b;margin-bottom:4px;">📋 Volledig</div>
+                                    <div style="font-size:0.85rem;color:#475569;">Alle 11 domeinen + netwerkpositie</div>
+                                </div>
+                            </label>
+                            <label style="cursor:pointer;">
+                                <input type="radio" name="track" value="quick" style="display:none;">
+                                <div class="track-option" style="border:2px solid #e2e8f0;background:white;border-radius:8px;padding:14px;transition:all 0.2s;">
+                                    <div style="font-weight:600;color:#1e293b;margin-bottom:4px;">⚡ Quick Scan</div>
+                                    <div style="font-size:0.85rem;color:#64748b;">Alleen urgente domeinen</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Start knop -->
+                    <button 
+                        onclick="validateAndStart()"
+                        style="width:100%;padding:16px;background:linear-gradient(135deg,#2ECC71,#27AE60);color:white;border:none;border-radius:10px;font-size:1.05rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(46,204,113,0.3);transition:all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(46,204,113,0.4)'"
+                        onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(46,204,113,0.3)'"
+                    >
+                        Start Analyse →
+                    </button>
+
+                    <div style="text-align:center;margin-top:16px;">
+                        <button 
+                            onclick="resetToOrgKeuze()"
+                            style="background:none;border:none;color:#64748b;font-size:0.85rem;cursor:pointer;text-decoration:underline;">
+                            ← Andere organisatie kiezen
+                        </button>
+                    </div>
+                    
+                    </div><!-- Einde restVanIntake -->
+
+<style>
+input[name="track"]:checked + .track-option {
+    border-color: #2ECC71 !important;
+    background: #f0fdf4 !important;
+}
+</style>
+
+<script>
+function updateDoelgroep() {
+    const checkboxes = document.querySelectorAll('[id^="doelgroep-"]');
+    state.doelgroepen = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+    saveState();
+    
+    // Update label
+    const label = document.getElementById('doelgroepLabel');
+    if (label) {
+        label.textContent = state.doelgroepen.length > 0 ? state.doelgroepen.join(', ') : 'Geen specifieke doelgroep';
+    }
+}
+
+function validateAndStart() {
+    const naam = document.getElementById('clientNaam')?.value.trim();
+    if (!naam) {
+        alert('Vul een naam in voor de cliënt');
+        document.getElementById('clientNaam')?.focus();
+        return;
+    }
+    
+    state.clientName = naam;
+    state.track = document.querySelector('input[name="track"]:checked')?.value || 'volledig';
+    state.createdAt = state.createdAt || new Date().toISOString();
+    state.updatedAt = new Date().toISOString();
+    state.clientId = state.clientId || 'client_' + Date.now();
+    
+    saveState();
+    goToScreen(2); // Ga naar domeinen
+}
+
+function resetToOrgKeuze() {
+    document.getElementById('organisatieKeuze').style.display = 'block';
+    document.getElementById('restVanIntake').style.display = 'none';
+}
+</script>
