@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA Positionele Analyse v5.0 LEAN - 8 schermen flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #22A65E;
+            --primary-light: #E8F5EE;
+            --primary-dark: #1E8E50;
+            --secondary: #5BB98C;
+            --warning: #E89347;
+            --danger: #DC4C4C;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #F9FAFB;
+            --white: #fff;
+            --shadow: 0 2px 12px rgba(34, 166, 94, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Top Navigation */
+        nav {
+            background: #fff;
+            border-bottom: 2px solid var(--primary);
+            padding: 10px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        nav .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6b7280;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        nav a:hover {
+            background: #f3f4f6;
+        }
+
+        nav a.active {
+            color: var(--primary);
+            background: var(--primary-light);
+            font-weight: 600;
+        }
+
+        /* Version badge */
+        .version-badge {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+        }
+
+        /* Screen management */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #d4e9f9;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Organisatie grid */
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .org-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .org-card:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .org-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        .org-icon {
+            font-size: 2.5rem;
+        }
+
+        .org-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Button choice group (toestemming) */
+        .btn-group-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-choice {
+            padding: 10px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-choice:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .btn-choice.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Demo trigger */
+        .demo-trigger {
+            text-align: center;
+            margin: 20px 0;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Details/summary styling */
+        details {
+            margin-bottom: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        details summary {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #6b7280;
+            list-style: none;
+        }
+
+        details summary:hover {
+            background: #f9fafb;
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        details > div {
+            padding: 16px;
+        }
+
+        /* Demo watermark */
+        #demo-watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            padding: 8px 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 10000;
+            border-bottom: 2px solid #f59e0b;
+        }
+
+        /* ===== SCHERM 2: DOMEINEN SCAN (ACCORDION) ===== */
+
+        /* Sticky header met overzicht */
+        .scan-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .scan-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .overview-chart {
+            max-width: 200px;
+        }
+
+        .overview-stats {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        /* Scroll progress bar */
+        .scroll-progress {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Doelgroep hint */
+        .doelgroep-hint {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 0.88rem;
+            color: #166534;
+        }
+
+        /* Domeinen accordion */
+        .domeinen-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .domein-item {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .domein-item.expanded {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.15);
+        }
+
+        .domein-item.urgent {
+            border-left: 4px solid #dc2626;
+        }
+
+        .domein-item.aandacht {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .domein-item.goed {
+            border-left: 4px solid #10b981;
+        }
+
+        .domein-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            background: linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+            transition: all 0.2s;
+        }
+
+        .domein-header:hover {
+            background: linear-gradient(to bottom, #fff 0%, #f5f5f5 100%);
+        }
+
+        .domein-item.expanded .domein-header {
+            background: var(--primary);
+            color: white;
+        }
+
+        .domein-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .domein-naam {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .domein-status {
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .domein-item.expanded .domein-status {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .domein-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .domein-item.expanded .domein-toggle {
+            transform: rotate(180deg);
+        }
+
+        .domein-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .domein-item.expanded .domein-content {
+            max-height: 2000px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        .domein-body {
+            padding: 20px;
+            background: white;
+        }
+
+        /* Status knoppen */
+        .status-knoppen {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .status-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .status-btn.active.status-urgent {
+            border-color: #dc2626;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-btn.active.status-aandacht {
+            border-color: #f59e0b;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-btn.active.status-goed {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Steun knoppen */
+        .steun-knoppen {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .steun-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .steun-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .steun-btn.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* Steun details (conditionally visible) */
+        .steun-details {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        /* Cross-domein tips */
+        .domein-tips {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: #1e40af;
+        }
+
+        /* Positie override knoppen */
+        .positie-override-btn {
+            padding: 16px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .positie-override-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .positie-override-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Beweging keuze knoppen */
+        .beweging-keuze {
+            padding: 20px 16px;
+            border: 3px solid #e5e7eb;
+            border-radius: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .beweging-keuze:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(46,204,113,0.2);
+        }
+
+        .beweging-keuze.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .beweging-keuze.selected div {
+            color: white !important;
+        }
+
+        /* Prioriteit knoppen */
+        .prioriteit-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .prioriteit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .prioriteit-btn[data-prio="urgent"].selected {
+            border-color: #dc2626;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .prioriteit-btn[data-prio="belangrijk"].selected {
+            border-color: #f59e0b;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .prioriteit-btn[data-prio="verbetering"].selected {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scan-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .org-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-group-inline {
+                flex-direction: column;
+            }
+
+            .btn-choice {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav>
+    <div class="nav-inner">
+        <a href="netwerkanalyse.html">📊 Niveau 1</a>
+        <a href="positioneel.html">🔄 Niveau 2 (v4)</a>
+        <a href="positioneel-v5.1-setup.html" class="active">✨ Niveau 2 (v5 LEAN)</a>
+        <a href="strategisch.html">📈 Niveau 3</a>
+        <span style="width:1px;height:20px;background:#e5e7eb;"></span>
+        <a href="familie-portal-pro.html">👨‍👩‍👧 Familie</a>
+        <a href="familie-portal-mdo.html">👥 MDO</a>
+        <span style="width:1px;height:20px;background:#e5e7eb;"></span>
+        <a href="#" onclick="resetApp(); return false;" style="color:#dc2626;">🔄 Reset</a>
+    </div>
+</nav>
+
+<!-- Version badge -->
+<div class="version-badge">v5.0 LEAN ✨ 8 schermen</div>
+
+<div class="container">
+
+    <!-- ===== SCHERM 0: EENMALIGE SETUP (alleen bij eerste gebruik) ===== -->
+    <div class="screen" id="screen-setup">
+        <div class="card" style="max-width:700px;margin:0 auto;">
+            <div style="text-align:center;margin-bottom:32px;">
+                <div style="font-size:3rem;margin-bottom:16px;">🔧</div>
+                <h1 style="font-size:1.8rem;margin-bottom:12px;color:var(--text);">Even instellen</h1>
+                <p style="font-size:0.95rem;color:var(--text-light);">
+                    Dit hoef je maar <strong>één keer</strong> te doen.<br>
+                    Daarna onthouden we je instellingen.
+                </p>
+            </div>
+
+            <section>
+                <h2 style="font-size:1.1rem;color:var(--text);margin-bottom:16px;">🏘️ Vanuit welke organisatie werk je?</h2>
+                <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:16px;">
+                    Dit helpt ons om relevante tips en interventies te tonen die passen bij jouw werkcontext.
+                </p>
+                <div class="org-grid" id="orgGridSetup">
+                    <div class="org-card" data-org="wijkteam" onclick="selectOrgSetup('wijkteam')">
+                        <span class="org-icon">🏘️</span>
+                        <span class="org-label">Wijkteam</span>
+                    </div>
+                    <div class="org-card" data-org="ggz" onclick="selectOrgSetup('ggz')">
+                        <span class="org-icon">🧠</span>
+                        <span class="org-label">GGZ</span>
+                    </div>
+                    <div class="org-card" data-org="mantelzorg" onclick="selectOrgSetup('mantelzorg')">
+                        <span class="org-icon">🫂</span>
+                        <span class="org-label">Mantelzorg</span>
+                    </div>
+                    <div class="org-card" data-org="schuldhulp" onclick="selectOrgSetup('schuldhulp')">
+                        <span class="org-icon">💰</span>
+                        <span class="org-label">Schuldhulp</span>
+                    </div>
+                    <div class="org-card" data-org="ouderenzorg" onclick="selectOrgSetup('ouderenzorg')">
+                        <span class="org-icon">👴</span>
+                        <span class="org-label">Ouderenzorg</span>
+                    </div>
+                    <div class="org-card" data-org="opvang" onclick="selectOrgSetup('opvang')">
+                        <span class="org-icon">🏠</span>
+                        <span class="org-label">Opvang</span>
+                    </div>
+                    <div class="org-card" data-org="reclassering" onclick="selectOrgSetup('reclassering')">
+                        <span class="org-icon">⚖️</span>
+                        <span class="org-label">Reclassering</span>
+                    </div>
+                    <div class="org-card" data-org="jeugdzorg" onclick="selectOrgSetup('jeugdzorg')">
+                        <span class="org-icon">🧒</span>
+                        <span class="org-label">Jeugdzorg</span>
+                    </div>
+                </div>
+            </section>
+
+            <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:10px;padding:16px;margin:24px 0;">
+                <p style="font-size:0.85rem;color:#166534;margin:0;">
+                    ✅ <strong>Eenmalig instellen</strong><br>
+                    Je hoeft dit niet elke keer opnieuw te doen. We onthouden je keuze voor toekomstige gesprekken.
+                    Je kunt het altijd wijzigen via de instellingen.
+                </p>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="completeSetup()" class="btn btn-primary" id="btnCompleteSetup" disabled>
+                    Opslaan en doorgaan →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 1: START & CONTEXT (VEREENVOUDIGD) ===== -->
+    <div class="screen" id="screen-start">
+        <div class="card">
+            <!-- Organisatie badge (subtiel bovenaan) -->
+            <div id="orgBadge" style="background:#f3f4f6;border-radius:8px;padding:10px 16px;margin-bottom:20px;display:none;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span id="orgBadgeIcon" style="font-size:1.3rem;"></span>
+                        <span style="font-size:0.85rem;color:#6b7280;">
+                            Organisatie: <strong id="orgBadgeText"></strong>
+                        </span>
+                    </div>
+                    <button onclick="goToScreenById('setup')" style="background:none;border:none;color:var(--primary);font-size:0.8rem;cursor:pointer;text-decoration:underline;">
+                        wijzigen
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align:center;margin-bottom:32px;">
+                <h1 style="font-size:2rem;margin-bottom:8px;color:var(--text);font-weight:700;">💬 Netwerkgesprek</h1>
+                <p style="font-size:1rem;color:var(--text-light);">Laten we beginnen met kennismaken</p>
+            </div>
+
+            <!-- 1. Cliëntgegevens (altijd zichtbaar) -->
+            <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:24px;">
+                <h3 style="font-size:1rem;color:var(--text);margin:0 0 16px;font-weight:600;">📋 Gegevens cliënt</h3>
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                    <div class="form-group" style="margin:0;">
+                        <label>👤 Naam *</label>
+                        <input type="text" id="clientNaam" placeholder="Voor- en achternaam" required>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label>📅 Geboortedatum</label>
+                        <input type="date" id="geboortedatum">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin:0 0 16px;">
+                    <label>🏠 Adres</label>
+                    <input type="text" id="adres" placeholder="Straat + huisnummer">
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                    <div class="form-group" style="margin:0;">
+                        <label>📍 Postcode</label>
+                        <input type="text" id="postcode" placeholder="1012AB" maxlength="6" style="text-transform:uppercase;">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label>🏘️ Plaats</label>
+                        <input type="text" id="plaats" placeholder="Bijv. Amsterdam">
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group" style="margin:0;">
+                        <label>📞 Telefoon</label>
+                        <input type="tel" id="telefoon" placeholder="06-12345678">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label>✉️ Email</label>
+                        <input type="email" id="email" placeholder="voorbeeld@email.nl">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Kernvraag (prominent) -->
+            <div class="form-group">
+                <label style="font-size:1.1rem;">🎯 Wat zou je graag anders willen?</label>
+                <textarea id="hulpvraag" rows="6" placeholder="Vertel in eigen woorden wat er speelt...
+
+💡 Denk aan: werk, wonen, financiën, gezondheid, relaties, dagbesteding..." style="font-size:1.05rem;"></textarea>
+            </div>
+
+            <!-- 3. Toestemming -->
+            <div class="form-group">
+                <label>📋 Toestemming informatie-uitwisseling</label>
+                <p style="font-size:0.85rem;color:#6b7280;margin:4px 0 10px;">Mag ik aantekeningen maken die gedeeld kunnen worden met andere betrokken hulpverleners?</p>
+                <div class="btn-group-inline">
+                    <button class="btn-choice" data-choice="ja" onclick="setToestemming('ja')">
+                        ✅ Ja, akkoord
+                    </button>
+                    <button class="btn-choice" data-choice="nee" onclick="setToestemming('nee')">
+                        🔒 Nee, alleen voor mijzelf
+                    </button>
+                    <button class="btn-choice" data-choice="later" onclick="setToestemming('later')">
+                        💬 Bespreken we later
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. Gesprek metadata (inklapbaar) -->
+            <details id="gesprek-metadata" style="margin-top:20px;">
+                <summary>📝 Gesprek & vervolg (optioneel)</summary>
+                <div style="padding-top:12px;">
+                    <div class="form-group">
+                        <label>📅 Datum gesprek</label>
+                        <input type="date" id="datumGesprek">
+                    </div>
+                    <div class="form-group">
+                        <label>👔 Professional (jouw naam)</label>
+                        <input type="text" id="professionalNaam" placeholder="Bijv. Jan de Vries">
+                    </div>
+                    <div class="form-group">
+                        <label>🔄 Vervolggesprek? (vorige datum + notitie)</label>
+                        <input type="date" id="vorigGesprekDatum" style="margin-bottom:8px;">
+                        <textarea id="vorigGesprekNotitie" rows="2" placeholder="Kort: hoe stond het er vorige keer voor?"></textarea>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Voor professionals (inklapbaar) -->
+            <details id="pro-tools" style="margin-top:16px;">
+                <summary>ℹ️ Over dit instrument</summary>
+                <div style="padding-top:12px;">
+                    <p style="font-size:0.85rem;color:#6b7280;line-height:1.6;">
+                        <strong>Positionele analyse:</strong> Het gaat niet om <em>meer</em> zorg, maar om <em>anders georganiseerde</em> steun.<br>
+                        <strong>⏱️ Duur:</strong> 25-30 minuten | <strong>💾</strong> Auto-save | <strong>🔒</strong> Lokaal in browser
+                    </p>
+                </div>
+            </details>
+
+            <div class="btn-group">
+                <button onclick="loadDemo()" class="btn btn-secondary">
+                    💡 Demo met voorbeeldcliënt
+                </button>
+                <button onclick="goToScreenById('domeinen-scan')" class="btn btn-primary" id="btnStart">
+                    Start gesprek →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 2: DOMEINEN SCAN (ACCORDION) ===== -->
+    <div class="screen" id="screen-domeinen-scan">
+        <div class="card">
+            <!-- Sticky header met overzicht -->
+            <div class="scan-header">
+                <div class="scan-overview">
+                    <div class="overview-chart">
+                        <canvas id="spiderChartScan" width="200" height="200"></canvas>
+                    </div>
+                    <div class="overview-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">🔴</span>
+                            <span class="stat-value" id="urgentCount">0</span>
+                            <span class="stat-label">Urgent</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🟡</span>
+                            <span class="stat-value" id="aandachtCount">0</span>
+                            <span class="stat-label">Aandacht</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🟢</span>
+                            <span class="stat-value" id="goedCount">0</span>
+                            <span class="stat-label">Gaat goed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-progress">
+                    <div class="progress-bar" id="scanProgress"></div>
+                </div>
+            </div>
+
+            <!-- Doelgroep hint -->
+            <div class="doelgroep-hint" id="doelgroepHint" style="display:none;">
+                💡 <span id="doelgroepHintText"></span>
+            </div>
+
+            <!-- Domeinen accordion -->
+            <div class="domeinen-accordion" id="domeinenAccordion">
+                <!-- Dynamisch gegenereerd via JavaScript -->
+            </div>
+
+            <div class="btn-group">
+                <button onclick="goToScreenById('start')" class="btn btn-secondary">← Terug</button>
+                <button onclick="goToScreenById('netwerkpositie')" class="btn btn-primary" id="btnVolgende" disabled>
+                    Ga door →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 3: NETWERKPOSITIE (AFGELEID) ===== -->
+    <div class="screen" id="screen-netwerkpositie">
+        <div class="card">
+            <div style="text-align:center;margin-bottom:32px;">
+                <h1 style="font-size:2rem;margin-bottom:12px;color:var(--text);font-weight:700;">🕸️ Huidige Netwerkpositie</h1>
+                <p style="font-size:1rem;color:var(--text-light);">Op basis van de domein-scan</p>
+            </div>
+
+            <!-- Automatisch berekende positie -->
+            <div id="positieResultaat" style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border:3px solid #86efac;border-radius:16px;padding:24px;margin-bottom:24px;text-align:center;">
+                <div style="font-size:0.85rem;color:#166534;margin-bottom:8px;font-weight:600;">IK ZIE:</div>
+                <div id="positieIcon" style="font-size:4rem;margin-bottom:12px;">🟣</div>
+                <div id="positieNaam" style="font-size:1.8rem;font-weight:700;color:#166534;margin-bottom:8px;">GEMENGD NETWERK</div>
+                <div id="positieUitleg" style="font-size:0.95rem;color:#15803d;line-height:1.6;max-width:500px;margin:0 auto;">
+                    Mix van professionele zorg, collectieve voorzieningen en informele steun
+                </div>
+            </div>
+
+            <!-- Breakdown per domein -->
+            <div style="background:white;border:2px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:24px;">
+                <h3 style="font-size:1.1rem;color:var(--text);margin:0 0 16px;font-weight:600;">📊 Wie helpt waar?</h3>
+                <div id="domeinBreakdown">
+                    <!-- Dynamisch gegenereerd -->
+                </div>
+            </div>
+
+            <!-- Risico-signalering (conditionally visible) -->
+            <div id="risicoAlert" style="display:none;background:linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);border:2px solid #dc2626;border-radius:12px;padding:20px;margin-bottom:24px;">
+                <div style="display:flex;align-items:start;gap:12px;">
+                    <div style="font-size:2rem;flex-shrink:0;">⚠️</div>
+                    <div style="flex:1;">
+                        <div style="font-weight:700;font-size:1.1rem;color:#991b1b;margin-bottom:8px;">Risico gedetecteerd</div>
+                        <div id="risicoText" style="font-size:0.9rem;color:#7f1d1d;line-height:1.6;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bevestiging of aanpassing -->
+            <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:20px;">
+                <div style="font-size:1rem;color:var(--text);margin-bottom:16px;font-weight:600;">
+                    Klopt deze analyse?
+                </div>
+                <div class="btn-group-inline">
+                    <button onclick="bevestigPositie()" class="btn-choice" style="flex:1;">
+                        ✅ Ja, dit klopt
+                    </button>
+                    <button onclick="togglePositieOverride()" class="btn-choice" style="flex:1;">
+                        ✏️ Nee, ik zie het anders
+                    </button>
+                </div>
+
+                <!-- Override (conditionally visible) -->
+                <div id="positieOverride" style="display:none;margin-top:20px;padding-top:20px;border-top:2px solid #e5e7eb;">
+                    <label style="font-size:0.9rem;color:var(--text);display:block;margin-bottom:12px;font-weight:600;">
+                        Welke positie past beter?
+                    </label>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px;">
+                        <button onclick="setPositieOverride('eenpersoons')" class="positie-override-btn" data-positie="eenpersoons">
+                            <div style="font-size:2rem;margin-bottom:4px;">🟡</div>
+                            <div style="font-size:0.8rem;font-weight:600;">1-persoons</div>
+                        </button>
+                        <button onclick="setPositieOverride('informeel')" class="positie-override-btn" data-positie="informeel">
+                            <div style="font-size:2rem;margin-bottom:4px;">🟢</div>
+                            <div style="font-size:0.8rem;font-weight:600;">Informeel</div>
+                        </button>
+                        <button onclick="setPositieOverride('formeel')" class="positie-override-btn" data-positie="formeel">
+                            <div style="font-size:2rem;margin-bottom:4px;">🔵</div>
+                            <div style="font-size:0.8rem;font-weight:600;">Formeel</div>
+                        </button>
+                        <button onclick="setPositieOverride('gemengd')" class="positie-override-btn" data-positie="gemengd">
+                            <div style="font-size:2rem;margin-bottom:4px;">🟣</div>
+                            <div style="font-size:0.8rem;font-weight:600;">Gemengd</div>
+                        </button>
+                        <button onclick="setPositieOverride('geen')" class="positie-override-btn" data-positie="geen">
+                            <div style="font-size:2rem;margin-bottom:4px;">⚪</div>
+                            <div style="font-size:0.8rem;font-weight:600;">Geen</div>
+                        </button>
+                    </div>
+                    <label style="font-size:0.9rem;color:var(--text);display:block;margin-bottom:8px;font-weight:600;">
+                        Waarom zie je het anders?
+                    </label>
+                    <textarea id="overrideReden" rows="3" placeholder="Bijv: Er is meer informele steun dan ik heb ingevuld..." style="width:100%;padding:10px;border:2px solid #e5e7eb;border-radius:8px;font-size:0.9rem;"></textarea>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:32px;">
+                <button onclick="goToScreenById('domeinen-scan')" class="btn btn-secondary">← Terug</button>
+                <button onclick="goToScreenById('beweging')" class="btn btn-primary" id="btnNaarBew eging">
+                    Ga door: Gewenste beweging →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 4: GEWENSTE BEWEGING ===== -->
+    <div class="screen" id="screen-beweging">
+        <div class="card">
+            <div style="text-align:center;margin-bottom:32px;">
+                <h1 style="font-size:2rem;margin-bottom:12px;color:var(--text);font-weight:700;">🔄 Gewenste Beweging</h1>
+                <p style="font-size:1rem;color:var(--text-light);">Waar moet <span id="bewegingNaam">de cliënt</span> naartoe?</p>
+            </div>
+
+            <!-- Huidige → Beoogde positie -->
+            <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border:2px solid #86efac;border-radius:16px;padding:24px;margin-bottom:32px;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;">
+                    <div style="text-align:center;">
+                        <div style="font-size:0.85rem;color:#166534;margin-bottom:8px;font-weight:600;">HUIDIG</div>
+                        <div id="bewegingHuidigIcon" style="font-size:3rem;margin-bottom:8px;">🟣</div>
+                        <div id="bewegingHuidigNaam" style="font-size:1.1rem;font-weight:700;color:#166534;">...</div>
+                    </div>
+                    
+                    <div style="font-size:3rem;color:var(--primary);">→</div>
+                    
+                    <div style="text-align:center;">
+                        <div style="font-size:0.85rem;color:#166534;margin-bottom:8px;font-weight:600;">BEOOGD</div>
+                        <div style="font-size:3rem;margin-bottom:8px;" id="bewegingBeoogdIcon">?</div>
+                        <div style="font-size:1.1rem;font-weight:700;color:#166534;" id="bewegingBeoogdNaam">Kies hieronder</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keuze beoogde positie -->
+            <div style="margin-bottom:32px;">
+                <label style="font-size:1.1rem;color:var(--text);display:block;margin-bottom:16px;font-weight:600;">
+                    Waar moet het netwerk naartoe?
+                </label>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;">
+                    <button onclick="kiesBeoogdePositie('eenpersoons')" class="beweging-keuze" data-positie="eenpersoons">
+                        <div style="font-size:2.5rem;margin-bottom:8px;">🟡</div>
+                        <div style="font-size:0.95rem;font-weight:700;margin-bottom:4px;">1-persoons</div>
+                        <div style="font-size:0.75rem;color:#6b7280;">Alles op 1 persoon</div>
+                    </button>
+                    <button onclick="kiesBeoogdePositie('informeel')" class="beweging-keuze" data-positie="informeel">
+                        <div style="font-size:2.5rem;margin-bottom:8px;">🟢</div>
+                        <div style="font-size:0.95rem;font-weight:700;margin-bottom:4px;">Informeel</div>
+                        <div style="font-size:0.75rem;color:#6b7280;">Eigen netwerk</div>
+                    </button>
+                    <button onclick="kiesBeoogdePositie('formeel')" class="beweging-keuze" data-positie="formeel">
+                        <div style="font-size:2.5rem;margin-bottom:8px;">🔵</div>
+                        <div style="font-size:0.95rem;font-weight:700;margin-bottom:4px;">Formeel</div>
+                        <div style="font-size:0.75rem;color:#6b7280;">Professionals</div>
+                    </button>
+                    <button onclick="kiesBeoogdePositie('gemengd')" class="beweging-keuze" data-positie="gemengd">
+                        <div style="font-size:2.5rem;margin-bottom:8px;">🟣</div>
+                        <div style="font-size:0.95rem;font-weight:700;margin-bottom:4px;">Gemengd</div>
+                        <div style="font-size:0.75rem;color:#6b7280;">Mix van alles</div>
+                    </button>
+                    <button onclick="kiesBeoogdePositie('geen')" class="beweging-keuze" data-positie="geen">
+                        <div style="font-size:2.5rem;margin-bottom:8px;">⚪</div>
+                        <div style="font-size:0.95rem;font-weight:700;margin-bottom:4px;">Geen</div>
+                        <div style="font-size:0.75rem;color:#6b7280;">Nauwelijks steun</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Waarom deze beweging? (conditionally visible) -->
+            <div id="bewegingWaarom" style="display:none;margin-bottom:32px;">
+                <label style="font-size:1.1rem;color:var(--text);display:block;margin-bottom:12px;font-weight:600;">
+                    💡 Waarom deze beweging?
+                </label>
+                <textarea id="bewegingReden" rows="4" placeholder="Bijv: Zus Marie is overbelast. We willen het informele netwerk breder maken (buren, vrijwilligers) zodat de druk verdeeld wordt..." style="width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:10px;font-size:0.95rem;"></textarea>
+                
+                <!-- Prioriteit -->
+                <div style="margin-top:20px;">
+                    <label style="font-size:1rem;color:var(--text);display:block;margin-bottom:12px;font-weight:600;">
+                        Prioriteit:
+                    </label>
+                    <div class="btn-group-inline">
+                        <button onclick="setPrioriteit('urgent')" class="prioriteit-btn" data-prio="urgent">
+                            🔴 Urgent
+                        </button>
+                        <button onclick="setPrioriteit('belangrijk')" class="prioriteit-btn" data-prio="belangrijk">
+                            🟡 Belangrijk
+                        </button>
+                        <button onclick="setPrioriteit('verbetering')" class="prioriteit-btn" data-prio="verbetering">
+                            🟢 Verbetering
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Concrete stappen -->
+                <div style="margin-top:24px;">
+                    <label style="font-size:1rem;color:var(--text);display:block;margin-bottom:12px;font-weight:600;">
+                        🎯 Concrete stappen (wat gaan we doen?):
+                    </label>
+                    <div id="stappenLijst" style="margin-bottom:12px;">
+                        <!-- Dynamisch gegenereerd -->
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <input type="text" id="nieuweStap" placeholder="Bijv: Buurman Tom vragen voor boodschappen" style="flex:1;padding:10px;border:2px solid #e5e7eb;border-radius:8px;">
+                        <button onclick="voegStapToe()" class="btn btn-secondary" style="padding:10px 20px;">+ Toevoegen</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="goToScreenById('netwerkpositie')" class="btn btn-secondary">← Terug</button>
+                <button onclick="volledigBewegingEnGaDoor()" class="btn btn-primary" id="btnNaarSamenvatting" disabled>
+                    Ga door: Samenvatting →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 5: INTERVENTIES (simplified) ===== -->
+    <div class="screen" id="screen-interventies">
+        <div class="card">
+            <h2>📚 Interventies & Hulpbronnen</h2>
+            <p style="margin-bottom:20px;">Welke interventies/organisaties kunnen helpen bij de gewenste beweging?</p>
+            
+            <div style="background:#eff6ff;border-left:4px solid #3b82f6;padding:16px;margin-bottom:24px;border-radius:8px;">
+                <strong>💡 Tip:</strong> Deze worden later gefilterd op Amsterdam postcode + doelgroep. Voor nu: vrij tekstveld.
+            </div>
+            
+            <textarea id="interventieNotities" rows="8" placeholder="Bijv:
+- Vrijwilligersorganisatie VONK (dagbesteding)
+- Schuldhulpverlening Amsterdam Oost
+- Buurtnetwerk Linnaeusbuurt
+- etc." style="width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:10px;"></textarea>
+            
+            <div class="btn-group" style="margin-top:24px;">
+                <button onclick="goToScreenById('beweging')" class="btn btn-secondary">← Terug</button>
+                <button onclick="saveInterventiesEnGaDoor()" class="btn btn-primary">Ga door: Team besluit →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 6: TEAM BESLUIT (simplified) ===== -->
+    <div class="screen" id="screen-team">
+        <div class="card">
+            <h2>👥 Team Besluit (MDO)</h2>
+            <p style="margin-bottom:20px;">Wie doet wat? (Anti-regiediffusie)</p>
+            
+            <div id="teamAfspraken" style="margin-bottom:20px;">
+                <!-- Dynamisch gegenereerd -->
+            </div>
+            
+            <div style="display:flex;gap:8px;margin-bottom:24px;">
+                <input type="text" id="teamWie" placeholder="Wie?" style="flex:1;padding:10px;border:2px solid #e5e7eb;border-radius:8px;">
+                <input type="text" id="teamActie" placeholder="Doet wat?" style="flex:2;padding:10px;border:2px solid #e5e7eb;border-radius:8px;">
+                <input type="date" id="teamDeadline" style="padding:10px;border:2px solid #e5e7eb;border-radius:8px;">
+                <button onclick="voegTeamAfspraakToe()" class="btn btn-secondary">+ Toevoegen</button>
+            </div>
+            
+            <div class="form-group">
+                <label>📅 Volgend overleg:</label>
+                <input type="date" id="volgendOverleg">
+            </div>
+            
+            <div class="btn-group">
+                <button onclick="goToScreenById('interventies')" class="btn btn-secondary">← Terug</button>
+                <button onclick="saveTeamEnGaDoor()" class="btn btn-primary">Ga door: Reflectie →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 7: REFLECTIE (simplified) ===== -->
+    <div class="screen" id="screen-reflectie">
+        <div class="card">
+            <h2>📊 Strategische Reflectie</h2>
+            <p style="margin-bottom:20px;">Terugkijken op de keuzes</p>
+            
+            <div class="form-group">
+                <label>💭 Reflectie op de gekozen beweging:</label>
+                <textarea id="reflectieNotitie" rows="6" placeholder="Bijv:
+- Verwachte impact: Minder druk op zus Marie, breder netwerk
+- Risico's: Nieuwe mensen moeten vertrouwen winnen
+- Kosten: Geen extra formele zorg nodig (besparing)
+- Tijdlijn: 3-6 maanden om nieuw netwerk op te bouwen"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>⚖️ Proportionaliteit (systeemplafond doorbroken?):</label>
+                <select id="proportionaliteit">
+                    <option value="">Kies...</option>
+                    <option value="binnen">Binnen systeemplafond (reguliere zorg)</option>
+                    <option value="grens">Op de grens (nieuwe aanpak nodig)</option>
+                    <option value="buiten">Buiten systeemplafond (structurele herpositionering)</option>
+                </select>
+            </div>
+            
+            <div class="btn-group">
+                <button onclick="goToScreenById('team')" class="btn btn-secondary">← Terug</button>
+                <button onclick="saveReflectieEnGaDoor()" class="btn btn-primary">Ga door: Samenvatting →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHERM 8: SAMENVATTING (simplified for now) ===== -->
+    <div class="screen" id="screen-samenvatting">
+        <div class="card">
+            <h2>📄 Samenvatting</h2>
+            <p>Dit scherm wordt nog gebouwd - voor nu zie je hier de ruwe data:</p>
+            <pre id="samenvattingData" style="background:#f9fafb;padding:20px;border-radius:10px;overflow:auto;"></pre>
+            <div class="btn-group">
+                <button onclick="goToScreenById('beweging')" class="btn btn-secondary">← Terug</button>
+                <button onclick="exportJSON()" class="btn btn-primary">📥 Exporteer JSON</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ===== STATE MANAGEMENT =====
+
+// Settings (persistent, apart van gesprek-state)
+let settings = {
+    organisatie: null,
+    setupCompleted: false
+};
+
+// Gesprek state (per cliënt)
+let state = {
+    start: {
+        // Cliëntgegevens
+        clientNaam: '',
+        geboortedatum: '',
+        adres: '',
+        postcode: '',
+        plaats: '',
+        telefoon: '',
+        email: '',
+        // Gesprek
+        hulpvraag: '',
+        toestemming: null,
+        datumGesprek: new Date().toISOString().split('T')[0],
+        professionalNaam: '',
+        vorigGesprek: {
+            datum: null,
+            notitie: ''
+        }
+    },
+    domeinen: {},
+    netwerkpositie: null,
+    beweging: null,
+    interventies: null,
+    team: null,
+    reflectie: null,
+    isDemoMode: false
+};
+
+// Domein definities (11 SIJN domeinen)
+const DOMAINS = [
+    { id: 'financien', icon: '💰', naam: 'Financiën', hint: 'Inkomen, schulden, budgetbeheer' },
+    { id: 'dagbesteding', icon: '💼', naam: 'Dagbesteding', hint: 'Werk, opleiding, zinvolle activiteit' },
+    { id: 'huisvesting', icon: '🏠', naam: 'Huisvesting', hint: 'Woning, woonomgeving, veiligheid' },
+    { id: 'huiselijkerelaties', icon: '👨‍👩‍👧', naam: 'Huiselijke relaties', hint: 'Gezin, partnerschap, opvoeding' },
+    { id: 'ggz', icon: '🧠', naam: 'Geestelijke gezondheid', hint: 'Psychisch welzijn, behandeling' },
+    { id: 'lgz', icon: '💪', naam: 'Lichamelijke gezondheid', hint: 'Fysieke gezondheid, medische zorg' },
+    { id: 'verslaving', icon: '🚭', naam: 'Verslaving', hint: 'Middelen, gokken, gedragsverslaving' },
+    { id: 'adl', icon: '🛁', naam: 'ADL-vaardigheden', hint: 'Zelfzorg, persoonlijke hygiëne' },
+    { id: 'sociaalnetwerk', icon: '👥', naam: 'Sociaal netwerk', hint: 'Familie, vrienden, kennissen' },
+    { id: 'participatie', icon: '🤝', naam: 'Maatschappelijke participatie', hint: 'Sociale activiteiten, vrijwilligerswerk' },
+    { id: 'justitie', icon: '⚖️', naam: 'Justitie', hint: 'Juridische problemen, reclassering' }
+];
+
+// Doelgroep-mapping (organisatie → vaak voorkomende domeinen)
+const DOELGROEP_HINTS = {
+    'wijkteam': {
+        top: ['financien', 'dagbesteding', 'sociaalnetwerk'],
+        tekst: 'Vaak speelt bij wijkteam: financiën, dagbesteding en sociaal netwerk'
+    },
+    'ggz': {
+        top: ['ggz', 'verslaving', 'huiselijkerelaties'],
+        tekst: 'Vaak speelt bij GGZ: geestelijke gezondheid, verslaving en huiselijke relaties'
+    },
+    'mantelzorg': {
+        top: ['ggz', 'sociaalnetwerk', 'adl'],
+        tekst: 'Vaak speelt bij mantelzorgers: overbelasting (ggz), sociaal netwerk en ADL-ondersteuning'
+    },
+    'schuldhulp': {
+        top: ['financien', 'huisvesting', 'dagbesteding'],
+        tekst: 'Vaak speelt bij schuldhulp: financiën, huisvesting en dagbesteding'
+    },
+    'ouderenzorg': {
+        top: ['lgz', 'adl', 'sociaalnetwerk'],
+        tekst: 'Vaak speelt bij ouderenzorg: lichamelijke gezondheid, ADL en sociaal netwerk'
+    },
+    'opvang': {
+        top: ['huisvesting', 'financien', 'verslaving'],
+        tekst: 'Vaak speelt bij opvang: huisvesting, financiën en verslaving'
+    },
+    'reclassering': {
+        top: ['justitie', 'dagbesteding', 'verslaving'],
+        tekst: 'Vaak speelt bij reclassering: justitie, dagbesteding en verslaving'
+    },
+    'jeugdzorg': {
+        top: ['huiselijkerelaties', 'ggz', 'dagbesteding'],
+        tekst: 'Vaak speelt bij jeugdzorg: huiselijke relaties, GGZ en dagbesteding'
+    }
+};
+
+// Initialiseer domeinen state
+function initDomeinen() {
+    const domeinen = {};
+    DOMAINS.forEach(d => {
+        domeinen[d.id] = {
+            status: null,
+            notitie: '',
+            steun: null,
+            steunDetails: null
+        };
+    });
+    return domeinen;
+}
+
+state.domeinen = initDomeinen();
+
+// ===== SCHERM 0: SETUP FUNCTIES =====
+
+function selectOrgSetup(org) {
+    settings.organisatie = org;
+    
+    // Visual feedback
+    document.querySelectorAll('#orgGridSetup .org-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    document.querySelector(`#orgGridSetup .org-card[data-org="${org}"]`).classList.add('selected');
+    
+    // Enable button
+    document.getElementById('btnCompleteSetup').disabled = false;
+    
+    saveSettings();
+}
+
+function completeSetup() {
+    if (!settings.organisatie) {
+        alert('❌ Kies eerst een organisatie');
+        return;
+    }
+    
+    settings.setupCompleted = true;
+    saveSettings();
+    
+    // Show org badge on screen 1
+    showOrgBadge();
+    
+    // Go to screen 1
+    goToScreenById('start');
+}
+
+function showOrgBadge() {
+    if (!settings.organisatie) return;
+    
+    const orgData = {
+        'wijkteam': { icon: '🏘️', label: 'Wijkteam' },
+        'ggz': { icon: '🧠', label: 'GGZ' },
+        'mantelzorg': { icon: '🫂', label: 'Mantelzorg' },
+        'schuldhulp': { icon: '💰', label: 'Schuldhulp' },
+        'ouderenzorg': { icon: '👴', label: 'Ouderenzorg' },
+        'opvang': { icon: '🏠', label: 'Opvang' },
+        'reclassering': { icon: '⚖️', label: 'Reclassering' },
+        'jeugdzorg': { icon: '🧒', label: 'Jeugdzorg' }
+    };
+    
+    const org = orgData[settings.organisatie];
+    if (org) {
+        document.getElementById('orgBadge').style.display = 'block';
+        document.getElementById('orgBadgeIcon').textContent = org.icon;
+        document.getElementById('orgBadgeText').textContent = org.label;
+    }
+}
+
+// ===== SCHERM 1 FUNCTIES =====
+
+function setToestemming(keuze) {
+    state.start.toestemming = keuze;
+    
+    // Visual feedback
+    document.querySelectorAll('.btn-choice[data-choice]').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    document.querySelector(`.btn-choice[data-choice="${keuze}"]`).classList.add('selected');
+    
+    saveState();
+}
+
+function goToScreenById(screenId) {
+    // Render logic per scherm
+    if (screenId === 'netwerkpositie') {
+        renderNetwerkpositie();
+    } else if (screenId === 'beweging') {
+        renderBewegingScherm();
+    } else if (screenId === 'interventies') {
+        renderInterventies();
+    } else if (screenId === 'team') {
+        renderTeam();
+    } else if (screenId === 'reflectie') {
+        renderReflectie();
+    } else if (screenId === 'samenvatting') {
+        renderSamenvatting();
+    }
+    
+    // Validatie voor Scherm 1 → 2
+    if (screenId === 'domeinen-scan') {
+        // Skip validatie als demo mode
+        if (!state.isDemoMode) {
+            // Minimale validatie: naam + toestemming
+            const naam = document.getElementById('clientNaam').value.trim();
+            if (!naam) {
+                alert('❌ Vul minimaal de naam van de cliënt in');
+                document.getElementById('clientNaam').focus();
+                return;
+            }
+            
+            if (!state.start.toestemming) {
+                alert('❌ Bespreek toestemming voor informatie-uitwisseling');
+                return;
+            }
+        }
+        
+        // Save all data
+        state.start.clientNaam = naam;
+        state.start.geboortedatum = document.getElementById('geboortedatum').value || '';
+        state.start.adres = document.getElementById('adres').value || '';
+        state.start.postcode = document.getElementById('postcode').value.toUpperCase();
+        state.start.plaats = document.getElementById('plaats').value || '';
+        state.start.telefoon = document.getElementById('telefoon').value || '';
+        state.start.email = document.getElementById('email').value || '';
+        state.start.hulpvraag = document.getElementById('hulpvraag').value;
+        state.start.datumGesprek = document.getElementById('datumGesprek').value || new Date().toISOString().split('T')[0];
+        state.start.professionalNaam = document.getElementById('professionalNaam').value || '';
+        
+        if (document.getElementById('vorigGesprekDatum').value) {
+            state.start.vorigGesprek.datum = document.getElementById('vorigGesprekDatum').value;
+            state.start.vorigGesprek.notitie = document.getElementById('vorigGesprekNotitie').value;
+        }
+        
+        saveState();
+        
+        // Render domeinen accordion
+        renderDomeinenAccordion();
+        showDoelgroepHint();
+    }
+    
+    // Switch screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + screenId).classList.add('active');
+    
+    window.scrollTo(0, 0);
+}
+
+// ===== SCHERM 2 FUNCTIES =====
+
+function renderDomeinenAccordion() {
+    const accordion = document.getElementById('domeinenAccordion');
+    accordion.innerHTML = '';
+    
+    // Sort: top domeinen eerst (o.b.v. organisatie uit settings)
+    const topDomeinen = settings.organisatie ? 
+        (DOELGROEP_HINTS[settings.organisatie]?.top || []) : [];
+    
+    const sortedDomains = [...DOMAINS].sort((a, b) => {
+        const aTop = topDomeinen.includes(a.id);
+        const bTop = topDomeinen.includes(b.id);
+        if (aTop && !bTop) return -1;
+        if (!aTop && bTop) return 1;
+        return 0;
+    });
+    
+    sortedDomains.forEach(domein => {
+        const item = document.createElement('div');
+        item.className = 'domein-item';
+        item.dataset.domein = domein.id;
+        
+        const currentData = state.domeinen[domein.id];
+        const statusText = currentData.status ? 
+            (currentData.status === 'urgent' ? '🔴 Urgent' :
+             currentData.status === 'aandacht' ? '🟡 Aandacht' :
+             '🟢 Gaat goed') : '⚪ Nog niet';
+        
+        // Add class for border color
+        if (currentData.status) {
+            item.classList.add(currentData.status);
+        }
+        
+        const isTop = topDomeinen.includes(domein.id);
+        const topBadge = isTop ? '<span style="background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:8px;">⭐ Vaak</span>' : '';
+        
+        item.innerHTML = `
+            <div class="domein-header" onclick="toggleDomein('${domein.id}')">
+                <span class="domein-icon">${domein.icon}</span>
+                <span class="domein-naam">${domein.naam}${topBadge}</span>
+                <span class="domein-status" id="status-${domein.id}">${statusText}</span>
+                <span class="domein-toggle">▼</span>
+            </div>
+            <div class="domein-content" id="content-${domein.id}">
+                <div class="domein-body">
+                    <div class="form-group">
+                        <label>Hoe gaat het met ${domein.naam.toLowerCase()}?</label>
+                        <p style="font-size:0.8rem;color:#6b7280;margin:4px 0 10px;">${domein.hint}</p>
+                        <div class="status-knoppen">
+                            <button onclick="setDomeinStatus('${domein.id}', 'urgent')" 
+                                    class="status-btn status-urgent ${currentData.status === 'urgent' ? 'active' : ''}" 
+                                    data-status="urgent">
+                                🔴 Urgent
+                            </button>
+                            <button onclick="setDomeinStatus('${domein.id}', 'aandacht')" 
+                                    class="status-btn status-aandacht ${currentData.status === 'aandacht' ? 'active' : ''}" 
+                                    data-status="aandacht">
+                                🟡 Aandacht
+                            </button>
+                            <button onclick="setDomeinStatus('${domein.id}', 'goed')" 
+                                    class="status-btn status-goed ${currentData.status === 'goed' ? 'active' : ''}" 
+                                    data-status="goed">
+                                🟢 Gaat goed
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🤔 Waar denk je aan?</label>
+                        <input type="text" id="notitie-${domein.id}" 
+                               placeholder="Bijv. ${domein.hint.toLowerCase()}..." 
+                               value="${currentData.notitie || ''}"
+                               oninput="saveDomeinNotitie('${domein.id}', this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Is er steun aanwezig?</label>
+                        <div class="steun-knoppen">
+                            <button onclick="setDomeinSteun('${domein.id}', 'zelfstandig')" 
+                                    class="steun-btn ${currentData.steun === 'zelfstandig' ? 'active' : ''}" 
+                                    data-steun="zelfstandig">
+                                🟢 Zelfstandig
+                            </button>
+                            <button onclick="setDomeinSteun('${domein.id}', 'aanwezig')" 
+                                    class="steun-btn ${currentData.steun === 'aanwezig' ? 'active' : ''}" 
+                                    data-steun="aanwezig">
+                                🟡 Aanwezig
+                            </button>
+                            <button onclick="setDomeinSteun('${domein.id}', 'nodig')" 
+                                    class="steun-btn ${currentData.steun === 'nodig' ? 'active' : ''}" 
+                                    data-steun="nodig">
+                                🔴 Nodig
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="steun-details" id="steun-details-${domein.id}" style="display:${currentData.steun === 'aanwezig' ? 'block' : 'none'};">
+                        <div class="form-group">
+                            <label>Type steun</label>
+                            <select id="steun-type-${domein.id}" onchange="saveSteunDetails('${domein.id}')">
+                                <option value="">Kies...</option>
+                                <option value="professioneel" ${currentData.steunDetails?.type === 'professioneel' ? 'selected' : ''}>🔵 Professioneel</option>
+                                <option value="collectief" ${currentData.steunDetails?.type === 'collectief' ? 'selected' : ''}>🟣 Collectief</option>
+                                <option value="informeel" ${currentData.steunDetails?.type === 'informeel' ? 'selected' : ''}>🟢 Informeel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Wie helpt?</label>
+                            <input type="text" id="steun-wie-${domein.id}" 
+                                   placeholder="Bijv. Schuldhulpverlener Jan" 
+                                   value="${currentData.steunDetails?.wie || ''}"
+                                   oninput="saveSteunDetails('${domein.id}')">
+                        </div>
+                        <div class="form-group">
+                            <label>Wat doet deze persoon/organisatie?</label>
+                            <input type="text" id="steun-wat-${domein.id}" 
+                                   placeholder="Bijv. Budgetbeheer + schuldsanering" 
+                                   value="${currentData.steunDetails?.wat || ''}"
+                                   oninput="saveSteunDetails('${domein.id}')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        accordion.appendChild(item);
+    });
+    
+    updateSpiderChart();
+    updateScanProgress();
+    checkVolgendeEnabled();
+}
+
+function toggleDomein(domeinId) {
+    const item = document.querySelector(`.domein-item[data-domein="${domeinId}"]`);
+    item.classList.toggle('expanded');
+}
+
+function setDomeinStatus(domeinId, status) {
+    state.domeinen[domeinId].status = status;
+    
+    // Visual feedback
+    const buttons = document.querySelectorAll(`.domein-item[data-domein="${domeinId}"] .status-btn`);
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.domein-item[data-domein="${domeinId}"] .status-btn[data-status="${status}"]`).classList.add('active');
+    
+    // Update header status
+    const statusEl = document.getElementById(`status-${domeinId}`);
+    statusEl.textContent = status === 'urgent' ? '🔴 Urgent' :
+                           status === 'aandacht' ? '🟡 Aandacht' :
+                           '🟢 Gaat goed';
+    
+    // Update border
+    const item = document.querySelector(`.domein-item[data-domein="${domeinId}"]`);
+    item.classList.remove('urgent', 'aandacht', 'goed');
+    item.classList.add(status);
+    
+    saveState();
+    updateSpiderChart();
+    updateScanProgress();
+    checkVolgendeEnabled();
+}
+
+function saveDomeinNotitie(domeinId, notitie) {
+    state.domeinen[domeinId].notitie = notitie;
+    saveState();
+}
+
+function setDomeinSteun(domeinId, steun) {
+    state.domeinen[domeinId].steun = steun;
+    
+    // Visual feedback
+    const buttons = document.querySelectorAll(`.domein-item[data-domein="${domeinId}"] .steun-btn`);
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.domein-item[data-domein="${domeinId}"] .steun-btn[data-steun="${steun}"]`).classList.add('active');
+    
+    // Show/hide steun details
+    const detailsEl = document.getElementById(`steun-details-${domeinId}`);
+    if (steun === 'aanwezig') {
+        detailsEl.style.display = 'block';
+        if (!state.domeinen[domeinId].steunDetails) {
+            state.domeinen[domeinId].steunDetails = { type: '', wie: '', wat: '' };
+        }
+    } else {
+        detailsEl.style.display = 'none';
+        state.domeinen[domeinId].steunDetails = null;
+    }
+    
+    saveState();
+}
+
+function saveSteunDetails(domeinId) {
+    const type = document.getElementById(`steun-type-${domeinId}`).value;
+    const wie = document.getElementById(`steun-wie-${domeinId}`).value;
+    const wat = document.getElementById(`steun-wat-${domeinId}`).value;
+    
+    state.domeinen[domeinId].steunDetails = { type, wie, wat };
+    saveState();
+}
+
+function updateSpiderChart() {
+    const canvas = document.getElementById('spiderChartScan');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Count stats
+    let urgent = 0, aandacht = 0, goed = 0;
+    DOMAINS.forEach(d => {
+        const status = state.domeinen[d.id].status;
+        if (status === 'urgent') urgent++;
+        else if (status === 'aandacht') aandacht++;
+        else if (status === 'goed') goed++;
+    });
+    
+    document.getElementById('urgentCount').textContent = urgent;
+    document.getElementById('aandachtCount').textContent = aandacht;
+    document.getElementById('goedCount').textContent = goed;
+    
+    // Simple spider chart (voor nu: placeholder)
+    // In volledige versie: gebruik Chart.js zoals in oude versie
+    ctx.clearRect(0, 0, 200, 200);
+    ctx.fillStyle = '#e5e7eb';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Spider chart', 100, 100);
+    ctx.fillText('(live update)', 100, 120);
+}
+
+function updateScanProgress() {
+    const total = DOMAINS.length;
+    const filled = DOMAINS.filter(d => state.domeinen[d.id].status !== null).length;
+    const percentage = Math.round((filled / total) * 100);
+    
+    document.getElementById('scanProgress').style.width = percentage + '%';
+}
+
+function checkVolgendeEnabled() {
+    // Enable "Ga door" als minimaal 1 domein ingevuld
+    const anyFilled = DOMAINS.some(d => state.domeinen[d.id].status !== null);
+    document.getElementById('btnVolgende').disabled = !anyFilled;
+}
+
+function showDoelgroepHint() {
+    if (!settings.organisatie) return;
+    
+    const hint = DOELGROEP_HINTS[settings.organisatie];
+    if (hint) {
+        document.getElementById('doelgroepHint').style.display = 'block';
+        document.getElementById('doelgroepHintText').textContent = hint.tekst;
+    }
+}
+
+// ===== SCHERM 3: NETWERKPOSITIE FUNCTIES =====
+
+function bepaalNetwerkpositie() {
+    let professioneel = [];
+    let collectief = [];
+    let informeel = [];
+    let enkelPersoonMap = new Map();
+    
+    // Scan alle domeinen
+    DOMAINS.forEach(d => {
+        const domeinData = state.domeinen[d.id];
+        if (domeinData.steun === 'aanwezig' && domeinData.steunDetails) {
+            const details = domeinData.steunDetails;
+            
+            if (details.type === 'professioneel') {
+                professioneel.push({ domein: d.naam, wie: details.wie, wat: details.wat });
+            } else if (details.type === 'collectief') {
+                collectief.push({ domein: d.naam, wie: details.wie, wat: details.wat });
+            } else if (details.type === 'informeel') {
+                informeel.push({ domein: d.naam, wie: details.wie, wat: details.wat });
+                
+                // Track: wie helpt waar?
+                if (!enkelPersoonMap.has(details.wie)) {
+                    enkelPersoonMap.set(details.wie, []);
+                }
+                enkelPersoonMap.get(details.wie).push(d.naam);
+            }
+        }
+    });
+    
+    // Beslislogica
+    let resultaat = {
+        positie: 'geen',
+        breakdown: { professioneel, collectief, informeel },
+        risico: null,
+        uitleg: ''
+    };
+    
+    // 1. Check: alles op 1 informele persoon (1-persoons netwerk)
+    if (informeel.length > 0 && enkelPersoonMap.size === 1 && professioneel.length === 0 && collectief.length === 0) {
+        const [persoon, domeinen] = [...enkelPersoonMap.entries()][0];
+        if (domeinen.length >= 3) {
+            resultaat.positie = 'eenpersoons';
+            resultaat.risico = `${persoon} doet alles (${domeinen.length} domeinen). Risico op overbelasting.`;
+            resultaat.uitleg = `Alle steun komt van één persoon uit de informele kring`;
+        } else {
+            // Weinig domeinen, maar wel alles op 1 persoon = toch informeel ipv eenpersoons
+            resultaat.positie = 'informeel';
+            resultaat.uitleg = 'Steun komt van de informele kring (eigen netwerk)';
+        }
+    }
+    // 2. Alleen informeel (meerdere mensen)
+    else if (professioneel.length === 0 && collectief.length === 0 && informeel.length > 0) {
+        resultaat.positie = 'informeel';
+        resultaat.uitleg = 'Steun komt van de informele kring (meerdere mensen uit eigen netwerk)';
+    }
+    // 3. Alleen formeel
+    else if (professioneel.length > 0 && collectief.length === 0 && informeel.length === 0) {
+        resultaat.positie = 'formeel';
+        resultaat.uitleg = 'Steun komt uitsluitend van professionele zorgverleners';
+    }
+    // 4. Mix = gemengd
+    else if ((professioneel.length > 0 || collectief.length > 0) && informeel.length > 0) {
+        resultaat.positie = 'gemengd';
+        resultaat.uitleg = 'Mix van professionele zorg, collectieve voorzieningen en informele steun';
+    }
+    // 5. Alleen professioneel + collectief (ook gemengd)
+    else if (professioneel.length > 0 && collectief.length > 0 && informeel.length === 0) {
+        resultaat.positie = 'gemengd';
+        resultaat.uitleg = 'Combinatie van professionele zorg en collectieve voorzieningen';
+    }
+    // 6. Geen steun
+    else {
+        resultaat.positie = 'geen';
+        resultaat.uitleg = 'Nauwelijks of geen steun aanwezig';
+        resultaat.risico = 'Geen netwerk betekent hoog risico op isolatie en crisis';
+    }
+    
+    return resultaat;
+}
+
+function renderNetwerkpositie() {
+    const resultaat = bepaalNetwerkpositie();
+    
+    // Save to state
+    state.netwerkpositie = {
+        huidig: resultaat.positie,
+        handmatigAangepast: false,
+        breakdown: resultaat.breakdown,
+        risico: resultaat.risico
+    };
+    saveState();
+    
+    // Render positie
+    const POSITIE_DATA = {
+        'eenpersoons': { icon: '🟡', naam: '1-PERSOONS NETWERK', kleur: '#fef3c7' },
+        'informeel': { icon: '🟢', naam: 'INFORMEEL NETWERK', kleur: '#d1fae5' },
+        'formeel': { icon: '🔵', naam: 'FORMEEL NETWERK', kleur: '#dbeafe' },
+        'gemengd': { icon: '🟣', naam: 'GEMENGD NETWERK', kleur: '#ede9fe' },
+        'geen': { icon: '⚪', naam: 'GEEN NETWERK', kleur: '#f3f4f6' }
+    };
+    
+    const positieInfo = POSITIE_DATA[resultaat.positie];
+    document.getElementById('positieIcon').textContent = positieInfo.icon;
+    document.getElementById('positieNaam').textContent = positieInfo.naam;
+    document.getElementById('positieUitleg').textContent = resultaat.uitleg;
+    
+    // Render breakdown
+    let breakdownHTML = '';
+    
+    if (resultaat.breakdown.professioneel.length > 0) {
+        breakdownHTML += `<div style="margin-bottom:16px;">
+            <div style="font-weight:600;color:#1e40af;margin-bottom:8px;">🔵 Professioneel (${resultaat.breakdown.professioneel.length})</div>`;
+        resultaat.breakdown.professioneel.forEach(item => {
+            breakdownHTML += `<div style="padding:8px 12px;background:#eff6ff;border-radius:6px;margin-bottom:6px;font-size:0.85rem;">
+                <strong>${item.domein}:</strong> ${item.wie} → ${item.wat}
+            </div>`;
+        });
+        breakdownHTML += `</div>`;
+    }
+    
+    if (resultaat.breakdown.collectief.length > 0) {
+        breakdownHTML += `<div style="margin-bottom:16px;">
+            <div style="font-weight:600;color:#7c3aed;margin-bottom:8px;">🟣 Collectief (${resultaat.breakdown.collectief.length})</div>`;
+        resultaat.breakdown.collectief.forEach(item => {
+            breakdownHTML += `<div style="padding:8px 12px;background:#f5f3ff;border-radius:6px;margin-bottom:6px;font-size:0.85rem;">
+                <strong>${item.domein}:</strong> ${item.wie} → ${item.wat}
+            </div>`;
+        });
+        breakdownHTML += `</div>`;
+    }
+    
+    if (resultaat.breakdown.informeel.length > 0) {
+        breakdownHTML += `<div style="margin-bottom:16px;">
+            <div style="font-weight:600;color:#166534;margin-bottom:8px;">🟢 Informeel (${resultaat.breakdown.informeel.length})</div>`;
+        resultaat.breakdown.informeel.forEach(item => {
+            breakdownHTML += `<div style="padding:8px 12px;background:#f0fdf4;border-radius:6px;margin-bottom:6px;font-size:0.85rem;">
+                <strong>${item.domein}:</strong> ${item.wie} → ${item.wat}
+            </div>`;
+        });
+        breakdownHTML += `</div>`;
+    }
+    
+    if (!breakdownHTML) {
+        breakdownHTML = `<div style="text-align:center;padding:20px;color:#9ca3af;font-style:italic;">
+            Geen steun aanwezig bij de ingevulde domeinen
+        </div>`;
+    }
+    
+    document.getElementById('domeinBreakdown').innerHTML = breakdownHTML;
+    
+    // Risico alert
+    if (resultaat.risico) {
+        document.getElementById('risicoAlert').style.display = 'block';
+        document.getElementById('risicoText').textContent = resultaat.risico;
+    } else {
+        document.getElementById('risicoAlert').style.display = 'none';
+    }
+}
+
+function bevestigPositie() {
+    // Positie is bevestigd, ga door naar beweging
+    goToScreenById('beweging');
+}
+
+function togglePositieOverride() {
+    const override = document.getElementById('positieOverride');
+    if (override.style.display === 'none') {
+        override.style.display = 'block';
+    } else {
+        override.style.display = 'none';
+    }
+}
+
+function setPositieOverride(positie) {
+    // Visual feedback
+    document.querySelectorAll('.positie-override-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    document.querySelector(`.positie-override-btn[data-positie="${positie}"]`).classList.add('selected');
+    
+    // Save override
+    state.netwerkpositie.huidig = positie;
+    state.netwerkpositie.handmatigAangepast = true;
+    state.netwerkpositie.overrideReden = document.getElementById('overrideReden').value;
+    saveState();
+}
+
+// ===== SCHERM 4: GEWENSTE BEWEGING FUNCTIES =====
+
+function renderBewegingScherm() {
+    // Fill naam
+    const naam = state.start.clientNaam || 'de cliënt';
+    document.getElementById('bewegingNaam').textContent = naam;
+    
+    // Fill huidige positie
+    const POSITIE_INFO = {
+        'eenpersoons': { icon: '🟡', naam: '1-persoons netwerk' },
+        'informeel': { icon: '🟢', naam: 'Informeel netwerk' },
+        'formeel': { icon: '🔵', naam: 'Formeel netwerk' },
+        'gemengd': { icon: '🟣', naam: 'Gemengd netwerk' },
+        'geen': { icon: '⚪', naam: 'Geen netwerk' }
+    };
+    
+    const huidig = state.netwerkpositie?.huidig || 'gemengd';
+    const huidigInfo = POSITIE_INFO[huidig];
+    document.getElementById('bewegingHuidigIcon').textContent = huidigInfo.icon;
+    document.getElementById('bewegingHuidigNaam').textContent = huidigInfo.naam;
+    
+    // Restore beoogd if exists
+    if (state.beweging && state.beweging.naar) {
+        const beoogdInfo = POSITIE_INFO[state.beweging.naar];
+        document.getElementById('bewegingBeoogdIcon').textContent = beoogdInfo.icon;
+        document.getElementById('bewegingBeoogdNaam').textContent = beoogdInfo.naam;
+        
+        // Select button
+        document.querySelectorAll('.beweging-keuze').forEach(btn => btn.classList.remove('selected'));
+        const selectedBtn = document.querySelector(`.beweging-keuze[data-positie="${state.beweging.naar}"]`);
+        if (selectedBtn) selectedBtn.classList.add('selected');
+        
+        // Show waarom section
+        document.getElementById('bewegingWaarom').style.display = 'block';
+        document.getElementById('bewegingReden').value = state.beweging.waarom || '';
+        
+        // Restore prioriteit
+        if (state.beweging.prioriteit) {
+            document.querySelectorAll('.prioriteit-btn').forEach(btn => btn.classList.remove('selected'));
+            const prioBtn = document.querySelector(`.prioriteit-btn[data-prio="${state.beweging.prioriteit}"]`);
+            if (prioBtn) prioBtn.classList.add('selected');
+        }
+        
+        // Restore stappen
+        renderStappen();
+        
+        // Enable button
+        document.getElementById('btnNaarSamenvatting').disabled = false;
+    }
+}
+
+function kiesBeoogdePositie(positie) {
+    // Init state if needed
+    if (!state.beweging) {
+        state.beweging = {
+            van: state.netwerkpositie?.huidig || 'gemengd',
+            naar: null,
+            waarom: '',
+            prioriteit: null,
+            stappen: []
+        };
+    }
+    
+    state.beweging.naar = positie;
+    saveState();
+    
+    // Update UI
+    const POSITIE_INFO = {
+        'eenpersoons': { icon: '🟡', naam: '1-persoons netwerk' },
+        'informeel': { icon: '🟢', naam: 'Informeel netwerk' },
+        'formeel': { icon: '🔵', naam: 'Formeel netwerk' },
+        'gemengd': { icon: '🟣', naam: 'Gemengd netwerk' },
+        'geen': { icon: '⚪', naam: 'Geen netwerk' }
+    };
+    
+    const info = POSITIE_INFO[positie];
+    document.getElementById('bewegingBeoogdIcon').textContent = info.icon;
+    document.getElementById('bewegingBeoogdNaam').textContent = info.naam;
+    
+    // Visual feedback
+    document.querySelectorAll('.beweging-keuze').forEach(btn => btn.classList.remove('selected'));
+    document.querySelector(`.beweging-keuze[data-positie="${positie}"]`).classList.add('selected');
+    
+    // Show waarom section
+    document.getElementById('bewegingWaarom').style.display = 'block';
+    
+    // Enable button if waarom is filled
+    checkBewegingComplete();
+}
+
+function setPrioriteit(prio) {
+    if (!state.beweging) return;
+    
+    state.beweging.prioriteit = prio;
+    saveState();
+    
+    // Visual feedback
+    document.querySelectorAll('.prioriteit-btn').forEach(btn => btn.classList.remove('selected'));
+    document.querySelector(`.prioriteit-btn[data-prio="${prio}"]`).classList.add('selected');
+    
+    checkBewegingComplete();
+}
+
+function voegStapToe() {
+    const input = document.getElementById('nieuweStap');
+    const stap = input.value.trim();
+    
+    if (!stap) return;
+    
+    if (!state.beweging.stappen) {
+        state.beweging.stappen = [];
+    }
+    
+    state.beweging.stappen.push({ tekst: stap, gedaan: false });
+    saveState();
+    
+    input.value = '';
+    renderStappen();
+    checkBewegingComplete();
+}
+
+function renderStappen() {
+    const lijst = document.getElementById('stappenLijst');
+    lijst.innerHTML = '';
+    
+    if (!state.beweging || !state.beweging.stappen || state.beweging.stappen.length === 0) {
+        lijst.innerHTML = '<div style="text-align:center;padding:20px;color:#9ca3af;font-style:italic;">Nog geen stappen toegevoegd</div>';
+        return;
+    }
+    
+    state.beweging.stappen.forEach((stap, index) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;margin-bottom:8px;';
+        item.innerHTML = `
+            <input type="checkbox" ${stap.gedaan ? 'checked' : ''} onchange="toggleStap(${index})" style="width:18px;height:18px;cursor:pointer;">
+            <span style="flex:1;${stap.gedaan ? 'text-decoration:line-through;color:#9ca3af;' : ''}">${stap.tekst}</span>
+            <button onclick="verwijderStap(${index})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:1.2rem;" title="Verwijderen">🗑️</button>
+        `;
+        lijst.appendChild(item);
+    });
+}
+
+function toggleStap(index) {
+    state.beweging.stappen[index].gedaan = !state.beweging.stappen[index].gedaan;
+    saveState();
+    renderStappen();
+}
+
+function verwijderStap(index) {
+    state.beweging.stappen.splice(index, 1);
+    saveState();
+    renderStappen();
+}
+
+function checkBewegingComplete() {
+    const complete = state.beweging && state.beweging.naar && state.beweging.prioriteit;
+    document.getElementById('btnNaarSamenvatting').disabled = !complete;
+}
+
+function volledigBewegingEnGaDoor() {
+    // Save waarom
+    state.beweging.waarom = document.getElementById('bewegingReden').value;
+    saveState();
+    
+    // Go to samenvatting
+    goToScreenById('samenvatting');
+}
+
+// ===== SCHERM 5: INTERVENTIES FUNCTIES =====
+
+function saveInterventiesEnGaDoor() {
+    if (!state.interventies) state.interventies = {};
+    state.interventies.notities = document.getElementById('interventieNotities').value;
+    saveState();
+    goToScreenById('team');
+}
+
+function renderInterventies() {
+    if (state.interventies && state.interventies.notities) {
+        document.getElementById('interventieNotities').value = state.interventies.notities;
+    }
+}
+
+// ===== SCHERM 6: TEAM BESLUIT FUNCTIES =====
+
+function voegTeamAfspraakToe() {
+    const wie = document.getElementById('teamWie').value.trim();
+    const actie = document.getElementById('teamActie').value.trim();
+    const deadline = document.getElementById('teamDeadline').value;
+    
+    if (!wie || !actie) {
+        alert('Vul minimaal "wie" en "actie" in');
+        return;
+    }
+    
+    if (!state.team) state.team = { afspraken: [], volgendOverleg: null };
+    if (!state.team.afspraken) state.team.afspraken = [];
+    
+    state.team.afspraken.push({ wie, actie, deadline, gedaan: false });
+    saveState();
+    
+    // Clear inputs
+    document.getElementById('teamWie').value = '';
+    document.getElementById('teamActie').value = '';
+    document.getElementById('teamDeadline').value = '';
+    
+    renderTeamAfspraken();
+}
+
+function renderTeamAfspraken() {
+    const container = document.getElementById('teamAfspraken');
+    
+    if (!state.team || !state.team.afspraken || state.team.afspraken.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:20px;color:#9ca3af;font-style:italic;">Nog geen afspraken gemaakt</div>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    state.team.afspraken.forEach((afspraak, index) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;margin-bottom:8px;';
+        item.innerHTML = `
+            <input type="checkbox" ${afspraak.gedaan ? 'checked' : ''} onchange="toggleTeamAfspraak(${index})" style="width:18px;height:18px;">
+            <span style="flex:1;${afspraak.gedaan ? 'text-decoration:line-through;color:#9ca3af;' : ''}">
+                <strong>${afspraak.wie}</strong> → ${afspraak.actie}
+                ${afspraak.deadline ? `<span style="color:#6b7280;font-size:0.85rem;"> (deadline: ${afspraak.deadline})</span>` : ''}
+            </span>
+            <button onclick="verwijderTeamAfspraak(${index})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:1.2rem;">🗑️</button>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function toggleTeamAfspraak(index) {
+    state.team.afspraken[index].gedaan = !state.team.afspraken[index].gedaan;
+    saveState();
+    renderTeamAfspraken();
+}
+
+function verwijderTeamAfspraak(index) {
+    state.team.afspraken.splice(index, 1);
+    saveState();
+    renderTeamAfspraken();
+}
+
+function saveTeamEnGaDoor() {
+    if (!state.team) state.team = {};
+    state.team.volgendOverleg = document.getElementById('volgendOverleg').value;
+    saveState();
+    goToScreenById('reflectie');
+}
+
+function renderTeam() {
+    renderTeamAfspraken();
+    if (state.team && state.team.volgendOverleg) {
+        document.getElementById('volgendOverleg').value = state.team.volgendOverleg;
+    }
+}
+
+// ===== SCHERM 7: REFLECTIE FUNCTIES =====
+
+function saveReflectieEnGaDoor() {
+    if (!state.reflectie) state.reflectie = {};
+    state.reflectie.notitie = document.getElementById('reflectieNotitie').value;
+    state.reflectie.proportionaliteit = document.getElementById('proportionaliteit').value;
+    saveState();
+    goToScreenById('samenvatting');
+}
+
+function renderReflectie() {
+    if (state.reflectie) {
+        if (state.reflectie.notitie) {
+            document.getElementById('reflectieNotitie').value = state.reflectie.notitie;
+        }
+        if (state.reflectie.proportionaliteit) {
+            document.getElementById('proportionaliteit').value = state.reflectie.proportionaliteit;
+        }
+    }
+}
+
+// ===== SCHERM 8: SAMENVATTING FUNCTIES =====
+
+function renderSamenvatting() {
+    const container = document.getElementById('samenvattingData');
+    
+    let html = '<div style="font-family:monospace;font-size:0.85rem;line-height:1.6;">';
+    
+    // Client
+    html += '<h3 style="color:var(--primary);margin-bottom:8px;">👤 Cliënt</h3>';
+    html += `<div style="margin-bottom:16px;">Naam: ${state.start.clientNaam || 'Onbekend'}<br>`;
+    if (state.start.geboortedatum) html += `Geboortedatum: ${state.start.geboortedatum}<br>`;
+    if (state.start.telefoon) html += `Telefoon: ${state.start.telefoon}<br>`;
+    html += `</div>`;
+    
+    // Hulpvraag
+    html += '<h3 style="color:var(--primary);margin-bottom:8px;">🎯 Hulpvraag</h3>';
+    html += `<div style="margin-bottom:16px;">${state.start.hulpvraag || 'Niet ingevuld'}</div>`;
+    
+    // Domeinen summary
+    html += '<h3 style="color:var(--primary);margin-bottom:8px;">📊 Domeinen</h3>';
+    html += '<div style="margin-bottom:16px;">';
+    let urgent = 0, aandacht = 0, goed = 0;
+    DOMAINS.forEach(d => {
+        const status = state.domeinen[d.id]?.status;
+        if (status === 'urgent') urgent++;
+        else if (status === 'aandacht') aandacht++;
+        else if (status === 'goed') goed++;
+    });
+    html += `🔴 ${urgent} urgent | 🟡 ${aandacht} aandacht | 🟢 ${goed} gaat goed</div>`;
+    
+    // Netwerkpositie
+    if (state.netwerkpositie) {
+        html += '<h3 style="color:var(--primary);margin-bottom:8px;">🕸️ Netwerkpositie</h3>';
+        html += `<div style="margin-bottom:16px;">Huidig: <strong>${state.netwerkpositie.huidig}</strong></div>`;
+    }
+    
+    // Beweging
+    if (state.beweging) {
+        html += '<h3 style="color:var(--primary);margin-bottom:8px;">🔄 Gewenste Beweging</h3>';
+        html += `<div style="margin-bottom:16px;">`;
+        html += `Van: ${state.beweging.van} → Naar: <strong>${state.beweging.naar}</strong><br>`;
+        html += `Waarom: ${state.beweging.waarom || 'Niet ingevuld'}<br>`;
+        html += `Prioriteit: ${state.beweging.prioriteit || 'Niet gekozen'}<br>`;
+        if (state.beweging.stappen && state.beweging.stappen.length > 0) {
+            html += `Stappen:<ul style="margin:4px 0;">`;
+            state.beweging.stappen.forEach(s => {
+                html += `<li>${s.gedaan ? '✅' : '☐'} ${s.tekst}</li>`;
+            });
+            html += `</ul>`;
+        }
+        html += `</div>`;
+    }
+    
+    // Team
+    if (state.team && state.team.afspraken && state.team.afspraken.length > 0) {
+        html += '<h3 style="color:var(--primary);margin-bottom:8px;">👥 Team Afspraken</h3>';
+        html += '<ul style="margin:4px 0 16px;">';
+        state.team.afspraken.forEach(a => {
+            html += `<li>${a.gedaan ? '✅' : '☐'} ${a.wie} → ${a.actie}`;
+            if (a.deadline) html += ` (${a.deadline})`;
+            html += `</li>`;
+        });
+        html += '</ul>';
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function exportJSON() {
+    const data = {
+        versie: '5.1-lean',
+        datum: new Date().toISOString(),
+        organisatie: settings.organisatie,
+        client: state.start,
+        domeinen: state.domeinen,
+        netwerkpositie: state.netwerkpositie,
+        beweging: state.beweging,
+        interventies: state.interventies,
+        team: state.team,
+        reflectie: state.reflectie
+    };
+    
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    const fileName = `RPA-${(state.start.clientNaam || 'export').replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = fileName;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    alert(`✅ Export succesvol: ${fileName}`);
+}
+
+// ===== RESET FUNCTIE =====
+
+function resetApp() {
+    if (confirm('🔄 Alles resetten en opnieuw beginnen?')) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+// ===== DEMO MODUS =====
+
+function loadDemo() {
+    console.log('Demo starting...');
+    
+    // Set organisatie if not set
+    if (!settings.organisatie) {
+        console.log('Setting organisatie to wijkteam');
+        settings.organisatie = 'wijkteam';
+        settings.setupCompleted = true;
+        saveSettings();
+        showOrgBadge();
+    }
+    
+    // Make sure we're on start screen first
+    const currentScreen = document.querySelector('.screen.active');
+    if (!currentScreen) {
+        console.error('No active screen found!');
+        return;
+    }
+    
+    console.log('Current screen:', currentScreen.id);
+    
+    if (currentScreen.id === 'screen-setup') {
+        console.log('On setup screen, going to start first...');
+        goToScreenById('start');
+        setTimeout(() => {
+            console.log('Retrying demo after 200ms...');
+            loadDemo();
+        }, 200);
+        return;
+    }
+    
+    const DEMO_DATA = {
+        start: {
+            clientNaam: 'Emma de Vries (voorbeeld)',
+            geboortedatum: '1985-03-15',
+            adres: 'Linnaeusstraat 42',
+            postcode: '1012AB',
+            plaats: 'Amsterdam',
+            telefoon: '06-12345678',
+            email: 'emma.devries@example.nl',
+            hulpvraag: 'Mijn zus Marie doet alles voor me (boodschappen, dokter, financiën). Maar ze heeft zelf ook een baan en kinderen. Ik zie dat ze moe is en ik wil haar niet zo belasten.',
+            toestemming: 'ja',
+            datumGesprek: new Date().toISOString().split('T')[0],
+            professionalNaam: 'Jan de Vries (voorbeeld)',
+            vorigGesprek: { datum: null, notitie: '' }
+        },
+        domeinen: {
+            financien: {
+                status: 'urgent',
+                notitie: 'Schulden opgelopen, brief van deurwaarder ontvangen vorige week',
+                steun: 'aanwezig',
+                steunDetails: {
+                    type: 'informeel',
+                    wie: 'Zus Marie',
+                    wat: 'Regelt alle financiën, komt elke week langs om post te sorteren'
+                }
+            },
+            ggz: {
+                status: 'aandacht',
+                notitie: 'Angstig, slaapt slecht sinds schuldenbrief',
+                steun: 'nodig',
+                steunDetails: null
+            },
+            sociaalnetwerk: {
+                status: 'urgent',
+                notitie: 'Alleen contact met zus, rest van familie woont ver weg',
+                steun: 'aanwezig',
+                steunDetails: {
+                    type: 'informeel',
+                    wie: 'Zus Marie',
+                    wat: 'Enige contact, belt dagelijks'
+                }
+            },
+            huisvesting: {
+                status: 'goed',
+                notitie: 'Huurwoning, maar wel achterstallige huur i.v.m. schulden',
+                steun: 'zelfstandig',
+                steunDetails: null
+            },
+            dagbesteding: {
+                status: 'aandacht',
+                notitie: 'Werkloos sinds 6 maanden, zoekt naar vrijwilligerswerk',
+                steun: 'nodig',
+                steunDetails: null
+            }
+        },
+        beweging: {
+            van: 'eenpersoons',
+            naar: 'informeel',
+            waarom: 'Zus Marie is overbelast. We willen het informele netwerk breder maken (buren, vrijwilligers) zodat de druk verdeeld wordt.',
+            prioriteit: 'urgent',
+            stappen: [
+                { tekst: 'Buurman Tom vragen voor boodschappen 1x per week', gedaan: false },
+                { tekst: 'Vrijwilligersorganisatie VONK contacteren voor dagbesteding', gedaan: false },
+                { tekst: 'Neef Peter vragen om eens per maand langs te komen', gedaan: false }
+            ]
+        },
+        interventies: {
+            notities: '- Vrijwilligersorganisatie VONK (dagbesteding)\n- Buurtnetwerk Linnaeusbuurt\n- Mantelzorgondersteuning Mezzo Amsterdam Oost'
+        },
+        team: {
+            afspraken: [
+                { wie: 'Jan de Vries (wijkteam)', actie: 'Contact leggen met VONK', deadline: '2026-04-01', gedaan: false },
+                { wie: 'Emma', actie: 'Gesprek met buurman Tom', deadline: '2026-03-28', gedaan: false }
+            ],
+            volgendOverleg: '2026-04-15'
+        },
+        reflectie: {
+            notitie: 'Verwachte impact: Minder druk op zus Marie, breder informeel netwerk binnen 3 maanden. Risico: Nieuwe contacten moeten vertrouwen winnen. Kosten: Geen extra formele zorg, wel begeleiding VONK.',
+            proportionaliteit: 'grens'
+        },
+        isDemoMode: true
+    };
+    
+    // Merge domeinen data
+    Object.keys(DEMO_DATA.domeinen).forEach(key => {
+        if (!state.domeinen[key]) {
+            state.domeinen[key] = { status: null, notitie: '', steun: null, steunDetails: null };
+        }
+        state.domeinen[key] = DEMO_DATA.domeinen[key];
+    });
+    
+    // Merge all data
+    state.start = { ...state.start, ...DEMO_DATA.start };
+    state.beweging = DEMO_DATA.beweging;
+    state.interventies = DEMO_DATA.interventies;
+    state.team = DEMO_DATA.team;
+    state.reflectie = DEMO_DATA.reflectie;
+    state.isDemoMode = true;
+    saveState();
+    
+    console.log('Filling UI fields with demo data...');
+    
+    // Fill UI fields on Scherm 1 (check if elements exist)
+    const fillField = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.value = value;
+            console.log(`Filled ${id}:`, value);
+        } else {
+            console.warn(`Element not found: ${id}`);
+        }
+    };
+    
+    fillField('clientNaam', state.start.clientNaam);
+    fillField('geboortedatum', state.start.geboortedatum);
+    fillField('adres', state.start.adres);
+    fillField('postcode', state.start.postcode);
+    fillField('plaats', state.start.plaats);
+    fillField('telefoon', state.start.telefoon);
+    fillField('email', state.start.email);
+    fillField('hulpvraag', state.start.hulpvraag);
+    
+    // Set toestemming (important: do this BEFORE going to next screen)
+    console.log('Setting toestemming to ja...');
+    document.querySelectorAll('.btn-choice').forEach(btn => btn.classList.remove('selected'));
+    const toestBtn = document.querySelector('.btn-choice[data-choice="ja"]');
+    if (toestBtn) {
+        toestBtn.classList.add('selected');
+        console.log('Toestemming button selected');
+    } else {
+        console.warn('Toestemming button not found!');
+    }
+    state.start.toestemming = 'ja';
+    
+    // Toon watermerk
+    if (!document.getElementById('demo-watermark')) {
+        console.log('Adding demo watermark...');
+        const watermark = document.createElement('div');
+        watermark.id = 'demo-watermark';
+        watermark.textContent = '🧪 DEMO MODUS - Dit is een voorbeeldcliënt';
+        document.body.prepend(watermark);
+    }
+    
+    // Spring naar domeinen scan
+    console.log('Navigating to domeinen-scan...');
+    goToScreenById('domeinen-scan');
+    
+    // Na render: forceer enable (demo data is ingevuld)
+    setTimeout(() => {
+        console.log('Checking if btnVolgende should be enabled...');
+        checkVolgendeEnabled();
+        
+        // Debug: forceer enable als het nog disabled is
+        const btn = document.getElementById('btnVolgende');
+        if (btn) {
+            console.log('btnVolgende found, disabled:', btn.disabled);
+            if (btn.disabled) {
+                console.log('Demo: Forcing btnVolgende enable');
+                btn.disabled = false;
+            }
+        } else {
+            console.warn('btnVolgende not found!');
+        }
+    }, 300);
+    
+    console.log('Demo loaded successfully!');
+}
+
+// ===== STATE PERSISTENCE =====
+
+function saveSettings() {
+    localStorage.setItem('rpa-v5-settings', JSON.stringify(settings));
+}
+
+function loadSettings() {
+    const saved = localStorage.getItem('rpa-v5-settings');
+    if (saved) {
+        settings = JSON.parse(saved);
+    }
+}
+
+function saveState() {
+    localStorage.setItem('rpa-v5-state', JSON.stringify(state));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('rpa-v5-state');
+    if (saved) {
+        state = JSON.parse(saved);
+    }
+}
+
+// ===== INIT =====
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadSettings();
+    loadState();
+    
+    // Check if setup is needed
+    if (!settings.setupCompleted || !settings.organisatie) {
+        // Show setup screen
+        goToScreenById('setup');
+    } else {
+        // Setup already done, show org badge and go to start
+        showOrgBadge();
+        goToScreenById('start');
+    }
+    
+    // Restore UI state
+    if (state.start.toestemming) {
+        const toestBtn = document.querySelector(`.btn-choice[data-choice="${state.start.toestemming}"]`);
+        if (toestBtn) toestBtn.classList.add('selected');
+    }
+    
+    // Restore cliëntgegevens
+    document.getElementById('clientNaam').value = state.start.clientNaam || '';
+    document.getElementById('geboortedatum').value = state.start.geboortedatum || '';
+    document.getElementById('adres').value = state.start.adres || '';
+    document.getElementById('postcode').value = state.start.postcode || '';
+    document.getElementById('plaats').value = state.start.plaats || '';
+    document.getElementById('telefoon').value = state.start.telefoon || '';
+    document.getElementById('email').value = state.start.email || '';
+    
+    // Restore gesprek
+    document.getElementById('hulpvraag').value = state.start.hulpvraag || '';
+    document.getElementById('datumGesprek').value = state.start.datumGesprek || new Date().toISOString().split('T')[0];
+    document.getElementById('professionalNaam').value = state.start.professionalNaam || '';
+    
+    if (state.start.vorigGesprek.datum) {
+        document.getElementById('vorigGesprekDatum').value = state.start.vorigGesprek.datum;
+        document.getElementById('vorigGesprekNotitie').value = state.start.vorigGesprek.notitie;
+    }
+    
+    // Demo watermerk als demo mode actief
+    if (state.isDemoMode) {
+        const watermark = document.createElement('div');
+        watermark.id = 'demo-watermark';
+        watermark.textContent = '🧪 DEMO MODUS - Dit is een voorbeeldcliënt';
+        document.body.prepend(watermark);
+    }
+});
+
+</script>
+
+</body>
+</html>

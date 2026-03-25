@@ -6793,21 +6793,44 @@
         // Screen configuration - FIXED FLOW (team feedback)
         // Correcte volgorde: Start → Netwerk → Check (nu) → Plan (gewenst) → Hulp → Team → Besluit
         const screenConfigBase = [
-            { id: 'organisatie',            label: 'Start',          emoji: '🏢' },
-            { id: 'intro',                  label: 'Uitleg',         emoji: 'ℹ️' },
+            { id: 'organisatie',            label: 'Start',          emoji: '🏢' }, // NIEUW: Organisatie keuze
+            { id: 'intro',                  label: 'Uitleg',         emoji: 'ℹ️' }, // Methodologie uitleg
             { id: 'start',                  label: 'Kennismaking',   emoji: '🏠' },
             { id: 'hulpvraag-focus',        label: 'Je vraag',       emoji: '🎯' },
             { id: 'triage',                 label: 'Jouw mensen',    emoji: '👥' },
             { id: 'domains',                label: 'Wie helpt?',     emoji: '🤝' },
             { id: 'network',                label: 'Overzicht',      emoji: '📊' },
-            { id: 'actieplan-selectie',     label: 'Prioriteit',     emoji: '🎯' },
-            { id: 'actieplan-domein',       label: 'Actieplan',      emoji: '📋' },
+            { id: 'reflectie',              label: 'Hoe gaat het?',  emoji: '💭' },
+            { id: 'beweging',               label: 'Wat wil je?',    emoji: '🎯' },
+            { id: 'interventies',           label: 'Wat helpt?',     emoji: '💡' },
+            { id: 'actieplan-selectie',     label: 'Prioriteit',     emoji: '🎯' }, // NIEUW: Welke domeinen aanpakken?
+            { id: 'actieplan-domein',       label: 'Actieplan',      emoji: '📋' }, // NIEUW: Per domein: wat/wie/acties
+            { id: 'team',                   label: 'Wie vraag je?',  emoji: '🤝' },
             { id: 'samenvatting',           label: 'Besluit',        emoji: '📄' }
         ];
 
         // Get current screen config based on mode
         function getScreenConfig() {
-            // Beide tracks gebruiken nu dezelfde gestroomlijnde flow
+            // Track A (hulpvraag-gedreven)
+            if (state.selectedTrack === 'hulpvraag') {
+                return screenConfigBase.filter(s => 
+                    ['organisatie', 'intro', 'start', 'hulpvraag-focus', 'triage', 'domains', 'network', 'beweging', 'interventies', 'actieplan-selectie', 'actieplan-domein', 'samenvatting'].includes(s.id)
+                );
+            }
+            
+            // Track B (netwerk-gedreven)
+            if (state.selectedTrack === 'netwerk') {
+                return screenConfigBase.filter(s => 
+                    ['organisatie', 'intro', 'start', 'triage', 'domains', 'network', 'reflectie', 'beweging', 'interventies', 'actieplan-selectie', 'actieplan-domein', 'team', 'samenvatting'].includes(s.id)
+                );
+            }
+            
+            // Snelle modus (legacy)
+            if (state.snelleModusSchermen && state.snelleModusSchermen.length > 0) {
+                return screenConfigBase.filter(s => state.snelleModusSchermen.includes(s.id));
+            }
+            
+            // Default: alle schermen
             return screenConfigBase;
         }
 
